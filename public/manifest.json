@@ -5,8 +5,8 @@
   "description": "Start-stop timer for Redmine",
   "icons": {
     "16": "logo16.png",
-    "48": "logo32.png",
-    "128": "logo32.png"
+    "48": "logo48.png",
+    "128": "logo128.png"
   },
   "author": "crawlercode@outlook.de",
   "homepage_url": "https://github.com/CrawlerCode/redmine-time-tracking",
