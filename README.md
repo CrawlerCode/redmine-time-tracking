@@ -1,8 +1,11 @@
 # Redmine Time Tracking (Chrome Extensions)
 
+> Start-stop timer for [Redmine](https://www.redmine.org/).
+
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-Start-stop timer for Redmine
+View all your assigned Redmine issue.
+Start and stop the timer for your current tasks, then transfer the time to the Redmine issue.
 
 ![issues](screenshots/issues.png)
 

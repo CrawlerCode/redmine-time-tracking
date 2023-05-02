@@ -1,11 +1,14 @@
 {
   "name": "redmine-time-tracking",
   "description": "Redmine Time Tracking",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "tsc && vite build --watch",
     "build": "tsc && vite build",
+    "pack": "node pack.js",
+    "release": "gh release create v%npm_package_version% release/redmine-time-tracking-v%npm_package_version%.zip --generate-notes",
+    "publish": "pnpm run build && pnpm run pack && pnpm run release",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
@@ -29,6 +32,7 @@
     "@typescript-eslint/parser": "^5.57.1",
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.14",
+    "adm-zip": "^0.5.10",
     "eslint": "^8.38.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
