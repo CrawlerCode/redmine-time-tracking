@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Redmine Time Tracking",
+  "version": "1.0.0",
+  "description": "Start-stop timer for Redmine",
+  "icons": {
+    "16": "logo16.png",
+    "48": "logo32.png",
+    "128": "logo32.png"
+  },
+  "author": "crawlercode@outlook.de",
+  "homepage_url": "https://github.com/CrawlerCode/redmine-time-tracking",
+  "action": {
+    "default_title": "Redmine Time Tracking",
+    "default_popup": "index.html"
+  },
+  "options_ui": {
+    "page": "index.html#/settings",
+    "open_in_tab": false
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage"],
+  "host_permissions": ["http://*/*", "https://*/*"]
+}
