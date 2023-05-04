@@ -18,7 +18,8 @@
 View all your assigned Redmine issue.
 Start and stop the timer for your current tasks, then transfer the time to the Redmine issue.
 
-![issues](screenshots/issues.png)
+![issues](screenshots/issues-dark.png)
+![issues](screenshots/settings-dark.png)
 
 # Credits
 
