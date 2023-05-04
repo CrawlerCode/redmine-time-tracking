@@ -1,6 +1,7 @@
 import { faCheck, faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
+import useSettings from "../../hooks/useSettings";
 import { Issue } from "../../types/redmine";
 
 type PropTypes = {
@@ -19,6 +20,8 @@ const calcTime = (time: number, start?: number) => {
 };
 
 const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone }: PropTypes) => {
+  const { settings } = useSettings();
+
   const [timer, setTimer] = useState(calcTime(time, start));
 
   useEffect(() => {
@@ -34,7 +37,7 @@ const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone 
   return (
     <div className="block w-full p-1 bg-white border border-gray-200 rounded-lg shadow dark:shadow-gray-600 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 relative">
       <h1 className="mb-1 truncate">
-        <a href={`http://localhost:58103/issues/${issue.id}`} target="_blank" className="text-blue-500 hover:underline">
+        <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" className="text-blue-500 hover:underline">
           #{issue.id}
         </a>{" "}
         {issue.subject}
