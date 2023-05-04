@@ -1,22 +1,22 @@
-export type Reference = {
+export type TReference = {
   id: number;
   name: string;
 };
 
-export type Status = {
+export type TStatus = {
   id: number;
   name: string;
   is_closed: boolean;
 };
 
-export type Issue = {
+export type TIssue = {
   id: number;
-  project: Reference;
-  tracker: Reference;
-  status: Status;
-  priority: Reference;
-  author: Reference;
-  assigned_to: Reference;
+  project: TReference;
+  tracker: TReference;
+  status: TStatus;
+  priority: TReference;
+  author: TReference;
+  assigned_to: TReference;
   subject: string;
   description: string;
   done_ratio: number;

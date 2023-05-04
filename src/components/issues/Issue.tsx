@@ -2,10 +2,10 @@ import { faCheck, faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import useSettings from "../../hooks/useSettings";
-import { Issue } from "../../types/redmine";
+import { TIssue } from "../../types/redmine";
 
 type PropTypes = {
-  issue: Issue;
+  issue: TIssue;
   isActive: boolean;
   time: number;
   start?: number;
