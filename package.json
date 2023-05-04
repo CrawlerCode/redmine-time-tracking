@@ -1,7 +1,15 @@
 {
   "name": "redmine-time-tracking",
   "description": "Redmine Time Tracking",
-  "version": "1.0.1",
+  "version": "1.1.0",
+  "author": {
+    "name": "CrawlerCode",
+    "email": "crawlercode@outlook.de"
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/CrawlerCode/redmine-time-tracking"
+  },
   "type": "module",
   "scripts": {
     "dev": "tsc && vite build --watch",
