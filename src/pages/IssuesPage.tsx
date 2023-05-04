@@ -27,20 +27,39 @@ const IssuesPage = () => {
         {issuesQuery.isLoading && <LoadingSpinner />}
         {issuesQuery.isError && <Toast type="error" message="Failed to load issues" allowClose={false} />}
         {issuesQuery.data?.map((issue) => {
-          const issueData = issue.id in issues ? issues[issue.id] : undefined;
+          const issueData =
+            issue.id in issues
+              ? issues[issue.id]
+              : {
+                  active: false,
+                  start: undefined,
+                  time: 0,
+                };
           return (
             <Issue
               issue={issue}
-              isActive={issueData?.active || false}
-              time={issueData?.time || 0}
-              start={issueData?.start}
+              isActive={issueData.active}
+              time={issueData.time}
+              start={issueData.start}
               onStart={() => {
                 setIssues({
-                  ...issues,
+                  ...(settings.options.autoPauseOnSwitch
+                    ? Object.entries(issues).reduce((res, [id, val]) => {
+                        // @ts-ignore
+                        res[id] = val.active
+                          ? {
+                              active: false,
+                              start: undefined,
+                              time: calcTime(val.time, val.start),
+                            }
+                          : val;
+                        return res;
+                      }, {})
+                    : issues),
                   [issue.id]: {
                     active: true,
                     start: new Date().getTime(),
-                    time: issueData?.time || 0,
+                    time: issueData.time,
                   },
                 });
               }}
@@ -76,6 +95,10 @@ const IssuesPage = () => {
       </div>
     </>
   );
+};
+
+const calcTime = (time: number, start?: number) => {
+  return time + (start ? new Date().getTime() - start : 0);
 };
 
 export default IssuesPage;

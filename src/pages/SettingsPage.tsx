@@ -1,6 +1,7 @@
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
+import CheckBox from "../components/general/CheckBox";
 import InputField from "../components/general/InputField";
 import Toast from "../components/general/Toast";
 import useSettings, { Settings } from "../hooks/useSettings";
@@ -40,12 +41,14 @@ const SettingsPage = () => {
               <div className="flex flex-col gap-y-2">
                 <Field type="text" name="redmineURL" title="Redmine URL" placeholder="Redmine URL" required as={InputField} error={touched.redmineURL && errors.redmineURL} />
                 <Field type="password" name="redmineApiKey" title="Redmine API-Key" placeholder="Redmine API-Key" required as={InputField} error={touched.redmineApiKey && errors.redmineApiKey} />
+                <h2 className="text-lg font-semibold">Options:</h2>
+                <Field type="checkbox" name="options.autoPauseOnSwitch" title="Auto pause" description="Automatic pause timers when changing issue" as={CheckBox} />
                 <button
                   type="button"
                   className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mt-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
                   onClick={submitForm}
                 >
-                  Save
+                  Save Settings
                 </button>
               </div>
             </Form>

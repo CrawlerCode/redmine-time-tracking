@@ -19,6 +19,9 @@ dependencies:
   clsx:
     specifier: ^1.2.1
     version: 1.2.1
+  deepmerge:
+    specifier: ^4.3.1
+    version: 4.3.1
   formik:
     specifier: ^2.2.9
     version: 2.2.9(react@18.2.0)
@@ -1148,6 +1151,11 @@ packages:
 
   /deepmerge@2.2.1:
     resolution: {integrity: sha512-R9hc1Xa/NOBi9WRVUWg19rl1UB7Tt4kuPd+thNJgFZoxXsTz7ncaPaeIm+40oSGuP33DfMb4sZt1QIGiJzC4EA==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
+  /deepmerge@4.3.1:
+    resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
     engines: {node: '>=0.10.0'}
     dev: false
 

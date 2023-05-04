@@ -15,10 +15,6 @@ type PropTypes = {
   onDone: (time: number) => void;
 };
 
-const calcTime = (time: number, start?: number) => {
-  return time + (start ? new Date().getTime() - start : 0);
-};
-
 const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone }: PropTypes) => {
   const { settings } = useSettings();
 
@@ -57,6 +53,10 @@ const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone 
       </div>
     </div>
   );
+};
+
+const calcTime = (time: number, start?: number) => {
+  return time + (start ? new Date().getTime() - start : 0);
 };
 
 export const formatTime = (seconds: number) => {
