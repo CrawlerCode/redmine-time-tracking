@@ -45,7 +45,10 @@ const EditTime = ({ initTime, onOverrideTime, onCancel }: PropTypes) => {
          * On "Enter" => override time
          */
         onKeyDown={(e) => {
-          if (e.key === "Enter") onOverrideTime(updatedTime);
+          if (e.key === "Enter") {
+            onOverrideTime(updatedTime);
+            e.preventDefault();
+          }
         }}
         /**
          * On loose focus, check if next target not a input => cancel
@@ -74,7 +77,10 @@ const EditTime = ({ initTime, onOverrideTime, onCancel }: PropTypes) => {
          * On "Enter" => override time
          */
         onKeyDown={(e) => {
-          if (e.key === "Enter") onOverrideTime(updatedTime);
+          if (e.key === "Enter") {
+            onOverrideTime(updatedTime);
+            e.preventDefault();
+          }
         }}
       />
       :
@@ -97,7 +103,10 @@ const EditTime = ({ initTime, onOverrideTime, onCancel }: PropTypes) => {
          * On "Enter" => override time
          */
         onKeyDown={(e) => {
-          if (e.key === "Enter") onOverrideTime(updatedTime);
+          if (e.key === "Enter") {
+            onOverrideTime(updatedTime);
+            e.preventDefault();
+          }
         }}
         /**
          * On loose focus, check if next target not a input => cancel

@@ -48,11 +48,16 @@ const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onDone,
        */
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.code === "Space") {
+          // ignore in edit mode
+          if (editTime !== undefined) {
+            return;
+          }
           if (isActive) {
             onPause(timer);
           } else {
             onStart();
           }
+          e.preventDefault();
         }
       }}
     >
