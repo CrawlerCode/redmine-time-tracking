@@ -1,8 +1,10 @@
 import { faCheck, faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
+import EditTime from "./EditTime";
 
 type PropTypes = {
   issue: TIssue;
@@ -13,9 +15,10 @@ type PropTypes = {
   onStop: (time: number) => void;
   onClear: () => void;
   onDone: (time: number) => void;
+  onOverrideTime: (time: number) => void;
 };
 
-const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone }: PropTypes) => {
+const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone, onOverrideTime }: PropTypes) => {
   const { settings } = useSettings();
 
   const [timer, setTimer] = useState(calcTime(time, start));
@@ -30,10 +33,12 @@ const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone 
     }
   }, [isActive, time, start]);
 
+  const [editTime, setEditTime] = useState<number | undefined>(undefined);
+
   return (
     <div className="block w-full p-1 bg-white border border-gray-200 rounded-lg shadow dark:shadow-gray-600 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 relative">
       <h1 className="mb-1 truncate">
-        <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" className="text-blue-500 hover:underline">
+        <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" className="text-blue-500 hover:underline" tabIndex={-1}>
           #{issue.id}
         </a>{" "}
         {issue.subject}
@@ -45,7 +50,20 @@ const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone 
           </div>
         </div>
         <div className="flex items-center gap-x-3 mr-3">
-          <span className="text-lg text-yellow-500">{formatTime(timer / 1000)}</span>
+          {(editTime !== undefined && (
+            <EditTime
+              initTime={editTime}
+              onOverrideTime={(time) => {
+                onOverrideTime(time);
+                setEditTime(undefined);
+              }}
+              onCancel={() => setEditTime(undefined)}
+            />
+          )) || (
+            <span className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", isActive && "font-semibold")} onDoubleClick={() => setEditTime(timer)}>
+              {formatTime(timer / 1000)}
+            </span>
+          )}
           {!isActive ? <FontAwesomeIcon icon={faPlay} size="2x" className="text-green-500 cursor-pointer" onClick={onStart} /> : <FontAwesomeIcon icon={faPause} size="2x" className="text-red-500 cursor-pointer" onClick={() => onStop(timer)} />}
           <FontAwesomeIcon icon={faStop} size="2x" className="text-red-500 cursor-pointer" onClick={onClear} />
           <FontAwesomeIcon icon={faCheck} size="2x" className="text-green-600 cursor-pointer" onClick={() => onDone(timer)} />

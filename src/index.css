@@ -2,8 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  input[type="number"].appearance-none::-webkit-inner-spin-button,
+  input[type="number"].appearance-none::-webkit-outer-spin-button {
+    appearance: none;
+  }
+}
+
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-thumb {

@@ -16,7 +16,11 @@ const CheckBox = ({ title, description, ...props }: PropTypes) => {
           {...props}
           id={id}
           type="checkbox"
-          className={clsx("w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600", props.className)}
+          className={clsx(
+            "w-4 h-4 accent-primary-600 bg-gray-100 border-gray-300 rounded dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600",
+            "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-600",
+            props.className
+          )}
         />
       </div>
       <div className="ml-2 text-sm">

@@ -112,6 +112,14 @@ const IssuesPage = () => {
                     const h = time / 1000 / 60 / 60;
                     window.open(`${settings.redmineURL}/issues/${issue.id}/time_entries/new?time_entry[hours]=${h}`);
                   }}
+                  onOverrideTime={(time) => {
+                    issueData.time = time;
+                    if (issueData.active) issueData.start = new Date().getTime();
+                    setIssues({
+                      ...issues,
+                      [issue.id]: issueData,
+                    });
+                  }}
                   key={issue.id}
                 />
               );

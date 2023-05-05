@@ -7,7 +7,7 @@ interface PropTypes extends React.ComponentProps<"input"> {
   error?: string;
 }
 
-const InputField = ({ error, ...props }: PropTypes) => {
+const InputField = ({ error, className, ...props }: PropTypes) => {
   const id = useId();
 
   return (
@@ -25,11 +25,11 @@ const InputField = ({ error, ...props }: PropTypes) => {
         className={clsx(
           "text-sm rounded-lg block w-full p-2.5",
           "bg-gray-50 border border-gray-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
-          "focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500",
+          "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-600",
           {
             "border-red-500 text-red-900 placeholder-red-700 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500": error !== undefined,
           },
-          props.className
+          className
         )}
       />
       {error && <p className="text-sm text-red-600 dark:text-red-500">{error}</p>}
