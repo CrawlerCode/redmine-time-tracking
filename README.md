@@ -15,11 +15,22 @@
 [Install Button]: https://img.shields.io/badge/Install-71b500?style=for-the-badge&logoColor=white&logo=DocuSign
 [Install Link]: https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg "Open in chrome web store"
 
-View all your assigned Redmine issue.
-Start and stop the timer for your current tasks, then transfer the time to the Redmine issue.
+# Features
+
+- View all your assigned Redmine issues
+- Start and stop the timer for your current tasks
+- Edit timer by double-click on timer
+- Transfer the timer to the Redmine issue
+- Round time to nearest 15 min
+- Search for issue (press `CTRL` + `K` or `CTRL` + `F`)
+- Dark & light mode (system default)
+
+# Screenshots
 
 ![issues](screenshots/issues-dark.png)
-![issues](screenshots/settings-dark.png)
+![settings](screenshots/settings-dark.png)
+![issues-search](screenshots/issues-search-dark.png)
+![issues-edit](screenshots/issues-edit-dark.png)
 
 # Credits
 
