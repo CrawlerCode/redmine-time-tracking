@@ -36,7 +36,25 @@ const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone,
   const [editTime, setEditTime] = useState<number | undefined>(undefined);
 
   return (
-    <div className="block w-full p-1 bg-white border border-gray-200 rounded-lg shadow dark:shadow-gray-600 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 relative">
+    <div
+      className={clsx(
+        "block w-full p-1 bg-white border border-gray-200 rounded-lg shadow-sm dark:shadow-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 relative",
+        "focus:ring-4 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800"
+      )}
+      tabIndex={1}
+      /**
+       * On "Space"/"Enter" => toggle timer
+       */
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.code === "Space") {
+          if (isActive) {
+            onStop(timer);
+          } else {
+            onStart();
+          }
+        }
+      }}
+    >
       <h1 className="mb-1 truncate">
         <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" className="text-blue-500 hover:underline" tabIndex={-1}>
           #{issue.id}
@@ -45,7 +63,7 @@ const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone,
       </h1>
       <div className="flex flex-row items-center justify-between gap-x-2">
         <div className="w-[80px] bg-[#eeeeee]">
-          <div className="bg-[#bae0ba] text-xs font-medium text-gray-600 text-center leading-none p-1" style={{ width: `${issue.done_ratio}%` }}>
+          <div className="bg-[#bae0ba] text-xs font-medium text-gray-600 text-center leading-none p-1 select-none" style={{ width: `${issue.done_ratio}%` }}>
             {issue.done_ratio}%
           </div>
         </div>

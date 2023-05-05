@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { useState } from "react";
+import useHotKey from "../../hooks/useHotkey";
 
 type PropTypes = {
   initTime: number;
@@ -12,6 +13,11 @@ const EditTime = ({ initTime, onOverrideTime, onCancel }: PropTypes) => {
   const [m, setM] = useState(to2Digit(Math.floor((initTime / 1000 / 60) % 60)));
   const [s, setS] = useState(to2Digit(Math.floor((initTime / 1000) % 60)));
   const updatedTime = (Number(h) * 60 * 60 + Number(m) * 60 + Number(s)) * 1000;
+
+  /**
+   * On "Escape" => cancel
+   */
+  useHotKey(onCancel, { key: "Escape" });
 
   return (
     <div className="flex items-center gap-x-0">

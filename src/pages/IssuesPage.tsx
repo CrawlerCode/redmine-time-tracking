@@ -1,8 +1,13 @@
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { getAllMyOpenIssues } from "../api/redmine";
+import InputField from "../components/general/InputField";
 import LoadingSpinner from "../components/general/LoadingSpinner";
 import Toast from "../components/general/Toast";
 import Issue from "../components/issues/Issue";
+import useHotKey from "../hooks/useHotkey";
 import useSettings from "../hooks/useSettings";
 import useStorage from "../hooks/useStorage";
 import { TIssue, TReference } from "../types/redmine";
@@ -18,8 +23,16 @@ type IssuesData = {
 const IssuesPage = () => {
   const { settings } = useSettings();
 
+  const [searching, setSearching] = useState(false);
+
+  useHotKey(() => setSearching(true), { ctrl: true, key: "k" });
+  useHotKey(() => setSearching(false), { key: "Escape" }, searching);
+
+  const [search, setSearch] = useState("");
+
   const issuesQuery = useQuery(["issues"], () => getAllMyOpenIssues());
-  const groupedIssues = issuesQuery.data?.reduce(
+  const filteredIssues = searching && search ? issuesQuery.data?.filter((issue) => new RegExp(search, "i").test(`#${issue.id} ${issue.subject}`)) : issuesQuery.data;
+  const groupedIssues = filteredIssues?.reduce(
     (
       result: {
         [id: number]: {
@@ -45,6 +58,7 @@ const IssuesPage = () => {
 
   return (
     <>
+      {searching && <InputField icon={<FontAwesomeIcon icon={faSearch} />} placeholder="Search..." className="select-none mb-3" onChange={(e) => setSearch(e.target.value)} autoFocus autoComplete="off" />}
       <div className="flex flex-col gap-y-2">
         {issuesQuery.isLoading && <LoadingSpinner />}
         {issuesQuery.isError && <Toast type="error" message="Failed to load issues" allowClose={false} />}
@@ -127,7 +141,7 @@ const IssuesPage = () => {
           </>
         ))}
 
-        {issuesQuery.data?.length === 0 && <p>No issues</p>}
+        {filteredIssues?.length === 0 && <p className="text-center">No issues</p>}
       </div>
     </>
   );
