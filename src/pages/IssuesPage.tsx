@@ -102,7 +102,7 @@ const IssuesPage = () => {
                       },
                     });
                   }}
-                  onStop={(time) => {
+                  onPause={(time) => {
                     setIssues({
                       ...issues,
                       [issue.id]: {
@@ -112,7 +112,7 @@ const IssuesPage = () => {
                       },
                     });
                   }}
-                  onClear={() => {
+                  onStop={() => {
                     setIssues({
                       ...issues,
                       [issue.id]: {

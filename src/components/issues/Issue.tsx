@@ -2,6 +2,7 @@ import { faCheck, faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
+import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
 import EditTime from "./EditTime";
@@ -12,13 +13,13 @@ type PropTypes = {
   time: number;
   start?: number;
   onStart: () => void;
-  onStop: (time: number) => void;
-  onClear: () => void;
+  onPause: (time: number) => void;
+  onStop: () => void;
   onDone: (time: number) => void;
   onOverrideTime: (time: number) => void;
 };
 
-const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone, onOverrideTime }: PropTypes) => {
+const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onDone, onOverrideTime }: PropTypes) => {
   const { settings } = useSettings();
 
   const [timer, setTimer] = useState(calcTime(time, start));
@@ -48,7 +49,7 @@ const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone,
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.code === "Space") {
           if (isActive) {
-            onStop(timer);
+            onPause(timer);
           } else {
             onStart();
           }
@@ -56,11 +57,46 @@ const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone,
       }}
     >
       <h1 className="mb-1 truncate">
-        <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" className="text-blue-500 hover:underline" tabIndex={-1}>
+        <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" className="text-blue-500 hover:underline" data-tooltip-id={`tooltip-issue-${issue.id}`} tabIndex={-1}>
           #{issue.id}
         </a>{" "}
         {issue.subject}
       </h1>
+      <Tooltip id={`tooltip-issue-${issue.id}`} place="right" className="z-10 opacity-100">
+        <div className="relative max-w-[210px]">
+          <table className="text-sm text-left text-gray-300">
+            <caption className="text-mg font-semibold text-left mb-3">
+              {issue.tracker.name} #{issue.id}
+              <p className="mt-1 text-xs font-normal max-w-[180px] truncate">{issue.subject}</p>
+            </caption>
+            <tbody>
+              <tr>
+                <th className="pr-2 font-medium whitespace-nowrap">Status:</th>
+                <td>{issue.status.name}</td>
+              </tr>
+              <tr>
+                <th className="pr-2 font-medium whitespace-nowrap">Priority:</th>
+                <td>{issue.priority.name}</td>
+              </tr>
+              <tr>
+                <th className="pr-2 font-medium whitespace-nowrap">Assignee:</th>
+                <td>{issue.assigned_to.name}</td>
+              </tr>
+              {issue.estimated_hours && (
+                <tr>
+                  <th className="pr-2 font-medium whitespace-nowrap">Estimated time:</th>
+                  <td>{formatHours(issue.estimated_hours)} h</td>
+                </tr>
+              )}
+              <tr>
+                <th className="pr-2 font-medium whitespace-nowrap">Spent time:</th>
+                <td>{formatHours(issue.spent_hours)} h</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="italic mt-5">Click to open issue</p>
+      </Tooltip>
       <div className="flex flex-row items-center justify-between gap-x-2">
         <div className="w-[80px] bg-[#eeeeee]">
           <div className="bg-[#bae0ba] text-xs font-medium text-gray-600 text-center leading-none p-1 select-none" style={{ width: `${issue.done_ratio}%` }}>
@@ -78,13 +114,24 @@ const Issue = ({ issue, isActive, time, start, onStart, onStop, onClear, onDone,
               onCancel={() => setEditTime(undefined)}
             />
           )) || (
-            <span className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", isActive && "font-semibold")} onDoubleClick={() => setEditTime(timer)}>
+            <span className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", isActive && "font-semibold")} onDoubleClick={() => setEditTime(timer)} data-tooltip-id="tooltip-edit-timer">
               {formatTime(timer / 1000)}
             </span>
           )}
-          {!isActive ? <FontAwesomeIcon icon={faPlay} size="2x" className="text-green-500 cursor-pointer" onClick={onStart} /> : <FontAwesomeIcon icon={faPause} size="2x" className="text-red-500 cursor-pointer" onClick={() => onStop(timer)} />}
-          <FontAwesomeIcon icon={faStop} size="2x" className="text-red-500 cursor-pointer" onClick={onClear} />
-          <FontAwesomeIcon icon={faCheck} size="2x" className="text-green-600 cursor-pointer" onClick={() => onDone(timer)} />
+          <Tooltip id="tooltip-edit-timer" place="top" delayShow={700} content="Double click to edit" className="italic" />
+          {!isActive ? (
+            <FontAwesomeIcon icon={faPlay} size="2x" className="text-green-500 cursor-pointer focus:outline-none" onClick={onStart} data-tooltip-id="tooltip-start-timer" tabIndex={-1} />
+          ) : (
+            <FontAwesomeIcon icon={faPause} size="2x" className="text-red-500 cursor-pointer focus:outline-none" onClick={() => onPause(timer)} data-tooltip-id="tooltip-pause-timer" tabIndex={-1} />
+          )}
+          <FontAwesomeIcon icon={faStop} size="2x" className="text-red-500 cursor-pointer focus:outline-none" onClick={onStop} data-tooltip-id="tooltip-stop-timer" tabIndex={-1} />
+          <FontAwesomeIcon icon={faCheck} size="2x" className="text-green-600 cursor-pointer focus:outline-none" onClick={() => onDone(timer)} data-tooltip-id={`tooltip-done-timer-${issue.id}`} tabIndex={-1} />
+          <Tooltip id="tooltip-start-timer" place="left" delayShow={700} content="Click to start timer" className="italic" />
+          <Tooltip id="tooltip-pause-timer" place="left" delayShow={700} content="Click to pause timer" className="italic" />
+          <Tooltip id="tooltip-stop-timer" place="top" delayShow={700} content="Click to stop timer" className="italic" />
+          <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} className="z-10 italic opacity-75">
+            Click to transfer <span className={clsx("text-xs", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", isActive && "font-semibold")}>{formatTime(timer / 1000)}</span> to Redmine issue
+          </Tooltip>
         </div>
       </div>
     </div>
@@ -95,13 +142,21 @@ const calcTime = (time: number, start?: number) => {
   return time + (start ? new Date().getTime() - start : 0);
 };
 
-export const formatTime = (seconds: number) => {
+const formatTime = (seconds: number) => {
   if (isNaN(seconds) || seconds < 0) return "";
 
-  let s = Math.floor(seconds % 60);
-  let m = Math.floor((seconds / 60) % 60);
-  let h = Math.floor(seconds / 60 / 60);
+  const s = Math.floor(seconds % 60);
+  const m = Math.floor((seconds / 60) % 60);
+  const h = Math.floor(seconds / 60 / 60);
   return `${h}:${m > 9 ? m : "0" + m}:${s > 9 ? s : "0" + s}`;
+};
+
+const formatHours = (hours: number) => {
+  if (isNaN(hours) || hours < 0) return "";
+
+  const h = Math.floor(hours);
+  const m = Math.round((hours - h) * 60);
+  return `${h}:${m > 9 ? m : "0" + m}`;
 };
 
 export default Issue;
