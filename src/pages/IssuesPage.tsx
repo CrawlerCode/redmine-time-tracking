@@ -26,6 +26,7 @@ const IssuesPage = () => {
   const [searching, setSearching] = useState(false);
 
   useHotKey(() => setSearching(true), { ctrl: true, key: "k" });
+  useHotKey(() => setSearching(true), { ctrl: true, key: "f" });
   useHotKey(() => setSearching(false), { key: "Escape" }, searching);
 
   const [search, setSearch] = useState("");

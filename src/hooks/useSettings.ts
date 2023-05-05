@@ -7,6 +7,7 @@ export type Settings = {
   redmineApiKey: string;
   options: {
     autoPauseOnSwitch: boolean;
+    roundTimeNearestQuarterHour: boolean;
   };
 };
 
@@ -15,6 +16,7 @@ const defaultSettings = {
   redmineApiKey: "",
   options: {
     autoPauseOnSwitch: true,
+    roundTimeNearestQuarterHour: false,
   },
 };
 
