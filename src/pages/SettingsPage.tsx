@@ -44,7 +44,7 @@ const SettingsPage = () => {
                 <Field type="password" name="redmineApiKey" title="Redmine API-Key" placeholder="Redmine API-Key" required as={InputField} error={touched.redmineApiKey && errors.redmineApiKey} />
                 <h2 className="text-lg font-semibold">Options:</h2>
                 <Field type="checkbox" name="options.autoPauseOnSwitch" title="Auto pause" description="Automatic pause timers when changing issue" as={CheckBox} />
-                <Field type="checkbox" name="options.roundTimeNearestQuarterHour" title="Round time to nearest 15 min" description="Round time to nearest quarter hour" as={CheckBox} />
+                <Field type="checkbox" name="options.roundTimeNearestQuarterHour" title="Round nearest 15 min" description="Round timer to nearest quarter hour" as={CheckBox} />
                 <button
                   type="button"
                   className={clsx(

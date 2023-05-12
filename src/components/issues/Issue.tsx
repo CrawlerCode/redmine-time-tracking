@@ -196,10 +196,9 @@ const formatHours = (hours: number) => {
  */
 const roundTimeNearestQuarterHour = (milliseconds: number) => {
   const seconds = milliseconds / 1000;
-  let m = Math.floor((seconds / 60) % 60);
-  m = (Math.round(m / 15) * 15) % 60;
-  const h = Math.floor(seconds / 60 / 60);
-  return (h * 60 + m) * 60 * 1000;
+  const m = Math.round(Math.floor((seconds / 60) % 60) / 15) * 15;
+  const h = Math.floor(seconds / 60 / 60) + Math.floor(m / 60);
+  return (h * 60 + (m % 60)) * 60 * 1000;
 };
 
 export default Issue;
