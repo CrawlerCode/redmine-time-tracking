@@ -6,6 +6,7 @@ import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
 import KBD from "../general/KBD";
+import CreateTimeEntryModal from "./CreateTimeEntryModal";
 import EditTime from "./EditTime";
 
 type PropTypes = {
@@ -16,11 +17,11 @@ type PropTypes = {
   onStart: () => void;
   onPause: (time: number) => void;
   onStop: () => void;
-  onDone: (time: number) => void;
+  //onDone: (time: number) => void;
   onOverrideTime: (time: number) => void;
 };
 
-const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onDone, onOverrideTime }: PropTypes) => {
+const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onOverrideTime }: PropTypes) => {
   const { settings } = useSettings();
 
   const [timer, setTimer] = useState(calcTime(time, start));
@@ -36,7 +37,7 @@ const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onDone,
   }, [isActive, time, start]);
 
   const [editTime, setEditTime] = useState<number | undefined>(undefined);
-
+  const [createTimeEntry, setCreateTimeEntry] = useState<number | undefined>(undefined);
   return (
     <>
       <div
@@ -137,7 +138,7 @@ const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onDone,
               icon={faCheck}
               size="2x"
               className="text-green-600 cursor-pointer focus:outline-none"
-              onClick={() => onDone(settings.options.roundTimeNearestQuarterHour ? roundTimeNearestQuarterHour(timer) : timer)}
+              onClick={() => setCreateTimeEntry(settings.options.roundTimeNearestQuarterHour ? roundTimeNearestQuarterHour(timer) : timer)}
               data-tooltip-id={`tooltip-done-timer-${issue.id}`}
               tabIndex={-1}
             />
@@ -157,6 +158,17 @@ const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onDone,
       <Tooltip id="tooltip-toggle-timer" place="bottom" delayShow={4000} className="italic max-w-[275px]">
         If selected, press <KBD text="Ctrl" /> + <KBD text="Spacebar" space="xl" /> to toggle timer
       </Tooltip>
+      {createTimeEntry !== undefined && (
+        <CreateTimeEntryModal
+          issue={issue}
+          time={createTimeEntry}
+          onClose={() => setCreateTimeEntry(undefined)}
+          onSuccess={() => {
+            setCreateTimeEntry(undefined);
+            onStop();
+          }}
+        />
+      )}
     </>
   );
 };

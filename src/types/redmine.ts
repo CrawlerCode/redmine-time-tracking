@@ -26,3 +26,21 @@ export type TIssue = {
   updated_on: string;
   closed_on?: string;
 };
+
+export type TTimeEntryActivity = {
+  id: number;
+  name: string;
+  is_default: boolean;
+  active: boolean;
+};
+
+export type TCreateTimeEntry = {
+  issue_id: number;
+  activity_id?: number;
+  hours: number;
+  comments?: string;
+};
+
+export type TRedmineError = {
+  errors: string[];
+};

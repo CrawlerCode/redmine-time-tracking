@@ -9,7 +9,7 @@ type PropTypes = {
 
 const Toast = ({ type, message, allowClose = true, onClose }: PropTypes) => {
   return (
-    <div className="fixed bottom-0 left-0 p-2 w-full">
+    <div className="fixed bottom-0 left-0 p-2 w-full z-50">
       <div className="flex items-center w-full p-1 text-gray-700 bg-gray-200 rounded-lg shadow dark:text-gray-300 dark:bg-gray-600" role="alert">
         <div
           className={clsx("inline-flex items-center justify-center flex-shrink-0 w-8 h-8", {

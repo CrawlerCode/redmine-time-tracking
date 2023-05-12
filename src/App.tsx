@@ -11,7 +11,7 @@ function App() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-1">
+      <nav className="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-1">
         <ul className="flex flex-wrap gap-x-2 -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
           <li>
             <Link
