@@ -20,7 +20,7 @@
 - View all your assigned Redmine issues
 - Start and stop the timer for your current tasks
 - Edit timer by double-click on timer
-- Transfer the timer to the Redmine issue
+- Create entry for time spent in Redmine issue
 - Round timer to nearest 15 min
 - Search for issue (press `CTRL` + `K` or `CTRL` + `F`)
 - Dark & light mode (system default)
