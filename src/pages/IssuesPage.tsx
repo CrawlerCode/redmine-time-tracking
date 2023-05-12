@@ -1,7 +1,7 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { getAllMyOpenIssues } from "../api/redmine";
 import InputField from "../components/general/InputField";
 import LoadingSpinner from "../components/general/LoadingSpinner";
@@ -31,29 +31,40 @@ const IssuesPage = () => {
 
   const [search, setSearch] = useState("");
 
-  const issuesQuery = useQuery(["issues"], () => getAllMyOpenIssues());
-  const filteredIssues = searching && search ? issuesQuery.data?.filter((issue) => new RegExp(search, "i").test(`#${issue.id} ${issue.subject}`)) : issuesQuery.data;
-  const groupedIssues = filteredIssues?.reduce(
-    (
-      result: {
-        [id: number]: {
-          project: TReference;
-          issues: TIssue[];
-        };
+  const issuesQuery = useInfiniteQuery({
+    queryKey: ["issues"],
+    queryFn: ({ pageParam = 0 }) => getAllMyOpenIssues(pageParam * 100, 100),
+    getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
+  });
+  useEffect(() => {
+    if (issuesQuery.hasNextPage && !issuesQuery.isFetchingNextPage) issuesQuery.fetchNextPage();
+  }, [issuesQuery.hasNextPage, issuesQuery.isFetchingNextPage, issuesQuery.fetchNextPage]);
+  const filteredIssues = searching && search ? issuesQuery.data?.pages?.flat().filter((issue) => new RegExp(search, "i").test(`#${issue.id} ${issue.subject}`)) : issuesQuery.data?.pages?.flat();
+  const groupedIssues = Object.values(
+    filteredIssues?.reduce(
+      (
+        result: {
+          [id: number]: {
+            project: TReference;
+            issues: TIssue[];
+            sort: number;
+          };
+        },
+        issue
+      ) => {
+        if (!(issue.project.id in result)) {
+          result[issue.project.id] = {
+            project: issue.project,
+            issues: [],
+            sort: Object.keys(result).length,
+          };
+        }
+        result[issue.project.id].issues.push(issue);
+        return result;
       },
-      issue
-    ) => {
-      if (!(issue.project.id in result)) {
-        result[issue.project.id] = {
-          project: issue.project,
-          issues: [],
-        };
-      }
-      result[issue.project.id].issues.push(issue);
-      return result;
-    },
-    {}
-  );
+      {}
+    ) ?? {}
+  ).sort(({ sort: a }, { sort: b }) => a - b);
 
   const { data: issues, setData: setIssues } = useStorage<IssuesData>("issues", {});
 
@@ -63,9 +74,11 @@ const IssuesPage = () => {
       <div className="flex flex-col gap-y-2">
         {issuesQuery.isLoading && <LoadingSpinner />}
         {issuesQuery.isError && <Toast type="error" message="Failed to load issues" allowClose={false} />}
-        {Object.entries(groupedIssues ?? {}).map(([_, { project, issues: groupIssues }]) => (
+        {groupedIssues.map(({ project, issues: groupIssues }) => (
           <>
-            <h5 className="text-xs text-slate-500 dark:text-slate-300 truncate">{project.name}</h5>
+            <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1}>
+              <h5 className="text-xs text-slate-500 dark:text-slate-300 truncate">{project.name}</h5>
+            </a>
             {groupIssues.map((issue) => {
               const issueData =
                 issue.id in issues
