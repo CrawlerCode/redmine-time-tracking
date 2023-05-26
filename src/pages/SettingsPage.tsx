@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
@@ -9,6 +10,7 @@ import useSettings, { Settings } from "../hooks/useSettings";
 
 const SettingsPage = () => {
   const formik = useRef<FormikProps<Settings>>(null);
+  const queryClient = useQueryClient();
 
   const { settings, setSettings } = useSettings();
 
@@ -32,6 +34,7 @@ const SettingsPage = () => {
         onSubmit={(values, { setSubmitting }) => {
           //console.log("onSubmit", values);
           setSettings(values);
+          queryClient.clear();
           setSubmitting(false);
           setSaved(true);
         }}
@@ -44,6 +47,7 @@ const SettingsPage = () => {
                 <Field type="password" name="redmineApiKey" title="Redmine API-Key" placeholder="Redmine API-Key" required as={InputField} error={touched.redmineApiKey && errors.redmineApiKey} />
                 <h2 className="text-lg font-semibold">Options:</h2>
                 <Field type="checkbox" name="options.autoPauseOnSwitch" title="Auto pause" description="Automatic pause timers when changing issue" as={CheckBox} />
+                <Field type="checkbox" name="options.extendedSearch" title="Extended search" description="Allows to search issues that are not assigned to you" as={CheckBox} />
                 <Field type="checkbox" name="options.roundTimeNearestQuarterHour" title="Round nearest 15 min" description="Round timer to nearest quarter hour" as={CheckBox} />
                 <button
                   type="button"

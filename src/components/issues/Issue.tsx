@@ -1,43 +1,54 @@
-import { faCheck, faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpRightFromSquare, faBan, faBookmark, faCheck, faCircleUser, faEdit, faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
+import ContextMenu from "../general/ContextMenu";
 import KBD from "../general/KBD";
 import CreateTimeEntryModal from "./CreateTimeEntryModal";
 import EditTime from "./EditTime";
 
+export type IssueData = {
+  active: boolean;
+  start?: number;
+  time: number;
+  remember: boolean;
+};
+
 type PropTypes = {
   issue: TIssue;
-  isActive: boolean;
-  time: number;
-  start?: number;
+  data: IssueData;
+  assignedToMe: boolean;
   onStart: () => void;
   onPause: (time: number) => void;
   onStop: () => void;
-  //onDone: (time: number) => void;
   onOverrideTime: (time: number) => void;
+  onRemember: () => void;
+  onForgot: () => void;
 };
 
-const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onOverrideTime }: PropTypes) => {
+const Issue = ({ issue, data: { active, time, start, remember }, assignedToMe, onStart, onPause, onStop, onOverrideTime, onRemember, onForgot }: PropTypes) => {
   const { settings } = useSettings();
 
   const [timer, setTimer] = useState(calcTime(time, start));
 
   useEffect(() => {
     setTimer(calcTime(time, start));
-    if (isActive && start) {
+    if (active && start) {
       const timerInterval = setInterval(() => {
         setTimer(calcTime(time, start));
       }, 1000);
       return () => clearInterval(timerInterval);
     }
-  }, [isActive, time, start]);
+  }, [active, time, start]);
 
   const [editTime, setEditTime] = useState<number | undefined>(undefined);
   const [createTimeEntry, setCreateTimeEntry] = useState<number | undefined>(undefined);
+
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | undefined>(undefined);
+
   return (
     <>
       <div
@@ -55,7 +66,7 @@ const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onOverr
             if (editTime !== undefined) {
               return;
             }
-            if (isActive) {
+            if (active) {
               onPause(timer);
             } else {
               onStart();
@@ -64,8 +75,12 @@ const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onOverr
           }
         }}
         data-tooltip-id="tooltip-toggle-timer"
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setContextMenu({ x: e.pageX, y: e.pageY });
+        }}
       >
-        <h1 className="mb-1 truncate">
+        <h1 className="mb-1 truncate me-4">
           <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" className="text-blue-500 hover:underline" data-tooltip-id={`tooltip-issue-${issue.id}`} tabIndex={-1}>
             #{issue.id}
           </a>{" "}
@@ -87,10 +102,12 @@ const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onOverr
                   <th className="pr-2 font-medium whitespace-nowrap">Priority:</th>
                   <td>{issue.priority.name}</td>
                 </tr>
-                <tr>
-                  <th className="pr-2 font-medium whitespace-nowrap">Assignee:</th>
-                  <td>{issue.assigned_to.name}</td>
-                </tr>
+                {issue.assigned_to && (
+                  <tr>
+                    <th className="pr-2 font-medium whitespace-nowrap">Assignee:</th>
+                    <td>{issue.assigned_to.name}</td>
+                  </tr>
+                )}
                 {issue.estimated_hours && (
                   <tr>
                     <th className="pr-2 font-medium whitespace-nowrap">Estimated time:</th>
@@ -123,12 +140,12 @@ const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onOverr
                 onCancel={() => setEditTime(undefined)}
               />
             )) || (
-              <span className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", isActive && "font-semibold")} onDoubleClick={() => setEditTime(timer)} data-tooltip-id="tooltip-edit-timer">
+              <span className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-semibold")} onDoubleClick={() => setEditTime(timer)} data-tooltip-id="tooltip-edit-timer">
                 {formatTime(timer)}
               </span>
             )}
             <Tooltip id="tooltip-edit-timer" place="top" delayShow={700} content="Double-click to edit" className="italic" />
-            {!isActive ? (
+            {!active ? (
               <FontAwesomeIcon icon={faPlay} size="2x" className="text-green-500 cursor-pointer focus:outline-none" onClick={onStart} data-tooltip-id="tooltip-start-timer" tabIndex={-1} />
             ) : (
               <FontAwesomeIcon icon={faPause} size="2x" className="text-red-500 cursor-pointer focus:outline-none" onClick={() => onPause(timer)} data-tooltip-id="tooltip-pause-timer" tabIndex={-1} />
@@ -147,13 +164,19 @@ const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onOverr
             <Tooltip id="tooltip-stop-timer" place="top" delayShow={700} content="Click to stop timer" className="italic" />
             <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} className="z-10 italic opacity-100">
               Click to transfer{" "}
-              <span className={clsx("text-xs", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", isActive && "font-semibold")}>
+              <span className={clsx("text-xs", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-semibold")}>
                 {formatTime(settings.options.roundTimeNearestQuarterHour ? roundTimeNearestQuarterHour(timer) : timer)}
               </span>{" "}
               to Redmine issue
             </Tooltip>
           </div>
         </div>
+        {!assignedToMe && (
+          <>
+            <Tooltip id="tooltip-not-assigned-to-me" place="left" delayShow={700} content="Issue is not assigned to you" className="italic" />
+            <FontAwesomeIcon icon={faCircleUser} className="absolute top-2 right-2 text-gray-300 dark:text-gray-600" data-tooltip-id="tooltip-not-assigned-to-me" />
+          </>
+        )}
       </div>
       <Tooltip id="tooltip-toggle-timer" place="bottom" delayShow={4000} className="italic max-w-[275px]">
         If selected, press <KBD text="Ctrl" /> + <KBD text="Spacebar" space="xl" /> to toggle timer
@@ -167,6 +190,64 @@ const Issue = ({ issue, isActive, time, start, onStart, onPause, onStop, onOverr
             setCreateTimeEntry(undefined);
             onStop();
           }}
+        />
+      )}
+      {contextMenu && (
+        <ContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          onClose={() => setContextMenu(undefined)}
+          menu={[
+            [
+              {
+                name: "Open in Redmine",
+                icon: <FontAwesomeIcon icon={faArrowUpRightFromSquare} />,
+                onClick: () => {
+                  window.open(`${settings.redmineURL}/issues/${issue.id}`, "_blank");
+                },
+              },
+            ],
+            [
+              {
+                name: "Start timer",
+                icon: <FontAwesomeIcon icon={faPlay} />,
+                disabled: active,
+                onClick: onStart,
+              },
+              {
+                name: "Pause timer",
+                icon: <FontAwesomeIcon icon={faPause} />,
+                disabled: !active,
+                onClick: () => onPause(timer),
+              },
+              {
+                name: "Stop timer",
+                icon: <FontAwesomeIcon icon={faStop} />,
+                disabled: timer === 0,
+                onClick: onStop,
+              },
+              {
+                name: "Edit timer",
+                icon: <FontAwesomeIcon icon={faEdit} />,
+                disabled: timer === 0,
+                onClick: () => setEditTime(timer),
+              },
+            ],
+            [
+              {
+                name: "Remember issue",
+                icon: <FontAwesomeIcon icon={faBookmark} />,
+                disabled: assignedToMe || remember,
+                onClick: onRemember,
+              },
+              {
+                name: "Forgot issue",
+                icon: <FontAwesomeIcon icon={faBan} />,
+                disabled: assignedToMe || !remember,
+                onClick: onForgot,
+              },
+            ],
+          ]}
         />
       )}
     </>

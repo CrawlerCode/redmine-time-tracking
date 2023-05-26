@@ -7,6 +7,7 @@ export type Settings = {
   redmineApiKey: string;
   options: {
     autoPauseOnSwitch: boolean;
+    extendedSearch: boolean;
     roundTimeNearestQuarterHour: boolean;
   };
 };
@@ -16,24 +17,26 @@ const defaultSettings = {
   redmineApiKey: "",
   options: {
     autoPauseOnSwitch: true,
+    extendedSearch: true,
     roundTimeNearestQuarterHour: false,
   },
 };
 
 const useSettings = () => {
-  const { data: settings, setData: setSettings } = useStorage<Settings>("settings", defaultSettings);
+  const { data, setData } = useStorage<Settings>("settings", defaultSettings);
 
   return {
-    settings: deepmerge<Settings>(defaultSettings, settings),
+    settings: deepmerge<Settings>(defaultSettings, data),
     setSettings: (data: Settings) => {
-      setSettings(data);
+      setData(data);
       loadRedmineConfig();
     },
   };
 };
 
-export const getSettings = () => {
-  return getStorage<Settings>("settings", defaultSettings);
+export const getSettings = async () => {
+  const data = await getStorage<Settings>("settings", defaultSettings);
+  return deepmerge<Settings>(defaultSettings, data);
 };
 
 export default useSettings;

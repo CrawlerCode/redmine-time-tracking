@@ -16,7 +16,7 @@ export type TIssue = {
   status: TStatus;
   priority: TReference;
   author: TReference;
-  assigned_to: TReference;
+  assigned_to?: TReference;
   subject: string;
   description: string;
   done_ratio: number;
@@ -43,4 +43,20 @@ export type TCreateTimeEntry = {
 
 export type TRedmineError = {
   errors: string[];
+};
+
+export type TSearchResult = {
+  id: number;
+  title: string;
+  type: "issue" | "issue-closed" | "project" | string;
+  url: string;
+  description: string;
+};
+
+export type TAccount = {
+  id: number;
+  fistname: string;
+  lastname: string;
+  login: string;
+  mail: string;
 };
