@@ -50,15 +50,12 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
             <h5 className="text-xs text-slate-500 dark:text-slate-300 truncate w-fit">{project.name}</h5>
           </a>
           {groupIssues.map((issue) => {
-            const data: IssueData =
-              issue.id in issuesData
-                ? issuesData[issue.id]
-                : {
-                    active: false,
-                    start: undefined,
-                    time: 0,
-                    remember: false,
-                  };
+            const data: IssueData = issuesData?.[issue.id] ?? {
+              active: false,
+              start: undefined,
+              time: 0,
+              remember: false,
+            };
             return (
               <Issue
                 key={issue.id}
@@ -101,15 +98,11 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
                   });
                 }}
                 onStop={() => {
-                  setIssuesData({
+                  const newIssuesData = {
                     ...issuesData,
-                    [issue.id]: {
-                      ...data,
-                      active: false,
-                      start: undefined,
-                      time: 0,
-                    },
-                  });
+                  };
+                  delete newIssuesData[issue.id];
+                  setIssuesData(newIssuesData);
                 }}
                 onOverrideTime={(time) => {
                   setIssuesData({
