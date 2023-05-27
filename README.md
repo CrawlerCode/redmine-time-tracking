@@ -4,6 +4,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/CrawlerCode/redmine-time-tracking)
 
 ![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/ldcanhhkffokndenejhafhlkapflgcjg?logo=google-chrome)
+![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldcanhhkffokndenejhafhlkapflgcjg)
 ![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/stars/ldcanhhkffokndenejhafhlkapflgcjg)
 
 # Redmine Time Tracking (Chrome Extensions)
@@ -21,8 +22,10 @@
 - Start and stop the timer for your current tasks
 - Edit timer by double-click on timer
 - Create entry for time spent in Redmine issue
+- Update done ratio
 - Round timer to nearest 15 min
 - Search for issue (press `CTRL` + `K` or `CTRL` + `F`)
+- Remember and forgot issue (not assigned to you)
 - Dark & light mode (system default)
 
 # Screenshots
