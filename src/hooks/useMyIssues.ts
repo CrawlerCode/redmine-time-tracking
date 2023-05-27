@@ -21,6 +21,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: string) => {
     queryKey: ["additionalIssues", additionalIssuesIds],
     queryFn: ({ pageParam = 0 }) => getOpenIssues(additionalIssuesIds, pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
+    enabled: additionalIssuesIds.length > 0,
   });
 
   // auto fetch all pages

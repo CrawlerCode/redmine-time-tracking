@@ -21,6 +21,14 @@ export const createTimeEntry = async (entry: TCreateTimeEntry) => {
     .then((res) => res.data);
 };
 
+export const updateIssue = async (id: number, issue: Partial<Omit<TIssue, "id">>) => {
+  return instance
+    .put(`/issues/${id}.json`, {
+      issue: issue,
+    })
+    .then((res) => res.data);
+};
+
 export const getTimeEntryActivities = async (): Promise<TTimeEntryActivity[]> => {
   return instance.get("/enumerations/time_entry_activities.json").then((res) => res.data.time_entry_activities);
 };

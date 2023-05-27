@@ -2,15 +2,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, isAxiosError } from "axios";
 import clsx from "clsx";
 import { Field, Form, Formik, FormikProps } from "formik";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
-import { createTimeEntry, getTimeEntryActivities } from "../../api/redmine";
+import { createTimeEntry, getTimeEntryActivities, updateIssue } from "../../api/redmine";
 import useSettings from "../../hooks/useSettings";
 import { TCreateTimeEntry, TIssue, TRedmineError } from "../../types/redmine";
 import InputField from "../general/InputField";
 import Modal from "../general/Modal";
 import SelectField from "../general/SelectField";
 import Toast from "../general/Toast";
+import DoneSlider from "./DoneSlider";
 
 type PropTypes = {
   issue: TIssue;
@@ -38,8 +39,14 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
     mutationFn: (entry: TCreateTimeEntry) => createTimeEntry(entry),
     onSuccess: () => {
       queryClient.invalidateQueries(["issues"]);
+      queryClient.invalidateQueries(["additionalIssues"]);
       onSuccess();
     },
+  });
+
+  const [doneRatio, setDoneRatio] = useState(issue.done_ratio);
+  const updateIssueMutation = useMutation({
+    mutationFn: (data: { done_ratio: number }) => updateIssue(issue.id, data),
   });
 
   return (
@@ -59,6 +66,9 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
           })}
           onSubmit={async (values, { setSubmitting }) => {
             //console.log("onSubmit", values);
+            if (issue.done_ratio !== doneRatio) {
+              await updateIssueMutation.mutateAsync({ done_ratio: doneRatio });
+            }
             await createTimeEntryMutation.mutateAsync(values);
             setSubmitting(false);
           }}
@@ -73,6 +83,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     </a>{" "}
                     {issue.subject}
                   </h1>
+                  <DoneSlider name="done_ratio" value={doneRatio} onChange={(e) => setDoneRatio(e.target.valueAsNumber)} className="mb-1" />
                   <Field type="number" name="hours" title="Hours" placeholder="Hours" min="0" step="0.01" required as={InputField} size="sm" error={touched.hours && errors.hours} autoComplete="off" />
                   <Field type="text" name="comments" title="Comments" placeholder="Comments" as={InputField} size="sm" error={touched.comments && errors.comments} autoFocus />
                   <Field type="select" name="activity_id" title="Activity" placeholder="Activity" required as={SelectField} size="sm" error={touched.activity_id && errors.activity_id}>

@@ -17,3 +17,10 @@
   background-color: #1e3a8a;
   border-radius: 3px;
 }
+
+input[name="done_ratio"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  width: 2px;
+}
