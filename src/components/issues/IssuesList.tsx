@@ -46,8 +46,8 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
     <>
       {groupedIssues.map(({ project, issues: groupIssues }) => (
         <>
-          <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" className="w-fit" tabIndex={-1}>
-            <h5 className="text-xs text-slate-500 dark:text-slate-300 truncate w-fit">{project.name}</h5>
+          <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1}>
+            <h5 className="text-xs text-slate-500 dark:text-slate-300 truncate">{project.name}</h5>
           </a>
           {groupIssues.map((issue) => {
             const data: IssueData = issuesData?.[issue.id] ?? {

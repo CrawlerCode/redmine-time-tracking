@@ -140,17 +140,33 @@ const Issue = ({ issue, data: { active, time, start, remember }, assignedToMe, o
                 onCancel={() => setEditTime(undefined)}
               />
             )) || (
-              <span className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-semibold")} onDoubleClick={() => setEditTime(timer)} data-tooltip-id="tooltip-edit-timer">
-                {formatTime(timer)}
-              </span>
+              <>
+                <Tooltip id="tooltip-edit-timer" place="top" delayShow={700} content="Double-click to edit" className="italic" />
+                <span className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-semibold")} onDoubleClick={() => setEditTime(timer)} data-tooltip-id="tooltip-edit-timer">
+                  {formatTime(timer)}
+                </span>
+              </>
             )}
-            <Tooltip id="tooltip-edit-timer" place="top" delayShow={700} content="Double-click to edit" className="italic" />
             {!active ? (
-              <FontAwesomeIcon icon={faPlay} size="2x" className="text-green-500 cursor-pointer focus:outline-none" onClick={onStart} data-tooltip-id="tooltip-start-timer" tabIndex={-1} />
+              <>
+                <Tooltip id="tooltip-start-timer" place="left" delayShow={700} content="Click to start timer" className="italic" />
+                <FontAwesomeIcon icon={faPlay} size="2x" className="text-green-500 cursor-pointer focus:outline-none" onClick={onStart} data-tooltip-id="tooltip-start-timer" tabIndex={-1} />
+              </>
             ) : (
-              <FontAwesomeIcon icon={faPause} size="2x" className="text-red-500 cursor-pointer focus:outline-none" onClick={() => onPause(timer)} data-tooltip-id="tooltip-pause-timer" tabIndex={-1} />
+              <>
+                <Tooltip id="tooltip-pause-timer" place="left" delayShow={700} content="Click to pause timer" className="italic" />
+                <FontAwesomeIcon icon={faPause} size="2x" className="text-red-500 cursor-pointer focus:outline-none" onClick={() => onPause(timer)} data-tooltip-id="tooltip-pause-timer" tabIndex={-1} />
+              </>
             )}
+            <Tooltip id="tooltip-stop-timer" place="top" delayShow={700} content="Click to stop timer" className="italic" />
             <FontAwesomeIcon icon={faStop} size="2x" className="text-red-500 cursor-pointer focus:outline-none" onClick={onStop} data-tooltip-id="tooltip-stop-timer" tabIndex={-1} />
+            <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} className="z-10 italic opacity-100">
+              Click to transfer{" "}
+              <span className={clsx("text-xs", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-semibold")}>
+                {formatTime(settings.options.roundTimeNearestQuarterHour ? roundTimeNearestQuarterHour(timer) : timer)}
+              </span>{" "}
+              to Redmine issue
+            </Tooltip>
             <FontAwesomeIcon
               icon={faCheck}
               size="2x"
@@ -159,22 +175,12 @@ const Issue = ({ issue, data: { active, time, start, remember }, assignedToMe, o
               data-tooltip-id={`tooltip-done-timer-${issue.id}`}
               tabIndex={-1}
             />
-            <Tooltip id="tooltip-start-timer" place="left" delayShow={700} content="Click to start timer" className="italic" />
-            <Tooltip id="tooltip-pause-timer" place="left" delayShow={700} content="Click to pause timer" className="italic" />
-            <Tooltip id="tooltip-stop-timer" place="top" delayShow={700} content="Click to stop timer" className="italic" />
-            <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} className="z-10 italic opacity-100">
-              Click to transfer{" "}
-              <span className={clsx("text-xs", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-semibold")}>
-                {formatTime(settings.options.roundTimeNearestQuarterHour ? roundTimeNearestQuarterHour(timer) : timer)}
-              </span>{" "}
-              to Redmine issue
-            </Tooltip>
           </div>
         </div>
         {!assignedToMe && (
           <>
             <Tooltip id="tooltip-not-assigned-to-me" place="left" delayShow={700} content="Issue is not assigned to you" className="italic" />
-            <FontAwesomeIcon icon={faCircleUser} className="absolute top-2 right-2 text-gray-300 dark:text-gray-600" data-tooltip-id="tooltip-not-assigned-to-me" />
+            <FontAwesomeIcon icon={faCircleUser} className="absolute top-2 right-2 text-gray-300 dark:text-gray-600" data-tooltip-id="tooltip-not-assigned-to-me" tabIndex={-1} />
           </>
         )}
       </div>

@@ -62,7 +62,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: string) => {
     account: myAccountQuery.data,
     data: issues,
     extendedSearch: extendedSearchIssues,
-    isLoading: issuesQuery.isLoading,
+    isLoading: issuesQuery.isInitialLoading || additionalIssuesQuery.isInitialLoading,
     isError: issuesQuery.isError,
   };
 };
