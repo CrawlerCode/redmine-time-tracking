@@ -78,7 +78,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
               <Form>
                 <div className="flex flex-col gap-y-2">
                   <h1 className="mb-1 truncate">
-                    <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" className="text-blue-500 hover:underline" tabIndex={-1}>
+                    <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline">
                       #{issue.id}
                     </a>{" "}
                     {issue.subject}

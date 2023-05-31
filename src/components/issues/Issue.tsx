@@ -81,7 +81,7 @@ const Issue = ({ issue, data: { active, time, start, remember }, assignedToMe, o
         }}
       >
         <h1 className="mb-1 truncate me-4">
-          <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" className="text-blue-500 hover:underline" data-tooltip-id={`tooltip-issue-${issue.id}`} tabIndex={-1}>
+          <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" data-tooltip-id={`tooltip-issue-${issue.id}`}>
             #{issue.id}
           </a>{" "}
           {issue.subject}
