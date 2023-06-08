@@ -129,7 +129,12 @@ const Issue = ({ issue, timerData, assignedToMe, favorite, remember, onStart, on
           }}
           data-tooltip-id="tooltip-toggle-timer"
         >
-          <h1 className="mb-1 truncate me-4">
+          <h1
+            className={clsx("mb-1 truncate", {
+              "me-4": (favorite && assignedToMe) || (!favorite && !assignedToMe),
+              "me-9": favorite && !assignedToMe,
+            })}
+          >
             <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" data-tooltip-id={`tooltip-issue-${issue.id}`}>
               #{issue.id}
             </a>{" "}

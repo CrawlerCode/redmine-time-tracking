@@ -109,8 +109,16 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
                 onStop={() => {
                   const newIssuesData = {
                     ...issuesData,
+                    [issue.id]: {
+                      ...data,
+                      active: false,
+                      start: undefined,
+                      time: 0,
+                    },
                   };
-                  delete newIssuesData[issue.id];
+                  if (!data.favorite && !data.remember) {
+                    delete newIssuesData[issue.id];
+                  }
                   setIssuesData(newIssuesData);
                 }}
                 onOverrideTime={(time) => {
