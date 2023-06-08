@@ -5,6 +5,7 @@ import Issue from "./Issue";
 import { IssueTimerData } from "./IssueTimer";
 
 type IssueData = IssueTimerData & {
+  favorite: boolean;
   remember: boolean;
 };
 
@@ -59,6 +60,7 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
               active: false,
               start: undefined,
               time: 0,
+              favorite: false,
               remember: false,
             };
             return (
@@ -67,6 +69,7 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
                 issue={issue}
                 timerData={{ active: data.active, start: data.start, time: data.time }}
                 assignedToMe={issue.assigned_to?.id === account?.id ?? false}
+                favorite={data.favorite}
                 remember={data.remember}
                 onStart={() => {
                   setIssuesData({
@@ -139,6 +142,24 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
                     [issue.id]: {
                       ...data,
                       remember: false,
+                    },
+                  });
+                }}
+                onFavorite={() => {
+                  setIssuesData({
+                    ...issuesData,
+                    [issue.id]: {
+                      ...data,
+                      favorite: true,
+                    },
+                  });
+                }}
+                onUnfavorite={() => {
+                  setIssuesData({
+                    ...issuesData,
+                    [issue.id]: {
+                      ...data,
+                      favorite: false,
                     },
                   });
                 }}

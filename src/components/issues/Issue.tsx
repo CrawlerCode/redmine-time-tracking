@@ -1,4 +1,5 @@
-import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faEdit, faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
+import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faEdit, faPause, faPlay, faStar, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useRef, useState } from "react";
@@ -14,17 +15,20 @@ import IssueTimer, { IssueTimerData, TimerActions, TimerRef } from "./IssueTimer
 export type IssueActions = {
   onRemember: () => void;
   onForgot: () => void;
+  onFavorite: () => void;
+  onUnfavorite: () => void;
 };
 
 type PropTypes = {
   issue: TIssue;
   timerData: IssueTimerData;
   assignedToMe: boolean;
+  favorite: boolean;
   remember: boolean;
 } & Omit<TimerActions, "onDoneTimer"> &
   IssueActions;
 
-const Issue = ({ issue, timerData, assignedToMe, remember, onStart, onPause, onStop, onOverrideTime, onRemember, onForgot }: PropTypes) => {
+const Issue = ({ issue, timerData, assignedToMe, favorite, remember, onStart, onPause, onStop, onOverrideTime, onRemember, onForgot, onFavorite, onUnfavorite }: PropTypes) => {
   const { settings } = useSettings();
 
   const timerRef = useRef<TimerRef>(null);
@@ -68,6 +72,20 @@ const Issue = ({ issue, timerData, assignedToMe, remember, onStart, onPause, onS
               icon: <FontAwesomeIcon icon={faEdit} />,
               disabled: timerRef.current?.timer === 0,
               onClick: () => timerRef.current?.editTimer(),
+            },
+          ],
+          [
+            {
+              name: "Favorite issue",
+              icon: <FontAwesomeIcon icon={faStar} />,
+              disabled: favorite,
+              onClick: onFavorite,
+            },
+            {
+              name: "Unfavorite issue",
+              icon: <FontAwesomeIcon icon={faStarRegular} />,
+              disabled: !favorite,
+              onClick: onUnfavorite,
             },
           ],
           [
@@ -126,16 +144,19 @@ const Issue = ({ issue, timerData, assignedToMe, remember, onStart, onPause, onS
                 </div>
               </div>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col mr-2">
               <IssueTimer key={issue.id} ref={timerRef} issue={issue} data={timerData} onStart={onStart} onPause={onPause} onStop={onStop} onOverrideTime={onOverrideTime} onDoneTimer={setCreateTimeEntry} />
             </div>
           </div>
-          {!assignedToMe && (
-            <>
-              <Tooltip id="tooltip-not-assigned-to-me" place="left" delayShow={700} content="Issue is not assigned to you" className="italic" />
-              <FontAwesomeIcon icon={faCircleUser} className="absolute top-2 right-2 text-gray-300 dark:text-gray-600" data-tooltip-id="tooltip-not-assigned-to-me" tabIndex={-1} />
-            </>
-          )}
+          <div className="absolute top-2 right-2 flex justify-end items-start gap-x-1">
+            {favorite && <FontAwesomeIcon icon={faStar} className="text-gray-300 dark:text-gray-600 focus:outline-none" tabIndex={-1} />}
+            {!assignedToMe && (
+              <>
+                <Tooltip id="tooltip-not-assigned-to-me" place="left" delayShow={700} content="Issue is not assigned to you" className="italic" />
+                <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 dark:text-gray-600 focus:outline-none" data-tooltip-id="tooltip-not-assigned-to-me" tabIndex={-1} />
+              </>
+            )}
+          </div>
         </div>
       </ContextMenu>
       <Tooltip id="tooltip-toggle-timer" place="bottom" delayShow={4000} className="italic max-w-[275px]">
