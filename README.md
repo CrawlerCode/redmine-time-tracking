@@ -20,12 +20,13 @@
 
 - View all your assigned Redmine issues
 - Start and stop the timer for your current tasks
-- Edit timer by double-click on timer
+- Edit timer (double-click)
 - Create entry for time spent in Redmine issue
 - Update done ratio
 - Round timer to nearest 15 min
 - Search for issue (press `CTRL` + `K` or `CTRL` + `F`)
 - Remember and forgot issue (not assigned to you)
+- Favorite and unfavorite issue
 - Dark & light mode (system default)
 
 # Screenshots
@@ -33,6 +34,8 @@
 ![issues](screenshots/issues-dark.png)
 ![settings](screenshots/settings-dark.png)
 ![issues-search](screenshots/issues-search-dark.png)
+![issues-create-time-spent](screenshots/issues-create-time-spent-dark.png)
+![issues-context-menu](screenshots/issues-context-menu-dark.png)
 ![issues-edit](screenshots/issues-edit-dark.png)
 
 # Credits
