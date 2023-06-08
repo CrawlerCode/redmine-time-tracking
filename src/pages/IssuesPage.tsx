@@ -1,6 +1,6 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import InputField from "../components/general/InputField";
 import Toast from "../components/general/Toast";
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
@@ -41,6 +41,15 @@ const IssuesPage = () => {
     { ctrl: true, key: "f" }
   );
   useHotKey(() => setSearching(false), { key: "Escape" }, searching);
+
+  useEffect(() => {
+    const count = Object.values(issuesData.data).reduce((count, data) => count + (data.active ? 1 : 0), 0);
+
+    chrome.action.setBadgeBackgroundColor({ color: "#1d4ed8" });
+    chrome.action.setBadgeText({
+      text: count > 0 ? count.toString() : "",
+    });
+  }, [issuesData.data]);
 
   return (
     <>
