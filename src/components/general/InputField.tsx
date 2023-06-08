@@ -1,7 +1,7 @@
 import { faAsterisk } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { useId } from "react";
+import { forwardRef, useId } from "react";
 
 interface PropTypes extends Omit<React.ComponentProps<"input">, "size"> {
   size?: "sm" | "md";
@@ -10,7 +10,7 @@ interface PropTypes extends Omit<React.ComponentProps<"input">, "size"> {
   extraText?: string;
 }
 
-const InputField = ({ size = "md", icon, error, extraText, className, ...props }: PropTypes) => {
+const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", icon, error, extraText, className, ...props }: PropTypes, ref) => {
   const id = useId();
 
   return (
@@ -30,6 +30,7 @@ const InputField = ({ size = "md", icon, error, extraText, className, ...props }
       <div className="relative">
         {icon && <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">{icon}</div>}
         <input
+          ref={ref}
           {...props}
           id={id}
           required={false}
@@ -61,6 +62,6 @@ const InputField = ({ size = "md", icon, error, extraText, className, ...props }
       {error && <p className="text-sm text-red-600 dark:text-red-500">{error}</p>}
     </div>
   );
-};
+});
 
 export default InputField;

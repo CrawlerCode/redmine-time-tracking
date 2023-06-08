@@ -1,6 +1,6 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import InputField from "../components/general/InputField";
 import Toast from "../components/general/Toast";
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
@@ -15,6 +15,7 @@ const IssuesPage = () => {
 
   const issuesData = useStorage<IssuesData>("issues", {});
 
+  const searchRef = useRef<HTMLInputElement>(null);
   const [searching, setSearching] = useState(false);
   const [search, setSearch] = useState("");
   const myIssuesQuery = useMyIssues(
@@ -25,13 +26,25 @@ const IssuesPage = () => {
   );
 
   // hotkeys
-  useHotKey(() => setSearching(true), { ctrl: true, key: "k" });
-  useHotKey(() => setSearching(true), { ctrl: true, key: "f" });
+  useHotKey(
+    () => {
+      setSearching(true);
+      searchRef.current?.focus();
+    },
+    { ctrl: true, key: "k" }
+  );
+  useHotKey(
+    () => {
+      setSearching(true);
+      searchRef.current?.focus();
+    },
+    { ctrl: true, key: "f" }
+  );
   useHotKey(() => setSearching(false), { key: "Escape" }, searching);
 
   return (
     <>
-      {searching && <InputField icon={<FontAwesomeIcon icon={faSearch} />} placeholder="Search..." className="select-none mb-3" onChange={(e) => setSearch(e.target.value)} autoFocus autoComplete="off" />}
+      {searching && <InputField ref={searchRef} icon={<FontAwesomeIcon icon={faSearch} />} placeholder="Search..." className="select-none mb-3" onChange={(e) => setSearch(e.target.value)} autoFocus autoComplete="off" />}
       <div className="flex flex-col gap-y-2">
         {myIssuesQuery.isLoading && <IssuesListSkeleton />}
         <IssuesList
