@@ -7,9 +7,10 @@ interface PropTypes extends Omit<React.ComponentProps<"input">, "size"> {
   size?: "sm" | "md";
   icon?: React.ReactNode;
   error?: string;
+  extraText?: string;
 }
 
-const InputField = ({ size = "md", icon, error, className, ...props }: PropTypes) => {
+const InputField = ({ size = "md", icon, error, extraText, className, ...props }: PropTypes) => {
   const id = useId();
 
   return (
@@ -41,10 +42,21 @@ const InputField = ({ size = "md", icon, error, className, ...props }: PropTypes
               "pl-8": !!icon,
               "p-1.5": size === "sm",
               "p-2.5": size === "md",
+              "appearance-none": extraText,
             },
             className
           )}
         />
+        {extraText && (
+          <span
+            className={clsx("bg-gray-100 text-gray-800 font-medium rounded dark:bg-gray-600 dark:text-gray-400 absolute", {
+              "right-1.5 top-1.5 px-2.5 py-0.5": size === "sm",
+              "right-2.5 top-2 px-3.5 py-1": size === "md",
+            })}
+          >
+            {extraText}
+          </span>
+        )}
       </div>
       {error && <p className="text-sm text-red-600 dark:text-red-500">{error}</p>}
     </div>

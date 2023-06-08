@@ -32,7 +32,7 @@ const ContextMenu = ({ menu, children }: PropTypes) => {
         ref.current.style.left = `${position.x - width}px`;
       }
     }
-  }, []);
+  }, [ref, position]);
 
   return (
     <>

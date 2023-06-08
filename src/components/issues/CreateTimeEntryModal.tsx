@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { createTimeEntry, getTimeEntryActivities, updateIssue } from "../../api/redmine";
 import useSettings from "../../hooks/useSettings";
 import { TCreateTimeEntry, TIssue, TRedmineError } from "../../types/redmine";
+import { formatHours } from "../../utils/date";
 import InputField from "../general/InputField";
 import Modal from "../general/Modal";
 import SelectField from "../general/SelectField";
@@ -73,7 +74,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
             setSubmitting(false);
           }}
         >
-          {({ isSubmitting, touched, errors }) => (
+          {({ isSubmitting, touched, errors, values }) => (
             <>
               <Form>
                 <div className="flex flex-col gap-y-2">
@@ -84,7 +85,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     {issue.subject}
                   </h1>
                   <DoneSlider name="done_ratio" value={doneRatio} onChange={(e) => setDoneRatio(e.target.valueAsNumber)} className="mb-1" />
-                  <Field type="number" name="hours" title="Hours" placeholder="Hours" min="0" step="0.01" required as={InputField} size="sm" error={touched.hours && errors.hours} autoComplete="off" />
+                  <Field type="number" name="hours" title="Hours" placeholder="Hours" min="0" step="0.01" required as={InputField} size="sm" extraText={formatHours(values.hours) + " h"} error={touched.hours && errors.hours} autoComplete="off" />
                   <Field type="text" name="comments" title="Comments" placeholder="Comments" as={InputField} size="sm" error={touched.comments && errors.comments} autoFocus />
                   <Field type="select" name="activity_id" title="Activity" placeholder="Activity" required as={SelectField} size="sm" error={touched.activity_id && errors.activity_id}>
                     {timeEntryActivitiesQuery.data?.map((activity) => (

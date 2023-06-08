@@ -1,4 +1,5 @@
-import { faCheck, faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
+import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useState } from "react";
@@ -103,13 +104,9 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
       )}
       <Tooltip id="tooltip-stop-timer" place="top" delayShow={700} content="Click to stop timer" className="italic" />
       <FontAwesomeIcon icon={faStop} size="2x" className="text-red-500 cursor-pointer focus:outline-none" onClick={onStop} data-tooltip-id="tooltip-stop-timer" tabIndex={-1} />
-      <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} className="z-10 italic opacity-100">
-        Click to transfer{" "}
-        <span className={clsx("text-xs", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-semibold")}>{formatTime(settings.options.roundTimeNearestQuarterHour ? roundTimeNearestQuarterHour(timer) : timer)}</span> to
-        Redmine issue
-      </Tooltip>
+      <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} content="Click to add time spend entry" className="z-10 italic" />
       <FontAwesomeIcon
-        icon={faCheck}
+        icon={faCircleCheck}
         size="2x"
         className="text-green-600 cursor-pointer focus:outline-none"
         onClick={() => onDoneTimer(settings.options.roundTimeNearestQuarterHour ? roundTimeNearestQuarterHour(timer) : timer)}
