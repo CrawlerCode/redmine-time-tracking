@@ -2,9 +2,9 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import InputField from "../components/general/InputField";
-import LoadingSpinner from "../components/general/LoadingSpinner";
 import Toast from "../components/general/Toast";
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
+import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
 import useHotKey from "../hooks/useHotkey";
 import useMyIssues from "../hooks/useMyIssues";
 import useSettings from "../hooks/useSettings";
@@ -33,7 +33,7 @@ const IssuesPage = () => {
     <>
       {searching && <InputField icon={<FontAwesomeIcon icon={faSearch} />} placeholder="Search..." className="select-none mb-3" onChange={(e) => setSearch(e.target.value)} autoFocus autoComplete="off" />}
       <div className="flex flex-col gap-y-2">
-        {myIssuesQuery.isLoading && <LoadingSpinner />}
+        {myIssuesQuery.isLoading && <IssuesListSkeleton />}
         <IssuesList
           account={myIssuesQuery.account}
           issues={myIssuesQuery.data.sort((a, b) => {
