@@ -1,7 +1,12 @@
 import useSettings from "../../hooks/useSettings";
 import useStorage from "../../hooks/useStorage";
 import { TAccount, TIssue, TReference } from "../../types/redmine";
-import Issue, { IssueData } from "./Issue";
+import Issue from "./Issue";
+import { IssueTimerData } from "./IssueTimer";
+
+type IssueData = IssueTimerData & {
+  remember: boolean;
+};
 
 export type IssuesData = {
   [id: number]: IssueData;
@@ -60,8 +65,9 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
               <Issue
                 key={issue.id}
                 issue={issue}
-                data={data}
+                timerData={{ active: data.active, start: data.start, time: data.time }}
                 assignedToMe={issue.assigned_to?.id === account?.id ?? false}
+                remember={data.remember}
                 onStart={() => {
                   setIssuesData({
                     ...(settings.options.autoPauseOnSwitch

@@ -8,7 +8,7 @@ type PropTypes = {
   onCancel: () => void;
 };
 
-const EditTime = ({ initTime, onOverrideTime, onCancel }: PropTypes) => {
+const EditTimer = ({ initTime, onOverrideTime, onCancel }: PropTypes) => {
   const [h, setH] = useState(Math.floor(initTime / 1000 / 60 / 60).toString());
   const [m, setM] = useState(to2Digit(Math.floor((initTime / 1000 / 60) % 60)));
   const [s, setS] = useState(to2Digit(Math.floor((initTime / 1000) % 60)));
@@ -123,4 +123,4 @@ const to2Digit = (val: number) => {
   return `${val < 10 ? "0" : ""}${val}`;
 };
 
-export default EditTime;
+export default EditTimer;
