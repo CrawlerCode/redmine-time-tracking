@@ -27,6 +27,21 @@ export type TIssue = {
   closed_on?: string;
 };
 
+export type TTimeEntry = {
+  id: number;
+  project: TReference;
+  issue?: {
+    id: number;
+  };
+  user: TReference;
+  activity: TReference;
+  hours: number;
+  comments: string;
+  spent_on: string;
+  created_on: string;
+  updated_on: string;
+};
+
 export type TTimeEntryActivity = {
   id: number;
   name: string;

@@ -9,7 +9,7 @@ import { TIssue } from "../../types/redmine";
 import ContextMenu from "../general/ContextMenu";
 import KBD from "../general/KBD";
 import CreateTimeEntryModal from "./CreateTimeEntryModal";
-import IssueInfoToolkit from "./IssueInfoToolkit";
+import IssueInfoTooltip from "./IssueInfoTooltip";
 import IssueTimer, { IssueTimerData, TimerActions, TimerRef } from "./IssueTimer";
 
 export type IssueActions = {
@@ -140,7 +140,7 @@ const Issue = ({ issue, timerData, assignedToMe, favorite, remember, onStart, on
             </a>{" "}
             {issue.subject}
           </h1>
-          <IssueInfoToolkit issue={issue} />
+          <IssueInfoTooltip issue={issue} />
           <div className="flex flex-row justify-between gap-x-2">
             <div className="mt-1">
               <div className="w-[80px] bg-[#eeeeee]">

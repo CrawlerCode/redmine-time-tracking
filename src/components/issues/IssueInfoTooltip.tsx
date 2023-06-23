@@ -6,7 +6,7 @@ type PropTypes = {
   issue: TIssue;
 };
 
-const IssueInfoToolkit = ({ issue }: PropTypes) => {
+const IssueInfoTooltip = ({ issue }: PropTypes) => {
   return (
     <Tooltip id={`tooltip-issue-${issue.id}`} place="right" className="z-10 opacity-100">
       <div className="relative max-w-[210px]">
@@ -48,4 +48,4 @@ const IssueInfoToolkit = ({ issue }: PropTypes) => {
   );
 };
 
-export default IssueInfoToolkit;
+export default IssueInfoTooltip;

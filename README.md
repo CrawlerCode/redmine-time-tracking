@@ -27,6 +27,7 @@
 - Search for issue (press `CTRL` + `K` or `CTRL` + `F`)
 - Remember and forgot issue (not assigned to you)
 - Favorite and unfavorite issue
+- View time entries overview
 - Dark & light mode (system default)
 
 # Screenshots

@@ -1,10 +1,11 @@
-import { faGear, faList } from "@fortawesome/free-solid-svg-icons";
+import { faGear, faList, faStopwatch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Toast from "./components/general/Toast";
 import IssuesPage from "./pages/IssuesPage";
 import SettingsPage from "./pages/SettingsPage";
+import TimePage from "./pages/TimePage";
 
 function App() {
   const location = useLocation();
@@ -34,6 +35,20 @@ function App() {
           </li>
           <li>
             <Link
+              to="/time"
+              className={clsx(
+                "inline-flex items-center gap-x-1 p-2 rounded-t-lg",
+                location.pathname === "/time" ? "text-primary-600 border-b-2 border-primary-600 dark:text-primary-500 dark:border-primary-500" : "border-b-2 border-transparent hover:text-gray-600 hover:border-gray-30 dark:hover:text-gray-300",
+                "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-600 select-none"
+              )}
+              tabIndex={-1}
+            >
+              <FontAwesomeIcon icon={faStopwatch} />
+              Time
+            </Link>
+          </li>
+          <li>
+            <Link
               to="/settings"
               className={clsx(
                 "inline-flex items-center gap-x-1 p-2 rounded-t-lg",
@@ -52,6 +67,7 @@ function App() {
         <Routes>
           <Route index element={<Navigate to="/issues" replace />} />
           <Route path="/issues" element={<IssuesPage />} />
+          <Route path="/time" element={<TimePage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<Toast type="error" message="Page not found!" allowClose={false} />} />
         </Routes>
