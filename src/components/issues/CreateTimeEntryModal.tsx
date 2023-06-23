@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, isAxiosError } from "axios";
 import clsx from "clsx";
+import { startOfDay } from "date-fns";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
@@ -8,10 +9,12 @@ import { createTimeEntry, getTimeEntryActivities, updateIssue } from "../../api/
 import useSettings from "../../hooks/useSettings";
 import { TCreateTimeEntry, TIssue, TRedmineError } from "../../types/redmine";
 import { formatHours } from "../../utils/date";
+import DateField from "../general/DateField";
 import InputField from "../general/InputField";
 import Modal from "../general/Modal";
 import SelectField from "../general/SelectField";
 import Toast from "../general/Toast";
+import TimeEntryPreview from "../time/TimeEntryPreview";
 import DoneSlider from "./DoneSlider";
 
 type PropTypes = {
@@ -57,11 +60,13 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
           innerRef={formik}
           initialValues={{
             issue_id: issue.id,
+            spent_on: new Date(),
             activity_id: undefined,
             hours: time / 1000 / 60 / 60,
             comments: "",
           }}
           validationSchema={Yup.object({
+            spent_on: Yup.date().max(new Date(), "Can not be in the future"),
             activity_id: Yup.number().required("Activity is required"),
             hours: Yup.number().required("Hours is required").min(0.01, "Must be greater than 0"),
           })}
@@ -85,6 +90,10 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     {issue.subject}
                   </h1>
                   <DoneSlider name="done_ratio" value={doneRatio} onChange={(e) => setDoneRatio(e.target.valueAsNumber)} className="mb-1" />
+
+                  {values.spent_on && <TimeEntryPreview date={startOfDay(values.spent_on)} previewHours={values.hours} />}
+
+                  <Field type="date" name="spent_on" title="Date" placeholder="Date" required as={DateField} size="sm" error={touched.spent_on && errors.spent_on} options={{ maxDate: new Date() }} />
                   <Field type="number" name="hours" title="Hours" placeholder="Hours" min="0" step="0.01" required as={InputField} size="sm" extraText={formatHours(values.hours) + " h"} error={touched.hours && errors.hours} autoComplete="off" />
                   <Field type="text" name="comments" title="Comments" placeholder="Comments" as={InputField} size="sm" error={touched.comments && errors.comments} autoFocus />
                   <Field type="select" name="activity_id" title="Activity" placeholder="Activity" required as={SelectField} size="sm" error={touched.activity_id && errors.activity_id}>

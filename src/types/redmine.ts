@@ -51,6 +51,7 @@ export type TTimeEntryActivity = {
 
 export type TCreateTimeEntry = {
   issue_id: number;
+  spent_on?: Date;
   activity_id?: number;
   hours: number;
   comments?: string;

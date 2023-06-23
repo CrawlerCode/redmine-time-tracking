@@ -35,7 +35,10 @@ export const getAllMyTimeEntries = async (from: Date, to: Date, offset = 0, limi
 export const createTimeEntry = async (entry: TCreateTimeEntry) => {
   return instance
     .post("/time_entries.json", {
-      time_entry: entry,
+      time_entry: {
+        ...entry,
+        spent_on: entry.spent_on ? formatISO(entry.spent_on, { representation: "date" }) : undefined,
+      },
     })
     .then((res) => res.data);
 };

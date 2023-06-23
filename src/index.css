@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-primary: theme("colors.primary.DEFAULT");
+  --color-primary-900: theme("colors.primary.900");
+}
+
 @layer utilities {
   input[type="number"].appearance-none::-webkit-inner-spin-button,
   input[type="number"].appearance-none::-webkit-outer-spin-button {
@@ -14,7 +19,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #1e3a8a;
+  background-color: var(--color-primary-900);
   border-radius: 3px;
 }
 
