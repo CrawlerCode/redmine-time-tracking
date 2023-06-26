@@ -1,4 +1,4 @@
-import { addDays, format, isFuture, isWeekend, parseISO, previousMonday, startOfDay, subWeeks } from "date-fns";
+import { addDays, format, isFuture, isMonday, isWeekend, parseISO, previousMonday, startOfDay, subWeeks } from "date-fns";
 import { TTimeEntry } from "../../types/redmine";
 import TimeEntry from "./TimeEntry";
 
@@ -39,10 +39,13 @@ const TimeEntryList = ({ entries }: PropTypes) => {
 
   const maxHours = Math.max(...groupedEntries.map(({ hours }) => hours));
 
+  const today = startOfDay(new Date());
+  const monday = isMonday(today) ? today : previousMonday(today);
+
   return (
     <>
       {Array(2)
-        .fill(previousMonday(startOfDay(new Date())))
+        .fill(monday)
         .map((d, i) => subWeeks(d, i))
         .map((monday) => {
           const days = Array(7)
