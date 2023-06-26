@@ -8,7 +8,7 @@ const TimeEntryListSkeleton = () => {
               <h1 className="h-4 w-40 bg-gray-200 dark:bg-gray-700"></h1>
               <span className="rounded h-5 w-12 bg-gray-200 dark:bg-gray-700"></span>
             </div>
-            {[...Array(5).keys()].map((d) => {
+            {[...Array(5).keys()].map(() => {
               return (
                 <div className="grid grid-cols-10 items-center gap-x-1">
                   <h4 className="col-span-1 h-3 w-8 bg-gray-200 dark:bg-gray-700"></h4>
