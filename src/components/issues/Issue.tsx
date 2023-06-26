@@ -14,21 +14,21 @@ import IssueTimer, { IssueTimerData, TimerActions, TimerRef } from "./IssueTimer
 
 export type IssueActions = {
   onRemember: () => void;
-  onForgot: () => void;
-  onFavorite: () => void;
-  onUnfavorite: () => void;
+  onForget: () => void;
+  onPin: () => void;
+  onUnpin: () => void;
 };
 
 type PropTypes = {
   issue: TIssue;
   timerData: IssueTimerData;
   assignedToMe: boolean;
-  favorite: boolean;
-  remember: boolean;
+  pinned: boolean;
+  remembered: boolean;
 } & Omit<TimerActions, "onDoneTimer"> &
   IssueActions;
 
-const Issue = ({ issue, timerData, assignedToMe, favorite, remember, onStart, onPause, onStop, onOverrideTime, onRemember, onForgot, onFavorite, onUnfavorite }: PropTypes) => {
+const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, onPause, onStop, onOverrideTime, onRemember, onForget, onPin, onUnpin }: PropTypes) => {
   const { settings } = useSettings();
 
   const timerRef = useRef<TimerRef>(null);
@@ -76,30 +76,30 @@ const Issue = ({ issue, timerData, assignedToMe, favorite, remember, onStart, on
           ],
           [
             {
-              name: "Favorite issue",
+              name: "Pin issue",
               icon: <FontAwesomeIcon icon={faStar} />,
-              disabled: favorite,
-              onClick: onFavorite,
+              disabled: pinned,
+              onClick: onPin,
             },
             {
-              name: "Unfavorite issue",
+              name: "Unpin issue",
               icon: <FontAwesomeIcon icon={faStarRegular} />,
-              disabled: !favorite,
-              onClick: onUnfavorite,
+              disabled: !pinned,
+              onClick: onUnpin,
             },
           ],
           [
             {
               name: "Remember issue",
               icon: <FontAwesomeIcon icon={faBookmark} />,
-              disabled: assignedToMe || remember,
+              disabled: assignedToMe || remembered,
               onClick: onRemember,
             },
             {
-              name: "Forgot issue",
+              name: "Forget issue",
               icon: <FontAwesomeIcon icon={faBan} />,
-              disabled: assignedToMe || !remember,
-              onClick: onForgot,
+              disabled: assignedToMe || !remembered,
+              onClick: onForget,
             },
           ],
         ]}
@@ -131,8 +131,8 @@ const Issue = ({ issue, timerData, assignedToMe, favorite, remember, onStart, on
         >
           <h1
             className={clsx("mb-1 truncate", {
-              "me-4": (favorite && assignedToMe) || (!favorite && !assignedToMe),
-              "me-9": favorite && !assignedToMe,
+              "me-4": (pinned && assignedToMe) || (!pinned && !assignedToMe),
+              "me-9": pinned && !assignedToMe,
             })}
           >
             <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" data-tooltip-id={`tooltip-issue-${issue.id}`}>
@@ -154,7 +154,7 @@ const Issue = ({ issue, timerData, assignedToMe, favorite, remember, onStart, on
             </div>
           </div>
           <div className="absolute top-2 right-2 flex justify-end items-start gap-x-1">
-            {favorite && <FontAwesomeIcon icon={faStar} className="text-gray-300 dark:text-gray-600 focus:outline-none" tabIndex={-1} />}
+            {pinned && <FontAwesomeIcon icon={faStar} className="text-gray-300 dark:text-gray-600 focus:outline-none" tabIndex={-1} />}
             {!assignedToMe && (
               <>
                 <Tooltip id="tooltip-not-assigned-to-me" place="left" delayShow={700} content="Issue is not assigned to you" className="italic" />

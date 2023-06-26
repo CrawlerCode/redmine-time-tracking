@@ -55,7 +55,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
 
   return (
     <>
-      <Modal title="Add time spent" onClose={onClose}>
+      <Modal title="Add spent time" onClose={onClose}>
         <Formik
           innerRef={formik}
           initialValues={{

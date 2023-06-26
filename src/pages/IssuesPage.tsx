@@ -56,11 +56,12 @@ const IssuesPage = () => {
       {searching && <InputField ref={searchRef} icon={<FontAwesomeIcon icon={faSearch} />} placeholder="Search..." className="select-none mb-3" onChange={(e) => setSearch(e.target.value)} autoFocus autoComplete="off" />}
       <div className="flex flex-col gap-y-2">
         {myIssuesQuery.isLoading && <IssuesListSkeleton />}
+
         <IssuesList
           account={myIssuesQuery.account}
           issues={myIssuesQuery.data.sort((a, b) => {
-            const favA = issuesData.data[a.id]?.favorite;
-            const favB = issuesData.data[b.id]?.favorite;
+            const favA = issuesData.data[a.id]?.pinned || issuesData.data[a.id]?.favorite;
+            const favB = issuesData.data[b.id]?.pinned || issuesData.data[b.id]?.favorite;
             if (favA && favB) return new Date(a.updated_on).getTime() - new Date(a.updated_on).getTime();
             return favA ? -1 : 1;
           })}

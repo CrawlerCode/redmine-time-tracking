@@ -25,8 +25,8 @@
 - Update done ratio
 - Round timer to nearest 15 min
 - Search for issue (press `CTRL` + `K` or `CTRL` + `F`)
-- Remember and forgot issue (not assigned to you)
-- Favorite and unfavorite issue
+- Remember and forget issue (not assigned to you)
+- Pin and unpin issue
 - View time entries overview
 - Dark & light mode (system default)
 

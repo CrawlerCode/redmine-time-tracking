@@ -104,7 +104,7 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
       )}
       <Tooltip id="tooltip-stop-timer" place="top" delayShow={700} content="Click to stop timer" className="italic" />
       <FontAwesomeIcon icon={faStop} size="2x" className="text-red-500 cursor-pointer focus:outline-none" onClick={onStop} data-tooltip-id="tooltip-stop-timer" tabIndex={-1} />
-      <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} content="Click to add time spend entry" className="z-10 italic" />
+      <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} content="Click to add spent time" className="z-10 italic" />
       <FontAwesomeIcon
         icon={faCircleCheck}
         size="2x"

@@ -48,7 +48,7 @@ const SettingsPage = () => {
                 <h2 className="text-lg font-semibold">Options:</h2>
                 <Field type="checkbox" name="options.autoPauseOnSwitch" title="Auto pause" description="Automatic pause timers when changing issue" as={CheckBox} />
                 <Field type="checkbox" name="options.extendedSearch" title="Extended search" description="Allows to search issues that are not assigned to you" as={CheckBox} />
-                <Field type="checkbox" name="options.roundTimeNearestQuarterHour" title="Round nearest 15 min" description="Round timer to nearest quarter hour" as={CheckBox} />
+                <Field type="checkbox" name="options.roundTimeNearestQuarterHour" title="Round to nearest 15 min" description="Round timer to nearest quarter hour" as={CheckBox} />
                 <button
                   type="button"
                   className={clsx(

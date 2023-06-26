@@ -5,8 +5,12 @@ import Issue from "./Issue";
 import { IssueTimerData } from "./IssueTimer";
 
 type IssueData = IssueTimerData & {
-  favorite: boolean;
-  remember: boolean;
+  pinned: boolean;
+  remembered: boolean;
+} & {
+  // TODO: remove me later
+  favorite?: boolean;
+  remember?: boolean;
 };
 
 export type IssuesData = {
@@ -60,17 +64,29 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
               active: false,
               start: undefined,
               time: 0,
-              favorite: false,
-              remember: false,
+              pinned: false,
+              remembered: false,
             };
+            /**
+             * support old data schema
+             * TODO: remove me later
+             */
+            if (data.favorite) {
+              data.pinned = true;
+              delete data.favorite;
+            }
+            if (data.remember) {
+              data.remembered = true;
+              delete data.remember;
+            }
             return (
               <Issue
                 key={issue.id}
                 issue={issue}
                 timerData={{ active: data.active, start: data.start, time: data.time }}
                 assignedToMe={issue.assigned_to?.id === account?.id ?? false}
-                favorite={data.favorite}
-                remember={data.remember}
+                pinned={data.pinned}
+                remembered={data.remembered}
                 onStart={() => {
                   setIssuesData({
                     ...(settings.options.autoPauseOnSwitch
@@ -144,30 +160,30 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
                     },
                   });
                 }}
-                onForgot={() => {
+                onForget={() => {
                   setIssuesData({
                     ...issuesData,
                     [issue.id]: {
                       ...data,
-                      remember: false,
+                      remembered: false,
                     },
                   });
                 }}
-                onFavorite={() => {
+                onPin={() => {
                   setIssuesData({
                     ...issuesData,
                     [issue.id]: {
                       ...data,
-                      favorite: true,
+                      remembered: true,
                     },
                   });
                 }}
-                onUnfavorite={() => {
+                onUnpin={() => {
                   setIssuesData({
                     ...issuesData,
                     [issue.id]: {
                       ...data,
-                      favorite: false,
+                      pinned: false,
                     },
                   });
                 }}

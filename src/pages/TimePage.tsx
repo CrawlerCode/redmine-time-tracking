@@ -14,7 +14,8 @@ const TimePage = () => {
     <>
       <div className="flex flex-col gap-y-2">
         {myTimeEntriesQuery.isLoading && <IssuesListSkeleton />}
-        <TimeEntryList entries={myTimeEntriesQuery.data} />
+
+        {!myTimeEntriesQuery.isLoading && <TimeEntryList entries={myTimeEntriesQuery.data} />}
 
         {myTimeEntriesQuery.isError && <Toast type="error" message="Failed to load data" allowClose={false} />}
       </div>
