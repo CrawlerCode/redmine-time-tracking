@@ -8,7 +8,7 @@ type PropTypes = {
 };
 
 const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
-  const hours = entries.reduce((sum, entry) => sum + entry.hours, 0);
+  const sumHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
   return (
     <div className="flex gap-x-0.5 items-center">
       {entries.map((entry) => (
@@ -54,7 +54,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
       <div
         className="h-3 bg-gray-400/40 dark:bg-gray-700/40 rounded"
         style={{
-          width: `${((maxHours - hours - (previewHours ?? 0)) / maxHours) * 100}%`,
+          width: `${((maxHours - sumHours - (previewHours ?? 0)) / maxHours) * 100}%`,
           backgroundSize: "1rem 1rem",
           backgroundImage: "linear-gradient(45deg,rgba(255,255,255,.05) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.05) 50%,rgba(255,255,255,.05) 75%,transparent 75%,transparent)",
         }}

@@ -156,7 +156,7 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
                     ...issuesData,
                     [issue.id]: {
                       ...data,
-                      remember: true,
+                      remembered: true,
                     },
                   });
                 }}
@@ -174,7 +174,7 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
                     ...issuesData,
                     [issue.id]: {
                       ...data,
-                      remembered: true,
+                      pinned: true,
                     },
                   });
                 }}

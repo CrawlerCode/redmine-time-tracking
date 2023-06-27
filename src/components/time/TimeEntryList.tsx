@@ -79,7 +79,7 @@ const TimeEntryList = ({ entries }: PropTypes) => {
                 return (
                   <div className="grid grid-cols-10 items-center gap-x-1">
                     <h4 className="col-span-1 text-sm">{format(date, "EEE")}</h4>
-                    <h3 className="col-span-2 text-sm text-end font-semibold truncate">{hours} h</h3>
+                    <h3 className="col-span-2 text-sm text-end font-semibold truncate text-clip">{hours} h</h3>
                     <div className="col-span-7">
                       <TimeEntry entries={groupEntries} maxHours={maxHours} />
                     </div>
