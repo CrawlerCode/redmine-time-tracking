@@ -132,7 +132,7 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
                       time: 0,
                     },
                   };
-                  if (!data.favorite && !data.remember) {
+                  if (!data.pinned && !data.remembered) {
                     delete newIssuesData[issue.id];
                   }
                   setIssuesData(newIssuesData);

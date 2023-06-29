@@ -64,6 +64,10 @@ const SettingsPage = () => {
           </>
         )}
       </Formik>
+      <div className="absolute bottom-0 w-full flex flex-col items-center p-2">
+        <g>{chrome.runtime.getManifest().name}</g>
+        <p>Version: {chrome.runtime.getManifest().version}</p>
+      </div>
       {saved && <Toast type="success" message="Settings saved!" onClose={() => setSaved(false)} />}
     </>
   );
