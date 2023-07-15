@@ -71,8 +71,9 @@ export type TSearchResult = {
 
 export type TAccount = {
   id: number;
-  fistname: string;
-  lastname: string;
   login: string;
+  firstname: string;
+  lastname: string;
   mail: string;
+  last_login_on: string;
 };

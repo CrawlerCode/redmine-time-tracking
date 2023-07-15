@@ -1,11 +1,9 @@
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, useState } from "react";
-import InputField from "../components/general/InputField";
+import { useEffect, useState } from "react";
 import Toast from "../components/general/Toast";
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
 import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
-import useHotKey from "../hooks/useHotkey";
+import Search from "../components/issues/Search";
+import useMyAccount from "../hooks/useMyAccount";
 import useMyIssues from "../hooks/useMyIssues";
 import useSettings from "../hooks/useSettings";
 import useStorage from "../hooks/useStorage";
@@ -15,32 +13,15 @@ const IssuesPage = () => {
 
   const issuesData = useStorage<IssuesData>("issues", {});
 
-  const searchRef = useRef<HTMLInputElement>(null);
-  const [searching, setSearching] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<{ searching: boolean; query: string }>({ searching: false, query: "" });
+
   const myIssuesQuery = useMyIssues(
     Object.keys(issuesData.data)
       .map((id) => Number(id))
       .filter((id) => issuesData.data[id].remembered || issuesData.data[id].remember || issuesData.data[id].active || issuesData.data[id].time > 0),
-    searching ? search : ""
+    search.searching ? search.query : ""
   );
-
-  // hotkeys
-  useHotKey(
-    () => {
-      setSearching(true);
-      searchRef.current?.focus();
-    },
-    { ctrl: true, key: "k" }
-  );
-  useHotKey(
-    () => {
-      setSearching(true);
-      searchRef.current?.focus();
-    },
-    { ctrl: true, key: "f" }
-  );
-  useHotKey(() => setSearching(false), { key: "Escape" }, searching);
+  const myAccount = useMyAccount();
 
   useEffect(() => {
     const count = Object.values(issuesData.data).reduce((count, data) => count + (data.active ? 1 : 0), 0);
@@ -53,13 +34,13 @@ const IssuesPage = () => {
 
   return (
     <>
-      {searching && <InputField ref={searchRef} icon={<FontAwesomeIcon icon={faSearch} />} placeholder="Search..." className="select-none mb-3" onChange={(e) => setSearch(e.target.value)} autoFocus autoComplete="off" />}
+      <Search onSearch={setSearch} />
       <div className="flex flex-col gap-y-2">
         {myIssuesQuery.isLoading && <IssuesListSkeleton />}
 
-        <IssuesList account={myIssuesQuery.account} issues={myIssuesQuery.data} issuesData={issuesData} />
+        <IssuesList account={myAccount.data} issues={myIssuesQuery.data} issuesData={issuesData} />
 
-        {searching && settings.options.extendedSearch && (
+        {search.searching && settings.options.extendedSearch && (
           <>
             <div className="relative">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -70,7 +51,7 @@ const IssuesPage = () => {
               </div>
             </div>
 
-            <IssuesList account={myIssuesQuery.account} issues={myIssuesQuery.extendedSearch} issuesData={issuesData} />
+            <IssuesList account={myAccount.data} issues={myIssuesQuery.extendedSearch} issuesData={issuesData} />
           </>
         )}
 

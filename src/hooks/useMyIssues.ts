@@ -1,16 +1,11 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { getAllMyOpenIssues, getMyAccount, getOpenIssues, searchOpenIssues } from "../api/redmine";
+import { getAllMyOpenIssues, getOpenIssues, searchOpenIssues } from "../api/redmine";
 import useDebounce from "./useDebounce";
 import useSettings from "./useSettings";
 
 const useMyIssues = (additionalIssuesIds: number[], search: string) => {
   const { settings } = useSettings();
-
-  const myAccountQuery = useQuery({
-    queryKey: ["myAccount"],
-    queryFn: getMyAccount,
-  });
 
   const issuesQuery = useInfiniteQuery({
     queryKey: ["issues"],
@@ -60,7 +55,6 @@ const useMyIssues = (additionalIssuesIds: number[], search: string) => {
   let extendedSearchIssues = extendedSearchIssuesQuery.data ?? [];
 
   return {
-    account: myAccountQuery.data,
     data: issues,
     extendedSearch: extendedSearchIssues,
     isLoading: issuesQuery.isInitialLoading || additionalIssuesQuery.isInitialLoading,
