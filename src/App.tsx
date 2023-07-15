@@ -1,11 +1,13 @@
 import { faGear, faList, faStopwatch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
+import { Suspense, lazy } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Toast from "./components/general/Toast";
-import IssuesPage from "./pages/IssuesPage";
-import SettingsPage from "./pages/SettingsPage";
-import TimePage from "./pages/TimePage";
+
+const IssuesPage = lazy(() => import("./pages/IssuesPage"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage"));
+const TimePage = lazy(() => import("./pages/TimePage"));
 
 function App() {
   const location = useLocation();
@@ -66,9 +68,32 @@ function App() {
       <main className="h-[500px] overflow-y-auto p-2">
         <Routes>
           <Route index element={<Navigate to="/issues" replace />} />
-          <Route path="/issues" element={<IssuesPage />} />
-          <Route path="/time" element={<TimePage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+
+          <Route
+            path="/issues"
+            element={
+              <Suspense>
+                <IssuesPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/time"
+            element={
+              <Suspense>
+                <TimePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <Suspense>
+                <SettingsPage />
+              </Suspense>
+            }
+          />
+
           <Route path="*" element={<Toast type="error" message="Page not found!" allowClose={false} />} />
         </Routes>
       </main>
