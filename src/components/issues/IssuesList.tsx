@@ -23,11 +23,18 @@ type PropTypes = {
   issuesData: ReturnType<typeof useStorage<IssuesData>>;
 };
 
-const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: setIssuesData } }: PropTypes) => {
+const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData, setData: setIssuesData } }: PropTypes) => {
   const { settings } = useSettings();
 
+  const sortedIssues = rawIssues.sort((a, b) => {
+    const pinnedA = issuesData[a.id]?.pinned || issuesData[a.id]?.favorite;
+    const pinnedB = issuesData[b.id]?.pinned || issuesData[b.id]?.favorite;
+    if (pinnedA && pinnedB) return new Date(a.updated_on).getTime() - new Date(a.updated_on).getTime();
+    return pinnedA ? -1 : 1;
+  });
+
   const groupedIssues = Object.values(
-    issues.reduce(
+    sortedIssues.reduce(
       (
         result: {
           [id: number]: {
@@ -192,7 +199,7 @@ const IssuesList = ({ account, issues, issuesData: { data: issuesData, setData: 
           })}
         </>
       ))}
-      {issues.length === 0 && <p className="text-center">No issues</p>}
+      {rawIssues.length === 0 && <p className="text-center">No issues</p>}
     </>
   );
 };

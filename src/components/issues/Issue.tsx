@@ -154,7 +154,12 @@ const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, on
             </div>
           </div>
           <div className="absolute top-2 right-2 flex justify-end items-start gap-x-1">
-            {pinned && <FontAwesomeIcon icon={faStar} className="text-gray-300 dark:text-gray-600 focus:outline-none" tabIndex={-1} />}
+            {pinned && (
+              <>
+                <Tooltip id="tooltip-pinned" place="left" delayShow={700} content="Issue is pinned at the top" className="italic" />
+                <FontAwesomeIcon icon={faStar} className="text-gray-300 dark:text-gray-600 focus:outline-none" data-tooltip-id="tooltip-pinned" tabIndex={-1} />
+              </>
+            )}
             {!assignedToMe && (
               <>
                 <Tooltip id="tooltip-not-assigned-to-me" place="left" delayShow={700} content="Issue is not assigned to you" className="italic" />
