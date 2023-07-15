@@ -3,19 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { forwardRef, useId } from "react";
 
-interface PropTypes extends Omit<React.ComponentProps<"input">, "size"> {
+interface PropTypes extends Omit<React.ComponentProps<"input">, "id" | "size"> {
   size?: "sm" | "md";
   icon?: React.ReactNode;
   error?: string;
   extraText?: string;
 }
 
-const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", icon, error, extraText, className, ...props }: PropTypes, ref) => {
+const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title, icon, error, extraText, className, ...props }: PropTypes, ref) => {
   const id = useId();
 
   return (
     <div>
-      {props.title && (
+      {title && (
         <label
           htmlFor={id}
           className={clsx("block font-medium text-gray-900 dark:text-white mb-1", {
@@ -23,7 +23,7 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", icon,
             "text-sm": size === "md",
           })}
         >
-          {props.title}
+          {title}
           {props.required && <FontAwesomeIcon icon={faAsterisk} size="2xs" className="text-red-600 ml-1" />}
         </label>
       )}
@@ -37,7 +37,7 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", icon,
           className={clsx(
             "text-sm rounded-lg block w-full",
             "bg-gray-50 border border-gray-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
-            "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-600",
+            "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
             {
               "border-red-500 text-red-900 placeholder-red-700 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500": error !== undefined,
               "pl-8": !!icon,

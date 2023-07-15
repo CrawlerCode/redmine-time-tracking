@@ -7,19 +7,19 @@ import Flatpickr, { DateTimePickerProps } from "react-flatpickr";
 import "../../assets/themes/dark.css";
 import "../../assets/themes/light.css";
 
-interface PropTypes extends Omit<DateTimePickerProps, "size" | "onChange"> {
+interface PropTypes extends Omit<DateTimePickerProps, "id" | "size" | "onChange"> {
   size?: "sm" | "md";
   icon?: React.ReactNode;
   error?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
 }
 
-const DateField = ({ size = "md", icon, error, className, value, onChange, onBlur, ...props }: PropTypes) => {
+const DateField = ({ size = "md", title, icon, error, className, value, onChange, onBlur, ...props }: PropTypes) => {
   const id = useId();
 
   return (
     <div>
-      {props.title && (
+      {title && (
         <label
           htmlFor={id}
           className={clsx("block font-medium text-gray-900 dark:text-white mb-1", {
@@ -27,7 +27,7 @@ const DateField = ({ size = "md", icon, error, className, value, onChange, onBlu
             "text-sm": size === "md",
           })}
         >
-          {props.title}
+          {title}
           {props.required && <FontAwesomeIcon icon={faAsterisk} size="2xs" className="text-red-600 ml-1" />}
         </label>
       )}
@@ -55,7 +55,7 @@ const DateField = ({ size = "md", icon, error, className, value, onChange, onBlu
           className={clsx(
             "text-sm rounded-lg block w-full",
             "bg-gray-50 border border-gray-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
-            "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-600",
+            "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
             {
               "border-red-500 text-red-900 placeholder-red-700 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500": error !== undefined,
               "pl-8": !!icon,

@@ -36,7 +36,7 @@ const Toast = ({ type, message, allowClose = true, onClose }: PropTypes) => {
         {allowClose && (
           <button
             type="button"
-            className="ml-auto text-gray-400 hover:text-gray-900 rounded-lg p-1.5 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-600"
+            className="ml-auto text-gray-400 hover:text-gray-900 rounded-lg p-1.5 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800"
             aria-label="Close"
             onClick={onClose}
           >

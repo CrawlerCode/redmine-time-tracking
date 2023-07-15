@@ -29,7 +29,7 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel }: PropTypes) => {
         className={clsx(
           "text-lg rounded-md w-4 text-center appearance-none",
           "bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400",
-          "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-600",
+          "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
           initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
         )}
         /**
@@ -66,7 +66,7 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel }: PropTypes) => {
         className={clsx(
           "text-lg rounded-md w-6 text-center appearance-none",
           "bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400",
-          "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-600",
+          "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
           initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
         )}
         onChange={(e) => {
@@ -92,7 +92,7 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel }: PropTypes) => {
         className={clsx(
           "text-lg rounded-md w-6 text-center appearance-none",
           "bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400",
-          "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-600",
+          "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
           initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
         )}
         onChange={(e) => {

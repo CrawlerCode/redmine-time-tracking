@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Toast from "../components/general/Toast";
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
 import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
-import Search from "../components/issues/Search";
+import Search, { SearchQuery, defaultSearchQuery } from "../components/issues/Search";
 import useMyAccount from "../hooks/useMyAccount";
 import useMyIssues from "../hooks/useMyIssues";
 import useSettings from "../hooks/useSettings";
@@ -13,13 +13,13 @@ const IssuesPage = () => {
 
   const issuesData = useStorage<IssuesData>("issues", {});
 
-  const [search, setSearch] = useState<{ searching: boolean; query: string }>({ searching: false, query: "" });
+  const [search, setSearch] = useState<SearchQuery>(defaultSearchQuery);
 
   const myIssuesQuery = useMyIssues(
     Object.keys(issuesData.data)
       .map((id) => Number(id))
       .filter((id) => issuesData.data[id].remembered || issuesData.data[id].remember || issuesData.data[id].active || issuesData.data[id].time > 0),
-    search.searching ? search.query : ""
+    search
   );
   const myAccount = useMyAccount();
 
