@@ -24,7 +24,7 @@
 - Create entry for time spent in Redmine issue
 - Update done ratio
 - Round timer to nearest 15 min
-- Search for issue (press `CTRL` + `K` or `CTRL` + `F`)
+- Search for issue or project (press `CTRL` + `K` or `CTRL` + `F`)
 - Remember and forget issue (not assigned to you)
 - Pin and unpin issue
 - View time entries overview
@@ -37,7 +37,7 @@
 ![issues-search](screenshots/issues-search-dark.png)
 ![issues-create-time-spent](screenshots/issues-create-time-spent-dark.png)
 ![issues-context-menu](screenshots/issues-context-menu-dark.png)
-![issues-edit](screenshots/issues-edit-dark.png)
+![issues-edit](screenshots/time-dark.png)
 
 # Credits
 
