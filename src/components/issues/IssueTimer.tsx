@@ -121,4 +121,6 @@ const calcTime = (time: number, start?: number) => {
   return time + (start ? new Date().getTime() - start : 0);
 };
 
+IssueTimer.displayName = "IssueTimer";
+
 export default IssueTimer;

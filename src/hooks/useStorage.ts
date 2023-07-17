@@ -9,6 +9,7 @@ const useStorage = <T>(name: string, defaultValue: T) => {
       if (result[name]) {
         try {
           setStorageData(JSON.parse(result[name]));
+          // eslint-disable-next-line no-empty
         } catch (error) {}
       }
     });

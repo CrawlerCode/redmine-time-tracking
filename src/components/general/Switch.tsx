@@ -25,7 +25,7 @@ const Switch = ({ size = "md", name, value, onChange, options, className }: Prop
       )}
     >
       {options.map((option) => (
-        <div className="flex justify-center">
+        <div className="flex justify-center" key={option.value}>
           <button
             type="button"
             className={clsx("w-full rounded-full", "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800", {

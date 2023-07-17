@@ -64,4 +64,6 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title
   );
 });
 
+InputField.displayName = "InputField";
+
 export default InputField;

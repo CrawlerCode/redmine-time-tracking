@@ -98,6 +98,7 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
                   setIssuesData({
                     ...(settings.options.autoPauseOnSwitch
                       ? Object.entries(issuesData).reduce((res, [id, val]) => {
+                          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                           // @ts-ignore
                           res[id] = val.active
                             ? {

@@ -14,7 +14,7 @@ const useMyTimeEntries = (from: Date, to: Date) => {
     if (entriesQuery.hasNextPage && !entriesQuery.isFetchingNextPage) entriesQuery.fetchNextPage();
   }, [entriesQuery.hasNextPage, entriesQuery.isFetchingNextPage, entriesQuery.fetchNextPage]);
 
-  let entries = entriesQuery.data?.pages?.flat() ?? [];
+  const entries = entriesQuery.data?.pages?.flat() ?? [];
 
   return {
     data: entries,
