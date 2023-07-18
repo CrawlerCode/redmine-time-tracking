@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Toast from "../components/general/Toast";
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
 import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
-import Search, { SearchQuery, defaultSearchQuery } from "../components/issues/Search";
+import Search, { SearchQuery, SearchRef, defaultSearchQuery } from "../components/issues/Search";
 import useMyAccount from "../hooks/useMyAccount";
 import useMyIssues from "../hooks/useMyIssues";
 import useSettings from "../hooks/useSettings";
@@ -13,6 +13,7 @@ const IssuesPage = () => {
 
   const issuesData = useStorage<IssuesData>("issues", {});
 
+  const searchRef = useRef<SearchRef>(null);
   const [search, setSearch] = useState<SearchQuery>(defaultSearchQuery);
 
   const myIssuesQuery = useMyIssues(
@@ -34,11 +35,11 @@ const IssuesPage = () => {
 
   return (
     <>
-      <Search onSearch={setSearch} />
+      <Search ref={searchRef} onSearch={setSearch} />
       <div className="flex flex-col gap-y-2">
         {myIssuesQuery.isLoading && <IssuesListSkeleton />}
 
-        <IssuesList account={myAccount.data} issues={myIssuesQuery.data} issuesData={issuesData} />
+        <IssuesList account={myAccount.data} issues={myIssuesQuery.data} issuesData={issuesData} onSearchInProject={(project) => searchRef.current?.searchInProject(project)} />
 
         {search.searching && settings.options.extendedSearch && (
           <>
@@ -51,7 +52,7 @@ const IssuesPage = () => {
               </div>
             </div>
 
-            <IssuesList account={myAccount.data} issues={myIssuesQuery.extendedSearch} issuesData={issuesData} />
+            <IssuesList account={myAccount.data} issues={myIssuesQuery.extendedSearch} issuesData={issuesData} onSearchInProject={(project) => searchRef.current?.searchInProject(project)} />
           </>
         )}
 

@@ -6,7 +6,7 @@ interface PropTypes extends Omit<React.ComponentProps<"input">, "id" | "type"> {
   description?: string;
 }
 
-const CheckBox = ({ title, description, ...props }: PropTypes) => {
+const CheckBox = ({ title, description, className, ...props }: PropTypes) => {
   const id = useId();
 
   return (
@@ -19,7 +19,7 @@ const CheckBox = ({ title, description, ...props }: PropTypes) => {
           className={clsx(
             "w-4 h-4 accent-primary-600 bg-gray-100 border-gray-300 rounded dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600",
             "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
-            props.className
+            className
           )}
         />
       </div>

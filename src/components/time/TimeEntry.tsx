@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Tooltip } from "react-tooltip";
 import { TTimeEntry } from "../../types/redmine";
 
@@ -12,7 +13,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
   return (
     <div className="flex gap-x-0.5 items-center">
       {entries.map((entry) => (
-        <>
+        <Fragment key={entry.id}>
           <Tooltip id={`tooltip-time-entry-${entry.id}`} place="bottom" className="z-10 opacity-100">
             <h4 className="text-base">
               {entry.issue ? (
@@ -32,7 +33,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
             }}
             data-tooltip-id={`tooltip-time-entry-${entry.id}`}
           />
-        </>
+        </Fragment>
       ))}
       {(previewHours && (
         <>

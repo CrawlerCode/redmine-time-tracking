@@ -5,6 +5,8 @@ import { SearchQuery } from "../components/issues/Search";
 import useDebounce from "./useDebounce";
 import useSettings from "./useSettings";
 
+const MAX_EXTENDED_SEARCH_LIMIT = 75;
+
 const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery) => {
   const { settings } = useSettings();
 
@@ -32,54 +34,58 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery) => {
   let issues = issuesQuery.data?.pages?.flat() ?? [];
   issues.push(...(additionalIssuesQuery.data?.pages?.flat().filter((issue) => !issues.find((iss) => iss.id === issue.id)) ?? []));
 
+  // filter by project
+  if (search.inProject) {
+    issues = issues.filter((issue) => issue.project.id === search.inProject?.id);
+  }
   // filter by search
   if (search.searching && search.query) {
     issues = issues.filter((issue) => new RegExp(search.query, "i").test(search.mode === "project" ? issue.project.name : `#${issue.id} ${issue.subject}`));
   }
 
+  // ---
+
   // extended search
   const debouncedSearch = useDebounce(search.query, 300);
   const extendedSearching = search.searching && debouncedSearch.length >= 3 && settings.options.extendedSearch;
 
-  // extended search - issues
-  const extendedSearchResultIssuesQuery = useQuery({
-    queryKey: ["extendedSearchResultIssues", debouncedSearch],
+  // extended search - mode: issue
+  const extendedSearchIssuesResultQuery = useQuery({
+    queryKey: ["extendedSearchIssuesResult", debouncedSearch],
     queryFn: () => searchOpenIssues(debouncedSearch),
     enabled: extendedSearching && search.mode === "issue",
     keepPreviousData: true,
   });
-  const extendedSearchResultIssuesIds = (extendedSearchResultIssuesQuery.data?.map((result) => result.id) ?? []).filter((id) => !issues.find((issue) => issue.id === id));
+  const extendedSearchIssuesResultIds = (extendedSearchIssuesResultQuery.data?.map((result) => result.id) ?? []).filter((id) => !issues.find((issue) => issue.id === id));
   const extendedSearchIssuesQuery = useQuery({
-    queryKey: ["extendedSearchIssues", extendedSearchResultIssuesIds],
-    queryFn: () => getOpenIssuesByIds(extendedSearchResultIssuesIds),
-    enabled: extendedSearchResultIssuesIds.length > 0,
-    keepPreviousData: extendedSearchResultIssuesIds.length > 0,
+    queryKey: ["extendedSearchIssues", extendedSearchIssuesResultIds],
+    queryFn: () => getOpenIssuesByIds(extendedSearchIssuesResultIds, 0, search.inProject ? 100 : MAX_EXTENDED_SEARCH_LIMIT),
+    enabled: extendedSearchIssuesResultIds.length > 0,
+    keepPreviousData: extendedSearchIssuesResultIds.length > 0,
   });
+  const extendedSearchIssuesList = (search.inProject ? extendedSearchIssuesQuery.data?.filter((issue) => issue.project.id === search.inProject?.id) : extendedSearchIssuesQuery.data)?.slice(0, MAX_EXTENDED_SEARCH_LIMIT) ?? [];
 
-  // extended search - projects
-  const extendedSearchResultProjectsQuery = useQuery({
-    queryKey: ["extendedSearchResultProjects", debouncedSearch],
+  // extended search - mode: project
+  const extendedSearchProjectsResultQuery = useQuery({
+    queryKey: ["extendedSearchProjectsResult", debouncedSearch],
     queryFn: () => searchProjects(debouncedSearch),
     enabled: extendedSearching && search.mode === "project",
     keepPreviousData: true,
   });
-  const extendedSearchResultProjectsIds = extendedSearchResultProjectsQuery.data?.map((result) => result.id) ?? [];
-  const extendedSearchIssuesProjectsQueries = useQueries({
-    queries: extendedSearchResultProjectsIds.map((projectId) => ({
-      queryKey: ["extendedSearchIssuesByProject", projectId],
-      queryFn: () => getOpenIssuesByProject(projectId),
+  const extendedSearchProjectsResultIds = extendedSearchProjectsResultQuery.data?.map((result) => result.id) ?? [];
+  const extendedSearchIssuesByProjectsQueries = useQueries({
+    queries: extendedSearchProjectsResultIds.map((projectId) => ({
+      queryKey: ["extendedSearchIssuesByProjects", projectId],
+      queryFn: () => getOpenIssuesByProject(projectId, 0, Math.ceil(MAX_EXTENDED_SEARCH_LIMIT / extendedSearchProjectsResultIds.length)),
       keepPreviousData: true,
     })),
   });
+  const extendedSearchIssuesByProjectsList = extendedSearchIssuesByProjectsQueries
+    .map((q) => q.data ?? [])
+    .flat()
+    .filter(({ id }) => !issues.find((issue) => issue.id === id));
 
-  const extendedSearchIssues = extendedSearching
-    ? search.mode === "issue"
-      ? extendedSearchIssuesQuery.data ?? []
-      : extendedSearchIssuesProjectsQueries
-          .map((q) => q.data ?? [])
-          .flat()
-          .filter(({ id }) => !issues.find((issue) => issue.id === id))
-    : [];
+  const extendedSearchIssues = extendedSearching ? (search.mode === "issue" ? extendedSearchIssuesList : extendedSearchIssuesByProjectsList) : [];
 
   return {
     data: issues,

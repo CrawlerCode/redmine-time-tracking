@@ -1,3 +1,6 @@
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Fragment } from "react";
 import useSettings from "../../hooks/useSettings";
 import useStorage from "../../hooks/useStorage";
 import { TAccount, TIssue, TReference } from "../../types/redmine";
@@ -21,9 +24,10 @@ type PropTypes = {
   account?: TAccount;
   issues: TIssue[];
   issuesData: ReturnType<typeof useStorage<IssuesData>>;
+  onSearchInProject: (project: TReference) => void;
 };
 
-const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData, setData: setIssuesData } }: PropTypes) => {
+const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData, setData: setIssuesData }, onSearchInProject }: PropTypes) => {
   const { settings } = useSettings();
 
   const sortedIssues = rawIssues.sort((a, b) => {
@@ -62,10 +66,15 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
   return (
     <>
       {groupedIssues.map(({ project, issues: groupIssues }) => (
-        <>
-          <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="text-xs text-slate-500 dark:text-slate-300 hover:underline truncate max-w-fit">
-            {project.name}
-          </a>
+        <Fragment key={project.id}>
+          <div className="flex justify-between gap-x-2">
+            <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="text-xs text-slate-500 dark:text-slate-300 hover:underline truncate max-w-fit">
+              {project.name}
+            </a>
+            <button type="button" className=" text-gray-900 dark:text-white" onClick={() => onSearchInProject(project)} tabIndex={-1}>
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            </button>
+          </div>
           {groupIssues.map((issue) => {
             const data: IssueData = issuesData?.[issue.id] ?? {
               active: false,
@@ -198,7 +207,7 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
               />
             );
           })}
-        </>
+        </Fragment>
       ))}
       {rawIssues.length === 0 && <p className="text-center">No issues</p>}
     </>
