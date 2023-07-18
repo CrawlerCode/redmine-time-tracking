@@ -4,6 +4,7 @@ import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import CheckBox from "../components/general/CheckBox";
+import Indicator from "../components/general/Indicator";
 import InputField from "../components/general/InputField";
 import Toast from "../components/general/Toast";
 import useMyAccount from "../hooks/useMyAccount";
@@ -51,11 +52,36 @@ const SettingsPage = () => {
                   <div className="flex flex-col gap-y-2">
                     <Field type="text" name="redmineURL" title="Redmine URL" placeholder="Redmine URL" required as={InputField} error={touched.redmineURL && errors.redmineURL} />
                     <Field type="password" name="redmineApiKey" title="Redmine API-Key" placeholder="Redmine API-Key" required as={InputField} error={touched.redmineApiKey && errors.redmineApiKey} />
-                    {myAccount.data && (
-                      <p>
-                        User: {myAccount.data.firstname} {myAccount.data.lastname} ({myAccount.data.login})
-                      </p>
-                    )}
+
+                    <div className="flex items-center gap-x-2">
+                      {myAccount.isLoading && (
+                        <>
+                          <Indicator variant="primary" />
+                          <p>Connecting...</p>
+                        </>
+                      )}
+                      {myAccount.isError && (
+                        <>
+                          <Indicator variant="danger" />
+                          <p>Connection failed</p>
+                        </>
+                      )}
+                      {!myAccount.isLoading && !myAccount.isError && myAccount.data && (
+                        <>
+                          <Indicator variant="success" />
+                          <div>
+                            <p>Connection successful!</p>
+                            <p>
+                              Hello{" "}
+                              <strong>
+                                {myAccount.data.firstname} {myAccount.data.lastname}
+                              </strong>{" "}
+                              ({myAccount.data.login})
+                            </p>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </fieldset>
                 <fieldset className="p-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
@@ -83,7 +109,9 @@ const SettingsPage = () => {
         )}
       </Formik>
       <div className="w-full flex flex-col items-center p-2 mt-3">
-        <g>{chrome.runtime.getManifest().name}</g>
+        <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline">
+          {chrome.runtime.getManifest().name}
+        </a>
         <p>Version: {chrome.runtime.getManifest().version}</p>
       </div>
       {saved && <Toast type="success" message="Settings saved!" onClose={() => setSaved(false)} />}

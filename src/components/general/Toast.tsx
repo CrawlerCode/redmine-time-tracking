@@ -13,8 +13,8 @@ const Toast = ({ type, message, allowClose = true, onClose }: PropTypes) => {
       <div className="flex items-center w-full p-1 text-gray-700 bg-gray-200 rounded-lg shadow dark:text-gray-300 dark:bg-gray-600" role="alert">
         <div
           className={clsx("inline-flex items-center justify-center flex-shrink-0 w-8 h-8", {
-            "text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200": type === "success",
-            "text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200": type === "error",
+            "text-green-700 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200": type === "success",
+            "text-red-700 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200": type === "error",
           })}
         >
           {type === "success" && (
