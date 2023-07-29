@@ -69,7 +69,7 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
           setEditMode(true);
         },
       } satisfies TimerRef),
-    [timer, editMode]
+    [timer, editMode, onStart, onPause]
   );
 
   return (

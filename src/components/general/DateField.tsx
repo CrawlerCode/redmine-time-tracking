@@ -43,6 +43,7 @@ const DateField = ({ size = "md", title, icon, error, className, value, onChange
                 name: props.name,
                 value: instance.config.mode === "single" ? dates[0] : dates,
               },
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any);
           }}
           onClose={() => {
@@ -50,6 +51,7 @@ const DateField = ({ size = "md", title, icon, error, className, value, onChange
               target: {
                 name: props.name,
               },
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any);
           }}
           className={clsx(

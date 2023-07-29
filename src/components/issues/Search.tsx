@@ -13,6 +13,7 @@ export type SearchQuery = {
   inProject?: TReference;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const defaultSearchQuery: SearchQuery = { searching: false, mode: "issue", query: "" };
 
 type PropTypes = {
@@ -47,7 +48,7 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
       query,
       inProject,
     });
-  }, [searching, mode, query, inProject]);
+  }, [searching, mode, query, inProject, onSearch]);
 
   // hotkeys
   useHotKey(

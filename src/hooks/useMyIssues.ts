@@ -26,10 +26,10 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery) => {
   // auto fetch all pages
   useEffect(() => {
     if (issuesQuery.hasNextPage && !issuesQuery.isFetchingNextPage) issuesQuery.fetchNextPage();
-  }, [issuesQuery.hasNextPage, issuesQuery.isFetchingNextPage, issuesQuery.fetchNextPage]);
+  }, [issuesQuery]);
   useEffect(() => {
     if (additionalIssuesQuery.hasNextPage && !additionalIssuesQuery.isFetchingNextPage) additionalIssuesQuery.fetchNextPage();
-  }, [additionalIssuesQuery.hasNextPage, additionalIssuesQuery.isFetchingNextPage, additionalIssuesQuery.fetchNextPage]);
+  }, [additionalIssuesQuery]);
 
   let issues = issuesQuery.data?.pages?.flat() ?? [];
   issues.push(...(additionalIssuesQuery.data?.pages?.flat().filter((issue) => !issues.find((iss) => iss.id === issue.id)) ?? []));

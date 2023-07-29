@@ -13,6 +13,7 @@ const useStorage = <T>(name: string, defaultValue: T) => {
         } catch (error) {}
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // set data to storage

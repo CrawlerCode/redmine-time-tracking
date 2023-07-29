@@ -1,10 +1,11 @@
 import clsx from "clsx";
+import { Fragment } from "react";
 
 const IssuesListSkeleton = () => {
   return (
     <>
-      {[...Array(Math.floor(Math.random() * 2 + 2)).keys()].map(() => (
-        <>
+      {[...Array(Math.floor(Math.random() * 2 + 2)).keys()].map((i) => (
+        <Fragment key={i}>
           <div className="animate-pulse h-2.5 my-0.5 w-28 rounded-full bg-gray-200 dark:bg-gray-700" />
           {[...Array(Math.floor(Math.random() * 5 + 1)).keys()].map((_, i) => {
             return (
@@ -26,7 +27,7 @@ const IssuesListSkeleton = () => {
               </div>
             );
           })}
-        </>
+        </Fragment>
       ))}
     </>
   );

@@ -12,7 +12,7 @@ const useMyTimeEntries = (from: Date, to: Date) => {
   // auto fetch all pages
   useEffect(() => {
     if (entriesQuery.hasNextPage && !entriesQuery.isFetchingNextPage) entriesQuery.fetchNextPage();
-  }, [entriesQuery.hasNextPage, entriesQuery.isFetchingNextPage, entriesQuery.fetchNextPage]);
+  }, [entriesQuery]);
 
   const entries = entriesQuery.data?.pages?.flat() ?? [];
 
