@@ -1,8 +1,9 @@
 import deepmerge from "deepmerge";
 import { loadRedmineConfig } from "../api/axios.config";
-import useStorage, { getStorage } from "./useStorage";
+import useStorage, { getChromeStorage } from "./useStorage";
 
 export type Settings = {
+  language: string;
   redmineURL: string;
   redmineApiKey: string;
   options: {
@@ -13,6 +14,7 @@ export type Settings = {
 };
 
 const defaultSettings = {
+  language: "browser",
   redmineURL: "",
   redmineApiKey: "",
   options: {
@@ -35,7 +37,7 @@ const useSettings = () => {
 };
 
 export const getSettings = async () => {
-  const data = await getStorage<Settings>("settings", defaultSettings);
+  const data = await getChromeStorage<Settings>("settings", defaultSettings);
   return deepmerge<Settings>(defaultSettings, data);
 };
 

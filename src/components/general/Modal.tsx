@@ -13,7 +13,7 @@ const Modal = ({ title, children, onClose }: PropTypes) => {
   useHotKey(onClose, { key: "Escape" });
 
   return (
-    <div tabIndex={-1} className="fixed inset-0 flex items-center z-40 w-full p-4 overflow-y-auto h-full bg-gray-800/50 dark:bg-gray-600/50 animate-in fade-in">
+    <div tabIndex={-1} className="fixed inset-0 flex items-center justify-center z-40 w-full p-4 overflow-y-auto h-full bg-gray-800/50 dark:bg-gray-600/50 animate-in fade-in">
       <div className="relative w-full max-w-md max-h-full">
         <div className="relative rounded-lg drop-shadow-lg bg-white dark:bg-gray-800 animate-in fade-in zoom-in">
           <button

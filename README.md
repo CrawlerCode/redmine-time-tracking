@@ -28,7 +28,15 @@
 - Remember and forget issue (not assigned to you)
 - Pin and unpin issue
 - View time entries overview
+- Multiple languages
 - Dark & light mode (system default)
+
+# Supported languages
+
+- English
+- German
+
+> If you want to add more languages or extend existing ones, feel free to contribute. Just create a pull request with the desired changes. The language files are located under [src/lang](src/lang).
 
 # Screenshots
 

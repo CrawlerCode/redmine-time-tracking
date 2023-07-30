@@ -3,6 +3,7 @@ import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
@@ -37,6 +38,7 @@ export type TimerRef = {
 };
 
 const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, onPause, onStop, onOverrideTime, onDoneTimer }: PropTypes, ref: ForwardedRef<TimerRef>) => {
+  const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
   const [editMode, setEditMode] = useState(false);
@@ -85,26 +87,33 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
         />
       )) || (
         <>
-          <Tooltip id="tooltip-edit-timer" place="top" delayShow={700} content="Double-click to edit" className="italic" />
-          <span className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-semibold")} onDoubleClick={() => setEditMode(true)} data-tooltip-id="tooltip-edit-timer">
+          <Tooltip id="tooltip-edit-timer" place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.edit.tooltip" })} className="italic" />
+          <span
+            className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-semibold")}
+            onDoubleClick={() => setEditMode(true)}
+            data-tooltip-id="tooltip-edit-timer"
+          >
             {formatTime(timer)}
           </span>
         </>
       )}
+
       {!active ? (
         <>
-          <Tooltip id="tooltip-start-timer" place="left" delayShow={700} content="Click to start timer" className="italic" />
+          <Tooltip id="tooltip-start-timer" place="left" delayShow={700} content={formatMessage({ id: "issues.timer.action.start.tooltip" })} className="italic" />
           <FontAwesomeIcon icon={faPlay} size="2x" className="text-green-500 cursor-pointer focus:outline-none" onClick={onStart} data-tooltip-id="tooltip-start-timer" tabIndex={-1} />
         </>
       ) : (
         <>
-          <Tooltip id="tooltip-pause-timer" place="left" delayShow={700} content="Click to pause timer" className="italic" />
+          <Tooltip id="tooltip-pause-timer" place="left" delayShow={700} content={formatMessage({ id: "issues.timer.action.pause.tooltip" })} className="italic" />
           <FontAwesomeIcon icon={faPause} size="2x" className="text-red-500 cursor-pointer focus:outline-none" onClick={() => onPause(timer)} data-tooltip-id="tooltip-pause-timer" tabIndex={-1} />
         </>
       )}
-      <Tooltip id="tooltip-stop-timer" place="top" delayShow={700} content="Click to stop timer" className="italic" />
+
+      <Tooltip id="tooltip-stop-timer" place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.stop.tooltip" })} className="italic" />
       <FontAwesomeIcon icon={faStop} size="2x" className="text-red-500 cursor-pointer focus:outline-none" onClick={onStop} data-tooltip-id="tooltip-stop-timer" tabIndex={-1} />
-      <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} content="Click to add spent time" className="z-10 italic" />
+
+      <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} content={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })} className="z-10 italic" />
       <FontAwesomeIcon
         icon={faCircleCheck}
         size="2x"

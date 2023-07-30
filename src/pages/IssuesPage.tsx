@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import Toast from "../components/general/Toast";
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
 import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
@@ -9,6 +10,7 @@ import useSettings from "../hooks/useSettings";
 import useStorage from "../hooks/useStorage";
 
 const IssuesPage = () => {
+  const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
   const issuesData = useStorage<IssuesData>("issues", {});
@@ -48,7 +50,9 @@ const IssuesPage = () => {
                 <div className="w-full border-t text-slate-500 dark:text-slate-300"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-white dark:bg-gray-800 px-2 text-sm text-slate-500 dark:text-slate-300">Extended search</span>
+                <span className="bg-white dark:bg-gray-800 px-2 text-sm text-slate-500 dark:text-slate-300">
+                  <FormattedMessage id="issues.extended-search" />
+                </span>
               </div>
             </div>
 
@@ -56,7 +60,7 @@ const IssuesPage = () => {
           </>
         )}
 
-        {myIssuesQuery.isError && <Toast type="error" message="Failed to load issues" allowClose={false} />}
+        {myIssuesQuery.isError && <Toast type="error" message={formatMessage({ id: "issues.error.fail-to-load-issues" })} allowClose={false} />}
       </div>
     </>
   );

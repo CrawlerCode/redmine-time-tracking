@@ -1,3 +1,4 @@
+import { FormattedMessage } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import { TIssue } from "../../types/redmine";
 import { formatHours } from "../../utils/date";
@@ -17,33 +18,45 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
           </caption>
           <tbody>
             <tr>
-              <th className="pr-2 font-medium whitespace-nowrap">Status:</th>
+              <th className="pr-2 font-medium whitespace-nowrap">
+                <FormattedMessage id="issues.info-tooltip.status" />:
+              </th>
               <td>{issue.status.name}</td>
             </tr>
             <tr>
-              <th className="pr-2 font-medium whitespace-nowrap">Priority:</th>
+              <th className="pr-2 font-medium whitespace-nowrap">
+                <FormattedMessage id="issues.info-tooltip.priority" />:
+              </th>
               <td>{issue.priority.name}</td>
             </tr>
             {issue.assigned_to && (
               <tr>
-                <th className="pr-2 font-medium whitespace-nowrap">Assignee:</th>
+                <th className="pr-2 font-medium whitespace-nowrap">
+                  <FormattedMessage id="issues.info-tooltip.assignee" />:
+                </th>
                 <td>{issue.assigned_to.name}</td>
               </tr>
             )}
             {issue.estimated_hours && (
               <tr>
-                <th className="pr-2 font-medium whitespace-nowrap">Estimated time:</th>
+                <th className="pr-2 font-medium whitespace-nowrap">
+                  <FormattedMessage id="issues.info-tooltip.estimated-time" />:
+                </th>
                 <td>{formatHours(issue.estimated_hours)} h</td>
               </tr>
             )}
             <tr>
-              <th className="pr-2 font-medium whitespace-nowrap">Spent time:</th>
+              <th className="pr-2 font-medium whitespace-nowrap">
+                <FormattedMessage id="issues.info-tooltip.spent-time" />:
+              </th>
               <td>{formatHours(issue.spent_hours)} h</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p className="italic mt-5">Click to open issue</p>
+      <p className="italic mt-5">
+        <FormattedMessage id="issues.info-tooltip.open-in-redmine" />
+      </p>
     </Tooltip>
   );
 };

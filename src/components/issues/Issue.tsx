@@ -3,6 +3,7 @@ import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faEdit, faPa
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useRef, useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
@@ -29,6 +30,8 @@ type PropTypes = {
   IssueActions;
 
 const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, onPause, onStop, onOverrideTime, onRemember, onForget, onPin, onUnpin }: PropTypes) => {
+  const { formatMessage } = useIntl();
+
   const { settings } = useSettings();
 
   const timerRef = useRef<TimerRef>(null);
@@ -41,7 +44,7 @@ const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, on
         menu={[
           [
             {
-              name: "Open in Redmine",
+              name: formatMessage({ id: "issues.context-menu.open-in-redmine" }),
               icon: <FontAwesomeIcon icon={faArrowUpRightFromSquare} />,
               onClick: () => {
                 window.open(`${settings.redmineURL}/issues/${issue.id}`, "_blank");
@@ -50,25 +53,25 @@ const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, on
           ],
           [
             {
-              name: "Start timer",
+              name: formatMessage({ id: "issues.context-menu.timer.start" }),
               icon: <FontAwesomeIcon icon={faPlay} />,
               disabled: timerData.active,
               onClick: onStart,
             },
             {
-              name: "Pause timer",
+              name: formatMessage({ id: "issues.context-menu.timer.pause" }),
               icon: <FontAwesomeIcon icon={faPause} />,
               disabled: !timerData.active,
               onClick: () => timerRef.current?.pauseTimer(),
             },
             {
-              name: "Stop timer",
+              name: formatMessage({ id: "issues.context-menu.timer.stop" }),
               icon: <FontAwesomeIcon icon={faStop} />,
               disabled: timerRef.current?.timer === 0,
               onClick: onStop,
             },
             {
-              name: "Edit timer",
+              name: formatMessage({ id: "issues.context-menu.timer.edit" }),
               icon: <FontAwesomeIcon icon={faEdit} />,
               disabled: timerRef.current?.timer === 0,
               onClick: () => timerRef.current?.editTimer(),
@@ -76,13 +79,13 @@ const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, on
           ],
           [
             {
-              name: "Pin issue",
+              name: formatMessage({ id: "issues.context-menu.pin" }),
               icon: <FontAwesomeIcon icon={faStar} />,
               disabled: pinned,
               onClick: onPin,
             },
             {
-              name: "Unpin issue",
+              name: formatMessage({ id: "issues.context-menu.unpin" }),
               icon: <FontAwesomeIcon icon={faStarRegular} />,
               disabled: !pinned,
               onClick: onUnpin,
@@ -90,13 +93,13 @@ const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, on
           ],
           [
             {
-              name: "Remember issue",
+              name: formatMessage({ id: "issues.context-menu.remember" }),
               icon: <FontAwesomeIcon icon={faBookmark} />,
               disabled: assignedToMe || remembered,
               onClick: onRemember,
             },
             {
-              name: "Forget issue",
+              name: formatMessage({ id: "issues.context-menu.forgot" }),
               icon: <FontAwesomeIcon icon={faBan} />,
               disabled: assignedToMe || !remembered,
               onClick: onForget,
@@ -150,19 +153,29 @@ const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, on
               </div>
             </div>
             <div className="flex flex-col mr-2">
-              <IssueTimer key={issue.id} ref={timerRef} issue={issue} data={timerData} onStart={onStart} onPause={onPause} onStop={onStop} onOverrideTime={onOverrideTime} onDoneTimer={setCreateTimeEntry} />
+              <IssueTimer
+                key={issue.id}
+                ref={timerRef}
+                issue={issue}
+                data={timerData}
+                onStart={onStart}
+                onPause={onPause}
+                onStop={onStop}
+                onOverrideTime={onOverrideTime}
+                onDoneTimer={setCreateTimeEntry}
+              />
             </div>
           </div>
           <div className="absolute top-2 right-2 flex justify-end items-start gap-x-1">
             {pinned && (
               <>
-                <Tooltip id="tooltip-pinned" place="left" delayShow={700} content="Issue is pinned at the top" className="italic" />
+                <Tooltip id="tooltip-pinned" place="left" delayShow={700} content={formatMessage({ id: "issues.issue.pinned" })} className="italic" />
                 <FontAwesomeIcon icon={faStar} className="text-gray-300 dark:text-gray-600 focus:outline-none" data-tooltip-id="tooltip-pinned" tabIndex={-1} />
               </>
             )}
             {!assignedToMe && (
               <>
-                <Tooltip id="tooltip-not-assigned-to-me" place="left" delayShow={700} content="Issue is not assigned to you" className="italic" />
+                <Tooltip id="tooltip-not-assigned-to-me" place="left" delayShow={700} content={formatMessage({ id: "issues.issue.not-assigned-to-me" })} className="italic" />
                 <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 dark:text-gray-600 focus:outline-none" data-tooltip-id="tooltip-not-assigned-to-me" tabIndex={-1} />
               </>
             )}
@@ -170,7 +183,12 @@ const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, on
         </div>
       </ContextMenu>
       <Tooltip id="tooltip-toggle-timer" place="bottom" delayShow={4000} className="italic max-w-[275px]">
-        If selected, press <KBD text="Ctrl" /> + <KBD text="Spacebar" space="xl" /> to toggle timer
+        <FormattedMessage
+          id="issues.action.toggle-timer.tooltip"
+          values={{
+            KBD: (children) => <KBD>{children}</KBD>,
+          }}
+        />
       </Tooltip>
       {createTimeEntry !== undefined && (
         <CreateTimeEntryModal

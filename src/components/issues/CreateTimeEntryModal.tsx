@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { startOfDay } from "date-fns";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
 import { createTimeEntry, getTimeEntryActivities, updateIssue } from "../../api/redmine";
 import useSettings from "../../hooks/useSettings";
@@ -25,8 +26,10 @@ type PropTypes = {
 };
 
 const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) => {
+  const { formatMessage } = useIntl();
   const { settings } = useSettings();
   const queryClient = useQueryClient();
+
   const formik = useRef<FormikProps<TCreateTimeEntry>>(null);
 
   const timeEntryActivitiesQuery = useQuery({
@@ -55,7 +58,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
 
   return (
     <>
-      <Modal title="Add spent time" onClose={onClose}>
+      <Modal title={formatMessage({ id: "issues.modal.add-spent-time.title" })} onClose={onClose}>
         <Formik
           innerRef={formik}
           initialValues={{
@@ -66,9 +69,11 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
             comments: "",
           }}
           validationSchema={Yup.object({
-            spent_on: Yup.date().max(new Date(), "Can not be in the future"),
-            activity_id: Yup.number().required("Activity is required"),
-            hours: Yup.number().required("Hours is required").min(0.01, "Must be greater than 0"),
+            spent_on: Yup.date().max(new Date(), formatMessage({ id: "issues.modal.add-spent-time.date.validation.in-future" })),
+            hours: Yup.number()
+              .required(formatMessage({ id: "issues.modal.add-spent-time.hours.validation.required" }))
+              .min(0.01, formatMessage({ id: "issues.modal.add-spent-time.hours.validation.greater-than-zero" })),
+            activity_id: Yup.number().required(formatMessage({ id: "issues.modal.add-spent-time.activity.validation.required" })),
           })}
           onSubmit={async (values, { setSubmitting }) => {
             //console.log("onSubmit", values);
@@ -93,10 +98,51 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
 
                   {values.spent_on && <TimeEntryPreview date={startOfDay(values.spent_on)} previewHours={values.hours} />}
 
-                  <Field type="date" name="spent_on" title="Date" placeholder="Date" required as={DateField} size="sm" error={touched.spent_on && errors.spent_on} options={{ maxDate: new Date() }} />
-                  <Field type="number" name="hours" title="Hours" placeholder="Hours" min="0" step="0.01" required as={InputField} size="sm" extraText={formatHours(values.hours) + " h"} error={touched.hours && errors.hours} autoComplete="off" />
-                  <Field type="text" name="comments" title="Comments" placeholder="Comments" as={InputField} size="sm" error={touched.comments && errors.comments} autoFocus />
-                  <Field type="select" name="activity_id" title="Activity" placeholder="Activity" required as={SelectField} size="sm" error={touched.activity_id && errors.activity_id}>
+                  <Field
+                    type="date"
+                    name="spent_on"
+                    title={formatMessage({ id: "issues.modal.add-spent-time.date" })}
+                    placeholder={formatMessage({ id: "issues.modal.add-spent-time.date" })}
+                    required
+                    as={DateField}
+                    size="sm"
+                    error={touched.spent_on && errors.spent_on}
+                    options={{ maxDate: new Date() }}
+                  />
+                  <Field
+                    type="number"
+                    name="hours"
+                    title={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
+                    placeholder={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
+                    min="0"
+                    step="0.01"
+                    required
+                    as={InputField}
+                    size="sm"
+                    extraText={formatHours(values.hours) + " h"}
+                    error={touched.hours && errors.hours}
+                    autoComplete="off"
+                  />
+                  <Field
+                    type="text"
+                    name="comments"
+                    title={formatMessage({ id: "issues.modal.add-spent-time.comments" })}
+                    placeholder={formatMessage({ id: "issues.modal.add-spent-time.comments" })}
+                    as={InputField}
+                    size="sm"
+                    error={touched.comments && errors.comments}
+                    autoFocus
+                  />
+                  <Field
+                    type="select"
+                    name="activity_id"
+                    title={formatMessage({ id: "issues.modal.add-spent-time.activity" })}
+                    placeholder={formatMessage({ id: "issues.modal.add-spent-time.activity" })}
+                    required
+                    as={SelectField}
+                    size="sm"
+                    error={touched.activity_id && errors.activity_id}
+                  >
                     {timeEntryActivitiesQuery.data?.map((activity) => (
                       <>
                         <option key={activity.id} value={activity.id}>
@@ -114,7 +160,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     )}
                     disabled={isSubmitting}
                   >
-                    Create
+                    <FormattedMessage id="issues.modal.add-spent-time.submit" />
                   </button>
                 </div>
               </Form>
@@ -126,7 +172,11 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
         <Toast
           type="error"
           allowClose={false}
-          message={isAxiosError(createTimeEntryMutation.error) ? ((createTimeEntryMutation.error as AxiosError).response?.data as TRedmineError)?.errors.join(", ") : (createTimeEntryMutation.error as Error).message}
+          message={
+            isAxiosError(createTimeEntryMutation.error)
+              ? (createTimeEntryMutation.error as AxiosError<TRedmineError>).response?.data?.errors.join(", ") ?? (createTimeEntryMutation.error as AxiosError).message
+              : (createTimeEntryMutation.error as Error).message
+          }
         />
       )}
     </>

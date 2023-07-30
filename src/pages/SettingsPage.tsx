@@ -2,19 +2,23 @@ import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
+import { LANGUAGES } from "../IntlProvider";
 import CheckBox from "../components/general/CheckBox";
 import Indicator from "../components/general/Indicator";
 import InputField from "../components/general/InputField";
+import SelectField from "../components/general/SelectField";
 import Toast from "../components/general/Toast";
 import useMyAccount from "../hooks/useMyAccount";
 import useSettings, { Settings } from "../hooks/useSettings";
 
 const SettingsPage = () => {
-  const formik = useRef<FormikProps<Settings>>(null);
   const queryClient = useQueryClient();
-
+  const { formatMessage } = useIntl();
   const { settings, setSettings } = useSettings();
+
+  const formik = useRef<FormikProps<Settings>>(null);
 
   useEffect(() => {
     formik.current?.setValues(settings);
@@ -31,9 +35,9 @@ const SettingsPage = () => {
         initialValues={settings}
         validationSchema={Yup.object({
           redmineURL: Yup.string()
-            .required("URL is required")
-            .matches(/^(http|https):\/\/\w+(\.\w+)*(:[0-9]+)?\/?.*?$/, "Enter a valid URL"),
-          redmineApiKey: Yup.string().required("API-Key is required"),
+            .required(formatMessage({ id: "settings.redmine.url.validation.required" }))
+            .matches(/^(http|https):\/\/\w+(\.\w+)*(:[0-9]+)?\/?.*?$/, formatMessage({ id: "settings.redmine.url.validation.valid-url" })),
+          redmineApiKey: Yup.string().required(formatMessage({ id: "settings.redmine.api-key.validation.required" })),
         })}
         onSubmit={(values, { setSubmitting }) => {
           //console.log("onSubmit", values);
@@ -48,35 +52,88 @@ const SettingsPage = () => {
             <Form>
               <div className="flex flex-col gap-y-1">
                 <fieldset className="p-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
-                  <legend className="px-2 text-base font-semibold">Redmine</legend>
+                  <legend className="px-2 text-base font-semibold">
+                    <FormattedMessage id="settings.general" />
+                  </legend>
                   <div className="flex flex-col gap-y-2">
-                    <Field type="text" name="redmineURL" title="Redmine URL" placeholder="Redmine URL" required as={InputField} error={touched.redmineURL && errors.redmineURL} />
-                    <Field type="password" name="redmineApiKey" title="Redmine API-Key" placeholder="Redmine API-Key" required as={InputField} error={touched.redmineApiKey && errors.redmineApiKey} />
+                    <Field
+                      type="select"
+                      name="language"
+                      title={formatMessage({ id: "settings.general.language" })}
+                      placeholder={formatMessage({ id: "settings.general.language" })}
+                      required
+                      as={SelectField}
+                    >
+                      <option value="browser">Auto (Browser)</option>
+                      {LANGUAGES.map((lang) => (
+                        <option key={lang} value={lang}>
+                          <FormattedMessage id={`settings.general.language.${lang}`} />
+                        </option>
+                      ))}
+                    </Field>
+                    <a href="https://github.com/CrawlerCode/redmine-time-tracking#supported-languages" target="_blank" tabIndex={-1} className="hover:underline">
+                      <FormattedMessage id="settings.general.language.missing-hint" />
+                    </a>
+                  </div>
+                </fieldset>
+                <fieldset className="p-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
+                  <legend className="px-2 text-base font-semibold">
+                    <FormattedMessage id="settings.redmine" />
+                  </legend>
+                  <div className="flex flex-col gap-y-2">
+                    <Field
+                      type="text"
+                      name="redmineURL"
+                      title={formatMessage({ id: "settings.redmine.url" })}
+                      placeholder={formatMessage({ id: "settings.redmine.url" })}
+                      required
+                      as={InputField}
+                      error={touched.redmineURL && errors.redmineURL}
+                    />
+                    <Field
+                      type="password"
+                      name="redmineApiKey"
+                      title={formatMessage({ id: "settings.redmine.api-key" })}
+                      placeholder={formatMessage({ id: "settings.redmine.api-key" })}
+                      required
+                      as={InputField}
+                      error={touched.redmineApiKey && errors.redmineApiKey}
+                    />
 
                     <div className="flex items-center gap-x-2">
                       {myAccount.isLoading && (
                         <>
                           <Indicator variant="primary" />
-                          <p>Connecting...</p>
+                          <p>
+                            <FormattedMessage id="settings.redmine.connecting" />
+                          </p>
                         </>
                       )}
                       {myAccount.isError && (
                         <>
                           <Indicator variant="danger" />
-                          <p>Connection failed</p>
+                          <p>
+                            <FormattedMessage id="settings.redmine.connection-failed" />
+                          </p>
                         </>
                       )}
                       {!myAccount.isLoading && !myAccount.isError && myAccount.data && (
                         <>
                           <Indicator variant="success" />
                           <div>
-                            <p>Connection successful!</p>
                             <p>
-                              Hello{" "}
-                              <strong>
-                                {myAccount.data.firstname} {myAccount.data.lastname}
-                              </strong>{" "}
-                              ({myAccount.data.login})
+                              <FormattedMessage id="settings.redmine.connection-successful" />
+                            </p>
+                            <p>
+                              <FormattedMessage
+                                id="settings.redmine.hello-user"
+                                values={{
+                                  firstName: myAccount.data.firstname,
+                                  lastName: myAccount.data.lastname,
+                                  accountName: myAccount.data.login,
+                                  strong: (children) => <strong>{children}</strong>,
+                                }}
+                              />
                             </p>
                           </div>
                         </>
@@ -85,11 +142,31 @@ const SettingsPage = () => {
                   </div>
                 </fieldset>
                 <fieldset className="p-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
-                  <legend className="px-2 text-base font-semibold">Options</legend>
+                  <legend className="px-2 text-base font-semibold">
+                    <FormattedMessage id="settings.options" />
+                  </legend>
                   <div className="flex flex-col gap-y-2">
-                    <Field type="checkbox" name="options.autoPauseOnSwitch" title="Auto pause" description="Automatic pause timers when changing issue" as={CheckBox} />
-                    <Field type="checkbox" name="options.extendedSearch" title="Extended search" description="Allows to search issues that are not assigned to you" as={CheckBox} />
-                    <Field type="checkbox" name="options.roundTimeNearestQuarterHour" title="Round to nearest 15 min" description="Round timer to nearest quarter hour" as={CheckBox} />
+                    <Field
+                      type="checkbox"
+                      name="options.autoPauseOnSwitch"
+                      title={formatMessage({ id: "settings.options.auto-pause-on-switch.title" })}
+                      description={formatMessage({ id: "settings.options.auto-pause-on-switch.description" })}
+                      as={CheckBox}
+                    />
+                    <Field
+                      type="checkbox"
+                      name="options.extendedSearch"
+                      title={formatMessage({ id: "settings.options.extended-search.title" })}
+                      description={formatMessage({ id: "settings.options.extended-search.description" })}
+                      as={CheckBox}
+                    />
+                    <Field
+                      type="checkbox"
+                      name="options.roundTimeNearestQuarterHour"
+                      title={formatMessage({ id: "settings.options.round-time-nearest-quarter-hour.title" })}
+                      description={formatMessage({ id: "settings.options.round-time-nearest-quarter-hour.description" })}
+                      as={CheckBox}
+                    />
                   </div>
                 </fieldset>
 
@@ -101,7 +178,7 @@ const SettingsPage = () => {
                   )}
                   onClick={submitForm}
                 >
-                  Save Settings
+                  <FormattedMessage id="settings.save-settings" />
                 </button>
               </div>
             </Form>
@@ -114,7 +191,7 @@ const SettingsPage = () => {
         </a>
         <p>Version: {chrome.runtime.getManifest().version}</p>
       </div>
-      {saved && <Toast type="success" message="Settings saved!" onClose={() => setSaved(false)} />}
+      {saved && <Toast type="success" message={formatMessage({ id: "settings.settings-saved" })} onClose={() => setSaved(false)} />}
     </>
   );
 };

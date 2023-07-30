@@ -34,6 +34,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-flatpickr": "^3.10.13",
+    "react-intl": "^6.4.4",
     "react-router-dom": "^6.14.2",
     "react-tooltip": "^5.18.0",
     "tailwind-merge": "^1.14.0",

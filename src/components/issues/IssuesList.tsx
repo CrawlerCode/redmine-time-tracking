@@ -1,6 +1,7 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment } from "react";
+import { FormattedMessage } from "react-intl";
 import useSettings from "../../hooks/useSettings";
 import useStorage from "../../hooks/useStorage";
 import { TAccount, TIssue, TReference } from "../../types/redmine";
@@ -209,7 +210,11 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
           })}
         </Fragment>
       ))}
-      {rawIssues.length === 0 && <p className="text-center">No issues</p>}
+      {rawIssues.length === 0 && (
+        <p className="text-center">
+          <FormattedMessage id="issues.list.no-issues" />
+        </p>
+      )}
     </>
   );
 };
