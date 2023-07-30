@@ -11,10 +11,6 @@ import { IssueTimerData } from "./IssueTimer";
 type IssueData = IssueTimerData & {
   pinned: boolean;
   remembered: boolean;
-} & {
-  // TODO: remove me later
-  favorite?: boolean;
-  remember?: boolean;
 };
 
 export type IssuesData = {
@@ -32,8 +28,8 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
   const { settings } = useSettings();
 
   const sortedIssues = rawIssues.sort((a, b) => {
-    const pinnedA = issuesData[a.id]?.pinned || issuesData[a.id]?.favorite;
-    const pinnedB = issuesData[b.id]?.pinned || issuesData[b.id]?.favorite;
+    const pinnedA = issuesData[a.id]?.pinned;
+    const pinnedB = issuesData[b.id]?.pinned;
     if (pinnedA && pinnedB) return new Date(a.updated_on).getTime() - new Date(a.updated_on).getTime();
     return pinnedA ? -1 : 1;
   });
@@ -84,18 +80,6 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
               pinned: false,
               remembered: false,
             };
-            /**
-             * support old data schema
-             * TODO: remove me later
-             */
-            if (data.favorite) {
-              data.pinned = true;
-              delete data.favorite;
-            }
-            if (data.remember) {
-              data.remembered = true;
-              delete data.remember;
-            }
             return (
               <Issue
                 key={issue.id}

@@ -21,7 +21,7 @@ const IssuesPage = () => {
   const myIssuesQuery = useMyIssues(
     Object.keys(issuesData.data)
       .map((id) => Number(id))
-      .filter((id) => issuesData.data[id].remembered || issuesData.data[id].remember || issuesData.data[id].active || issuesData.data[id].time > 0),
+      .filter((id) => issuesData.data[id].remembered || issuesData.data[id].active || issuesData.data[id].time > 0),
     search
   );
   const myAccount = useMyAccount();
