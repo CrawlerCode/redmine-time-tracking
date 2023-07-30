@@ -1,7 +1,7 @@
 {
   "name": "redmine-time-tracking",
   "description": "Redmine Time Tracking",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "author": {
     "name": "CrawlerCode",
     "email": "crawlercode@outlook.de"
@@ -24,7 +24,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@tanstack/react-query": "^4.29.25",
+    "@tanstack/react-query": "^4.32.0",
     "axios": "^1.4.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
@@ -36,29 +36,29 @@
     "react-flatpickr": "^3.10.13",
     "react-intl": "^6.4.4",
     "react-router-dom": "^6.14.2",
-    "react-tooltip": "^5.18.0",
+    "react-tooltip": "^5.19.0",
     "tailwind-merge": "^1.14.0",
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.241",
-    "@types/node": "^20.4.2",
-    "@types/react": "^18.2.15",
+    "@types/chrome": "^0.0.242",
+    "@types/node": "^20.4.5",
+    "@types/react": "^18.2.17",
     "@types/react-dom": "^18.2.7",
     "@types/react-flatpickr": "^3.8.8",
-    "@typescript-eslint/eslint-plugin": "^6.1.0",
-    "@typescript-eslint/parser": "^6.1.0",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
     "@vitejs/plugin-react": "^4.0.3",
     "adm-zip": "^0.5.10",
     "autoprefixer": "^10.4.14",
-    "eslint": "^8.45.0",
-    "eslint-plugin-react": "^7.32.2",
+    "eslint": "^8.46.0",
+    "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "postcss": "^8.4.26",
+    "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.6",
     "typescript": "^5.1.6",
-    "vite": "^4.4.4"
+    "vite": "^4.4.7"
   }
 }
