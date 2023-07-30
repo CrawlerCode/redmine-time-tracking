@@ -51,7 +51,7 @@
   "settings.general.language": "Language",
   "settings.general.language.de": "German",
   "settings.general.language.en": "English",
-  "settings.general.language.missing-hint": "Missing your languages?",
+  "settings.general.language.missing-hint": "Missing your language?",
   "settings.redmine": "Redmine",
   "settings.redmine.url": "Redmine URL",
   "settings.redmine.url.validation.required": "URL is required",
