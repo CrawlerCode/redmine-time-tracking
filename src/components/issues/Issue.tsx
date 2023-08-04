@@ -144,7 +144,7 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
               e.preventDefault();
             }
           }}
-          data-tooltip-id="tooltip-toggle-timer"
+          data-tooltip-id={`tooltip-toggle-timer-${issue.id}`}
         >
           <h1
             className={clsx("mb-1 truncate", {
@@ -186,20 +186,20 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
           <div className="absolute top-2 right-2 flex justify-end items-start gap-x-1">
             {pinned && (
               <>
-                <Tooltip id="tooltip-pinned" place="left" delayShow={700} content={formatMessage({ id: "issues.issue.pinned" })} className="italic" />
-                <FontAwesomeIcon icon={faStar} className="text-gray-300 dark:text-gray-600 focus:outline-none" data-tooltip-id="tooltip-pinned" tabIndex={-1} />
+                <Tooltip id={`tooltip-pinned-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.pinned" })} className="italic" />
+                <FontAwesomeIcon icon={faStar} className="text-gray-300 dark:text-gray-600 focus:outline-none" data-tooltip-id={`tooltip-pinned-${issue.id}`} tabIndex={-1} />
               </>
             )}
             {!assignedToMe && (
               <>
-                <Tooltip id="tooltip-not-assigned-to-me" place="left" delayShow={700} content={formatMessage({ id: "issues.issue.not-assigned-to-me" })} className="italic" />
-                <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 dark:text-gray-600 focus:outline-none" data-tooltip-id="tooltip-not-assigned-to-me" tabIndex={-1} />
+                <Tooltip id={`tooltip-not-assigned-to-me-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.not-assigned-to-me" })} className="italic" />
+                <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 dark:text-gray-600 focus:outline-none" data-tooltip-id={`tooltip-not-assigned-to-me-${issue.id}`} tabIndex={-1} />
               </>
             )}
           </div>
         </div>
       </ContextMenu>
-      <Tooltip id="tooltip-toggle-timer" place="bottom" delayShow={4000} className="italic max-w-[275px]">
+      <Tooltip id={`tooltip-toggle-timer-${issue.id}`} place="bottom" delayShow={4000} className="italic max-w-[275px] z-10">
         <FormattedMessage
           id="issues.action.toggle-timer.tooltip"
           values={{
