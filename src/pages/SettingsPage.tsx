@@ -1,3 +1,5 @@
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "@tanstack/react-query";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
@@ -47,7 +49,7 @@ const SettingsPage = () => {
           setSaved(true);
         }}
       >
-        {({ submitForm, touched, errors }) => (
+        {({ submitForm, touched, errors, values }) => (
           <>
             <Form>
               <div className="flex flex-col gap-y-1">
@@ -76,6 +78,7 @@ const SettingsPage = () => {
                     </a>
                   </div>
                 </fieldset>
+
                 <fieldset className="p-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
                   <legend className="px-2 text-base font-semibold">
                     <FormattedMessage id="settings.redmine" />
@@ -99,7 +102,21 @@ const SettingsPage = () => {
                       as={InputField}
                       error={touched.redmineApiKey && errors.redmineApiKey}
                     />
-
+                    {values.redmineURL && !errors.redmineURL && !values.redmineApiKey && (
+                      <p>
+                        <FontAwesomeIcon icon={faInfoCircle} className="mr-1 text-yellow-500 dark:text-yellow-400" />
+                        <FormattedMessage
+                          id="settings.redmine.api-key.hint"
+                          values={{
+                            link: (children) => (
+                              <a href={`${values.redmineURL}/my/account`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline">
+                                {children}
+                              </a>
+                            ),
+                          }}
+                        />
+                      </p>
+                    )}
                     <div className="flex items-center gap-x-2">
                       {myAccount.isLoading && (
                         <>
@@ -141,6 +158,7 @@ const SettingsPage = () => {
                     </div>
                   </div>
                 </fieldset>
+
                 <fieldset className="p-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
                   <legend className="px-2 text-base font-semibold">
                     <FormattedMessage id="settings.options" />

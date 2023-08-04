@@ -63,6 +63,7 @@
   "settings.redmine.url.validation.valid-url": "Enter a valid URL",
   "settings.redmine.api-key": "Redmine API-Key",
   "settings.redmine.api-key.validation.required": "API-Key is required",
+  "settings.redmine.api-key.hint": "Where can I find my API-Key? <link>here</link>",
   "settings.redmine.connecting": "Connecting...",
   "settings.redmine.connection-failed": "Connection failed",
   "settings.redmine.connection-successful": "Connection successful!",
