@@ -1,7 +1,7 @@
 {
   "name": "redmine-time-tracking",
   "description": "Redmine Time Tracking",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "author": {
     "name": "CrawlerCode",
     "email": "crawlercode@outlook.de"
@@ -20,35 +20,35 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.4.0",
-    "@fortawesome/free-regular-svg-icons": "^6.4.0",
-    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-regular-svg-icons": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@tanstack/react-query": "^4.32.0",
+    "@tanstack/react-query": "^4.32.5",
     "axios": "^1.4.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "deepmerge": "^4.3.1",
     "flatpickr": "^4.6.13",
-    "formik": "^2.4.2",
+    "formik": "^2.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-flatpickr": "^3.10.13",
     "react-intl": "^6.4.4",
     "react-router-dom": "^6.14.2",
-    "react-tooltip": "^5.19.0",
+    "react-tooltip": "^5.20.0",
     "tailwind-merge": "^1.14.0",
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.242",
-    "@types/node": "^20.4.5",
-    "@types/react": "^18.2.17",
+    "@types/chrome": "^0.0.243",
+    "@types/node": "^20.4.7",
+    "@types/react": "^18.2.18",
     "@types/react-dom": "^18.2.7",
     "@types/react-flatpickr": "^3.8.8",
-    "@typescript-eslint/eslint-plugin": "^6.2.0",
-    "@typescript-eslint/parser": "^6.2.0",
-    "@vitejs/plugin-react": "^4.0.3",
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
+    "@vitejs/plugin-react": "^4.0.4",
     "adm-zip": "^0.5.10",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.46.0",
@@ -59,6 +59,6 @@
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.6",
     "typescript": "^5.1.6",
-    "vite": "^4.4.7"
+    "vite": "^4.4.8"
   }
 }
