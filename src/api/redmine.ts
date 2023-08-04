@@ -1,5 +1,5 @@
 import { formatISO } from "date-fns";
-import { TAccount, TCreateTimeEntry, TIssue, TSearchResult, TTimeEntry, TTimeEntryActivity } from "../types/redmine";
+import { TAccount, TCreateTimeEntry, TIssue, TSearchResult, TTimeEntry, TTimeEntryActivity, TissuesPriority } from "../types/redmine";
 import instance from "./axios.config";
 
 export const getMyAccount = async (): Promise<TAccount> => {
@@ -35,9 +35,15 @@ export const updateIssue = async (id: number, issue: Partial<Omit<TIssue, "id">>
     .then((res) => res.data);
 };
 
+export const getIssuePriorities = async (): Promise<TissuesPriority[]> => {
+  return instance.get("/enumerations/issue_priorities.json").then((res) => res.data.issue_priorities);
+};
+
 // Time entries
 export const getAllMyTimeEntries = async (from: Date, to: Date, offset = 0, limit = 100): Promise<TTimeEntry[]> => {
-  return instance.get(`/time_entries.json?offset=${offset}&limit=${limit}&user_id=me&from=${formatISO(from, { representation: "date" })}&to=${formatISO(to, { representation: "date" })}`).then((res) => res.data.time_entries);
+  return instance
+    .get(`/time_entries.json?offset=${offset}&limit=${limit}&user_id=me&from=${formatISO(from, { representation: "date" })}&to=${formatISO(to, { representation: "date" })}`)
+    .then((res) => res.data.time_entries);
 };
 
 export const createTimeEntry = async (entry: TCreateTimeEntry) => {

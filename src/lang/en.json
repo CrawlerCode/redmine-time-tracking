@@ -39,6 +39,7 @@
   "issues.modal.add-spent-time.hours": "Hours",
   "issues.modal.add-spent-time.hours.validation.required": "Hours is required",
   "issues.modal.add-spent-time.hours.validation.greater-than-zero": "Must be greater than 0",
+  "issues.modal.add-spent-time.hours.validation.less-than-24": "Must be less than one day",
   "issues.modal.add-spent-time.comments": "Comments",
   "issues.modal.add-spent-time.activity": "Activity",
   "issues.modal.add-spent-time.activity.validation.required": "Activity is required",

@@ -27,6 +27,13 @@ export type TIssue = {
   closed_on?: string;
 };
 
+export type TissuesPriority = {
+  id: number;
+  name: string;
+  is_default: boolean;
+  active: boolean;
+};
+
 export type TTimeEntry = {
   id: number;
   project: TReference;

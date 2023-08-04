@@ -1,12 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, isAxiosError } from "axios";
 import { startOfDay } from "date-fns";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
-import { createTimeEntry, getTimeEntryActivities, updateIssue } from "../../api/redmine";
+import { createTimeEntry, updateIssue } from "../../api/redmine";
 import useSettings from "../../hooks/useSettings";
+import useTimeEntryActivities from "../../hooks/useTimeEntryActivities";
 import { TCreateTimeEntry, TIssue, TRedmineError } from "../../types/redmine";
 import { formatHours } from "../../utils/date";
 import Button from "../general/Button";
@@ -32,15 +33,11 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
 
   const formik = useRef<FormikProps<TCreateTimeEntry>>(null);
 
-  const timeEntryActivitiesQuery = useQuery({
-    queryKey: ["timeEntryActivities"],
-    queryFn: getTimeEntryActivities,
-    refetchOnWindowFocus: false,
-  });
+  const timeEntryActivities = useTimeEntryActivities();
 
   useEffect(() => {
-    formik.current?.setFieldValue("activity_id", timeEntryActivitiesQuery.data?.find((entry) => entry.is_default)?.id ?? undefined);
-  }, [timeEntryActivitiesQuery.data]);
+    formik.current?.setFieldValue("activity_id", timeEntryActivities.find((entry) => entry.is_default)?.id ?? undefined);
+  }, [timeEntryActivities]);
 
   const createTimeEntryMutation = useMutation({
     mutationFn: (entry: TCreateTimeEntry) => createTimeEntry(entry),
@@ -72,7 +69,8 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
             spent_on: Yup.date().max(new Date(), formatMessage({ id: "issues.modal.add-spent-time.date.validation.in-future" })),
             hours: Yup.number()
               .required(formatMessage({ id: "issues.modal.add-spent-time.hours.validation.required" }))
-              .min(0.01, formatMessage({ id: "issues.modal.add-spent-time.hours.validation.greater-than-zero" })),
+              .min(0.01, formatMessage({ id: "issues.modal.add-spent-time.hours.validation.greater-than-zero" }))
+              .max(24, formatMessage({ id: "issues.modal.add-spent-time.hours.validation.less-than-24" })),
             activity_id: Yup.number().required(formatMessage({ id: "issues.modal.add-spent-time.activity.validation.required" })),
           })}
           onSubmit={async (values, { setSubmitting }) => {
@@ -116,10 +114,11 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     placeholder={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
                     min="0"
                     step="0.01"
+                    max="24"
                     required
                     as={InputField}
                     size="sm"
-                    extraText={formatHours(values.hours) + " h"}
+                    extraText={values.hours >= 0 && values.hours <= 24 ? formatHours(values.hours) + " h" : undefined}
                     error={touched.hours && errors.hours}
                     autoComplete="off"
                   />
@@ -143,7 +142,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     size="sm"
                     error={touched.activity_id && errors.activity_id}
                   >
-                    {timeEntryActivitiesQuery.data?.map((activity) => (
+                    {timeEntryActivities.map((activity) => (
                       <>
                         <option key={activity.id} value={activity.id}>
                           {activity.name}

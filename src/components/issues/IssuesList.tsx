@@ -2,6 +2,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment } from "react";
 import { FormattedMessage } from "react-intl";
+import useIssuePriorities from "../../hooks/useIssuePriorities";
 import useSettings from "../../hooks/useSettings";
 import useStorage from "../../hooks/useStorage";
 import { TAccount, TIssue, TReference } from "../../types/redmine";
@@ -27,12 +28,18 @@ type PropTypes = {
 const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData, setData: setIssuesData }, onSearchInProject }: PropTypes) => {
   const { settings } = useSettings();
 
-  const sortedIssues = rawIssues.sort((a, b) => {
-    const pinnedA = issuesData[a.id]?.pinned;
-    const pinnedB = issuesData[b.id]?.pinned;
-    if (pinnedA && pinnedB) return new Date(a.updated_on).getTime() - new Date(a.updated_on).getTime();
-    return pinnedA ? -1 : 1;
-  });
+  const issuePriorities = useIssuePriorities();
+
+  const issuePrioritiesIndices = issuePriorities.data.reduce((result, priority, index) => {
+    result[priority.id] = index;
+    return result;
+  }, {} as Record<number, number>);
+  const sortedIssues = rawIssues.sort(
+    (a, b) =>
+      (issuesData[b.id]?.pinned ? 1 : 0) - (issuesData[a.id]?.pinned ? 1 : 0) ||
+      issuePrioritiesIndices[b.priority.id] - issuePrioritiesIndices[a.priority.id] ||
+      new Date(a.updated_on).getTime() - new Date(a.updated_on).getTime()
+  );
 
   const groupedIssues = Object.values(
     sortedIssues.reduce(
@@ -84,6 +91,7 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
               <Issue
                 key={issue.id}
                 issue={issue}
+                priorityType={issuePriorities.getPriorityType(issue)}
                 timerData={{ active: data.active, start: data.start, time: data.time }}
                 assignedToMe={issue.assigned_to?.id === account?.id ?? false}
                 pinned={data.pinned}

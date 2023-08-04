@@ -3,10 +3,11 @@ import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faEdit, faPa
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useRef, useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage, PrimitiveType, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
+import { clsxm } from "../../utils/clsxm";
 import ContextMenu from "../general/ContextMenu";
 import KBD from "../general/KBD";
 import CreateTimeEntryModal from "./CreateTimeEntryModal";
@@ -22,6 +23,7 @@ export type IssueActions = {
 
 type PropTypes = {
   issue: TIssue;
+  priorityType: PrimitiveType;
   timerData: IssueTimerData;
   assignedToMe: boolean;
   pinned: boolean;
@@ -29,7 +31,7 @@ type PropTypes = {
 } & Omit<TimerActions, "onDoneTimer"> &
   IssueActions;
 
-const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, onPause, onStop, onOverrideTime, onRemember, onForget, onPin, onUnpin }: PropTypes) => {
+const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembered, onStart, onPause, onStop, onOverrideTime, onRemember, onForget, onPin, onUnpin }: PropTypes) => {
   const { formatMessage } = useIntl();
 
   const { settings } = useSettings();
@@ -108,9 +110,21 @@ const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, on
         ]}
       >
         <div
-          className={clsx(
-            "block w-full p-1 bg-white border border-gray-200 rounded-lg shadow-sm dark:shadow-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 relative",
-            "focus:ring-4 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800"
+          className={clsxm(
+            "block w-full p-1 rounded-lg shadow-sm dark:shadow-gray-700 relative",
+            "focus:ring-4 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
+            "bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700",
+            {
+              //"bg-[#eaf7ff] border-[#add7f3] hover:bg-[#f2faff]": priorityType === "lowest",
+              //"bg-white border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700": priorityType === "normal",
+              //"bg-[#fee] border-[#fcc] hover:bg-[#fff2f2]": priorityType === "high",
+              //"bg-[#ffc4c4] border-[#ffb4b4] hover:bg-[#ffd4d4]": priorityType === "higher" || priorityType === "highest",
+
+              "border-2 border-[#add7f3] dark:border-[#4973f3]/40": priorityType === "lowest",
+              "border border-gray-200 dark:border-gray-700": priorityType === "normal",
+              "border-2 border-[#fcc] dark:border-[#ff6868]/40": priorityType === "high",
+              "border-2 border-[#ffb4b4] dark:border-[#ff5050]/40": priorityType === "higher" || priorityType === "highest",
+            }
           )}
           tabIndex={1}
           /**
@@ -136,6 +150,9 @@ const Issue = ({ issue, timerData, assignedToMe, pinned, remembered, onStart, on
             className={clsx("mb-1 truncate", {
               "me-4": (pinned && assignedToMe) || (!pinned && !assignedToMe),
               "me-9": pinned && !assignedToMe,
+              "text-[#559] dark:text-[#9393ed]": priorityType === "lowest",
+              "text-[#900] dark:text-[#fa7070]": priorityType === "high" || priorityType === "higher",
+              "text-[#900] dark:text-[#fa7070] font-bold": priorityType === "highest",
             })}
           >
             <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" data-tooltip-id={`tooltip-issue-${issue.id}`}>
