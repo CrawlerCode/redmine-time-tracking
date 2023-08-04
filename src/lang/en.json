@@ -43,6 +43,10 @@
   "issues.modal.add-spent-time.activity": "Activity",
   "issues.modal.add-spent-time.activity.validation.required": "Activity is required",
   "issues.modal.add-spent-time.submit": "Create",
+  "issues.modal.save-changes.title": "Save changes?",
+  "issues.modal.save-changes.message": "Do you want to save your changes?",
+  "issues.modal.save-changes.cancel": "No, cancel",
+  "issues.modal.save-changes.save": "Yes, Save",
   "issues.error.fail-to-load-issues": "Failed to load issues",
 
   "time.error.fail-to-load-data": "Failed to load data",

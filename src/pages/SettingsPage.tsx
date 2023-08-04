@@ -1,10 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
-import clsx from "clsx";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
 import { LANGUAGES } from "../IntlProvider";
+import Button from "../components/general/Button";
 import CheckBox from "../components/general/CheckBox";
 import Indicator from "../components/general/Indicator";
 import InputField from "../components/general/InputField";
@@ -170,16 +170,9 @@ const SettingsPage = () => {
                   </div>
                 </fieldset>
 
-                <button
-                  type="button"
-                  className={clsx(
-                    "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5 mt-2 dark:bg-primary-600 dark:hover:bg-primary-700",
-                    "focus:ring-4 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800"
-                  )}
-                  onClick={submitForm}
-                >
+                <Button onClick={submitForm} className="mt-2">
                   <FormattedMessage id="settings.save-settings" />
-                </button>
+                </Button>
               </div>
             </Form>
           </>

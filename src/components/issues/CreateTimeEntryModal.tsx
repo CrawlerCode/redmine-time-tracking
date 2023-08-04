@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, isAxiosError } from "axios";
-import clsx from "clsx";
 import { startOfDay } from "date-fns";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
@@ -10,6 +9,7 @@ import { createTimeEntry, getTimeEntryActivities, updateIssue } from "../../api/
 import useSettings from "../../hooks/useSettings";
 import { TCreateTimeEntry, TIssue, TRedmineError } from "../../types/redmine";
 import { formatHours } from "../../utils/date";
+import Button from "../general/Button";
 import DateField from "../general/DateField";
 import InputField from "../general/InputField";
 import Modal from "../general/Modal";
@@ -152,16 +152,9 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     ))}
                   </Field>
 
-                  <button
-                    type="submit"
-                    className={clsx(
-                      "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-1.5 mt-2 dark:bg-primary-600 dark:hover:bg-primary-700",
-                      "focus:ring-4 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800"
-                    )}
-                    disabled={isSubmitting}
-                  >
+                  <Button type="submit" disabled={isSubmitting}>
                     <FormattedMessage id="issues.modal.add-spent-time.submit" />
-                  </button>
+                  </Button>
                 </div>
               </Form>
             </>
