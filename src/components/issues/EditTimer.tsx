@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { FocusEvent, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import useHotKey from "../../hooks/useHotkey";
 import Button from "../general/Button";
@@ -24,7 +24,7 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
   /**
    * On "Escape" => cancel
    */
-  useHotKey(onCancel, { key: "Escape" });
+  useHotKey(onConfirmCancel, { key: "Escape" });
 
   return (
     <>
@@ -59,10 +59,10 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
             }
           }}
           /**
-           * On loose focus, check if next target not a input => cancel
+           * On loose focus, check if next target not a number input => cancel
            */
           onBlur={(e) => {
-            if (!(e.relatedTarget?.localName === "input")) onCancel();
+            if (!(e.relatedTarget?.localName === "input" && (e as FocusEvent<HTMLInputElement, HTMLInputElement>).relatedTarget?.type === "number")) onCancel();
           }}
         />
         :
@@ -91,10 +91,10 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
             }
           }}
           /**
-           * On loose focus, check if next target not a input => cancel
+           * On loose focus, check if next target not a number input => cancel
            */
           onBlur={(e) => {
-            if (!(e.relatedTarget?.localName === "input")) onCancel();
+            if (!(e.relatedTarget?.localName === "input" && (e as FocusEvent<HTMLInputElement, HTMLInputElement>).relatedTarget?.type === "number")) onCancel();
           }}
         />
         :
@@ -123,10 +123,10 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
             }
           }}
           /**
-           * On loose focus, check if next target not a input => cancel
+           * On loose focus, check if next target not a number input => cancel
            */
           onBlur={(e) => {
-            if (!(e.relatedTarget?.localName === "input")) onCancel();
+            if (!(e.relatedTarget?.localName === "input" && (e as FocusEvent<HTMLInputElement, HTMLInputElement>).relatedTarget?.type === "number")) onCancel();
           }}
         />
       </div>
