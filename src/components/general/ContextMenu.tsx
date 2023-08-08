@@ -47,7 +47,7 @@ const ContextMenu = ({ menu, children }: PropTypes) => {
       {position && (
         <div
           ref={ref}
-          className="absolute z-20 bg-white border dark:border-0 border-gray-200 divide-y divide-gray-200 dark:divide-gray-600 rounded-lg shadow w-40 dark:bg-gray-700"
+          className="absolute z-20 w-40 divide-y divide-gray-200 rounded-lg border border-gray-200 bg-white shadow dark:divide-gray-600 dark:border-0 dark:bg-gray-700"
           style={{ top: `${position.y}px`, left: `${position.x}px` }}
           onClick={() => setPosition(undefined)}
         >
@@ -57,7 +57,7 @@ const ContextMenu = ({ menu, children }: PropTypes) => {
                 <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton" key={i}>
                   {group.map((item) => (
                     <li className={clsx("flex px-2 py-1", item.disabled ? "text-gray-300 dark:text-gray-500" : "hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white")} onClick={!item.disabled ? item.onClick : undefined} key={item.name}>
-                      <span className="flex justify-center items-center w-4 me-2">{item.icon}</span>
+                      <span className="me-2 flex w-4 items-center justify-center">{item.icon}</span>
                       {item.name}
                     </li>
                   ))}
@@ -68,7 +68,7 @@ const ContextMenu = ({ menu, children }: PropTypes) => {
             <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
               {(menu as MenuItem[]).map((item) => (
                 <li className={clsx("flex px-2 py-1", item.disabled ? "text-gray-300 dark:text-gray-500" : "hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white")} onClick={!item.disabled ? item.onClick : undefined} key={item.name}>
-                  <span className="flex justify-center items-center w-4 me-2">{item.icon}</span>
+                  <span className="me-2 flex w-4 items-center justify-center">{item.icon}</span>
                   {item.name}
                 </li>
               ))}

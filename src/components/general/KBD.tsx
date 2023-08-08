@@ -12,7 +12,7 @@ const KBD = ({ children, space = "md", className }: PropTypes) => {
     <kbd
       className={clsx(
         space === "xl" ? "px-2" : "px-1",
-        "mx-1 py-0.5 text-xs text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500",
+        "mx-1 rounded-lg border border-gray-200 bg-gray-100 py-0.5 text-xs text-gray-800 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100",
         className
       )}
     >

@@ -35,9 +35,9 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           min={0}
           max={100}
           className={clsx(
-            "text-lg rounded-md w-4 text-center appearance-none",
-            "bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400",
-            "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
+            "w-4 appearance-none rounded-md text-center text-lg",
+            "border border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:placeholder:text-gray-400",
+            "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
             initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
           )}
           /**
@@ -72,9 +72,9 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           min={0}
           max={59}
           className={clsx(
-            "text-lg rounded-md w-6 text-center appearance-none",
-            "bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400",
-            "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
+            "w-6 appearance-none rounded-md text-center text-lg",
+            "border border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:placeholder:text-gray-400",
+            "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
             initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
           )}
           onChange={(e) => {
@@ -104,9 +104,9 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           min={0}
           max={59}
           className={clsx(
-            "text-lg rounded-md w-6 text-center appearance-none",
-            "bg-gray-50 border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400",
-            "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
+            "w-6 appearance-none rounded-md text-center text-lg",
+            "border border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:placeholder:text-gray-400",
+            "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
             initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
           )}
           onChange={(e) => {
@@ -135,7 +135,7 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           <p className="mb-5">
             <FormattedMessage id="issues.modal.save-changes.message" />
           </p>
-          <div className="flex justify-between items-end">
+          <div className="flex items-end justify-between">
             <Button size="sm" variant="outline" onClick={onConfirmCancel}>
               <FormattedMessage id="issues.modal.save-changes.cancel" />
             </Button>

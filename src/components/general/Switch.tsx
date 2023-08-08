@@ -31,7 +31,7 @@ const Switch = ({ size = "md", name, value, onChange, options, className, tabInd
         <div className="flex justify-center" key={option.value}>
           <button
             type="button"
-            className={clsx("w-full rounded-full", "focus:ring-2 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800", {
+            className={clsx("w-full rounded-full", "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800", {
               "text-white bg-primary-700 dark:bg-primary-600": value === option.value,
               "p-0.5 px-2": size === "md",
               "p-1 px-3": size === "lg",

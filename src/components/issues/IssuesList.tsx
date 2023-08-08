@@ -72,7 +72,7 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
       {groupedIssues.map(({ project, issues: groupIssues }) => (
         <Fragment key={project.id}>
           <div className="flex justify-between gap-x-2">
-            <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="text-xs text-slate-500 dark:text-slate-300 hover:underline truncate max-w-fit">
+            <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs text-slate-500 hover:underline dark:text-slate-300">
               {project.name}
             </a>
             <button type="button" className=" text-gray-900 dark:text-white" onClick={() => onSearchInProject(project)} tabIndex={-1}>

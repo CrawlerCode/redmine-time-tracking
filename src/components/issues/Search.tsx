@@ -104,17 +104,17 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
               { value: "project", name: formatMessage({ id: "issues.search.mode.project" }), disabled: !!inProject },
             ]}
             onChange={(e) => setMode(e.target.value as SearchQuery["mode"])}
-            className="absolute top-1.5 end-1 bg-gray-300 dark:bg-gray-800"
+            className="absolute end-1 top-1.5 bg-gray-300 dark:bg-gray-800"
             tabIndex={-1}
           />
           {inProject && (
-            <div className="flex items-center gap-x-1.5 ps-2 mt-1.5 whitespace-nowrap">
+            <div className="mt-1.5 flex items-center gap-x-1.5 whitespace-nowrap ps-2">
               <FontAwesomeIcon icon={faChevronRight} />
               <FormattedMessage
                 id="issues.search.search-in-project"
                 values={{
                   projectName: inProject.name,
-                  badge: (children) => <span className="rounded-full bg-primary-300 dark:bg-primary-800 px-1.5 text-xs truncate">{children}</span>,
+                  badge: (children) => <span className="truncate rounded-full bg-primary-300 px-1.5 text-xs dark:bg-primary-800">{children}</span>,
                 }}
               />
             </div>

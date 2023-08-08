@@ -53,7 +53,7 @@ const SettingsPage = () => {
           <>
             <Form>
               <div className="flex flex-col gap-y-1">
-                <fieldset className="p-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
+                <fieldset className="rounded-lg border border-gray-300 p-1.5 dark:border-gray-600">
                   <legend className="px-2 text-base font-semibold">
                     <FormattedMessage id="settings.general" />
                   </legend>
@@ -79,7 +79,7 @@ const SettingsPage = () => {
                   </div>
                 </fieldset>
 
-                <fieldset className="p-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
+                <fieldset className="rounded-lg border border-gray-300 p-1.5 dark:border-gray-600">
                   <legend className="px-2 text-base font-semibold">
                     <FormattedMessage id="settings.redmine" />
                   </legend>
@@ -159,7 +159,7 @@ const SettingsPage = () => {
                   </div>
                 </fieldset>
 
-                <fieldset className="p-1.5 rounded-lg border border-gray-300 dark:border-gray-600">
+                <fieldset className="rounded-lg border border-gray-300 p-1.5 dark:border-gray-600">
                   <legend className="px-2 text-base font-semibold">
                     <FormattedMessage id="settings.options" />
                   </legend>
@@ -196,7 +196,7 @@ const SettingsPage = () => {
           </>
         )}
       </Formik>
-      <div className="w-full flex flex-col items-center p-2 mt-3">
+      <div className="mt-3 flex w-full flex-col items-center p-2">
         <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline">
           {chrome.runtime.getManifest().name}
         </a>

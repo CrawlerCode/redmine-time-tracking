@@ -50,7 +50,7 @@ const IssuesPage = () => {
                 <div className="w-full border-t text-slate-500 dark:text-slate-300"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-white dark:bg-gray-800 px-2 text-sm text-slate-500 dark:text-slate-300">
+                <span className="bg-white px-2 text-sm text-slate-500 dark:bg-gray-800 dark:text-slate-300">
                   <FormattedMessage id="issues.extended-search" />
                 </span>
               </div>

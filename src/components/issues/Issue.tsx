@@ -164,12 +164,12 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
           <div className="flex flex-row justify-between gap-x-2">
             <div className="mt-1">
               <div className="w-[80px] bg-[#eeeeee]">
-                <div className="bg-[#bae0ba] text-xs font-medium text-gray-600 text-center leading-none p-1 select-none" style={{ width: `${issue.done_ratio}%` }}>
+                <div className="select-none bg-[#bae0ba] p-1 text-center text-xs font-medium leading-none text-gray-600" style={{ width: `${issue.done_ratio}%` }}>
                   {issue.done_ratio}%
                 </div>
               </div>
             </div>
-            <div className="flex flex-col mr-2">
+            <div className="mr-2 flex flex-col">
               <IssueTimer
                 key={issue.id}
                 ref={timerRef}
@@ -183,23 +183,23 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
               />
             </div>
           </div>
-          <div className="absolute top-2 right-2 flex justify-end items-start gap-x-1">
+          <div className="absolute right-2 top-2 flex items-start justify-end gap-x-1">
             {pinned && (
               <>
                 <Tooltip id={`tooltip-pinned-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.pinned" })} className="italic" />
-                <FontAwesomeIcon icon={faStar} className="text-gray-300 dark:text-gray-600 focus:outline-none" data-tooltip-id={`tooltip-pinned-${issue.id}`} tabIndex={-1} />
+                <FontAwesomeIcon icon={faStar} className="text-gray-300 focus:outline-none dark:text-gray-600" data-tooltip-id={`tooltip-pinned-${issue.id}`} tabIndex={-1} />
               </>
             )}
             {!assignedToMe && (
               <>
                 <Tooltip id={`tooltip-not-assigned-to-me-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.not-assigned-to-me" })} className="italic" />
-                <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 dark:text-gray-600 focus:outline-none" data-tooltip-id={`tooltip-not-assigned-to-me-${issue.id}`} tabIndex={-1} />
+                <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 focus:outline-none dark:text-gray-600" data-tooltip-id={`tooltip-not-assigned-to-me-${issue.id}`} tabIndex={-1} />
               </>
             )}
           </div>
         </div>
       </ContextMenu>
-      <Tooltip id={`tooltip-toggle-timer-${issue.id}`} place="bottom" delayShow={4000} className="italic max-w-[275px] z-10">
+      <Tooltip id={`tooltip-toggle-timer-${issue.id}`} place="bottom" delayShow={4000} className="z-10 max-w-[275px] italic">
         <FormattedMessage
           id="issues.action.toggle-timer.tooltip"
           values={{

@@ -11,7 +11,7 @@ type PropTypes = {
 const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
   const sumHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
   return (
-    <div className="flex gap-x-0.5 items-center">
+    <div className="flex items-center gap-x-0.5">
       {entries.map((entry) => (
         <Fragment key={entry.id}>
           <Tooltip id={`tooltip-time-entry-${entry.id}`} place="bottom" className="z-10 opacity-100">
@@ -27,7 +27,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
             <p>{entry.comments}</p>
           </Tooltip>
           <div
-            className="h-4 bg-primary rounded"
+            className="h-4 rounded bg-primary"
             style={{
               width: `${(entry.hours / maxHours) * 100}%`,
             }}
@@ -41,7 +41,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
             <h4 className="text-base">{previewHours} h</h4>
           </Tooltip>
           <div
-            className="h-4 bg-primary/50 rounded"
+            className="h-4 rounded bg-primary/50"
             style={{
               width: `${(previewHours / maxHours) * 100}%`,
               backgroundSize: "1rem 1rem",
@@ -53,7 +53,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
       )) ||
         undefined}
       <div
-        className="h-3 bg-gray-400/40 dark:bg-gray-700/40 rounded"
+        className="h-3 rounded bg-gray-400/40 dark:bg-gray-700/40"
         style={{
           width: `${((maxHours - sumHours - (previewHours ?? 0)) / maxHours) * 100}%`,
           backgroundSize: "1rem 1rem",
