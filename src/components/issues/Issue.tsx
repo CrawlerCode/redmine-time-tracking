@@ -1,4 +1,4 @@
-import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faPause, faPen, faPen, faPlay, faStop, faThumbTack, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faPause, faPen, faPlay, faStop, faThumbTack, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useRef, useState } from "react";
@@ -13,7 +13,7 @@ import CreateTimeEntryModal from "./CreateTimeEntryModal";
 import IssueInfoTooltip from "./IssueInfoTooltip";
 import IssueTimer, { IssueTimerData, TimerActions, TimerRef } from "./IssueTimer";
 
-export type IssueActions = {
+type IssueActions = {
   onRemember: () => void;
   onForget: () => void;
   onPin: () => void;

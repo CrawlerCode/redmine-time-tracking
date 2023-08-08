@@ -6,31 +6,25 @@ type PropTypes = {
   entries: TTimeEntry[];
 };
 
+type GroupedEntries = {
+  date: Date;
+  hours: number;
+  entries: TTimeEntry[];
+};
+
 const TimeEntryList = ({ entries }: PropTypes) => {
   const groupedEntries = Object.values(
-    entries.reduce(
-      (
-        result: {
-          [date: string]: {
-            date: Date;
-            hours: number;
-            entries: TTimeEntry[];
-          };
-        },
-        entry
-      ) => {
-        if (!(entry.spent_on in result)) {
-          result[entry.spent_on] = {
-            date: parseISO(entry.spent_on),
-            hours: 0,
-            entries: [],
-          };
-        }
-        result[entry.spent_on].entries.push(entry);
-        return result;
-      },
-      {}
-    )
+    entries.reduce((result: Record<string, GroupedEntries>, entry) => {
+      if (!(entry.spent_on in result)) {
+        result[entry.spent_on] = {
+          date: parseISO(entry.spent_on),
+          hours: 0,
+          entries: [],
+        };
+      }
+      result[entry.spent_on].entries.push(entry);
+      return result;
+    }, {})
   ).map((group) => {
     group.entries.sort((a, b) => b.hours - a.hours);
     group.hours = group.entries.reduce((sum, entry) => sum + entry.hours, 0);

@@ -14,8 +14,12 @@ type IssueData = IssueTimerData & {
   remembered: boolean;
 };
 
-export type IssuesData = {
-  [id: number]: IssueData;
+export type IssuesData = Record<number, IssueData>;
+
+type GroupedIssues = {
+  project: TReference;
+  issues: TIssue[];
+  sort: number;
 };
 
 type PropTypes = {
@@ -30,13 +34,10 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
 
   const issuePriorities = useIssuePriorities();
 
-  const issuePrioritiesIndices = issuePriorities.data.reduce(
-    (result, priority, index) => {
-      result[priority.id] = index;
-      return result;
-    },
-    {} as Record<number, number>
-  );
+  const issuePrioritiesIndices = issuePriorities.data.reduce((result: Record<number, number>, priority, index) => {
+    result[priority.id] = index;
+    return result;
+  }, {});
   const sortedIssues = rawIssues.sort(
     (a, b) =>
       (issuesData[b.id]?.pinned ? 1 : 0) - (issuesData[a.id]?.pinned ? 1 : 0) ||
@@ -45,29 +46,17 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
   );
 
   const groupedIssues = Object.values(
-    sortedIssues.reduce(
-      (
-        result: {
-          [id: number]: {
-            project: TReference;
-            issues: TIssue[];
-            sort: number;
-          };
-        },
-        issue
-      ) => {
-        if (!(issue.project.id in result)) {
-          result[issue.project.id] = {
-            project: issue.project,
-            issues: [],
-            sort: Object.keys(result).length,
-          };
-        }
-        result[issue.project.id].issues.push(issue);
-        return result;
-      },
-      {}
-    )
+    sortedIssues.reduce((result: Record<number, GroupedIssues>, issue) => {
+      if (!(issue.project.id in result)) {
+        result[issue.project.id] = {
+          project: issue.project,
+          issues: [],
+          sort: Object.keys(result).length,
+        };
+      }
+      result[issue.project.id].issues.push(issue);
+      return result;
+    }, {})
   ).sort((a, b) => a.sort - b.sort);
 
   return (
@@ -102,10 +91,8 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
                 onStart={() => {
                   setIssuesData({
                     ...(settings.options.autoPauseOnSwitch
-                      ? Object.entries(issuesData).reduce((res, [id, val]) => {
-                          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                          // @ts-ignore
-                          res[id] = val.active
+                      ? Object.entries(issuesData).reduce((res: IssuesData, [id, val]) => {
+                          res[Number(id)] = val.active
                             ? {
                                 ...val,
                                 active: false,
