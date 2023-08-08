@@ -19,6 +19,7 @@
   "issues.context-menu.unpin": "Unpin issue",
   "issues.context-menu.remember": "Remember issue",
   "issues.context-menu.forgot": "Forget issue",
+  "issues.context-menu.pin-and-remember": "Pin and remember issue",
   "issues.issue.pinned": "Issue is pinned at the top",
   "issues.issue.not-assigned-to-me": "Issue is not assigned to you",
   "issues.action.toggle-timer.tooltip": "If selected, press <KBD>Ctrl</KBD> + <KBD>Spacebar</KBD> to toggle timer",

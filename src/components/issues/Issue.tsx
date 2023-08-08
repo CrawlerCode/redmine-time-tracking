@@ -1,5 +1,4 @@
-import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
-import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faEdit, faPause, faPlay, faStar, faStop } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faPause, faPen, faPen, faPlay, faStop, faThumbTack, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useRef, useState } from "react";
@@ -19,6 +18,7 @@ export type IssueActions = {
   onForget: () => void;
   onPin: () => void;
   onUnpin: () => void;
+  onPinAndRemember: () => void;
 };
 
 type PropTypes = {
@@ -31,7 +31,7 @@ type PropTypes = {
 } & Omit<TimerActions, "onDoneTimer"> &
   IssueActions;
 
-const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembered, onStart, onPause, onStop, onOverrideTime, onRemember, onForget, onPin, onUnpin }: PropTypes) => {
+const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembered, onStart, onPause, onStop, onOverrideTime, onRemember, onForget, onPin, onUnpin, onPinAndRemember }: PropTypes) => {
   const { formatMessage } = useIntl();
 
   const { settings } = useSettings();
@@ -74,21 +74,21 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
             },
             {
               name: formatMessage({ id: "issues.context-menu.timer.edit" }),
-              icon: <FontAwesomeIcon icon={faEdit} />,
+              icon: <FontAwesomeIcon icon={faPen} />,
               disabled: timerRef.current?.timer === 0,
               onClick: () => timerRef.current?.editTimer(),
             },
           ],
           [
             {
-              name: formatMessage({ id: "issues.context-menu.pin" }),
-              icon: <FontAwesomeIcon icon={faStar} />,
+              name: formatMessage({ id: assignedToMe || remembered ? "issues.context-menu.pin" : "issues.context-menu.pin-and-remember" }),
+              icon: <FontAwesomeIcon icon={faThumbTack} className="rotate-[30deg]" />,
               disabled: pinned,
-              onClick: onPin,
+              onClick: assignedToMe || remembered ? onPin : onPinAndRemember,
             },
             {
               name: formatMessage({ id: "issues.context-menu.unpin" }),
-              icon: <FontAwesomeIcon icon={faStarRegular} />,
+              icon: <FontAwesomeIcon icon={faXmark} />,
               disabled: !pinned,
               onClick: onUnpin,
             },
@@ -111,15 +111,10 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
       >
         <div
           className={clsxm(
-            "block w-full p-1 rounded-lg shadow-sm dark:shadow-gray-700 relative",
-            "focus:ring-4 focus:ring-primary-300 focus:outline-none dark:focus:ring-primary-800",
+            "relative block w-full rounded-lg p-1 shadow-sm dark:shadow-gray-700",
+            "focus:outline-none focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-800",
             "bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700",
             {
-              //"bg-[#eaf7ff] border-[#add7f3] hover:bg-[#f2faff]": priorityType === "lowest",
-              //"bg-white border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700": priorityType === "normal",
-              //"bg-[#fee] border-[#fcc] hover:bg-[#fff2f2]": priorityType === "high",
-              //"bg-[#ffc4c4] border-[#ffb4b4] hover:bg-[#ffd4d4]": priorityType === "higher" || priorityType === "highest",
-
               "border-2 border-[#add7f3] dark:border-[#4973f3]/40": priorityType === "lowest",
               "border border-gray-200 dark:border-gray-700": priorityType === "normal",
               "border-2 border-[#fcc] dark:border-[#ff6868]/40": priorityType === "high",
@@ -152,7 +147,7 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
               "me-9": pinned && !assignedToMe,
               "text-[#559] dark:text-[#9393ed]": priorityType === "lowest",
               "text-[#900] dark:text-[#fa7070]": priorityType === "high" || priorityType === "higher",
-              "text-[#900] dark:text-[#fa7070] font-bold": priorityType === "highest",
+              "font-bold text-[#900] dark:text-[#fa7070]": priorityType === "highest",
             })}
           >
             <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" data-tooltip-id={`tooltip-issue-${issue.id}`}>
@@ -187,7 +182,7 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
             {pinned && (
               <>
                 <Tooltip id={`tooltip-pinned-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.pinned" })} className="italic" />
-                <FontAwesomeIcon icon={faStar} className="text-gray-300 focus:outline-none dark:text-gray-600" data-tooltip-id={`tooltip-pinned-${issue.id}`} tabIndex={-1} />
+                <FontAwesomeIcon icon={faThumbTack} className="rotate-[30deg] text-gray-300 focus:outline-none dark:text-gray-600" data-tooltip-id={`tooltip-pinned-${issue.id}`} tabIndex={-1} />
               </>
             )}
             {!assignedToMe && (

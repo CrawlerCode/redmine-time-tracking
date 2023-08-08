@@ -30,10 +30,13 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
 
   const issuePriorities = useIssuePriorities();
 
-  const issuePrioritiesIndices = issuePriorities.data.reduce((result, priority, index) => {
-    result[priority.id] = index;
-    return result;
-  }, {} as Record<number, number>);
+  const issuePrioritiesIndices = issuePriorities.data.reduce(
+    (result, priority, index) => {
+      result[priority.id] = index;
+      return result;
+    },
+    {} as Record<number, number>
+  );
   const sortedIssues = rawIssues.sort(
     (a, b) =>
       (issuesData[b.id]?.pinned ? 1 : 0) - (issuesData[a.id]?.pinned ? 1 : 0) ||
@@ -194,6 +197,16 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
                     [issue.id]: {
                       ...data,
                       pinned: false,
+                    },
+                  });
+                }}
+                onPinAndRemember={() => {
+                  setIssuesData({
+                    ...issuesData,
+                    [issue.id]: {
+                      ...data,
+                      pinned: true,
+                      remembered: true,
                     },
                   });
                 }}

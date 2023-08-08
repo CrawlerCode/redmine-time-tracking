@@ -54,9 +54,13 @@ const ContextMenu = ({ menu, children }: PropTypes) => {
           {(menu.length > 0 && Array.isArray(menu[0]) && (
             <>
               {(menu as MenuItem[][]).map((group, i) => (
-                <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton" key={i}>
+                <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" key={i}>
                   {group.map((item) => (
-                    <li className={clsx("flex px-2 py-1", item.disabled ? "text-gray-300 dark:text-gray-500" : "hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white")} onClick={!item.disabled ? item.onClick : undefined} key={item.name}>
+                    <li
+                      className={clsx("flex px-2 py-1", item.disabled ? "text-gray-300 dark:text-gray-500" : "hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white")}
+                      onClick={!item.disabled ? item.onClick : undefined}
+                      key={item.name}
+                    >
                       <span className="me-2 flex w-4 items-center justify-center">{item.icon}</span>
                       {item.name}
                     </li>
@@ -65,9 +69,13 @@ const ContextMenu = ({ menu, children }: PropTypes) => {
               ))}
             </>
           )) || (
-            <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+            <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
               {(menu as MenuItem[]).map((item) => (
-                <li className={clsx("flex px-2 py-1", item.disabled ? "text-gray-300 dark:text-gray-500" : "hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white")} onClick={!item.disabled ? item.onClick : undefined} key={item.name}>
+                <li
+                  className={clsx("flex px-2 py-1", item.disabled ? "text-gray-300 dark:text-gray-500" : "hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white")}
+                  onClick={!item.disabled ? item.onClick : undefined}
+                  key={item.name}
+                >
                   <span className="me-2 flex w-4 items-center justify-center">{item.icon}</span>
                   {item.name}
                 </li>
