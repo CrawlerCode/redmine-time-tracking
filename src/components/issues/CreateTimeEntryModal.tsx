@@ -62,7 +62,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
             issue_id: issue.id,
             spent_on: new Date(),
             activity_id: undefined,
-            hours: time / 1000 / 60 / 60,
+            hours: Number((time / 1000 / 60 / 60).toFixed(2)),
             comments: "",
           }}
           validationSchema={Yup.object({
