@@ -60,7 +60,7 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
       searchRef.current?.focus();
       searchRef.current?.select();
     },
-    { ctrl: true, key: "k" }
+    { ctrl: true, code: "KeyK" }
   );
   useHotKey(
     () => {
@@ -68,7 +68,7 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
       searchRef.current?.focus();
       searchRef.current?.select();
     },
-    { ctrl: true, key: "f" }
+    { ctrl: true, code: "KeyF" }
   );
   useHotKey(
     () => {

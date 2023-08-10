@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 
-const useHotKey = (callback: () => void, hotkey: { key: string; ctrl?: boolean }, prevent = true) => {
+const useHotKey = (callback: () => void, hotkey: { key?: string; code?: string; ctrl?: boolean }, prevent = true) => {
   const handleKeyPress = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === hotkey.key && (hotkey.ctrl ? e.ctrlKey : true)) {
+      if ((hotkey.ctrl ? e.ctrlKey : true) && (e.key === hotkey.key || e.code === hotkey.code)) {
         callback();
         if (prevent) e.preventDefault();
       }
