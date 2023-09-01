@@ -9,7 +9,7 @@ const useIssuePriorities = () => {
     queryKey: ["issuePriorities"],
     queryFn: getIssuePriorities,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 60,
   });
 
   const priorities = issuePrioritiesQuery.data?.filter((priority) => priority.active) ?? [];

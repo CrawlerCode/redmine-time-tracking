@@ -6,7 +6,7 @@ const useTimeEntryActivities = () => {
     queryKey: ["timeEntryActivities"],
     queryFn: getTimeEntryActivities,
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 60,
   });
   return timeEntryActivitiesQuery.data?.filter((activity) => activity.active !== false) ?? [];
 };

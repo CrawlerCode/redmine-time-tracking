@@ -27,7 +27,7 @@ const Navbar = ({ navigation }: PropTypes) => {
                 location.pathname === item.href
                   ? "border-b-2 border-primary-600 text-primary-600 dark:border-primary-500 dark:text-primary-500"
                   : "border-b-2 border-transparent hover:text-gray-600 dark:hover:text-gray-300",
-                "select-none focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-600"
+                "select-none focus:outline-none"
               )}
               tabIndex={-1}
             >

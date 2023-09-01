@@ -8,7 +8,7 @@ const useMyAccount = () => {
   const myAccountQuery = useQuery({
     queryKey: ["myAccount", settings.redmineURL, settings.redmineApiKey],
     queryFn: getMyAccount,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 60,
   });
 
   return {

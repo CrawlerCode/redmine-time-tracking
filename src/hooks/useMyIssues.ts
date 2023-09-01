@@ -6,6 +6,8 @@ import useDebounce from "./useDebounce";
 import useSettings from "./useSettings";
 
 const MAX_EXTENDED_SEARCH_LIMIT = 75;
+const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 5;
+const STALE_DATA_TIME = 1000 * 60;
 
 const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery) => {
   const { settings } = useSettings();
@@ -14,6 +16,8 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery) => {
     queryKey: ["issues"],
     queryFn: ({ pageParam = 0 }) => getAllMyOpenIssues(pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
+    staleTime: STALE_DATA_TIME,
+    refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
   });
   const additionalIssuesQuery = useInfiniteQuery({
     queryKey: ["additionalIssues", additionalIssuesIds],
@@ -21,6 +25,8 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery) => {
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     enabled: additionalIssuesIds.length > 0,
     keepPreviousData: additionalIssuesIds.length > 0,
+    staleTime: STALE_DATA_TIME,
+    refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
   });
 
   // auto fetch all pages
@@ -53,17 +59,23 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery) => {
   const extendedSearchIssuesResultQuery = useQuery({
     queryKey: ["extendedSearchIssuesResult", debouncedSearch],
     queryFn: () => searchOpenIssues(debouncedSearch),
-    enabled: extendedSearching && search.mode === "issue",
+    enabled: extendedSearching && search.mode === "issue" && !debouncedSearch.includes("#"),
     keepPreviousData: true,
   });
   const extendedSearchIssuesResultIds = (extendedSearchIssuesResultQuery.data?.map((result) => result.id) ?? []).filter((id) => !issues.find((issue) => issue.id === id));
+  const extendedSearchIssueIdMatch = debouncedSearch.match(/^#(\d+)$/); // search for #<issueId>
+  if (extendedSearchIssueIdMatch) {
+    const issueId = Number(extendedSearchIssueIdMatch[1]);
+    if (!issues.find((issue) => issue.id === issueId)) extendedSearchIssuesResultIds.push(issueId);
+  }
   const extendedSearchIssuesQuery = useQuery({
     queryKey: ["extendedSearchIssues", extendedSearchIssuesResultIds],
     queryFn: () => getOpenIssuesByIds(extendedSearchIssuesResultIds, 0, search.inProject ? 100 : MAX_EXTENDED_SEARCH_LIMIT),
     enabled: extendedSearchIssuesResultIds.length > 0,
     keepPreviousData: extendedSearchIssuesResultIds.length > 0,
   });
-  const extendedSearchIssuesList = (search.inProject ? extendedSearchIssuesQuery.data?.filter((issue) => issue.project.id === search.inProject?.id) : extendedSearchIssuesQuery.data)?.slice(0, MAX_EXTENDED_SEARCH_LIMIT) ?? [];
+  const extendedSearchIssuesList =
+    (search.inProject ? extendedSearchIssuesQuery.data?.filter((issue) => issue.project.id === search.inProject?.id) : extendedSearchIssuesQuery.data)?.slice(0, MAX_EXTENDED_SEARCH_LIMIT) ?? [];
 
   // extended search - mode: project
   const extendedSearchProjectsResultQuery = useQuery({

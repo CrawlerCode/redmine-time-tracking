@@ -42,8 +42,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
   const createTimeEntryMutation = useMutation({
     mutationFn: (entry: TCreateTimeEntry) => createTimeEntry(entry),
     onSuccess: () => {
-      queryClient.invalidateQueries(["issues"]);
-      queryClient.invalidateQueries(["additionalIssues"]);
+      queryClient.invalidateQueries(["timeEntries"]);
       onSuccess();
     },
   });
@@ -51,6 +50,10 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
   const [doneRatio, setDoneRatio] = useState(issue.done_ratio);
   const updateIssueMutation = useMutation({
     mutationFn: (data: { done_ratio: number }) => updateIssue(issue.id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["issues"]);
+      queryClient.invalidateQueries(["additionalIssues"]);
+    },
   });
 
   return (

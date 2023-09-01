@@ -12,7 +12,7 @@
   "homepage_url": "https://github.com/CrawlerCode/redmine-time-tracking",
   "action": {
     "default_title": "Redmine Time Tracking",
-    "default_popup": "index.html"
+    "default_popup": "index.html?location=popup"
   },
   "options_ui": {
     "page": "index.html#/settings",
