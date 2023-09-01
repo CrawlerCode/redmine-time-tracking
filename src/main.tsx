@@ -4,8 +4,9 @@ import ReactDOM from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import "react-tooltip/dist/react-tooltip.css";
 import App from "./App.tsx";
-import IntlProvider from "./IntlProvider.tsx";
 import "./index.css";
+import IntlProvider from "./provider/IntlProvider.tsx";
+import SettingsProvider from "./provider/SettingsProvider.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,9 +20,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <HashRouter>
       <QueryClientProvider client={queryClient}>
-        <IntlProvider>
-          <App />
-        </IntlProvider>
+        <SettingsProvider>
+          <IntlProvider>
+            <App />
+          </IntlProvider>
+        </SettingsProvider>
       </QueryClientProvider>
     </HashRouter>
   </React.StrictMode>

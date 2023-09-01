@@ -5,7 +5,6 @@ import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
-import { LANGUAGES } from "../IntlProvider";
 import Button from "../components/general/Button";
 import CheckBox from "../components/general/CheckBox";
 import Indicator from "../components/general/Indicator";
@@ -13,7 +12,9 @@ import InputField from "../components/general/InputField";
 import SelectField from "../components/general/SelectField";
 import Toast from "../components/general/Toast";
 import useMyAccount from "../hooks/useMyAccount";
-import useSettings, { Settings } from "../hooks/useSettings";
+import useSettings from "../hooks/useSettings";
+import { LANGUAGES } from "../provider/IntlProvider";
+import { Settings } from "../provider/SettingsProvider";
 
 const SettingsPage = () => {
   const queryClient = useQueryClient();

@@ -2,9 +2,9 @@ import { setDefaultOptions } from "date-fns";
 import { de as dateFnsLocalDE, enUS as dateFnsLocalEN } from "date-fns/locale";
 import React from "react";
 import { IntlProvider as ReactIntlProvider } from "react-intl";
-import useSettings from "./hooks/useSettings";
-import messagesDE from "./lang/de.json";
-import messagesEN from "./lang/en.json";
+import useSettings from "../hooks/useSettings";
+import messagesDE from "../lang/de.json";
+import messagesEN from "../lang/en.json";
 
 type Language = "de" | "en";
 // eslint-disable-next-line react-refresh/only-export-components

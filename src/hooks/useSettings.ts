@@ -1,41 +1,18 @@
 import deepmerge from "deepmerge";
-import { loadRedmineConfig } from "../api/axios.config";
-import useStorage, { getChromeStorage } from "./useStorage";
+import { useContext } from "react";
+import { Settings, SettingsContext, defaultSettings } from "../provider/SettingsProvider";
+import { getChromeStorage } from "./useStorage";
 
-export type Settings = {
-  language: string;
-  redmineURL: string;
-  redmineApiKey: string;
-  options: {
-    autoPauseOnSwitch: boolean;
-    extendedSearch: boolean;
-    roundTimeNearestQuarterHour: boolean;
-  };
-};
-
-const defaultSettings = {
-  language: "browser",
-  redmineURL: "",
-  redmineApiKey: "",
-  options: {
-    autoPauseOnSwitch: true,
-    extendedSearch: true,
-    roundTimeNearestQuarterHour: false,
-  },
-};
-
+/**
+ * Use settings context
+ */
 const useSettings = () => {
-  const { data, setData } = useStorage<Settings>("settings", defaultSettings);
-
-  return {
-    settings: deepmerge<Settings>(defaultSettings, data),
-    setSettings: (data: Settings) => {
-      setData(data);
-      loadRedmineConfig();
-    },
-  };
+  return useContext(SettingsContext);
 };
 
+/**
+ * Get the settings from storage
+ */
 export const getSettings = async () => {
   const data = await getChromeStorage<Settings>("settings", defaultSettings);
   return deepmerge<Settings>(defaultSettings, data);

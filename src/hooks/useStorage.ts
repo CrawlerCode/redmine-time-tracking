@@ -4,33 +4,37 @@ const useStorage = <T>(name: string, defaultValue: T) => {
   const [localData, setLocalData] = useState(defaultValue);
 
   // load data from storage
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const data = await getChromeStorage(name, defaultValue);
-        setLocalData(data);
-        // eslint-disable-next-line no-empty
-      } catch (error) {}
-    };
-
-    // init load
-    loadData();
-
-    // load on custom event "local-storage"
-    window.addEventListener("local-storage", loadData);
-    return () => {
-      window.removeEventListener("local-storage", loadData);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const loadData = async () => {
+    try {
+      const data = await getChromeStorage(name, defaultValue);
+      setLocalData(data);
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
+  };
 
   // set data to storage
-  const setData = (data: T) => {
+  const setData = async (data: T) => {
     setLocalData(data);
-    setChromeStorage(name, data);
-    // fire custom event "local-storage"
-    window.dispatchEvent(new Event("local-storage"));
+    await setChromeStorage(name, data);
   };
+
+  /**
+   * Init load
+   */
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  /**
+   * On chrome storage change => load data
+   */
+  useEffect(() => {
+    const onChange = () => {
+      loadData();
+    };
+    chrome.storage.local.onChanged.addListener(onChange);
+    return () => chrome.storage.local.onChanged.removeListener(onChange);
+  }, []);
 
   return { data: localData, setData };
 };
@@ -47,8 +51,8 @@ export const getChromeStorage = <T>(name: string, defaultValue: T) => {
   });
 };
 
-export const setChromeStorage = <T>(name: string, data: T) => {
-  chrome.storage.local.set({ [name]: JSON.stringify(data) });
+export const setChromeStorage = async <T>(name: string, data: T) => {
+  await chrome.storage.local.set({ [name]: JSON.stringify(data) });
 };
 
 export default useStorage;
