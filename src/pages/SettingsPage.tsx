@@ -201,7 +201,7 @@ const SettingsPage = () => {
         <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline">
           {chrome.runtime.getManifest().name}
         </a>
-        <p>Version: {chrome.runtime.getManifest().version}</p>
+        <p>Version: {chrome.runtime.getManifest().version_name}</p>
       </div>
       {saved && <Toast type="success" message={formatMessage({ id: "settings.settings-saved" })} onClose={() => setSaved(false)} />}
     </>

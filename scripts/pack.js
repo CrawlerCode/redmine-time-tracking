@@ -5,10 +5,10 @@ import { dirname, parse, resolve } from "path";
 try {
   const __dirname = resolve(dirname(""));
   const { base } = parse(__dirname);
-  const { version } = JSON.parse(readFileSync(resolve(__dirname, "dist", "manifest.json"), "utf8"));
+  const { version, version_name } = JSON.parse(readFileSync(resolve(__dirname, "dist", "manifest.json"), "utf8"));
 
   const outdir = "release";
-  const filename = `${base}-v${version}.zip`;
+  const filename = `${base}-v${version_name || version}.zip`;
   const zip = new AdmZip();
   zip.addLocalFolder("dist");
   if (!existsSync(outdir)) {
