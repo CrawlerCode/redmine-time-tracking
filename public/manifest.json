@@ -1,7 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Redmine Time Tracking",
-  "version": "1.10.3",
+  "name": "Redmine Time Tracking (BETA)",
+  "version": "1.11.0",
+  "version_name": "1.11.0-beta",
   "description": "Start-stop timer for Redmine",
   "icons": {
     "16": "logo16.png",
