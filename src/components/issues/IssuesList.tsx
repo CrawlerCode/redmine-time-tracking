@@ -1,13 +1,14 @@
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment } from "react";
 import { FormattedMessage } from "react-intl";
 import useIssuePriorities from "../../hooks/useIssuePriorities";
 import useSettings from "../../hooks/useSettings";
 import useStorage from "../../hooks/useStorage";
 import { TAccount, TIssue, TReference } from "../../types/redmine";
+import { getGroupedIssues, getSortedIssues } from "../../utils/issue";
 import Issue from "./Issue";
 import { IssueTimerData } from "./IssueTimer";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type IssueData = IssueTimerData & {
   pinned: boolean;
@@ -16,7 +17,7 @@ type IssueData = IssueTimerData & {
 
 export type IssuesData = Record<number, IssueData>;
 
-type GroupedIssues = {
+export type GroupedIssues = {
   project: TReference;
   issues: TIssue[];
   sort: number;
@@ -34,30 +35,7 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
 
   const issuePriorities = useIssuePriorities();
 
-  const issuePrioritiesIndices = issuePriorities.data.reduce((result: Record<number, number>, priority, index) => {
-    result[priority.id] = index;
-    return result;
-  }, {});
-  const sortedIssues = rawIssues.sort(
-    (a, b) =>
-      (issuesData[b.id]?.pinned ? 1 : 0) - (issuesData[a.id]?.pinned ? 1 : 0) ||
-      issuePrioritiesIndices[b.priority.id] - issuePrioritiesIndices[a.priority.id] ||
-      new Date(a.updated_on).getTime() - new Date(a.updated_on).getTime()
-  );
-
-  const groupedIssues = Object.values(
-    sortedIssues.reduce((result: Record<number, GroupedIssues>, issue) => {
-      if (!(issue.project.id in result)) {
-        result[issue.project.id] = {
-          project: issue.project,
-          issues: [],
-          sort: Object.keys(result).length,
-        };
-      }
-      result[issue.project.id].issues.push(issue);
-      return result;
-    }, {})
-  ).sort((a, b) => a.sort - b.sort);
+  const groupedIssues = getGroupedIssues(getSortedIssues(rawIssues, issuePriorities.data, issuesData));
 
   return (
     <>
@@ -202,7 +180,7 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
           })}
         </Fragment>
       ))}
-      {rawIssues.length === 0 && (
+      {groupedIssues.length === 0 && (
         <p className="text-center">
           <FormattedMessage id="issues.list.no-issues" />
         </p>

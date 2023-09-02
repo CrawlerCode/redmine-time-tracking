@@ -5,17 +5,15 @@ import { FormattedMessage, useIntl } from "react-intl";
 import useHotKey from "../../hooks/useHotkey";
 import { TReference } from "../../types/redmine";
 import InputField from "../general/InputField";
-import Switch from "../general/Switch";
 
 export type SearchQuery = {
   searching: boolean;
-  mode: "issue" | "project";
   query: string;
   inProject?: TReference;
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const defaultSearchQuery: SearchQuery = { searching: false, mode: "issue", query: "" };
+export const defaultSearchQuery: SearchQuery = { searching: false, query: "" };
 
 type PropTypes = {
   onSearch: (search: SearchQuery) => void;
@@ -29,14 +27,12 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
   const { formatMessage } = useIntl();
 
   const searchRef = useRef<HTMLInputElement>(null);
-  const [searching, setSearching] = useState(false);
-  const [mode, setMode] = useState<SearchQuery["mode"]>(defaultSearchQuery.mode);
+  const [searching, setSearching] = useState(defaultSearchQuery.searching);
   const [query, setQuery] = useState(defaultSearchQuery.query);
-  const [inProject, setInProject] = useState<TReference | undefined>(undefined);
+  const [inProject, setInProject] = useState<TReference | undefined>(defaultSearchQuery.inProject);
 
   useImperativeHandle(ref, () => ({
     searchInProject(project: TReference) {
-      setMode("issue");
       setInProject(project);
       setSearching(true);
       searchRef.current?.focus();
@@ -44,14 +40,14 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
     },
   }));
 
+  // sync states
   useEffect(() => {
     onSearch({
       searching,
-      mode,
       query,
       inProject,
     });
-  }, [searching, mode, query, inProject, onSearch]);
+  }, [searching, query, inProject, onSearch]);
 
   // hotkeys
   useHotKey(
@@ -74,7 +70,6 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
     () => {
       setSearching(false);
       setQuery("");
-      setMode(defaultSearchQuery.mode);
       setInProject(undefined);
     },
     { key: "Escape" },
@@ -95,17 +90,6 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
             autoComplete="off"
-          />
-          <Switch
-            name="mode"
-            value={mode}
-            options={[
-              { value: "issue", name: formatMessage({ id: "issues.search.mode.issue" }) },
-              { value: "project", name: formatMessage({ id: "issues.search.mode.project" }), disabled: !!inProject },
-            ]}
-            onChange={(e) => setMode(e.target.value as SearchQuery["mode"])}
-            className="absolute end-1 top-1.5 bg-gray-300 dark:bg-gray-800"
-            tabIndex={-1}
           />
           {inProject && (
             <div className="mt-1.5 flex items-center gap-x-1.5 whitespace-nowrap ps-2">
