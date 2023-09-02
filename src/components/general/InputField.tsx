@@ -38,8 +38,9 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title
             "block w-full rounded-lg text-sm",
             "border border-gray-300 bg-gray-50 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400",
             "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
+            "dark:autofill:shadow-[inset_0_0_0px_32px_rgb(55,65,81)]",
             {
-              "border-red-500 text-red-900 placeholder:text-red-700 dark:text-red-500 dark:placeholder:text-red-500 dark:border-red-500": error !== undefined,
+              "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
               "pl-8": !!icon,
               "p-1.5": size === "sm",
               "p-2.5": size === "md",

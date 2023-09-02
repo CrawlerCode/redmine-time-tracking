@@ -28,7 +28,7 @@ export const defaultSettings = {
 const SettingsContext = createContext({
   settings: defaultSettings,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setSettings: (data: Settings) => undefined,
+  setSettings: (_data: Settings) => undefined,
 });
 
 const SettingsProvider = ({ children }: { children: ReactNode }) => {

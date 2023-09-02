@@ -30,7 +30,7 @@ const SelectField = ({ size = "md", title, error, children, placeholder, classNa
         id={id}
         className={clsx(
           "block w-full rounded-lg text-sm",
-          "border border-gray-300 bg-gray-50 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 ",
+          "border border-gray-300 bg-gray-50 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400",
           "focus:border-primary-300 focus:ring-primary-300 dark:focus:border-primary-800 dark:focus:ring-primary-800",
           {
             "p-1.5": size === "sm",
