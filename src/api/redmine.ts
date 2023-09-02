@@ -1,5 +1,5 @@
 import { formatISO } from "date-fns";
-import { TAccount, TCreateTimeEntry, TIssue, TSearchResult, TTimeEntry, TTimeEntryActivity, TissuesPriority } from "../types/redmine";
+import { TAccount, TCreateTimeEntry, TIssue, TIssuesPriority, TProject, TSearchResult, TTimeEntry, TTimeEntryActivity } from "../types/redmine";
 import instance from "./axios.config";
 
 export const getMyAccount = async (): Promise<TAccount> => {
@@ -23,10 +23,6 @@ export const searchOpenIssues = async (query: string): Promise<TSearchResult[]> 
   return instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&issues=1&open_issues=1`).then((res) => res.data.results);
 };
 
-export const searchProjects = async (query: string): Promise<TSearchResult[]> => {
-  return instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&projects=1`).then((res) => res.data.results);
-};
-
 export const updateIssue = async (id: number, issue: Partial<Omit<TIssue, "id">>) => {
   return instance
     .put(`/issues/${id}.json`, {
@@ -35,8 +31,17 @@ export const updateIssue = async (id: number, issue: Partial<Omit<TIssue, "id">>
     .then((res) => res.data);
 };
 
-export const getIssuePriorities = async (): Promise<TissuesPriority[]> => {
+export const getIssuePriorities = async (): Promise<TIssuesPriority[]> => {
   return instance.get("/enumerations/issue_priorities.json").then((res) => res.data.issue_priorities);
+};
+
+// Projects
+export const getAllMyProjects = async (offset = 0, limit = 100): Promise<TProject[]> => {
+  return instance.get(`/projects.json?offset=${offset}&limit=${limit}`).then((res) => res.data.projects);
+};
+
+export const searchProjects = async (query: string): Promise<TSearchResult[]> => {
+  return instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&projects=1`).then((res) => res.data.results);
 };
 
 // Time entries

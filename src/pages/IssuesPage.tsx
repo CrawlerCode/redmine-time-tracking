@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import Toast from "../components/general/Toast";
+import Filter, { FilterQuery, defaultFilter } from "../components/issues/Filter";
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
 import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
 import Search, { SearchQuery, SearchRef, defaultSearchQuery } from "../components/issues/Search";
@@ -17,12 +18,14 @@ const IssuesPage = () => {
 
   const searchRef = useRef<SearchRef>(null);
   const [search, setSearch] = useState<SearchQuery>(defaultSearchQuery);
+  const [filter, setFilter] = useState<FilterQuery>(defaultFilter);
 
   const myIssuesQuery = useMyIssues(
     Object.keys(issuesData.data)
       .map((id) => Number(id))
       .filter((id) => issuesData.data[id].remembered || issuesData.data[id].active || issuesData.data[id].time > 0),
-    search
+    search,
+    filter
   );
   const myAccount = useMyAccount();
 
@@ -38,6 +41,9 @@ const IssuesPage = () => {
   return (
     <>
       <Search ref={searchRef} onSearch={setSearch} />
+
+      <Filter onChange={(filter) => setFilter(filter)} />
+
       <div className="flex flex-col gap-y-2">
         {myIssuesQuery.isLoading && <IssuesListSkeleton />}
 

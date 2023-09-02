@@ -27,7 +27,7 @@ export type TIssue = {
   closed_on?: string;
 };
 
-export type TissuesPriority = {
+export type TIssuesPriority = {
   id: number;
   name: string;
   is_default: boolean;
@@ -83,4 +83,17 @@ export type TAccount = {
   lastname: string;
   mail: string;
   last_login_on: string;
+};
+
+export type TProject = {
+  id: number;
+  name: string;
+  description: string;
+  identifier: string;
+  inherit_members: boolean;
+  is_public: boolean;
+  status: number;
+  parent?: TReference;
+  created_on: string;
+  updated_on: string;
 };
