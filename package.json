@@ -17,6 +17,7 @@
     "pack": "node scripts/pack.js",
     "release": "gh release create v%npm_package_version% release/redmine-time-tracking-v%npm_package_version%.zip --notes-file release_notes.md --generate-notes",
     "publish": "pnpm run build && pnpm run pack && pnpm run release",
+    "publish:beta": "pnpm run build && pnpm run pack && pnpm run release --prerelease --target beta",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix"
   },
   "dependencies": {
