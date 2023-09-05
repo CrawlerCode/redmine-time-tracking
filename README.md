@@ -20,16 +20,24 @@
 
 - View all your assigned Redmine issues
 - Start and stop the timer for your current tasks
-- Edit timer (double-click)
+- Search for issue or project (press `CTRL` + `K` or `CTRL` + `F`)
 - Create entry for time spent in Redmine issue
 - Update done ratio
+- Create time spent entries for other users
+- Edit timer (double-click)
+- Filter issues by projects
 - Round timer to nearest 15 min
-- Search for issue or project (press `CTRL` + `K` or `CTRL` + `F`)
 - Remember and forget issue (not assigned to you)
 - Pin and unpin issue
 - View time entries overview
 - Multiple languages
 - Dark & light mode (system default)
+
+# Requirements
+
+At least Redmine version `4.1.0` or higher required. Recommended version `5.0` or higher. Some features may not work in old Redmine versions.
+
+Tested with Google Chrome Version 116
 
 # Supported languages
 
