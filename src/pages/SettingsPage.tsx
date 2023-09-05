@@ -204,14 +204,21 @@ const SettingsPage = () => {
           </>
         )}
       </Formik>
-      <div className="mt-3 flex w-full flex-col items-center p-2">
-        <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline">
-          {chrome.runtime.getManifest().name}
-        </a>
-        <p>Version: {chrome.runtime.getManifest().version_name}</p>
-      </div>
+      <Info />
       {saved && <Toast type="success" message={formatMessage({ id: "settings.settings-saved" })} onClose={() => setSaved(false)} />}
     </>
+  );
+};
+
+const Info = () => {
+  const { name, version, version_name } = chrome.runtime.getManifest();
+  return (
+    <div className="mt-3 flex w-full flex-col items-center p-2">
+      <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline">
+        {name}
+      </a>
+      <p>Version: {version_name || version}</p>
+    </div>
   );
 };
 

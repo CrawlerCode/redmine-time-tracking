@@ -1,3 +1,5 @@
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment } from "react";
 import { FormattedMessage } from "react-intl";
 import useIssuePriorities from "../../hooks/useIssuePriorities";
@@ -7,8 +9,6 @@ import { TAccount, TIssue, TReference } from "../../types/redmine";
 import { getGroupedIssues, getSortedIssues } from "../../utils/issue";
 import Issue from "./Issue";
 import { IssueTimerData } from "./IssueTimer";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type IssueData = IssueTimerData & {
   pinned: boolean;
@@ -63,7 +63,7 @@ const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData
                 issue={issue}
                 priorityType={issuePriorities.getPriorityType(issue)}
                 timerData={{ active: data.active, start: data.start, time: data.time }}
-                assignedToMe={issue.assigned_to?.id === account?.id ?? false}
+                assignedToMe={account ? account.id === issue.assigned_to?.id : true}
                 pinned={data.pinned}
                 remembered={data.remembered}
                 onStart={() => {
