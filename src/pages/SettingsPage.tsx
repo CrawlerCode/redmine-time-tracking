@@ -186,6 +186,13 @@ const SettingsPage = () => {
                       description={formatMessage({ id: "settings.options.round-time-nearest-quarter-hour.description" })}
                       as={CheckBox}
                     />
+                    <Field
+                      type="checkbox"
+                      name="options.addSpentTimeForOtherUsers"
+                      title={formatMessage({ id: "settings.options.add-spent-time-for-other-users.title" })}
+                      description={formatMessage({ id: "settings.options.add-spent-time-for-other-users.description" })}
+                      as={CheckBox}
+                    />
                   </div>
                 </fieldset>
 

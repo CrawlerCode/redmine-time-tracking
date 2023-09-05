@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
 import { createTimeEntry, updateIssue } from "../../api/redmine";
+import useMyAccount from "../../hooks/useMyAccount";
+import useProjectUsers from "../../hooks/useProjectUsers";
 import useSettings from "../../hooks/useSettings";
 import useTimeEntryActivities from "../../hooks/useTimeEntryActivities";
 import { TCreateTimeEntry, TIssue, TRedmineError } from "../../types/redmine";
@@ -13,7 +15,9 @@ import { formatHours } from "../../utils/date";
 import Button from "../general/Button";
 import DateField from "../general/DateField";
 import InputField from "../general/InputField";
+import LoadingSpinner from "../general/LoadingSpinner";
 import Modal from "../general/Modal";
+import ReactSelectFormik from "../general/ReactSelectFormik";
 import SelectField from "../general/SelectField";
 import Toast from "../general/Toast";
 import TimeEntryPreview from "../time/TimeEntryPreview";
@@ -33,21 +37,26 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
 
   const formik = useRef<FormikProps<TCreateTimeEntry>>(null);
 
+  const myAccount = useMyAccount();
   const timeEntryActivities = useTimeEntryActivities();
+  const users = useProjectUsers(issue.project.id, { enabled: settings.options.addSpentTimeForOtherUsers });
 
   useEffect(() => {
-    formik.current?.setFieldValue("activity_id", timeEntryActivities.find((entry) => entry.is_default)?.id ?? undefined);
-  }, [timeEntryActivities]);
+    formik.current?.setFieldValue("activity_id", timeEntryActivities.data.find((entry) => entry.is_default)?.id ?? undefined);
+  }, [timeEntryActivities.data]);
 
   const createTimeEntryMutation = useMutation({
     mutationFn: (entry: TCreateTimeEntry) => createTimeEntry(entry),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["timeEntries"]);
-      onSuccess();
+    onSuccess: (_, entry) => {
+      // if entry created for me => invalidate query
+      if (!entry.user_id || entry.user_id === myAccount.data?.id) {
+        queryClient.invalidateQueries(["timeEntries"]);
+      }
     },
   });
 
   const [doneRatio, setDoneRatio] = useState(issue.done_ratio);
+
   const updateIssueMutation = useMutation({
     mutationFn: (data: { done_ratio: number }) => updateIssue(issue.id, data),
     onSuccess: () => {
@@ -63,12 +72,14 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
           innerRef={formik}
           initialValues={{
             issue_id: issue.id,
+            user_id: undefined,
             spent_on: new Date(),
             activity_id: undefined,
             hours: Number((time / 1000 / 60 / 60).toFixed(2)),
             comments: "",
           }}
           validationSchema={Yup.object({
+            user_id: Yup.array(Yup.number()),
             spent_on: Yup.date().max(new Date(), formatMessage({ id: "issues.modal.add-spent-time.date.validation.in-future" })),
             hours: Yup.number()
               .required(formatMessage({ id: "issues.modal.add-spent-time.hours.validation.required" }))
@@ -81,8 +92,17 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
             if (issue.done_ratio !== doneRatio) {
               await updateIssueMutation.mutateAsync({ done_ratio: doneRatio });
             }
-            await createTimeEntryMutation.mutateAsync(values);
+            if (values.user_id && Array.isArray(values.user_id) && values.user_id.length > 0) {
+              // create for multiple users
+              for (const userId of values.user_id as number[]) {
+                await createTimeEntryMutation.mutateAsync({ ...values, user_id: userId });
+              }
+            } else {
+              // create for me
+              await createTimeEntryMutation.mutateAsync({ ...values, user_id: undefined });
+            }
             setSubmitting(false);
+            if (!createTimeEntryMutation.isError) onSuccess();
           }}
         >
           {({ isSubmitting, touched, errors, values }) => (
@@ -99,32 +119,59 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
 
                   {values.spent_on && <TimeEntryPreview date={startOfDay(values.spent_on)} previewHours={values.hours} />}
 
-                  <Field
-                    type="date"
-                    name="spent_on"
-                    title={formatMessage({ id: "issues.modal.add-spent-time.date" })}
-                    placeholder={formatMessage({ id: "issues.modal.add-spent-time.date" })}
-                    required
-                    as={DateField}
-                    size="sm"
-                    error={touched.spent_on && errors.spent_on}
-                    options={{ maxDate: new Date() }}
-                  />
-                  <Field
-                    type="number"
-                    name="hours"
-                    title={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
-                    placeholder={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
-                    min="0"
-                    step="0.01"
-                    max="24"
-                    required
-                    as={InputField}
-                    size="sm"
-                    extraText={values.hours >= 0 && values.hours <= 24 ? formatHours(values.hours) + " h" : undefined}
-                    error={touched.hours && errors.hours}
-                    autoComplete="off"
-                  />
+                  <div className="grid grid-cols-5 gap-x-2">
+                    <div className="col-span-3">
+                      <Field
+                        type="number"
+                        name="hours"
+                        title={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
+                        placeholder={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
+                        min="0"
+                        step="0.01"
+                        max="24"
+                        required
+                        as={InputField}
+                        size="sm"
+                        className="appearance-none"
+                        extraText={values.hours >= 0 && values.hours <= 24 ? formatHours(values.hours) + " h" : undefined}
+                        error={touched.hours && errors.hours}
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <Field
+                        type="date"
+                        name="spent_on"
+                        title={formatMessage({ id: "issues.modal.add-spent-time.date" })}
+                        placeholder={formatMessage({ id: "issues.modal.add-spent-time.date" })}
+                        required
+                        as={DateField}
+                        size="sm"
+                        error={touched.spent_on && errors.spent_on}
+                        options={{ maxDate: new Date() }}
+                      />
+                    </div>
+                  </div>
+
+                  {settings.options.addSpentTimeForOtherUsers && (
+                    <Field
+                      type="select"
+                      name="user_id"
+                      title={formatMessage({ id: "issues.modal.add-spent-time.user" })}
+                      placeholder={formatMessage({ id: "issues.modal.add-spent-time.user" })}
+                      as={ReactSelectFormik}
+                      options={users.data.map((user) => ({
+                        value: user.id,
+                        label: user.id === myAccount.data?.id ? `${user.name} (${formatMessage({ id: "issues.modal.add-spent-time.user.me" })})` : user.name,
+                      }))}
+                      error={touched.user_id && errors.user_id}
+                      isClearable
+                      isMulti
+                      closeMenuOnSelect={false}
+                      isLoading={users.isLoading}
+                    />
+                  )}
+
                   <Field
                     type="text"
                     name="comments"
@@ -145,7 +192,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     size="sm"
                     error={touched.activity_id && errors.activity_id}
                   >
-                    {timeEntryActivities.map((activity) => (
+                    {timeEntryActivities.data.map((activity) => (
                       <>
                         <option key={activity.id} value={activity.id}>
                           {activity.name}
@@ -154,8 +201,9 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     ))}
                   </Field>
 
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button type="submit" disabled={isSubmitting} className="flex items-center justify-center gap-x-2">
                     <FormattedMessage id="issues.modal.add-spent-time.submit" />
+                    {isSubmitting && <LoadingSpinner />}
                   </Button>
                 </div>
               </Form>

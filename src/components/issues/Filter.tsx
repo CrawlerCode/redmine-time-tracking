@@ -27,7 +27,9 @@ const Filter = ({ onChange }: PropTypes) => {
   // On "Escape" => close filter
   useHotKey(() => setShowFilter(false), { key: "Escape" });
 
-  const { data: projects, isLoading } = useMyProjects(showFilter);
+  const { data: projects, isLoading } = useMyProjects({
+    enabled: showFilter,
+  });
 
   const { data: filter, setData: setFilter } = useStorage<FilterQuery>("filter", defaultFilter);
 

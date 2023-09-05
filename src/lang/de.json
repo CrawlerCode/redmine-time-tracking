@@ -44,6 +44,8 @@
   "issues.modal.add-spent-time.hours.validation.required": "Stunden wird benötigt",
   "issues.modal.add-spent-time.hours.validation.greater-than-zero": "Muss größer als 0 sein",
   "issues.modal.add-spent-time.hours.validation.less-than-24": "Muss weniger als ein Tag sein",
+  "issues.modal.add-spent-time.user": "Benutzer",
+  "issues.modal.add-spent-time.user.me": "ich",
   "issues.modal.add-spent-time.comments": "Kommentar",
   "issues.modal.add-spent-time.activity": "Aktivität ",
   "issues.modal.add-spent-time.activity.validation.required": "Aktivität wird benötigt",
@@ -79,6 +81,8 @@
   "settings.options.extended-search.description": "Erlaubt Tickets zu suchen, die Ihnen nicht zugewiesen sind",
   "settings.options.round-time-nearest-quarter-hour.title": "Zu nächsten 15 min runden",
   "settings.options.round-time-nearest-quarter-hour.description": "Timer auf nächsten Viertelstunde runden",
+  "settings.options.add-spent-time-for-other-users.title": "Zeitaufwand für andere Nutzer hinzufügen",
+  "settings.options.add-spent-time-for-other-users.description": "(Redmine-Berechtigung benötigt)",
   "settings.save-settings": "Einstellungen speichern",
   "settings.settings-saved": "Einstellungen gespeichert!"
 }

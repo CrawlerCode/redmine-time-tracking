@@ -58,6 +58,7 @@ export type TTimeEntryActivity = {
 
 export type TCreateTimeEntry = {
   issue_id: number;
+  user_id?: number;
   spent_on?: Date;
   activity_id?: number;
   hours: number;
@@ -96,4 +97,15 @@ export type TProject = {
   parent?: TReference;
   created_on: string;
   updated_on: string;
+};
+export type TMembership = {
+  id: number;
+  project: TReference;
+  user?: TReference;
+  group?: TReference;
+  roles: {
+    id: number;
+    name: string;
+    inherited?: boolean;
+  }[];
 };

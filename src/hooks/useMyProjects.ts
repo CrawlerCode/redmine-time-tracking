@@ -2,16 +2,16 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { getAllMyProjects } from "../api/redmine";
 
-const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 5;
-const STALE_DATA_TIME = 1000 * 60;
+type Options = {
+  enabled?: boolean;
+};
 
-const useMyProjects = (enabled = true) => {
+const useMyProjects = ({ enabled = true }: Options = {}) => {
   const projectsQuery = useInfiniteQuery({
     queryKey: ["projects"],
     queryFn: ({ pageParam = 0 }) => getAllMyProjects(pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
-    staleTime: STALE_DATA_TIME,
-    refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
+    staleTime: 1000 * 60 * 60,
     enabled: enabled,
   });
 

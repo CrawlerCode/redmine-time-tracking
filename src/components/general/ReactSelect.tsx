@@ -5,9 +5,10 @@ import Select, { GroupBase, Props } from "react-select";
 
 type PropTypes = {
   title?: string;
+  error?: string;
 };
 
-function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group extends GroupBase<Option> = GroupBase<Option>>({ title, ...props }: Props<Option, IsMulti, Group> & PropTypes) {
+function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group extends GroupBase<Option> = GroupBase<Option>>({ title, error, ...props }: Props<Option, IsMulti, Group> & PropTypes) {
   return (
     <div>
       {title && (
@@ -27,9 +28,12 @@ function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group ex
           control: (state) =>
             clsx("block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white", {
               "outline-none ring-2 ring-primary-300 dark:ring-primary-800": state.isFocused,
+              "border-red-500 text-red-900 dark:border-red-500 dark:text-red-500": error !== undefined,
             }),
-          input: () => "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
-          placeholder: () => "text-gray-400",
+          placeholder: () =>
+            clsx("text-gray-400", {
+              "text-red-700 dark:text-red-500": error !== undefined,
+            }),
           menu: () => "mt-1 py-2 rounded-lg bg-gray-100 text-gray-900 dark:bg-gray-600 dark:text-white border border-gray-300 dark:border-gray-600",
           option: (state) =>
             clsx("truncate p-1.5", {
@@ -41,6 +45,7 @@ function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group ex
           indicatorsContainer: () => "cursor-pointer",
         }}
       />
+      {error && <p className="text-sm text-red-600 dark:text-red-500">{error}</p>}
     </div>
   );
 }

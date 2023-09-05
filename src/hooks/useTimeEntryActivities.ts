@@ -8,6 +8,13 @@ const useTimeEntryActivities = () => {
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60,
   });
-  return timeEntryActivitiesQuery.data?.filter((activity) => activity.active !== false) ?? [];
+
+  const activities = timeEntryActivitiesQuery.data?.filter((activity) => activity.active !== false) ?? [];
+
+  return {
+    data: activities,
+    isLoading: timeEntryActivitiesQuery.isInitialLoading,
+    isError: timeEntryActivitiesQuery.isError,
+  };
 };
 export default useTimeEntryActivities;
