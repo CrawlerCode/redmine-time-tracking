@@ -55,7 +55,11 @@ const TimeEntryList = ({ entries }: PropTypes) => {
                   <svg aria-hidden="true" className="mr-1 h-3 w-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"></path>
                   </svg>
-                  {groupedEntries.filter((entries) => days.find((d) => d.getTime() === entries.date.getTime())).reduce((sum, entry) => sum + entry.hours, 0)} h
+                  {groupedEntries
+                    .filter((entries) => days.find((d) => d.getTime() === entries.date.getTime()))
+                    .reduce((sum, entry) => sum + entry.hours, 0)
+                    .toFixed(2)}{" "}
+                  h
                 </span>
               </div>
               {days.map((d, i) => {
