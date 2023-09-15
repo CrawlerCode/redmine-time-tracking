@@ -3,7 +3,7 @@ import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
@@ -70,7 +70,7 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
         editTimer: () => {
           setEditMode(true);
         },
-      } satisfies TimerRef),
+      }) satisfies TimerRef,
     [timer, editMode, onStart, onPause]
   );
 
@@ -100,12 +100,16 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
 
       {!active ? (
         <>
-          <Tooltip id={`tooltip-start-timer-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.timer.action.start.tooltip" })} className="italic" />
+          <Tooltip id={`tooltip-start-timer-${issue.id}`} place="left" delayShow={700} className="italic">
+            <FormattedMessage id="issues.timer.action.start.tooltip" />
+          </Tooltip>
           <FontAwesomeIcon icon={faPlay} size="2x" className="cursor-pointer text-green-500 focus:outline-none" onClick={onStart} data-tooltip-id={`tooltip-start-timer-${issue.id}`} tabIndex={-1} />
         </>
       ) : (
         <>
-          <Tooltip id={`tooltip-pause-timer-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.timer.action.pause.tooltip" })} className="italic" />
+          <Tooltip id={`tooltip-pause-timer-${issue.id}`} place="left" delayShow={700} className="italic">
+            <FormattedMessage id="issues.timer.action.pause.tooltip" />
+          </Tooltip>
           <FontAwesomeIcon
             icon={faPause}
             size="2x"
