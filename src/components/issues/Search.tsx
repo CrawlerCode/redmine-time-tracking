@@ -1,4 +1,4 @@
-import { faChevronRight, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight, faSearch, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -92,8 +92,8 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
             autoComplete="off"
           />
           {inProject && (
-            <div className="mt-1.5 flex items-center gap-x-1.5 whitespace-nowrap ps-2">
-              <FontAwesomeIcon icon={faChevronRight} />
+            <div className="mt-1.5 flex items-center gap-x-1.5 whitespace-nowrap">
+              <FontAwesomeIcon icon={faChevronRight} className="ps-2" />
               <FormattedMessage
                 id="issues.search.search-in-project"
                 values={{
@@ -101,6 +101,9 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
                   badge: (children) => <span className="truncate rounded-full bg-primary-300 px-1.5 text-xs dark:bg-primary-800">{children}</span>,
                 }}
               />
+              <div className="mr-2 flex grow justify-end">
+                <FontAwesomeIcon icon={faX} className="cursor-pointer" onClick={() => setInProject(undefined)} />
+              </div>
             </div>
           )}
         </div>
