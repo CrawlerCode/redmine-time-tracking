@@ -60,8 +60,9 @@
 
   "settings.general": "Allgemein",
   "settings.general.language": "Sprache",
-  "settings.general.language.de": "Deutsch (German)",
   "settings.general.language.en": "Englisch (English)",
+  "settings.general.language.de": "Deutsch (German)",
+  "settings.general.language.ru": "Russisch (Russian)",
   "settings.general.language.missing-hint": "Vermissen Sie Ihre Sprache?",
   "settings.redmine": "Redmine",
   "settings.redmine.url": "Redmine URL",

@@ -1,14 +1,16 @@
 import { setDefaultOptions } from "date-fns";
-import { de as dateFnsLocalDE, enUS as dateFnsLocalEN } from "date-fns/locale";
+import { de as dateFnsLocalDE, enUS as dateFnsLocalEN, ru as dateFnsLocalRu } from "date-fns/locale";
 import React from "react";
 import { IntlProvider as ReactIntlProvider } from "react-intl";
 import useSettings from "../hooks/useSettings";
 import messagesDE from "../lang/de.json";
 import messagesEN from "../lang/en.json";
+import messagesRU from "../lang/ru.json";
 
-type Language = "de" | "en";
 // eslint-disable-next-line react-refresh/only-export-components
-export const LANGUAGES: Language[] = ["de", "en"];
+export const LANGUAGES = ["en", "de", "ru"] as const;
+
+type Language = (typeof LANGUAGES)[number];
 
 type PropTypes = {
   children: React.ReactNode;
@@ -27,13 +29,17 @@ const IntlProvider = ({ children }: PropTypes) => {
   let messages;
   let dateFnsLocal;
   switch (locale) {
+    case "en":
+      messages = messagesEN;
+      dateFnsLocal = dateFnsLocalEN;
+      break;
     case "de":
       messages = messagesDE;
       dateFnsLocal = dateFnsLocalDE;
       break;
-    case "en":
-      messages = messagesEN;
-      dateFnsLocal = dateFnsLocalEN;
+    case "ru":
+      messages = messagesRU;
+      dateFnsLocal = dateFnsLocalRu;
       break;
   }
 
