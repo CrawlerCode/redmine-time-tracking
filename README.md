@@ -43,6 +43,7 @@ Tested with Google Chrome Version 116
 
 - English
 - German
+- Russian (@Develop-FM)
 
 > If you want to add more languages or extend existing ones, feel free to contribute. Just create a pull request with the desired changes. The language files are located under [src/lang](src/lang).
 
