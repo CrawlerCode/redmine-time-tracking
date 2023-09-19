@@ -51,7 +51,7 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title
         />
         {extraText && (
           <span
-            className={clsx("absolute rounded bg-gray-100 font-medium text-gray-800 dark:bg-gray-600 dark:text-gray-400", {
+            className={clsx("absolute whitespace-nowrap rounded bg-gray-100 font-medium text-gray-800 dark:bg-gray-600 dark:text-gray-400", {
               "right-1.5 top-1.5 px-2.5 py-0.5": size === "sm",
               "right-2.5 top-2 px-3.5 py-1": size === "md",
             })}

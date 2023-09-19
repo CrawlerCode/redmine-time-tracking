@@ -13,7 +13,7 @@ const TimeEntryPreview = ({ date, previewHours }: PropTypes) => {
 
   return (
     <div className="grid grid-cols-6 items-center gap-x-1">
-      <h3 className="col-span-1 truncate text-sm font-semibold">{sumHours} h</h3>
+      <h3 className="col-span-1 truncate text-sm font-semibold">{sumHours.toFixed(2)} h</h3>
       <div className="col-span-5">
         <TimeEntry entries={myTimeEntriesQuery.data} previewHours={previewHours} maxHours={sumHours > 12 ? sumHours : 12} />
       </div>
