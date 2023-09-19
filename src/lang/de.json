@@ -85,5 +85,8 @@
   "settings.options.add-spent-time-for-other-users.title": "Zeitaufwand für andere Nutzer hinzufügen",
   "settings.options.add-spent-time-for-other-users.description": "(Redmine-Berechtigung benötigt)",
   "settings.save-settings": "Einstellungen speichern",
-  "settings.settings-saved": "Einstellungen gespeichert!"
+  "settings.settings-saved": "Einstellungen gespeichert!",
+  "settings.info.version": "Version: {version}",
+
+  "format.hours": "{hours} Std."
 }

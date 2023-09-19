@@ -42,14 +42,28 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
                 <th className="whitespace-nowrap pr-2 font-medium">
                   <FormattedMessage id="issues.info-tooltip.estimated-time" />:
                 </th>
-                <td>{formatHours(issue.estimated_hours)} h</td>
+                <td>
+                  <FormattedMessage
+                    id="format.hours"
+                    values={{
+                      hours: formatHours(issue.estimated_hours),
+                    }}
+                  />
+                </td>
               </tr>
             )}
             <tr>
               <th className="whitespace-nowrap pr-2 font-medium">
                 <FormattedMessage id="issues.info-tooltip.spent-time" />:
               </th>
-              <td>{formatHours(issue.spent_hours)} h</td>
+              <td>
+                <FormattedMessage
+                  id="format.hours"
+                  values={{
+                    hours: formatHours(issue.spent_hours),
+                  }}
+                />
+              </td>
             </tr>
           </tbody>
         </table>

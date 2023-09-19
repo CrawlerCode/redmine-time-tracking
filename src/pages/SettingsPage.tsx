@@ -217,7 +217,9 @@ const Info = () => {
       <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline">
         {name}
       </a>
-      <p>Version: {version_name || version}</p>
+      <p>
+        <FormattedMessage id="settings.info.version" values={{ version: version_name || version }} />
+      </p>
     </div>
   );
 };

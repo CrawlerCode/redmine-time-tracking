@@ -133,7 +133,16 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                         as={InputField}
                         size="sm"
                         className="appearance-none"
-                        extraText={values.hours >= 0 && values.hours <= 24 ? formatHours(values.hours) + " h" : undefined}
+                        extraText={
+                          values.hours >= 0 && values.hours <= 24
+                            ? formatMessage(
+                                { id: "format.hours" },
+                                {
+                                  hours: formatHours(values.hours),
+                                }
+                              )
+                            : undefined
+                        }
                         error={touched.hours && errors.hours}
                         autoComplete="off"
                       />

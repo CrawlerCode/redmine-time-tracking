@@ -85,5 +85,8 @@
   "settings.options.add-spent-time-for-other-users.title": "Add spent time for other users",
   "settings.options.add-spent-time-for-other-users.description": "(Redmine permission required)",
   "settings.save-settings": "Save settings",
-  "settings.settings-saved": "Settings saved!"
+  "settings.settings-saved": "Settings saved!",
+  "settings.info.version": "Version: {version}",
+
+  "format.hours": "{hours} h"
 }

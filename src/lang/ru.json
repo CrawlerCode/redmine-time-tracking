@@ -85,5 +85,8 @@
   "settings.options.add-spent-time-for-other-users.title": "Добавлять затраченное время для других пользователей",
   "settings.options.add-spent-time-for-other-users.description": "(Требуются разрешения в Redmine)",
   "settings.save-settings": "Сохранить настройки",
-  "settings.settings-saved": "Настройки сохранены!"
+  "settings.settings-saved": "Настройки сохранены!",
+  "settings.info.version": "Version: {version}",
+
+  "format.hours": "{hours} h"
 }
