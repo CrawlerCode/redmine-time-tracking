@@ -1,5 +1,6 @@
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import useMyTimeEntries from "../../hooks/useMyTimeEntries";
+import { roundHours } from "../../utils/date";
 import TimeEntry from "./TimeEntry";
 
 type PropTypes = {
@@ -8,17 +9,19 @@ type PropTypes = {
 };
 
 const TimeEntryPreview = ({ date, previewHours }: PropTypes) => {
+  const { formatNumber } = useIntl();
+
   const myTimeEntriesQuery = useMyTimeEntries(date, date);
 
   const sumHours = myTimeEntriesQuery.data.reduce((sum, entry) => sum + entry.hours, 0) + previewHours;
 
   return (
     <div className="flex items-center gap-x-1">
-      <h3 className="text-sm font-semibold">
+      <h3 className="max-w-[5rem] truncate text-sm font-semibold">
         <FormattedMessage
           id="format.hours"
           values={{
-            hours: sumHours.toFixed(2),
+            hours: formatNumber(roundHours(sumHours)),
           }}
         />
       </h3>

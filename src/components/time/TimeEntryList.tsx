@@ -1,6 +1,7 @@
 import { addDays, format, isFuture, isMonday, isWeekend, parseISO, previousMonday, startOfDay, subWeeks } from "date-fns";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { TTimeEntry } from "../../types/redmine";
+import { roundHours } from "../../utils/date";
 import TimeEntry from "./TimeEntry";
 
 type PropTypes = {
@@ -14,6 +15,8 @@ type GroupedEntries = {
 };
 
 const TimeEntryList = ({ entries }: PropTypes) => {
+  const { formatNumber, formatDate } = useIntl();
+
   const groupedEntries = Object.values(
     entries.reduce((result: Record<string, GroupedEntries>, entry) => {
       if (!(entry.spent_on in result)) {
@@ -46,11 +49,12 @@ const TimeEntryList = ({ entries }: PropTypes) => {
           const days = Array(7)
             .fill(monday)
             .map((d, i) => addDays(d, 6 - i));
+          const summedHours = groupedEntries.filter((entries) => days.find((d) => d.getTime() === entries.date.getTime())).reduce((sum, entry) => sum + entry.hours, 0);
           return (
             <div className="mb-5 flex flex-col gap-y-1" key={i}>
               <div className="flex items-center gap-x-3">
                 <h1 className="text-lg">
-                  {monday.toLocaleDateString()} - {addDays(monday, 6).toLocaleDateString()}
+                  {formatDate(monday)} - {formatDate(addDays(monday, 6))}
                 </h1>
                 <span className="inline-flex items-center rounded border border-primary-400 bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800 dark:bg-gray-700 dark:text-primary-400">
                   <svg aria-hidden="true" className="mr-1 h-3 w-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -59,10 +63,7 @@ const TimeEntryList = ({ entries }: PropTypes) => {
                   <FormattedMessage
                     id="format.hours"
                     values={{
-                      hours: groupedEntries
-                        .filter((entries) => days.find((d) => d.getTime() === entries.date.getTime()))
-                        .reduce((sum, entry) => sum + entry.hours, 0)
-                        .toFixed(2),
+                      hours: formatNumber(roundHours(summedHours)),
                     }}
                   />
                 </span>
@@ -82,11 +83,11 @@ const TimeEntryList = ({ entries }: PropTypes) => {
                 return (
                   <div className="flex items-center gap-x-1" key={i}>
                     <h4 className="w-8 text-sm">{format(date, "EEE")}</h4>
-                    <h3 className="text-sm font-semibold">
+                    <h3 className="w-14 truncate text-end text-sm font-semibold">
                       <FormattedMessage
                         id="format.hours"
                         values={{
-                          hours: hours.toFixed(2),
+                          hours: formatNumber(roundHours(hours)),
                         }}
                       />
                     </h3>

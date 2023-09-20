@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
-import { formatTime, roundTimeNearestQuarterHour } from "../../utils/date";
+import { formatTimer, roundTimeNearestQuarterHour } from "../../utils/date";
 import EditTimer from "./EditTimer";
 
 export type IssueTimerData = {
@@ -93,7 +93,7 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
             onDoubleClick={() => setEditMode(true)}
             data-tooltip-id={`tooltip-edit-timer-${issue.id}`}
           >
-            {formatTime(timer)}
+            {formatTimer(timer)}
           </span>
         </>
       )}

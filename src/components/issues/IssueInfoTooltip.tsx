@@ -1,13 +1,14 @@
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import { TIssue } from "../../types/redmine";
-import { formatHours } from "../../utils/date";
 
 type PropTypes = {
   issue: TIssue;
 };
 
 const IssueInfoTooltip = ({ issue }: PropTypes) => {
+  const { formatNumber } = useIntl();
+
   return (
     <Tooltip id={`tooltip-issue-${issue.id}`} place="right" className="z-10 opacity-100">
       <div className="relative max-w-[210px]">
@@ -46,7 +47,7 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
                   <FormattedMessage
                     id="format.hours"
                     values={{
-                      hours: formatHours(issue.estimated_hours),
+                      hours: formatNumber(issue.estimated_hours),
                     }}
                   />
                 </td>
@@ -60,7 +61,7 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
                 <FormattedMessage
                   id="format.hours"
                   values={{
-                    hours: formatHours(issue.spent_hours),
+                    hours: formatNumber(issue.spent_hours),
                   }}
                 />
               </td>

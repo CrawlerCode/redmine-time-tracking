@@ -11,7 +11,7 @@ import useProjectUsers from "../../hooks/useProjectUsers";
 import useSettings from "../../hooks/useSettings";
 import useTimeEntryActivities from "../../hooks/useTimeEntryActivities";
 import { TCreateTimeEntry, TIssue, TRedmineError } from "../../types/redmine";
-import { formatHours } from "../../utils/date";
+import { formatHoursUsually } from "../../utils/date";
 import Button from "../general/Button";
 import DateField from "../general/DateField";
 import InputField from "../general/InputField";
@@ -31,7 +31,7 @@ type PropTypes = {
 };
 
 const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) => {
-  const { formatMessage } = useIntl();
+  const { formatMessage, formatDate } = useIntl();
   const { settings } = useSettings();
   const queryClient = useQueryClient();
 
@@ -117,7 +117,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                   </h1>
                   <DoneSlider name="done_ratio" value={doneRatio} onChange={(e) => setDoneRatio(e.target.valueAsNumber)} className="mb-1" />
 
-                  {values.spent_on && <TimeEntryPreview date={startOfDay(values.spent_on)} previewHours={values.hours} />}
+                  {values.spent_on && <TimeEntryPreview date={startOfDay(values.spent_on)} previewHours={values.hours ? values.hours : 0} />}
 
                   <div className="grid grid-cols-5 gap-x-2">
                     <div className="col-span-3">
@@ -138,7 +138,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                             ? formatMessage(
                                 { id: "format.hours" },
                                 {
-                                  hours: formatHours(values.hours),
+                                  hours: formatHoursUsually(values.hours),
                                 }
                               )
                             : undefined
@@ -157,7 +157,11 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                         as={DateField}
                         size="sm"
                         error={touched.spent_on && errors.spent_on}
-                        options={{ maxDate: new Date() }}
+                        options={{
+                          maxDate: new Date(),
+                          altInput: true,
+                          formatDate: (date: Date) => formatDate(date),
+                        }}
                       />
                     </div>
                   </div>

@@ -1,4 +1,4 @@
-export const formatTime = (milliseconds: number) => {
+export const formatTimer = (milliseconds: number) => {
   if (isNaN(milliseconds) || milliseconds < 0) return "";
   const seconds = milliseconds / 1000;
 
@@ -6,17 +6,6 @@ export const formatTime = (milliseconds: number) => {
   const m = Math.floor((seconds / 60) % 60);
   const h = Math.floor(seconds / 60 / 60);
   return `${h}:${m > 9 ? m : "0" + m}:${s > 9 ? s : "0" + s}`;
-};
-
-/**
- * convert 2.5 => 2:30
- */
-export const formatHours = (hours: number) => {
-  if (isNaN(hours) || hours < 0) return "";
-
-  const h = Math.floor(hours);
-  const m = Math.round((hours - h) * 60);
-  return `${h}:${m > 9 ? m : "0" + m}`;
 };
 
 /**
@@ -32,4 +21,22 @@ export const roundTimeNearestQuarterHour = (milliseconds: number) => {
   const m = Math.round(Math.floor((seconds / 60) % 60) / 15) * 15;
   const h = Math.floor(seconds / 60 / 60) + Math.floor(m / 60);
   return (h * 60 + (m % 60)) * 60 * 1000;
+};
+
+/**
+ * Format hours to usually format (1:30)
+ */
+export const formatHoursUsually = (hours: number) => {
+  if (isNaN(hours) || hours < 0) return "";
+
+  const h = Math.floor(hours);
+  const m = Math.round((hours - h) * 60);
+  return `${h}:${m > 9 ? m : "0" + m}`;
+};
+
+/**
+ * Round hours
+ */
+export const roundHours = (hours: number) => {
+  return Number(hours.toFixed(2));
 };
