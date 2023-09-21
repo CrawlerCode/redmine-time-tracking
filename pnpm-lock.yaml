@@ -13,9 +13,15 @@ dependencies:
   '@fortawesome/react-fontawesome':
     specifier: ^0.2.0
     version: 0.2.0(@fortawesome/fontawesome-svg-core@6.4.2)(react@18.2.0)
+  '@tanstack/query-async-storage-persister':
+    specifier: ^4.35.3
+    version: 4.35.3
   '@tanstack/react-query':
     specifier: ^4.35.3
     version: 4.35.3(react-dom@18.2.0)(react@18.2.0)
+  '@tanstack/react-query-persist-client':
+    specifier: ^4.35.5
+    version: 4.35.5(@tanstack/react-query@4.35.3)
   axios:
     specifier: ^1.5.0
     version: 1.5.0
@@ -888,8 +894,29 @@ packages:
     engines: {node: '>=14.0.0'}
     dev: false
 
+  /@tanstack/query-async-storage-persister@4.35.3:
+    resolution: {integrity: sha512-NscT3EHczCNpFp9i0Dw+EllgwkfSWcw2Rp6jMhhC2cEZsipwkQYi+KqQdievu5hGQNmrYfWDaDp8ZBcyUqLygw==}
+    dependencies:
+      '@tanstack/query-persist-client-core': 4.35.3
+    dev: false
+
   /@tanstack/query-core@4.35.3:
     resolution: {integrity: sha512-PS+WEjd9wzKTyNjjQymvcOe1yg8f3wYc6mD+vb6CKyZAKvu4sIJwryfqfBULITKCla7P9C4l5e9RXePHvZOZeQ==}
+    dev: false
+
+  /@tanstack/query-persist-client-core@4.35.3:
+    resolution: {integrity: sha512-UlUMsvmy12qgPzphIq8iyFtwxuv/vaEyFQEFDVVCvyrqj2G020qMZiCA1vj3+gasmCXh59EraiC2eY4Iqo0/PA==}
+    dependencies:
+      '@tanstack/query-core': 4.35.3
+    dev: false
+
+  /@tanstack/react-query-persist-client@4.35.5(@tanstack/react-query@4.35.3):
+    resolution: {integrity: sha512-d8pFzvMD6AD2guGXLP2A4r0mfCRuZ8C4VMBl5+EZvka/e4o9/DRfizZB4S9w0Za+sOQJ4/SdD3OOk2BwYEykkQ==}
+    peerDependencies:
+      '@tanstack/react-query': ^4.35.3
+    dependencies:
+      '@tanstack/query-persist-client-core': 4.35.3
+      '@tanstack/react-query': 4.35.3(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@tanstack/react-query@4.35.3(react-dom@18.2.0)(react@18.2.0):

@@ -7,7 +7,7 @@ import useDebounce from "./useDebounce";
 import useSettings from "./useSettings";
 
 const MAX_EXTENDED_SEARCH_LIMIT = 75;
-const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 5;
+const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 15;
 const STALE_DATA_TIME = 1000 * 60;
 
 const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter: FilterQuery) => {
@@ -63,6 +63,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     queryFn: () => searchOpenIssues(debouncedSearch),
     enabled: extendedSearching && !debouncedSearch.includes("#"),
     keepPreviousData: true,
+    staleTime: -1,
   });
   const extendedSearchIssuesResultIds = (extendedSearchIssuesResultQuery.data?.map((result) => result.id) ?? []).filter((id) => !issues.find((issue) => issue.id === id));
   if (extendedSearching && extendedSearchIssueIdMatch) {
@@ -74,6 +75,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     queryFn: () => getOpenIssuesByIds(extendedSearchIssuesResultIds, 0, search.inProject ? 100 : MAX_EXTENDED_SEARCH_LIMIT),
     enabled: extendedSearchIssuesResultIds.length > 0,
     keepPreviousData: extendedSearchIssuesResultIds.length > 0,
+    staleTime: -1,
   });
 
   const extendedSearchIssuesList =
@@ -99,7 +101,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     data: issues,
     extendedSearch: extendedSearchIssues,
     isLoading: issuesQuery.isInitialLoading || additionalIssuesQuery.isInitialLoading,
-    isError: issuesQuery.isError,
+    isError: issuesQuery.isError || additionalIssuesQuery.isError,
   };
 };
 

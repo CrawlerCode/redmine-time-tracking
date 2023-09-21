@@ -11,7 +11,6 @@ const useProjectUsers = (id: number, { enabled = true }: Options = {}) => {
     queryKey: ["memberships", id],
     queryFn: ({ pageParam = 0 }) => getProjectMemberships(id, pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
-    staleTime: 1000 * 60 * 60,
     enabled: enabled,
   });
 

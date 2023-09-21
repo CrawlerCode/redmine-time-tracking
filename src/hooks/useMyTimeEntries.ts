@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { getAllMyTimeEntries } from "../api/redmine";
 
-const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 5;
+const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 15;
 const STALE_DATA_TIME = 1000 * 60;
 
 const useMyTimeEntries = (from: Date, to: Date) => {

@@ -1,7 +1,7 @@
 import deepmerge from "deepmerge";
 import { useContext } from "react";
 import { Settings, SettingsContext, defaultSettings } from "../provider/SettingsProvider";
-import { getChromeStorage } from "./useStorage";
+import { getStorage } from "./useStorage";
 
 /**
  * Use settings context
@@ -14,7 +14,7 @@ const useSettings = () => {
  * Get the settings from storage
  */
 export const getSettings = async () => {
-  const data = await getChromeStorage<Settings>("settings", defaultSettings);
+  const data = await getStorage<Settings>("settings", defaultSettings);
   return deepmerge<Settings>(defaultSettings, data);
 };
 

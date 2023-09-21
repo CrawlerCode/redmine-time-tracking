@@ -5,16 +5,19 @@ import Filter, { FilterQuery, defaultFilter } from "../components/issues/Filter"
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
 import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
 import Search, { SearchQuery, SearchRef, defaultSearchQuery } from "../components/issues/Search";
+import useIssuePriorities from "../hooks/useIssuePriorities";
 import useMyAccount from "../hooks/useMyAccount";
 import useMyIssues from "../hooks/useMyIssues";
 import useSettings from "../hooks/useSettings";
 import useStorage from "../hooks/useStorage";
 
+const _defaultIssues = {};
+
 const IssuesPage = () => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
-  const issuesData = useStorage<IssuesData>("issues", {});
+  const issuesData = useStorage<IssuesData>("issues", _defaultIssues);
 
   const searchRef = useRef<SearchRef>(null);
   const [search, setSearch] = useState<SearchQuery>(defaultSearchQuery);
@@ -27,6 +30,7 @@ const IssuesPage = () => {
     search,
     filter
   );
+  const issuePriorities = useIssuePriorities();
   const myAccount = useMyAccount();
 
   useEffect(() => {
@@ -38,6 +42,8 @@ const IssuesPage = () => {
     });
   }, [issuesData.data]);
 
+  const isLoading = issuesData.isLoading || myIssuesQuery.isLoading || issuePriorities.isLoading;
+
   return (
     <>
       <Search ref={searchRef} onSearch={setSearch} />
@@ -45,9 +51,17 @@ const IssuesPage = () => {
       <Filter onChange={(filter) => setFilter(filter)} />
 
       <div className="flex flex-col gap-y-2">
-        {myIssuesQuery.isLoading && <IssuesListSkeleton />}
+        {isLoading && <IssuesListSkeleton />}
 
-        <IssuesList account={myAccount.data} issues={myIssuesQuery.data} issuesData={issuesData} onSearchInProject={(project) => searchRef.current?.searchInProject(project)} />
+        {!isLoading && (
+          <IssuesList
+            account={myAccount.data}
+            issues={myIssuesQuery.data}
+            issuePriorities={issuePriorities}
+            issuesData={issuesData}
+            onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
+          />
+        )}
 
         {search.searching && settings.options.extendedSearch && (
           <>
@@ -62,7 +76,13 @@ const IssuesPage = () => {
               </div>
             </div>
 
-            <IssuesList account={myAccount.data} issues={myIssuesQuery.extendedSearch} issuesData={issuesData} onSearchInProject={(project) => searchRef.current?.searchInProject(project)} />
+            <IssuesList
+              account={myAccount.data}
+              issues={myIssuesQuery.extendedSearch}
+              issuePriorities={issuePriorities}
+              issuesData={issuesData}
+              onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
+            />
           </>
         )}
 

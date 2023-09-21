@@ -8,8 +8,6 @@ const useIssuePriorities = () => {
   const issuePrioritiesQuery = useQuery({
     queryKey: ["issuePriorities"],
     queryFn: getIssuePriorities,
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60,
   });
 
   const priorities = issuePrioritiesQuery.data?.filter((priority) => priority.active) ?? [];
@@ -48,6 +46,8 @@ const useIssuePriorities = () => {
 
   return {
     data: priorities,
+    isLoading: issuePrioritiesQuery.isInitialLoading,
+    isError: issuePrioritiesQuery.isError,
     getPriorityType,
   };
 };

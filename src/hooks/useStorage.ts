@@ -1,58 +1,50 @@
 import { useEffect, useState } from "react";
 
+const Storage = {
+  getItem: async (key: string) => (await chrome.storage.local.get(key))[key],
+  setItem: (key: string, value: string) => chrome.storage.local.set({ [key]: value }),
+  removeItem: (key: string) => chrome.storage.local.remove(key),
+  serialize: JSON.stringify,
+  deserialize: JSON.parse,
+};
+
+export const getStorage = async <T>(name: string, defaultValue: T): Promise<T> => {
+  const data = await Storage.getItem(name);
+  if (!data) return defaultValue;
+  return Storage.deserialize(data);
+};
+
+export const setStorage = <T>(name: string, data: T) => {
+  Storage.setItem(name, Storage.serialize(data));
+};
+
 const useStorage = <T>(name: string, defaultValue: T) => {
   const [localData, setLocalData] = useState(defaultValue);
-
-  // load data from storage
-  const loadData = async () => {
-    try {
-      const data = await getChromeStorage(name, defaultValue);
-      setLocalData(data);
-      // eslint-disable-next-line no-empty
-    } catch (error) {}
-  };
+  const [isLoading, setIsLoading] = useState(true);
 
   // set data to storage
-  const setData = async (data: T) => {
-    setLocalData(data);
-    await setChromeStorage(name, data);
-  };
+  const setData = (data: T) => setStorage(name, data);
 
-  /**
-   * Init load
-   */
+  // Init load data
   useEffect(() => {
-    loadData();
+    getStorage(name, defaultValue).then((data) => {
+      setLocalData(data);
+      setIsLoading(false);
+    });
   }, []);
 
-  /**
-   * On chrome storage change => load data
-   */
+  // On chrome storage change => load data
   useEffect(() => {
-    const onChange = () => {
-      loadData();
+    const onChange: Parameters<typeof chrome.storage.local.onChanged.addListener>[0] = (changes) => {
+      if (!changes[name]) return; // other changed
+      setLocalData(Storage.deserialize(changes[name].newValue));
     };
+
     chrome.storage.local.onChanged.addListener(onChange);
     return () => chrome.storage.local.onChanged.removeListener(onChange);
-  }, []);
+  }, [name]);
 
-  return { data: localData, setData };
-};
-
-export const getChromeStorage = <T>(name: string, defaultValue: T) => {
-  return new Promise<T>((resolve, reject) => {
-    chrome.storage.local.get(name).then((result) => {
-      try {
-        resolve(result[name] ? JSON.parse(result[name]) : defaultValue);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  });
-};
-
-export const setChromeStorage = async <T>(name: string, data: T) => {
-  await chrome.storage.local.set({ [name]: JSON.stringify(data) });
+  return { data: localData, setData, isLoading };
 };
 
 export default useStorage;

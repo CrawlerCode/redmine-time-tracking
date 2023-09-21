@@ -11,7 +11,6 @@ const useMyProjects = ({ enabled = true }: Options = {}) => {
     queryKey: ["projects"],
     queryFn: ({ pageParam = 0 }) => getAllMyProjects(pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
-    staleTime: 1000 * 60 * 60,
     enabled: enabled,
   });
 

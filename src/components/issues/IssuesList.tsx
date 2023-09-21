@@ -26,14 +26,13 @@ export type GroupedIssues = {
 type PropTypes = {
   account?: TAccount;
   issues: TIssue[];
+  issuePriorities: ReturnType<typeof useIssuePriorities>;
   issuesData: ReturnType<typeof useStorage<IssuesData>>;
   onSearchInProject: (project: TReference) => void;
 };
 
-const IssuesList = ({ account, issues: rawIssues, issuesData: { data: issuesData, setData: setIssuesData }, onSearchInProject }: PropTypes) => {
+const IssuesList = ({ account, issues: rawIssues, issuePriorities, issuesData: { data: issuesData, setData: setIssuesData }, onSearchInProject }: PropTypes) => {
   const { settings } = useSettings();
-
-  const issuePriorities = useIssuePriorities();
 
   const groupedIssues = getGroupedIssues(getSortedIssues(rawIssues, issuePriorities.data, issuesData));
 
