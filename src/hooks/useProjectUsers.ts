@@ -1,9 +1,15 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { getProjectMemberships } from "../api/redmine";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo } from "react";
+import { getAllRoles, getProjectMemberships } from "../api/redmine";
+import { TMembership } from "../types/redmine";
 
 type Options = {
   enabled?: boolean;
+};
+
+export type TUser = TMembership["user"] & {
+  roles: TMembership["roles"];
+  highestRole?: TMembership["roles"][0];
 };
 
 const useProjectUsers = (id: number, { enabled = true }: Options = {}) => {
@@ -19,17 +25,44 @@ const useProjectUsers = (id: number, { enabled = true }: Options = {}) => {
     if (usersQuery.hasNextPage && !usersQuery.isFetchingNextPage) usersQuery.fetchNextPage();
   }, [usersQuery]);
 
+  const issueRolesQuery = useQuery({
+    queryKey: ["roles"],
+    queryFn: getAllRoles,
+    enabled: enabled,
+  });
+
   // filter memberships => only users
-  const users =
-    usersQuery.data?.pages
-      ?.flat()
-      .filter((m) => m.user)
-      .map((m) => m.user!) ?? [];
+  const users: TUser[] = useMemo(() => {
+    const rolesIdx =
+      issueRolesQuery.data?.reduce((result: Record<number, number>, role, i) => {
+        result[role.id] = i;
+        return result;
+      }, {}) ?? {};
+
+    return (
+      usersQuery.data?.pages
+        ?.flat()
+        .filter((m) => m.user)
+        .map(
+          (m) =>
+            ({
+              ...m.user!,
+              roles: m.roles,
+              highestRole: m.roles.reduce((result: TMembership["roles"][0] | undefined, role) => {
+                if (!result || rolesIdx[role.id] < rolesIdx[result.id]) {
+                  result = role;
+                }
+                return result;
+              }, undefined),
+            }) satisfies TUser
+        ) ?? []
+    );
+  }, [usersQuery.data, issueRolesQuery.data]);
 
   return {
     data: users,
-    isLoading: usersQuery.isInitialLoading,
-    isError: usersQuery.isError,
+    isLoading: usersQuery.isInitialLoading || issueRolesQuery.isInitialLoading,
+    isError: usersQuery.isError || issueRolesQuery.isError,
   };
 };
 

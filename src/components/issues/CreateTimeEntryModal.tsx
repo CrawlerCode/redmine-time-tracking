@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, isAxiosError } from "axios";
 import { startOfDay } from "date-fns";
 import { Field, Form, Formik, FormikProps } from "formik";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
 import { createTimeEntry, updateIssue } from "../../api/redmine";
@@ -12,6 +12,7 @@ import useSettings from "../../hooks/useSettings";
 import useTimeEntryActivities from "../../hooks/useTimeEntryActivities";
 import { TCreateTimeEntry, TIssue, TRedmineError } from "../../types/redmine";
 import { formatHoursUsually } from "../../utils/date";
+import { getGroupedUsers } from "../../utils/user";
 import Button from "../general/Button";
 import DateField from "../general/DateField";
 import InputField from "../general/InputField";
@@ -64,6 +65,8 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
       queryClient.invalidateQueries(["additionalIssues"]);
     },
   });
+
+  const groupedUsers = useMemo(() => getGroupedUsers(users.data), [users.data]);
 
   return (
     <>
@@ -172,10 +175,14 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                       name="user_id"
                       title={formatMessage({ id: "issues.modal.add-spent-time.user" })}
                       placeholder={formatMessage({ id: "issues.modal.add-spent-time.user" })}
+                      noOptionsMessage={() => formatMessage({ id: "issues.modal.add-spent-time.user.no-users" })}
                       as={ReactSelectFormik}
-                      options={users.data.map((user) => ({
-                        value: user.id,
-                        label: user.id === myAccount.data?.id ? `${user.name} (${formatMessage({ id: "issues.modal.add-spent-time.user.me" })})` : user.name,
+                      options={groupedUsers.map(({ role, users }) => ({
+                        label: role.name,
+                        options: users.map((user) => ({
+                          value: user.id,
+                          label: user.id === myAccount.data?.id ? `${user.name} (${formatMessage({ id: "issues.modal.add-spent-time.user.me" })})` : user.name,
+                        })),
                       }))}
                       error={touched.user_id && errors.user_id}
                       isClearable

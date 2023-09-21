@@ -39,6 +39,7 @@ function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group ex
             clsx("truncate p-1.5", {
               "bg-gray-200 dark:bg-gray-700": state.isFocused,
             }),
+          groupHeading: () => "px-2 py-1 text-xs font-bold uppercase font-mono dark:text-gray-300",
           valueContainer: () => "gap-1",
           multiValue: () =>
             "rounded-md bg-gray-50 dark:bg-gray-400/10 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-300 ring-1 ring-inset ring-gray-600/10 dark:ring-gray-300/10 max-w-[240px]",

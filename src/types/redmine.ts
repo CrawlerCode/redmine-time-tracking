@@ -98,6 +98,7 @@ export type TProject = {
   created_on: string;
   updated_on: string;
 };
+
 export type TMembership = {
   id: number;
   project: TReference;

@@ -1,5 +1,5 @@
 import { formatISO } from "date-fns";
-import { TAccount, TCreateTimeEntry, TIssue, TIssuesPriority, TMembership, TProject, TSearchResult, TTimeEntry, TTimeEntryActivity } from "../types/redmine";
+import { TAccount, TCreateTimeEntry, TIssue, TIssuesPriority, TMembership, TProject, TReference, TSearchResult, TTimeEntry, TTimeEntryActivity } from "../types/redmine";
 import instance from "./axios.config";
 
 export const getMyAccount = async (): Promise<TAccount> => {
@@ -68,4 +68,10 @@ export const createTimeEntry = async (entry: TCreateTimeEntry) => {
 
 export const getTimeEntryActivities = async (): Promise<TTimeEntryActivity[]> => {
   return instance.get("/enumerations/time_entry_activities.json").then((res) => res.data.time_entry_activities);
+};
+
+// Other
+
+export const getAllRoles = async (): Promise<TReference[]> => {
+  return instance.get(`/roles.json`).then((res) => res.data.roles);
 };

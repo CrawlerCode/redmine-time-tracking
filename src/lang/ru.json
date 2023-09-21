@@ -46,6 +46,7 @@
   "issues.modal.add-spent-time.hours.validation.less-than-24": "Должно быть не больше 24 часов",
   "issues.modal.add-spent-time.user": "Пользователь",
   "issues.modal.add-spent-time.user.me": "<< мне >>",
+  "issues.modal.add-spent-time.user.no-users": "No users",
   "issues.modal.add-spent-time.comments": "Комментарий",
   "issues.modal.add-spent-time.activity": "Деятельность",
   "issues.modal.add-spent-time.activity.validation.required": "Требуется хотя бы одно созданное действие в «Списки значений»",
