@@ -237,7 +237,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
           allowClose={false}
           message={
             isAxiosError(createTimeEntryMutation.error)
-              ? (createTimeEntryMutation.error as AxiosError<TRedmineError>).response?.data?.errors.join(", ") ?? (createTimeEntryMutation.error as AxiosError).message
+              ? (createTimeEntryMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (createTimeEntryMutation.error as AxiosError).message
               : (createTimeEntryMutation.error as Error).message
           }
         />
