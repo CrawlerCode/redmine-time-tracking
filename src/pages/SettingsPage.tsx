@@ -213,13 +213,18 @@ const SettingsPage = () => {
 const Info = () => {
   const { name, version, version_name } = chrome.runtime.getManifest();
   return (
-    <div className="mt-3 flex w-full flex-col items-center p-2">
-      <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline">
+    <div className="mt-3 flex w-full flex-col items-center gap-y-2 p-2">
+      <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="font-semibold hover:underline">
         {name}
       </a>
-      <p>
+
+      <Button variant="outline" size="xs" as="a" href="https://github.com/CrawlerCode/redmine-time-tracking/releases" target="_blank" tabIndex={-1}>
         <FormattedMessage id="settings.info.version" values={{ version: version_name || version }} />
-      </p>
+      </Button>
+
+      <a href="https://github.com/CrawlerCode/redmine-time-tracking/issues" target="_blank" tabIndex={-1} className="hover:underline">
+        <FormattedMessage id="settings.info.report-an-issue" />
+      </a>
     </div>
   );
 };

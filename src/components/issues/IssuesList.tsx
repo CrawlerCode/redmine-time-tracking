@@ -44,7 +44,7 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, issuesData: {
             <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs text-slate-500 hover:underline dark:text-slate-300">
               {project.name}
             </a>
-            <button type="button" className=" text-gray-900 dark:text-white" onClick={() => onSearchInProject(project)} tabIndex={-1}>
+            <button type="button" className="text-gray-900 dark:text-white" onClick={() => onSearchInProject(project)} tabIndex={-1}>
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
           </div>

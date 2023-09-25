@@ -88,6 +88,7 @@
   "settings.save-settings": "Сохранить настройки",
   "settings.settings-saved": "Настройки сохранены!",
   "settings.info.version": "Версия: {version}",
+  "settings.info.report-an-issue": "Report an issue",
 
   "format.hours": "{hours} ч"
 }
