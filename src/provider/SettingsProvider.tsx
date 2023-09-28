@@ -12,6 +12,7 @@ export type Settings = {
     extendedSearch: boolean;
     roundTimeNearestQuarterHour: boolean;
     addSpentTimeForOtherUsers: boolean;
+    cacheComments: boolean;
   };
 };
 
@@ -24,6 +25,7 @@ export const defaultSettings = {
     extendedSearch: true,
     roundTimeNearestQuarterHour: false,
     addSpentTimeForOtherUsers: false,
+    cacheComments: true,
   },
 };
 

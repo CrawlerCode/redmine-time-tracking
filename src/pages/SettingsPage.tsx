@@ -1,7 +1,7 @@
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "@tanstack/react-query";
-import { FastField, Form, Formik, FormikProps } from "formik";
+import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
@@ -59,7 +59,7 @@ const SettingsPage = () => {
                     <FormattedMessage id="settings.general" />
                   </legend>
                   <div className="flex flex-col gap-y-2">
-                    <FastField
+                    <Field
                       type="select"
                       name="language"
                       title={formatMessage({ id: "settings.general.language" })}
@@ -73,7 +73,7 @@ const SettingsPage = () => {
                           <FormattedMessage id={`settings.general.language.${lang}`} />
                         </option>
                       ))}
-                    </FastField>
+                    </Field>
                     <a href="https://github.com/CrawlerCode/redmine-time-tracking#supported-languages" target="_blank" tabIndex={-1} className="hover:underline">
                       <FormattedMessage id="settings.general.language.missing-hint" />
                     </a>
@@ -85,7 +85,7 @@ const SettingsPage = () => {
                     <FormattedMessage id="settings.redmine" />
                   </legend>
                   <div className="flex flex-col gap-y-2">
-                    <FastField
+                    <Field
                       type="text"
                       name="redmineURL"
                       title={formatMessage({ id: "settings.redmine.url" })}
@@ -94,7 +94,7 @@ const SettingsPage = () => {
                       as={InputField}
                       error={touched.redmineURL && errors.redmineURL}
                     />
-                    <FastField
+                    <Field
                       type="password"
                       name="redmineApiKey"
                       title={formatMessage({ id: "settings.redmine.api-key" })}
@@ -165,32 +165,39 @@ const SettingsPage = () => {
                     <FormattedMessage id="settings.options" />
                   </legend>
                   <div className="flex flex-col gap-y-2">
-                    <FastField
+                    <Field
                       type="checkbox"
                       name="options.autoPauseOnSwitch"
                       title={formatMessage({ id: "settings.options.auto-pause-on-switch.title" })}
                       description={formatMessage({ id: "settings.options.auto-pause-on-switch.description" })}
                       as={CheckBox}
                     />
-                    <FastField
+                    <Field
                       type="checkbox"
                       name="options.extendedSearch"
                       title={formatMessage({ id: "settings.options.extended-search.title" })}
                       description={formatMessage({ id: "settings.options.extended-search.description" })}
                       as={CheckBox}
                     />
-                    <FastField
+                    <Field
                       type="checkbox"
                       name="options.roundTimeNearestQuarterHour"
                       title={formatMessage({ id: "settings.options.round-time-nearest-quarter-hour.title" })}
                       description={formatMessage({ id: "settings.options.round-time-nearest-quarter-hour.description" })}
                       as={CheckBox}
                     />
-                    <FastField
+                    <Field
                       type="checkbox"
                       name="options.addSpentTimeForOtherUsers"
                       title={formatMessage({ id: "settings.options.add-spent-time-for-other-users.title" })}
                       description={formatMessage({ id: "settings.options.add-spent-time-for-other-users.description" })}
+                      as={CheckBox}
+                    />
+                    <Field
+                      type="checkbox"
+                      name="options.keepUnsavedComments"
+                      title={formatMessage({ id: "settings.options.cache-comments.title" })}
+                      description={formatMessage({ id: "settings.options.cache-comments.description" })}
                       as={CheckBox}
                     />
                   </div>

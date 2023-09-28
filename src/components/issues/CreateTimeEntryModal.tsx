@@ -9,6 +9,7 @@ import { createTimeEntry, updateIssue } from "../../api/redmine";
 import useMyAccount from "../../hooks/useMyAccount";
 import useProjectUsers from "../../hooks/useProjectUsers";
 import useSettings from "../../hooks/useSettings";
+import useStorage from "../../hooks/useStorage";
 import useTimeEntryActivities from "../../hooks/useTimeEntryActivities";
 import { TCreateTimeEntry, TIssue, TRedmineError } from "../../types/redmine";
 import { formatHoursUsually } from "../../utils/date";
@@ -31,6 +32,8 @@ type PropTypes = {
   onSuccess: () => void;
 };
 
+const _defaultCachedComments = {};
+
 const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) => {
   const { formatMessage, formatDate } = useIntl();
   const { settings } = useSettings();
@@ -42,9 +45,19 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
   const timeEntryActivities = useTimeEntryActivities();
   const users = useProjectUsers(issue.project.id, { enabled: settings.options.addSpentTimeForOtherUsers });
 
+  const cachedComments = useStorage<Record<number, string | undefined>>("cachedComments", _defaultCachedComments);
+
   useEffect(() => {
     formik.current?.setFieldValue("activity_id", timeEntryActivities.data.find((entry) => entry.is_default)?.id ?? undefined);
   }, [timeEntryActivities.data]);
+  useEffect(() => {
+    if (!settings.options.cacheComments) return;
+    // load cached comment to formik
+    const comments = cachedComments.data[issue.id];
+    if (comments) {
+      formik.current?.setFieldValue("comments", comments);
+    }
+  }, [issue.id, cachedComments.data]);
 
   const createTimeEntryMutation = useMutation({
     mutationFn: (entry: TCreateTimeEntry) => createTimeEntry(entry),
@@ -70,7 +83,19 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
 
   return (
     <>
-      <Modal title={formatMessage({ id: "issues.modal.add-spent-time.title" })} onClose={onClose}>
+      <Modal
+        title={formatMessage({ id: "issues.modal.add-spent-time.title" })}
+        onClose={() => {
+          if (settings.options.cacheComments) {
+            // if comment or already cached => save/update comment
+            const comments = formik.current?.values.comments;
+            if (comments || cachedComments.data[issue.id]) {
+              cachedComments.setData({ ...cachedComments.data, [issue.id]: comments });
+            }
+          }
+          onClose();
+        }}
+      >
         <Formik
           innerRef={formik}
           initialValues={{
@@ -105,7 +130,15 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
               await createTimeEntryMutation.mutateAsync({ ...values, user_id: undefined });
             }
             setSubmitting(false);
-            if (!createTimeEntryMutation.isError) onSuccess();
+            if (!createTimeEntryMutation.isError) {
+              if (settings.options.cacheComments) {
+                // if has cached comment => remove it
+                if (cachedComments.data[issue.id]) {
+                  cachedComments.setData({ ...cachedComments.data, [issue.id]: undefined });
+                }
+              }
+              onSuccess();
+            }
           }}
         >
           {({ isSubmitting, touched, errors, values }) => (

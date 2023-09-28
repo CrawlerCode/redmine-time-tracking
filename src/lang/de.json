@@ -85,6 +85,8 @@
   "settings.options.round-time-nearest-quarter-hour.description": "Timer auf nächsten Viertelstunde runden",
   "settings.options.add-spent-time-for-other-users.title": "Zeitaufwand für andere Nutzer hinzufügen",
   "settings.options.add-spent-time-for-other-users.description": "(Redmine-Berechtigung benötigt)",
+  "settings.options.cache-comments.title": "Kommentare zwischenspeichern",
+  "settings.options.cache-comments.description": "Kommentare zwischenspeichern, bis sie übermittelt wurden",
   "settings.save-settings": "Einstellungen speichern",
   "settings.settings-saved": "Einstellungen gespeichert!",
   "settings.info.version": "Version: {version}",
