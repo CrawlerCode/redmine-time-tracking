@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, isAxiosError } from "axios";
 import { startOfDay } from "date-fns";
-import { Field, Form, Formik, FormikProps } from "formik";
+import { FastField, Form, Formik, FormikProps } from "formik";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
@@ -109,125 +109,123 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
           }}
         >
           {({ isSubmitting, touched, errors, values }) => (
-            <>
-              <Form>
-                <div className="flex flex-col gap-y-2">
-                  <h1 className="mb-1 truncate">
-                    <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline">
-                      #{issue.id}
-                    </a>{" "}
-                    {issue.subject}
-                  </h1>
-                  <DoneSlider name="done_ratio" value={doneRatio} onChange={(e) => setDoneRatio(e.target.valueAsNumber)} className="mb-1" />
+            <Form>
+              <div className="flex flex-col gap-y-2">
+                <h1 className="mb-1 truncate">
+                  <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline">
+                    #{issue.id}
+                  </a>{" "}
+                  {issue.subject}
+                </h1>
+                <DoneSlider name="done_ratio" value={doneRatio} onChange={(e) => setDoneRatio(e.target.valueAsNumber)} className="mb-1" />
 
-                  {values.spent_on && <TimeEntryPreview date={startOfDay(values.spent_on)} previewHours={values.hours ? values.hours : 0} />}
+                {values.spent_on && <TimeEntryPreview date={startOfDay(values.spent_on)} previewHours={values.hours ? values.hours : 0} />}
 
-                  <div className="grid grid-cols-5 gap-x-2">
-                    <div className="col-span-3">
-                      <Field
-                        type="number"
-                        name="hours"
-                        title={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
-                        placeholder={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
-                        min="0"
-                        step="0.01"
-                        max="24"
-                        required
-                        as={InputField}
-                        size="sm"
-                        className="appearance-none"
-                        extraText={
-                          values.hours >= 0 && values.hours <= 24
-                            ? formatMessage(
-                                { id: "format.hours" },
-                                {
-                                  hours: formatHoursUsually(values.hours),
-                                }
-                              )
-                            : undefined
-                        }
-                        error={touched.hours && errors.hours}
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <Field
-                        type="date"
-                        name="spent_on"
-                        title={formatMessage({ id: "issues.modal.add-spent-time.date" })}
-                        placeholder={formatMessage({ id: "issues.modal.add-spent-time.date" })}
-                        required
-                        as={DateField}
-                        size="sm"
-                        error={touched.spent_on && errors.spent_on}
-                        options={{
-                          maxDate: new Date(),
-                          altInput: true,
-                          formatDate: (date: Date) => formatDate(date),
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {settings.options.addSpentTimeForOtherUsers && (
-                    <Field
-                      type="select"
-                      name="user_id"
-                      title={formatMessage({ id: "issues.modal.add-spent-time.user" })}
-                      placeholder={formatMessage({ id: "issues.modal.add-spent-time.user" })}
-                      noOptionsMessage={() => formatMessage({ id: "issues.modal.add-spent-time.user.no-users" })}
-                      as={ReactSelectFormik}
-                      options={groupedUsers.map(({ role, users }) => ({
-                        label: role.name,
-                        options: users.map((user) => ({
-                          value: user.id,
-                          label: user.id === myAccount.data?.id ? `${user.name} (${formatMessage({ id: "issues.modal.add-spent-time.user.me" })})` : user.name,
-                        })),
-                      }))}
-                      error={touched.user_id && errors.user_id}
-                      isClearable
-                      isMulti
-                      closeMenuOnSelect={false}
-                      isLoading={users.isLoading}
+                <div className="grid grid-cols-5 gap-x-2">
+                  <div className="col-span-3">
+                    <FastField
+                      type="number"
+                      name="hours"
+                      title={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
+                      placeholder={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
+                      min="0"
+                      step="0.01"
+                      max="24"
+                      required
+                      as={InputField}
+                      size="sm"
+                      className="appearance-none"
+                      extraText={
+                        values.hours >= 0 && values.hours <= 24
+                          ? formatMessage(
+                              { id: "format.hours" },
+                              {
+                                hours: formatHoursUsually(values.hours),
+                              }
+                            )
+                          : undefined
+                      }
+                      error={touched.hours && errors.hours}
+                      autoComplete="off"
                     />
-                  )}
-
-                  <Field
-                    type="text"
-                    name="comments"
-                    title={formatMessage({ id: "issues.modal.add-spent-time.comments" })}
-                    placeholder={formatMessage({ id: "issues.modal.add-spent-time.comments" })}
-                    as={InputField}
-                    size="sm"
-                    error={touched.comments && errors.comments}
-                    autoFocus
-                  />
-                  <Field
-                    type="select"
-                    name="activity_id"
-                    title={formatMessage({ id: "issues.modal.add-spent-time.activity" })}
-                    placeholder={formatMessage({ id: "issues.modal.add-spent-time.activity" })}
-                    required
-                    as={SelectField}
-                    size="sm"
-                    error={touched.activity_id && errors.activity_id}
-                  >
-                    {timeEntryActivities.data.map((activity) => (
-                      <>
-                        <option key={activity.id} value={activity.id}>
-                          {activity.name}
-                        </option>
-                      </>
-                    ))}
-                  </Field>
-
-                  <Button type="submit" disabled={isSubmitting} className="flex items-center justify-center gap-x-2">
-                    <FormattedMessage id="issues.modal.add-spent-time.submit" />
-                    {isSubmitting && <LoadingSpinner />}
-                  </Button>
+                  </div>
+                  <div className="col-span-2">
+                    <FastField
+                      type="date"
+                      name="spent_on"
+                      title={formatMessage({ id: "issues.modal.add-spent-time.date" })}
+                      placeholder={formatMessage({ id: "issues.modal.add-spent-time.date" })}
+                      required
+                      as={DateField}
+                      size="sm"
+                      error={touched.spent_on && errors.spent_on}
+                      options={{
+                        maxDate: new Date(),
+                        altInput: true,
+                        formatDate: (date: Date) => formatDate(date),
+                      }}
+                    />
+                  </div>
                 </div>
-              </Form>
-            </>
+
+                {settings.options.addSpentTimeForOtherUsers && (
+                  <FastField
+                    type="select"
+                    name="user_id"
+                    title={formatMessage({ id: "issues.modal.add-spent-time.user" })}
+                    placeholder={formatMessage({ id: "issues.modal.add-spent-time.user" })}
+                    noOptionsMessage={() => formatMessage({ id: "issues.modal.add-spent-time.user.no-users" })}
+                    as={ReactSelectFormik}
+                    options={groupedUsers.map(({ role, users }) => ({
+                      label: role.name,
+                      options: users.map((user) => ({
+                        value: user.id,
+                        label: user.id === myAccount.data?.id ? `${user.name} (${formatMessage({ id: "issues.modal.add-spent-time.user.me" })})` : user.name,
+                      })),
+                    }))}
+                    error={touched.user_id && errors.user_id}
+                    isClearable
+                    isMulti
+                    closeMenuOnSelect={false}
+                    isLoading={users.isLoading}
+                  />
+                )}
+
+                <FastField
+                  type="text"
+                  name="comments"
+                  title={formatMessage({ id: "issues.modal.add-spent-time.comments" })}
+                  placeholder={formatMessage({ id: "issues.modal.add-spent-time.comments" })}
+                  as={InputField}
+                  size="sm"
+                  error={touched.comments && errors.comments}
+                  autoFocus
+                />
+                <FastField
+                  type="select"
+                  name="activity_id"
+                  title={formatMessage({ id: "issues.modal.add-spent-time.activity" })}
+                  placeholder={formatMessage({ id: "issues.modal.add-spent-time.activity" })}
+                  required
+                  as={SelectField}
+                  size="sm"
+                  error={touched.activity_id && errors.activity_id}
+                >
+                  {timeEntryActivities.data.map((activity) => (
+                    <>
+                      <option key={activity.id} value={activity.id}>
+                        {activity.name}
+                      </option>
+                    </>
+                  ))}
+                </FastField>
+
+                <Button type="submit" disabled={isSubmitting} className="flex items-center justify-center gap-x-2">
+                  <FormattedMessage id="issues.modal.add-spent-time.submit" />
+                  {isSubmitting && <LoadingSpinner />}
+                </Button>
+              </div>
+            </Form>
           )}
         </Formik>
       </Modal>

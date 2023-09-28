@@ -32,9 +32,6 @@ const Button = <T extends React.ElementType = "button">({
         className
       )}
       {...props}
-      {...(Component === "button" && {
-        type: "button",
-      })}
     >
       {children}
     </Component>

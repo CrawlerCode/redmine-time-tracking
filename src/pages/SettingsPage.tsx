@@ -1,7 +1,7 @@
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "@tanstack/react-query";
-import { Field, Form, Formik, FormikProps } from "formik";
+import { FastField, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
@@ -50,7 +50,7 @@ const SettingsPage = () => {
           setSaved(true);
         }}
       >
-        {({ submitForm, touched, errors, values }) => (
+        {({ isSubmitting, touched, errors, values }) => (
           <>
             <Form>
               <div className="flex flex-col gap-y-1">
@@ -59,7 +59,7 @@ const SettingsPage = () => {
                     <FormattedMessage id="settings.general" />
                   </legend>
                   <div className="flex flex-col gap-y-2">
-                    <Field
+                    <FastField
                       type="select"
                       name="language"
                       title={formatMessage({ id: "settings.general.language" })}
@@ -73,7 +73,7 @@ const SettingsPage = () => {
                           <FormattedMessage id={`settings.general.language.${lang}`} />
                         </option>
                       ))}
-                    </Field>
+                    </FastField>
                     <a href="https://github.com/CrawlerCode/redmine-time-tracking#supported-languages" target="_blank" tabIndex={-1} className="hover:underline">
                       <FormattedMessage id="settings.general.language.missing-hint" />
                     </a>
@@ -85,7 +85,7 @@ const SettingsPage = () => {
                     <FormattedMessage id="settings.redmine" />
                   </legend>
                   <div className="flex flex-col gap-y-2">
-                    <Field
+                    <FastField
                       type="text"
                       name="redmineURL"
                       title={formatMessage({ id: "settings.redmine.url" })}
@@ -94,7 +94,7 @@ const SettingsPage = () => {
                       as={InputField}
                       error={touched.redmineURL && errors.redmineURL}
                     />
-                    <Field
+                    <FastField
                       type="password"
                       name="redmineApiKey"
                       title={formatMessage({ id: "settings.redmine.api-key" })}
@@ -165,28 +165,28 @@ const SettingsPage = () => {
                     <FormattedMessage id="settings.options" />
                   </legend>
                   <div className="flex flex-col gap-y-2">
-                    <Field
+                    <FastField
                       type="checkbox"
                       name="options.autoPauseOnSwitch"
                       title={formatMessage({ id: "settings.options.auto-pause-on-switch.title" })}
                       description={formatMessage({ id: "settings.options.auto-pause-on-switch.description" })}
                       as={CheckBox}
                     />
-                    <Field
+                    <FastField
                       type="checkbox"
                       name="options.extendedSearch"
                       title={formatMessage({ id: "settings.options.extended-search.title" })}
                       description={formatMessage({ id: "settings.options.extended-search.description" })}
                       as={CheckBox}
                     />
-                    <Field
+                    <FastField
                       type="checkbox"
                       name="options.roundTimeNearestQuarterHour"
                       title={formatMessage({ id: "settings.options.round-time-nearest-quarter-hour.title" })}
                       description={formatMessage({ id: "settings.options.round-time-nearest-quarter-hour.description" })}
                       as={CheckBox}
                     />
-                    <Field
+                    <FastField
                       type="checkbox"
                       name="options.addSpentTimeForOtherUsers"
                       title={formatMessage({ id: "settings.options.add-spent-time-for-other-users.title" })}
@@ -196,7 +196,7 @@ const SettingsPage = () => {
                   </div>
                 </fieldset>
 
-                <Button onClick={submitForm} className="mt-2">
+                <Button type="submit" disabled={isSubmitting} className="mt-2">
                   <FormattedMessage id="settings.save-settings" />
                 </Button>
               </div>

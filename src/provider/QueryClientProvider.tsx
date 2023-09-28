@@ -25,7 +25,7 @@ const persister = createAsyncStoragePersister({
     setItem: (key, value) => chrome.storage.local.set({ [key]: value }),
     removeItem: (key) => chrome.storage.local.remove(key),
   },
-  throttleTime: 1000 * 10,
+  throttleTime: 3000,
 });
 
 const QueryClientProvider = ({ children }: PropTypes) => {
