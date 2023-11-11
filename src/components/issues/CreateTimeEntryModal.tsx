@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, isAxiosError } from "axios";
 import { startOfDay } from "date-fns";
-import { FastField, Form, Formik, FormikProps } from "formik";
+import { FastField, Form, Formik, FormikProps, getIn } from "formik";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
@@ -221,6 +221,19 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     isMulti
                     closeMenuOnSelect={false}
                     isLoading={users.isLoading}
+                    // update the FastField component if isLoading or options changed
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    shouldUpdate={(nextProps: any, currentProps: any) =>
+                      nextProps.isLoading !== currentProps.isLoading ||
+                      nextProps.options !== currentProps.options ||
+                      // formik's default shouldUpdate
+                      nextProps.name !== currentProps.name ||
+                      nextProps.formik.isSubmitting !== currentProps.formik.isSubmitting ||
+                      Object.keys(nextProps).length !== Object.keys(currentProps).length ||
+                      getIn(nextProps.formik.values, currentProps.name) !== getIn(currentProps.formik.values, currentProps.name) ||
+                      getIn(nextProps.formik.errors, currentProps.name) !== getIn(currentProps.formik.errors, currentProps.name) ||
+                      getIn(nextProps.formik.touched, currentProps.name) !== getIn(currentProps.formik.touched, currentProps.name)
+                    }
                   />
                 )}
 
