@@ -20,7 +20,7 @@
 
 - View all your assigned Redmine issues
 - Start and stop the timer for your current tasks
-- Search for issue or project (press `CTRL` + `K` or `CTRL` + `F`)
+- Search for issues (press `CTRL` + `K` or `CTRL` + `F`)
 - Create entry for time spent in Redmine issue
 - Update done ratio
 - Create time spent entries for other users
