@@ -1,6 +1,6 @@
 import { faChevronRight, faSearch, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { ForwardedRef, ReactNode, forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import useHotKey from "../../hooks/useHotkey";
 import { TReference } from "../../types/redmine";
@@ -12,18 +12,17 @@ export type SearchQuery = {
   inProject?: TReference;
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const defaultSearchQuery: SearchQuery = { searching: false, query: "" };
+const defaultSearchQuery: SearchQuery = { searching: false, query: "" };
 
 type PropTypes = {
-  onSearch: (search: SearchQuery) => void;
+  children: (state: { search: SearchQuery }) => ReactNode;
 };
 
 export type SearchRef = {
   searchInProject: (project: TReference) => void;
 };
 
-const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>) => {
+const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>) => {
   const { formatMessage } = useIntl();
 
   const searchRef = useRef<HTMLInputElement>(null);
@@ -39,15 +38,6 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
       searchRef.current?.select();
     },
   }));
-
-  // sync states
-  useEffect(() => {
-    onSearch({
-      searching,
-      query,
-      inProject,
-    });
-  }, [searching, query, inProject, onSearch]);
 
   // hotkeys
   useHotKey(
@@ -108,6 +98,13 @@ const Search = forwardRef(({ onSearch }: PropTypes, ref: ForwardedRef<SearchRef>
           )}
         </div>
       )}
+      {children({
+        search: {
+          searching,
+          query,
+          inProject,
+        },
+      })}
     </>
   );
 });

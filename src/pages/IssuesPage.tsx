@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import ChromeBadge from "../components/general/ChromeBadge";
 import Toast from "../components/general/Toast";
-import Filter, { FilterQuery, defaultFilter } from "../components/issues/Filter";
+import Filter, { FilterQuery } from "../components/issues/Filter";
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
 import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
-import Search, { SearchQuery, SearchRef, defaultSearchQuery } from "../components/issues/Search";
+import Search, { SearchQuery, SearchRef } from "../components/issues/Search";
 import useIssuePriorities from "../hooks/useIssuePriorities";
 import useMyAccount from "../hooks/useMyAccount";
 import useMyIssues from "../hooks/useMyIssues";
@@ -13,15 +14,11 @@ import useStorage from "../hooks/useStorage";
 
 const _defaultIssues = {};
 
-const IssuesPage = () => {
+const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { search: SearchQuery; filter: FilterQuery; searchRef: RefObject<SearchRef>; isLoading: boolean }) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
   const issuesData = useStorage<IssuesData>("issues", _defaultIssues);
-
-  const searchRef = useRef<SearchRef>(null);
-  const [search, setSearch] = useState<SearchQuery>(defaultSearchQuery);
-  const [filter, setFilter] = useState<FilterQuery>(defaultFilter);
 
   const myIssuesQuery = useMyIssues(
     Object.keys(issuesData.data)
@@ -33,22 +30,13 @@ const IssuesPage = () => {
   const issuePriorities = useIssuePriorities();
   const myAccount = useMyAccount();
 
-  useEffect(() => {
-    const count = Object.values(issuesData.data).reduce((count, data) => count + (data.active ? 1 : 0), 0);
+  const activeTimerCount = Object.values(issuesData.data).reduce((count, data) => count + (data.active ? 1 : 0), 0);
 
-    chrome.action.setBadgeBackgroundColor({ color: "#1d4ed8" });
-    chrome.action.setBadgeText({
-      text: count > 0 ? count.toString() : "",
-    });
-  }, [issuesData.data]);
-
-  const isLoading = issuesData.isLoading || myIssuesQuery.isLoading || issuePriorities.isLoading;
+  const isLoading = issuesData.isLoading || myIssuesQuery.isLoading || issuePriorities.isLoading || isPageLoading;
 
   return (
     <>
-      <Search ref={searchRef} onSearch={setSearch} />
-
-      <Filter onChange={(filter) => setFilter(filter)} />
+      <ChromeBadge backgroundColor="#1d4ed8" text={activeTimerCount > 0 ? activeTimerCount.toString() : ""} />
 
       <div className="flex flex-col gap-y-2">
         {isLoading && <IssuesListSkeleton />}
@@ -92,4 +80,26 @@ const IssuesPage = () => {
   );
 };
 
-export default IssuesPage;
+const SearchFilterWrapper = () => {
+  const searchRef = useRef<SearchRef>(null);
+
+  return (
+    <>
+      <Search ref={searchRef}>
+        {({ search }) => (
+          <>
+            <Filter>
+              {({ filter, isLoading: isLoadingFilter }) => (
+                <>
+                  <IssuesPage search={search} filter={filter} searchRef={searchRef} isLoading={isLoadingFilter} />
+                </>
+              )}
+            </Filter>
+          </>
+        )}
+      </Search>
+    </>
+  );
+};
+
+export default SearchFilterWrapper;

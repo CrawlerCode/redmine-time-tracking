@@ -1,6 +1,6 @@
 import { faSliders, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { MouseEventHandler, useEffect, useState } from "react";
+import { MouseEventHandler, ReactNode, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import useHotKey from "../../hooks/useHotkey";
 import useMyProjects from "../../hooks/useMyProjects";
@@ -13,28 +13,25 @@ export type FilterQuery = {
   hideCompletedIssues: boolean;
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const defaultFilter: FilterQuery = { projects: [], hideCompletedIssues: false };
+const defaultFilter: FilterQuery = { projects: [], hideCompletedIssues: false };
 
 type PropTypes = {
-  onChange: (filter: FilterQuery) => void;
+  children: (state: { filter: FilterQuery; isLoading: boolean }) => ReactNode;
 };
 
-const Filter = ({ onChange }: PropTypes) => {
+const Filter = ({ children }: PropTypes) => {
   const { formatMessage } = useIntl();
 
   const [showFilter, setShowFilter] = useState(false);
+
   // On "Escape" => close filter
   useHotKey(() => setShowFilter(false), { key: "Escape" });
 
-  const { data: projects, isLoading } = useMyProjects({
+  const { data: projects, isLoading: isLoadingProjects } = useMyProjects({
     enabled: showFilter,
   });
 
-  const { data: filter, setData: setFilter } = useStorage<FilterQuery>("filter", defaultFilter);
-
-  // sync states
-  useEffect(() => onChange(filter), [filter, onChange]);
+  const { data: filter, setData: setFilter, isLoading } = useStorage<FilterQuery>("filter", defaultFilter);
 
   return (
     <>
@@ -54,7 +51,7 @@ const Filter = ({ onChange }: PropTypes) => {
               placeholder={formatMessage({ id: "issues.filter.projects" })}
               noOptionsMessage={() => formatMessage({ id: "issues.filter.projects.no-projects" })}
               options={projects.map((project) => ({ value: project.id, label: project.name }))}
-              isLoading={isLoading}
+              isLoading={isLoadingProjects}
               value={filter.projects.map((id) => ({ value: id, label: projects.find((p) => p.id === id)?.name ?? "..." }))}
               onChange={(selected) => {
                 setFilter({
@@ -75,6 +72,7 @@ const Filter = ({ onChange }: PropTypes) => {
           </div>
         </fieldset>
       )}
+      {children({ filter, isLoading })}
     </>
   );
 };
