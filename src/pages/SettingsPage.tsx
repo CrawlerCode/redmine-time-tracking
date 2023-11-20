@@ -195,7 +195,7 @@ const SettingsPage = () => {
                     />
                     <Field
                       type="checkbox"
-                      name="options.keepUnsavedComments"
+                      name="options.cacheComments"
                       title={formatMessage({ id: "settings.options.cache-comments.title" })}
                       description={formatMessage({ id: "settings.options.cache-comments.description" })}
                       as={CheckBox}
