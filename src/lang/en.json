@@ -76,6 +76,7 @@
   "settings.redmine.connection-failed": "Connection failed",
   "settings.redmine.connection-successful": "Connection successful!",
   "settings.redmine.hello-user": "Hello <strong>{firstName} {lastName}</strong> ({accountName})",
+  "settings.redmine.edit": "Edit",
   "settings.options": "Options",
   "settings.options.auto-pause-on-switch.title": "Auto pause",
   "settings.options.auto-pause-on-switch.description": "Automatic pause timers when changing issue",

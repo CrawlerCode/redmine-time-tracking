@@ -76,6 +76,7 @@
   "settings.redmine.connection-failed": "Ошибка подключения",
   "settings.redmine.connection-successful": "Подключение успешно!",
   "settings.redmine.hello-user": "Здравствуйте <strong>{firstName} {lastName}</strong> ({accountName})",
+  "settings.redmine.edit": "Edit",
   "settings.options": "Дополнительно",
   "settings.options.auto-pause-on-switch.title": "Авто остановка",
   "settings.options.auto-pause-on-switch.description": "Автоматически останавливать таймеры при изменении задачи",

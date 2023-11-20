@@ -1,4 +1,4 @@
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "@tanstack/react-query";
 import { Field, Form, Formik, FormikProps } from "formik";
@@ -23,13 +23,17 @@ const SettingsPage = () => {
 
   const formik = useRef<FormikProps<Settings>>(null);
 
-  useEffect(() => {
-    formik.current?.setValues(settings);
-  }, [settings]);
-
+  const [editRedmineInstance, setEditRedmineInstance] = useState(false);
   const [saved, setSaved] = useState(false);
 
   const myAccount = useMyAccount();
+
+  useEffect(() => {
+    formik.current?.setValues(settings);
+    if (settings.redmineURL === "") {
+      setEditRedmineInstance(true);
+    }
+  }, [settings]);
 
   return (
     <>
@@ -39,7 +43,7 @@ const SettingsPage = () => {
         validationSchema={Yup.object({
           redmineURL: Yup.string()
             .required(formatMessage({ id: "settings.redmine.url.validation.required" }))
-            .matches(/^(http|https):\/\/\w+(\.\w+)*(:[0-9]+)?\/?.*?$/, formatMessage({ id: "settings.redmine.url.validation.valid-url" })),
+            .matches(/^(http|https):\/\/[\w\-\.]+(\.\w+)*(:[0-9]+)?\/?$/, formatMessage({ id: "settings.redmine.url.validation.valid-url" })),
           redmineApiKey: Yup.string().required(formatMessage({ id: "settings.redmine.api-key.validation.required" })),
         })}
         onSubmit={(values, { setSubmitting }) => {
@@ -48,6 +52,7 @@ const SettingsPage = () => {
           queryClient.clear();
           setSubmitting(false);
           setSaved(true);
+          setEditRedmineInstance(false);
         }}
       >
         {({ isSubmitting, touched, errors, values }) => (
@@ -85,78 +90,90 @@ const SettingsPage = () => {
                     <FormattedMessage id="settings.redmine" />
                   </legend>
                   <div className="flex flex-col gap-y-2">
-                    <Field
-                      type="text"
-                      name="redmineURL"
-                      title={formatMessage({ id: "settings.redmine.url" })}
-                      placeholder={formatMessage({ id: "settings.redmine.url" })}
-                      required
-                      as={InputField}
-                      error={touched.redmineURL && errors.redmineURL}
-                    />
-                    <Field
-                      type="password"
-                      name="redmineApiKey"
-                      title={formatMessage({ id: "settings.redmine.api-key" })}
-                      placeholder={formatMessage({ id: "settings.redmine.api-key" })}
-                      required
-                      as={InputField}
-                      error={touched.redmineApiKey && errors.redmineApiKey}
-                    />
-                    {values.redmineURL && !errors.redmineURL && !values.redmineApiKey && (
-                      <p>
-                        <FontAwesomeIcon icon={faInfoCircle} className="mr-1 text-yellow-500 dark:text-yellow-400" />
-                        <FormattedMessage
-                          id="settings.redmine.api-key.hint"
-                          values={{
-                            link: (children) => (
-                              <a href={`${values.redmineURL}/my/account`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline">
-                                {children}
-                              </a>
-                            ),
-                          }}
+                    {(editRedmineInstance && (
+                      <>
+                        <Field
+                          type="text"
+                          name="redmineURL"
+                          title={formatMessage({ id: "settings.redmine.url" })}
+                          placeholder={formatMessage({ id: "settings.redmine.url" })}
+                          required
+                          as={InputField}
+                          error={touched.redmineURL && errors.redmineURL}
                         />
-                      </p>
-                    )}
-                    <div className="flex items-center gap-x-2">
-                      {myAccount.isLoading && (
-                        <>
-                          <Indicator variant="primary" />
+                        <Field
+                          type="password"
+                          name="redmineApiKey"
+                          title={formatMessage({ id: "settings.redmine.api-key" })}
+                          placeholder={formatMessage({ id: "settings.redmine.api-key" })}
+                          required
+                          as={InputField}
+                          error={touched.redmineApiKey && errors.redmineApiKey}
+                        />
+                        {values.redmineURL && !errors.redmineURL && !values.redmineApiKey && (
                           <p>
-                            <FormattedMessage id="settings.redmine.connecting" />
+                            <FontAwesomeIcon icon={faInfoCircle} className="mr-1 text-yellow-500 dark:text-yellow-400" />
+                            <FormattedMessage
+                              id="settings.redmine.api-key.hint"
+                              values={{
+                                link: (children) => (
+                                  <a href={`${values.redmineURL}/my/account`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline">
+                                    {children}
+                                  </a>
+                                ),
+                              }}
+                            />
                           </p>
-                        </>
-                      )}
-                      {myAccount.isError && (
-                        <>
-                          <Indicator variant="danger" />
-                          <p>
-                            <FormattedMessage id="settings.redmine.connection-failed" />
-                          </p>
-                        </>
-                      )}
-                      {!myAccount.isLoading && !myAccount.isError && myAccount.data && (
-                        <>
-                          <Indicator variant="success" />
-                          <div>
-                            <p>
-                              <FormattedMessage id="settings.redmine.connection-successful" />
+                        )}
+                      </>
+                    )) || (
+                      <>
+                        <div className="flex items-center gap-x-2">
+                          <div className="relative w-full">
+                            <h3 className="max-w-[285px] truncate text-base">
+                              <FontAwesomeIcon icon={faServer} className="mr-1" />
+                              {settings.redmineURL}
+                            </h3>
+                            <p className="flex items-center gap-x-1.5">
+                              {myAccount.isLoading ? (
+                                <>
+                                  <Indicator variant="primary" />
+                                  <FormattedMessage id="settings.redmine.connecting" />
+                                </>
+                              ) : myAccount.isError ? (
+                                <>
+                                  <Indicator variant="danger" />
+                                  <FormattedMessage id="settings.redmine.connection-failed" />
+                                </>
+                              ) : myAccount.data ? (
+                                <>
+                                  <Indicator variant="success" />
+                                  <FormattedMessage id="settings.redmine.connection-successful" />
+                                </>
+                              ) : (
+                                "Unknown status"
+                              )}
                             </p>
-                            <p>
-                              <FormattedMessage
-                                id="settings.redmine.hello-user"
-                                values={{
-                                  firstName: myAccount.data.firstname,
-                                  lastName: myAccount.data.lastname,
-                                  accountName: myAccount.data.login,
-                                  strong: (children) => <strong>{children}</strong>,
-                                }}
-                              />
-                            </p>
+                            {myAccount.data && (
+                              <p>
+                                <FormattedMessage
+                                  id="settings.redmine.hello-user"
+                                  values={{
+                                    firstName: myAccount.data.firstname,
+                                    lastName: myAccount.data.lastname,
+                                    accountName: myAccount.data.login,
+                                    strong: (children) => <strong>{children}</strong>,
+                                  }}
+                                />
+                              </p>
+                            )}
+                            <Button className="absolute bottom-0 right-0" size="sm" onClick={() => setEditRedmineInstance(true)}>
+                              <FormattedMessage id="settings.redmine.edit" />
+                            </Button>
                           </div>
-                        </>
-                      )}
-                    </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </fieldset>
 
