@@ -24,6 +24,7 @@ import SelectField from "../general/SelectField";
 import Toast from "../general/Toast";
 import TimeEntryPreview from "../time/TimeEntryPreview";
 import DoneSlider from "./DoneSlider";
+import SpentVsEstimatedTime from "./SpentVsEstimatedTime";
 
 type PropTypes = {
   issue: TIssue;
@@ -150,7 +151,12 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                   </a>{" "}
                   {issue.subject}
                 </h1>
-                <DoneSlider name="done_ratio" value={doneRatio} onChange={(e) => setDoneRatio(e.target.valueAsNumber)} className="mb-1" />
+
+                <div className="flex justify-between gap-x-3">
+                  <DoneSlider name="done_ratio" value={doneRatio} onChange={(e) => setDoneRatio(e.target.valueAsNumber)} className="mb-1" />
+
+                  {issue.estimated_hours && <SpentVsEstimatedTime issue={issue} previewHours={values.hours ? values.hours : 0} />}
+                </div>
 
                 {values.spent_on && <TimeEntryPreview date={startOfDay(values.spent_on)} previewHours={values.hours ? values.hours : 0} />}
 
@@ -220,6 +226,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     isClearable
                     isMulti
                     closeMenuOnSelect={false}
+                    maxMenuHeight={200}
                     isLoading={users.isLoading}
                     // update the FastField component if isLoading or options changed
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
