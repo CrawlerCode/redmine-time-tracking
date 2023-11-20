@@ -27,7 +27,7 @@ function App() {
         e.preventDefault();
       }}
     >
-      <div className="relative">
+      <header className="relative h-12">
         <Navbar
           navigation={[
             {
@@ -48,10 +48,11 @@ function App() {
           ]}
         />
         {locationType === "popup" && <FontAwesomeIcon icon={faUpRightFromSquare} size="lg" className="absolute right-4 top-1/2 z-20 -translate-y-1/2 cursor-pointer" onClick={createPopOut} />}
-      </div>
+      </header>
       <main
-        className={clsx("h-[500px] overflow-y-scroll p-2", {
-          "h-full": locationType === "popout",
+        className={clsx("overflow-y-scroll p-2", {
+          "h-[500px]": locationType !== "popout",
+          "absolute bottom-0 top-12 w-full min-w-[320px]": locationType === "popout",
         })}
       >
         <Routes>
