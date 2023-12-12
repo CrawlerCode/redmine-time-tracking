@@ -75,7 +75,9 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
     onSuccess: (_, entry) => {
       // if entry created for me => invalidate query
       if (!entry.user_id || entry.user_id === myAccount.data?.id) {
-        queryClient.invalidateQueries(["timeEntries"]);
+        queryClient.invalidateQueries({
+          queryKey: ["timeEntries"],
+        });
       }
     },
   });
@@ -83,8 +85,8 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
   const updateIssueMutation = useMutation({
     mutationFn: (data: TUpdateIssue) => updateIssue(issue.id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(["issues"]);
-      queryClient.invalidateQueries(["additionalIssues"]);
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries({ queryKey: ["additionalIssues"] });
     },
   });
 

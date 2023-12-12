@@ -15,7 +15,8 @@ export type TUser = TMembership["user"] & {
 const useProjectUsers = (id: number, { enabled = true }: Options = {}) => {
   const usersQuery = useInfiniteQuery({
     queryKey: ["memberships", id],
-    queryFn: ({ pageParam = 0 }) => getProjectMemberships(id, pageParam * 100, 100),
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) => getProjectMemberships(id, pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     enabled: enabled,
   });

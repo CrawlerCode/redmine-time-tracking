@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { getAllMyOpenIssues, getOpenIssuesByIds, searchOpenIssues } from "../api/redmine";
 import { FilterQuery } from "../components/issues/Filter";
@@ -15,17 +15,18 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
 
   const issuesQuery = useInfiniteQuery({
     queryKey: ["issues"],
-    queryFn: ({ pageParam = 0 }) => getAllMyOpenIssues(pageParam * 100, 100),
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) => getAllMyOpenIssues(pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
   });
   const additionalIssuesQuery = useInfiniteQuery({
     queryKey: ["additionalIssues", additionalIssuesIds],
-    queryFn: ({ pageParam = 0 }) => getOpenIssuesByIds(additionalIssuesIds, pageParam * 100, 100),
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) => getOpenIssuesByIds(additionalIssuesIds, pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     enabled: additionalIssuesIds.length > 0,
-    keepPreviousData: additionalIssuesIds.length > 0,
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
   });
@@ -62,7 +63,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     queryKey: ["extendedSearchIssuesResult", debouncedSearch],
     queryFn: () => searchOpenIssues(debouncedSearch),
     enabled: extendedSearching && !debouncedSearch.includes("#"),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     staleTime: -1,
   });
   const extendedSearchIssuesResultIds = (extendedSearchIssuesResultQuery.data?.map((result) => result.id) ?? []).filter((id) => !issues.find((issue) => issue.id === id));
@@ -74,7 +75,6 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     queryKey: ["extendedSearchIssues", extendedSearchIssuesResultIds],
     queryFn: () => getOpenIssuesByIds(extendedSearchIssuesResultIds, 0, search.inProject ? 100 : MAX_EXTENDED_SEARCH_LIMIT),
     enabled: extendedSearchIssuesResultIds.length > 0,
-    keepPreviousData: extendedSearchIssuesResultIds.length > 0,
     staleTime: -1,
   });
 

@@ -6,6 +6,7 @@ import { useId } from "react";
 interface PropTypes extends Omit<React.ComponentProps<"select">, "id" | "size"> {
   size?: "sm" | "md";
   error?: string;
+  placeholder?: string
 }
 
 const SelectField = ({ size = "md", title, error, children, placeholder, className, ...props }: PropTypes) => {

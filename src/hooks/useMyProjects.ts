@@ -9,7 +9,8 @@ type Options = {
 const useMyProjects = ({ enabled = true }: Options = {}) => {
   const projectsQuery = useInfiniteQuery({
     queryKey: ["projects"],
-    queryFn: ({ pageParam = 0 }) => getAllMyProjects(pageParam * 100, 100),
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) => getAllMyProjects(pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     enabled: enabled,
   });
