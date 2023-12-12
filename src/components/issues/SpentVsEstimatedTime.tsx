@@ -15,7 +15,7 @@ const SpentVsEstimatedTime = ({ issue, previewHours, className, ...props }: Prop
         <span className={clsx("flex items-center gap-x-1 truncate", className)} {...props}>
           <span
             className={clsx("mb-0.5 truncate font-bold", {
-              "text-orange-600 dark:text-orange-400": issue.spent_hours + previewHours > issue.estimated_hours,
+              "text-orange-500 dark:text-orange-400": issue.spent_hours + previewHours > issue.estimated_hours,
             })}
           >
             {formatMessage(

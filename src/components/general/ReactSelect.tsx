@@ -8,9 +8,14 @@ type PropTypes = {
   error?: string;
 };
 
-function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group extends GroupBase<Option> = GroupBase<Option>>({ title, error, ...props }: Props<Option, IsMulti, Group> & PropTypes) {
+function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group extends GroupBase<Option> = GroupBase<Option>>({
+  title,
+  error,
+  className,
+  ...props
+}: Props<Option, IsMulti, Group> & PropTypes) {
   return (
-    <div>
+    <div className={className}>
       {title && (
         <label className="mb-1 block text-sm font-medium text-gray-900 dark:text-white">
           {title}

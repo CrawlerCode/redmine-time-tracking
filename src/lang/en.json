@@ -4,7 +4,7 @@
   "nav.tabs.settings": "Settings",
   "nav.error.page-not-found": "Page not found!",
 
-  "issues.search": "Search...",
+  "issues.search": "Search... (#123, Subject, ...)",
   "issues.search.search-in-project": "Search in <badge>{projectName}</badge>",
   "issues.extended-search": "Extended search",
   "issues.filter": "Filter",

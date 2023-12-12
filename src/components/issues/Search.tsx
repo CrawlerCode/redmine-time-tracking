@@ -75,7 +75,6 @@ const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>
             icon={<FontAwesomeIcon icon={faSearch} />}
             name="query"
             placeholder={formatMessage({ id: "issues.search" })}
-            className="select-none pr-[7.25rem]"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus

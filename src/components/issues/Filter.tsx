@@ -40,7 +40,7 @@ const Filter = ({ children }: PropTypes) => {
           <FilterButton onClick={() => setShowFilter((show) => !show)} />
         </div>
       )) || (
-        <fieldset className="mb-2 rounded-md border border-gray-300 p-1.5 dark:border-gray-600">
+        <fieldset className="mb-2 rounded-md border border-gray-200 p-1.5 dark:border-gray-700">
           <legend className="cursor-pointer px-2 text-right" onClick={() => setShowFilter((show) => !show)}>
             <FilterButton />
             <FontAwesomeIcon icon={faX} className="ml-2" />

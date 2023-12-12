@@ -4,7 +4,7 @@
   "nav.tabs.settings": "Настройки",
   "nav.error.page-not-found": "Страница не найдена!",
 
-  "issues.search": "Поиск...",
+  "issues.search": "Поиск... (#123, Subject, ...)",
   "issues.search.search-in-project": "Поиск в <badge>{projectName}</badge>",
   "issues.extended-search": "Расширенный поиск",
   "issues.filter": "Фильтр",

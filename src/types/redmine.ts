@@ -27,6 +27,8 @@ export type TIssue = {
   closed_on?: string;
 };
 
+export type TUpdateIssue = Partial<Omit<TIssue, "id">>;
+
 export type TIssuesPriority = {
   id: number;
   name: string;

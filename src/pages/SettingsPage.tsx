@@ -7,6 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
 import Button from "../components/general/Button";
 import CheckBox from "../components/general/CheckBox";
+import Fieldset from "../components/general/Fieldset";
 import Indicator from "../components/general/Indicator";
 import InputField from "../components/general/InputField";
 import SelectField from "../components/general/SelectField";
@@ -59,10 +60,7 @@ const SettingsPage = () => {
           <>
             <Form>
               <div className="flex flex-col gap-y-1">
-                <fieldset className="rounded-lg border border-gray-300 p-1.5 dark:border-gray-600">
-                  <legend className="px-2 text-base font-semibold">
-                    <FormattedMessage id="settings.general" />
-                  </legend>
+                <Fieldset legend={<FormattedMessage id="settings.general" />}>
                   <div className="flex flex-col gap-y-2">
                     <Field
                       type="select"
@@ -83,12 +81,9 @@ const SettingsPage = () => {
                       <FormattedMessage id="settings.general.language.missing-hint" />
                     </a>
                   </div>
-                </fieldset>
+                </Fieldset>
 
-                <fieldset className="rounded-lg border border-gray-300 p-1.5 dark:border-gray-600">
-                  <legend className="px-2 text-base font-semibold">
-                    <FormattedMessage id="settings.redmine" />
-                  </legend>
+                <Fieldset legend={<FormattedMessage id="settings.redmine" />}>
                   <div className="flex flex-col gap-y-2">
                     {(editRedmineInstance && (
                       <>
@@ -131,7 +126,7 @@ const SettingsPage = () => {
                         <div className="flex items-center gap-x-2">
                           <div className="relative w-full">
                             <h3 className="max-w-[285px] truncate text-base">
-                              <FontAwesomeIcon icon={faServer} className="mr-1" />
+                              <FontAwesomeIcon icon={faServer} className="mr-1 text-gray-800 dark:text-gray-200" />
                               {settings.redmineURL}
                             </h3>
                             <p className="flex items-center gap-x-1.5">
@@ -175,12 +170,9 @@ const SettingsPage = () => {
                       </>
                     )}
                   </div>
-                </fieldset>
+                </Fieldset>
 
-                <fieldset className="rounded-lg border border-gray-300 p-1.5 dark:border-gray-600">
-                  <legend className="px-2 text-base font-semibold">
-                    <FormattedMessage id="settings.options" />
-                  </legend>
+                <Fieldset legend={<FormattedMessage id="settings.options" />}>
                   <div className="flex flex-col gap-y-2">
                     <Field
                       type="checkbox"
@@ -218,7 +210,7 @@ const SettingsPage = () => {
                       as={CheckBox}
                     />
                   </div>
-                </fieldset>
+                </Fieldset>
 
                 <Button type="submit" disabled={isSubmitting} className="mt-2">
                   <FormattedMessage id="settings.save-settings" />

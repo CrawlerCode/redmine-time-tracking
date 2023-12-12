@@ -12,7 +12,7 @@ const TextareaField = ({ size = "md", title, error, value, rows = 3, className, 
   const id = useId();
 
   return (
-    <div>
+    <div className={className}>
       {title && (
         <label
           htmlFor={id}
@@ -34,11 +34,10 @@ const TextareaField = ({ size = "md", title, error, value, rows = 3, className, 
           "border border-gray-300 bg-gray-50 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400",
           "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
           {
-            "border-red-500 text-red-900 placeholder:text-red-700 dark:text-red-500 dark:placeholder:text-red-500 dark:border-red-500": error !== undefined,
+            "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
             "p-1.5": size === "sm",
             "p-2.5": size === "md",
-          },
-          className
+          }
         )}
         rows={rows}
       >

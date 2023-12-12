@@ -8,13 +8,14 @@ interface PropTypes extends Omit<React.ComponentProps<"input">, "id" | "size"> {
   icon?: React.ReactNode;
   error?: string;
   extraText?: string;
+  inputClassName?: string;
 }
 
-const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title, icon, error, extraText, className, ...props }: PropTypes, ref) => {
+const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title, icon, error, extraText, className, inputClassName, ...props }: PropTypes, ref) => {
   const id = useId();
 
   return (
-    <div>
+    <div className={className}>
       {title && (
         <label
           htmlFor={id}
@@ -46,7 +47,7 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title
               "p-2.5": size === "md",
               "appearance-none": extraText,
             },
-            className
+            inputClassName
           )}
         />
         {extraText && (

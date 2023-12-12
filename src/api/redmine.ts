@@ -1,5 +1,5 @@
 import { formatISO } from "date-fns";
-import { TAccount, TCreateTimeEntry, TIssue, TIssuesPriority, TMembership, TProject, TReference, TSearchResult, TTimeEntry, TTimeEntryActivity } from "../types/redmine";
+import { TAccount, TCreateTimeEntry, TIssue, TIssuesPriority, TMembership, TProject, TReference, TSearchResult, TTimeEntry, TTimeEntryActivity, TUpdateIssue } from "../types/redmine";
 import instance from "./axios.config";
 
 export const getMyAccount = async (): Promise<TAccount> => {
@@ -23,7 +23,7 @@ export const searchOpenIssues = async (query: string): Promise<TSearchResult[]> 
   return instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&issues=1&open_issues=1`).then((res) => res.data.results);
 };
 
-export const updateIssue = async (id: number, issue: Partial<Omit<TIssue, "id">>) => {
+export const updateIssue = async (id: number, issue: TUpdateIssue) => {
   return instance
     .put(`/issues/${id}.json`, {
       issue: issue,

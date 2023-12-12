@@ -12,7 +12,7 @@ const SelectField = ({ size = "md", title, error, children, placeholder, classNa
   const id = useId();
 
   return (
-    <div>
+    <div className={className}>
       {title && (
         <label
           htmlFor={id}
@@ -35,8 +35,7 @@ const SelectField = ({ size = "md", title, error, children, placeholder, classNa
           {
             "p-1.5": size === "sm",
             "p-2.5": size === "md",
-          },
-          className
+          }
         )}
       >
         {placeholder && (
