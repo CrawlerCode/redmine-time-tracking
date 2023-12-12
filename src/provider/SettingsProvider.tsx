@@ -13,10 +13,11 @@ export type Settings = {
     roundTimeNearestQuarterHour: boolean;
     addSpentTimeForOtherUsers: boolean;
     cacheComments: boolean;
+    addNotes: boolean;
   };
 };
 
-export const defaultSettings = {
+export const defaultSettings: Settings = {
   language: "browser",
   redmineURL: "",
   redmineApiKey: "",
@@ -26,6 +27,7 @@ export const defaultSettings = {
     roundTimeNearestQuarterHour: false,
     addSpentTimeForOtherUsers: false,
     cacheComments: true,
+    addNotes: false,
   },
 };
 

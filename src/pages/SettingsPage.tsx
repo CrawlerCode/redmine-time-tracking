@@ -204,6 +204,13 @@ const SettingsPage = () => {
                     />
                     <Field
                       type="checkbox"
+                      name="options.addNotes"
+                      title={formatMessage({ id: "settings.options.add-notes.title" })}
+                      description={formatMessage({ id: "settings.options.add-notes.description" })}
+                      as={CheckBox}
+                    />
+                    <Field
+                      type="checkbox"
                       name="options.cacheComments"
                       title={formatMessage({ id: "settings.options.cache-comments.title" })}
                       description={formatMessage({ id: "settings.options.cache-comments.description" })}

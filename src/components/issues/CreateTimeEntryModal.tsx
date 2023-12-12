@@ -22,7 +22,9 @@ import LoadingSpinner from "../general/LoadingSpinner";
 import Modal from "../general/Modal";
 import ReactSelectFormik from "../general/ReactSelectFormik";
 import SelectField from "../general/SelectField";
+import TextareaField from "../general/TextareaField";
 import Toast from "../general/Toast";
+import Toggle from "../general/Toggle";
 import TimeEntryPreview from "../time/TimeEntryPreview";
 import DoneSlider from "./DoneSlider";
 import SpentVsEstimatedTime from "./SpentVsEstimatedTime";
@@ -35,8 +37,9 @@ type PropTypes = {
 };
 
 type TCreateTimeEntryForm = Omit<TCreateTimeEntry, "user_id"> &
-  Pick<TUpdateIssue, "done_ratio"> & {
+  Pick<TUpdateIssue, "done_ratio" | "notes"> & {
     user_id?: number[];
+    add_notes?: boolean;
   };
 
 const _defaultCachedComments = {};
@@ -112,6 +115,8 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
             user_id: undefined,
             comments: "",
             activity_id: undefined,
+            add_notes: false,
+            notes: "",
           }}
           validationSchema={Yup.object({
             done_ratio: Yup.number().min(0).max(100),
@@ -123,14 +128,18 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
             user_id: Yup.array(Yup.number()),
             comments: Yup.string(),
             activity_id: Yup.number().required(formatMessage({ id: "issues.modal.add-spent-time.activity.validation.required" })),
+            add_notes: Yup.boolean(),
+            notes: Yup.string(),
           })}
           onSubmit={async (originalValues, { setSubmitting }) => {
             const values = { ...originalValues };
             //console.log("onSubmit", values);
-            if (values.done_ratio !== issue.done_ratio) {
-              await updateIssueMutation.mutateAsync({ done_ratio: values.done_ratio !== issue.done_ratio ? values.done_ratio : undefined });
+            if (values.done_ratio !== issue.done_ratio || (values.add_notes && values.notes)) {
+              await updateIssueMutation.mutateAsync({ done_ratio: values.done_ratio !== issue.done_ratio ? values.done_ratio : undefined, notes: values.add_notes ? values.notes : undefined });
             }
             delete values.done_ratio;
+            delete values.add_notes;
+            delete values.notes;
             if (values.user_id && Array.isArray(values.user_id) && values.user_id.length > 0) {
               // create for multiple users
               for (const userId of values.user_id) {
@@ -284,6 +293,26 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     ))}
                   </FastField>
                 </Fieldset>
+
+                {settings.options.addNotes &&
+                  (!values.add_notes ? (
+                    <FastField type="checkbox" name="add_notes" title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} as={Toggle} error={touched.add_notes && errors.add_notes} />
+                  ) : (
+                    <Fieldset legend={formatMessage({ id: "issues.modal.add-spent-time.notes" })} className="flex flex-col gap-y-2">
+                      <FastField type="checkbox" name="add_notes" title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} as={Toggle} error={touched.add_notes && errors.add_notes} />
+
+                      {values.add_notes && (
+                        <FastField
+                          type="textarea"
+                          name="notes"
+                          placeholder={formatMessage({ id: "issues.modal.add-spent-time.notes" })}
+                          as={TextareaField}
+                          size="sm"
+                          error={touched.notes && errors.notes}
+                        />
+                      )}
+                    </Fieldset>
+                  ))}
 
                 <Button type="submit" disabled={isSubmitting} className="flex items-center justify-center gap-x-2">
                   <FormattedMessage id="issues.modal.add-spent-time.submit" />
