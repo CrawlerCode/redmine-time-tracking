@@ -20,6 +20,9 @@ export type TIssue = {
   subject: string;
   description: string;
   done_ratio: number;
+  fixed_version?: TReference;
+  start_date?: string; // YYYY-MM-DD
+  due_date?: string; // YYYY-MM-DD
   estimated_hours?: number;
   spent_hours: number;
   created_on: string;
@@ -114,4 +117,17 @@ export type TMembership = {
     name: string;
     inherited?: boolean;
   }[];
+};
+
+export type TVersion = {
+  id: number;
+  project: TReference;
+  name: string;
+  status: "open" | "closed" | "locked";
+  due_date?: string; // YYYY-MM-DD
+  description: string;
+  sharing: string;
+  wiki_page_title: string;
+  created_on: string;
+  updated_on: string;
 };

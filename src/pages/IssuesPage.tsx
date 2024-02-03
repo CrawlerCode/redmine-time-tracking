@@ -9,6 +9,7 @@ import Search, { SearchQuery, SearchRef } from "../components/issues/Search";
 import useIssuePriorities from "../hooks/useIssuePriorities";
 import useMyAccount from "../hooks/useMyAccount";
 import useMyIssues from "../hooks/useMyIssues";
+import useProjectVersions from "../hooks/useProjectVersions";
 import useSettings from "../hooks/useSettings";
 import useStorage from "../hooks/useStorage";
 
@@ -28,11 +29,12 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
     filter
   );
   const issuePriorities = useIssuePriorities();
+  const projectVersions = useProjectVersions([...new Set(myIssuesQuery.data.filter((i) => i.fixed_version).map((i) => i.project.id))], { enabled: settings.style.groupIssuesByVersion });
   const myAccount = useMyAccount();
 
   const activeTimerCount = Object.values(issuesData.data).reduce((count, data) => count + (data.active ? 1 : 0), 0);
 
-  const isLoading = issuesData.isLoading || myIssuesQuery.isLoading || issuePriorities.isLoading || isPageLoading;
+  const isLoading = issuesData.isLoading || myIssuesQuery.isLoading || issuePriorities.isLoading || projectVersions.isLoading || isPageLoading;
 
   return (
     <>
@@ -46,6 +48,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
             account={myAccount.data}
             issues={myIssuesQuery.data}
             issuePriorities={issuePriorities}
+            projectVersions={projectVersions}
             issuesData={issuesData}
             onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
           />
@@ -68,6 +71,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
               account={myAccount.data}
               issues={myIssuesQuery.extendedSearch}
               issuePriorities={issuePriorities}
+              projectVersions={projectVersions}
               issuesData={issuesData}
               onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
             />

@@ -219,6 +219,12 @@ const SettingsPage = () => {
                   </div>
                 </Fieldset>
 
+                <Fieldset legend={<FormattedMessage id="settings.style" />}>
+                  <div className="flex flex-col gap-y-2">
+                    <Field type="checkbox" name="style.groupIssuesByVersion" title={formatMessage({ id: "settings.style.group-issues-by-version.title" })} as={CheckBox} />
+                  </div>
+                </Fieldset>
+
                 <Button type="submit" disabled={isSubmitting} className="mt-2">
                   <FormattedMessage id="settings.save-settings" />
                 </Button>

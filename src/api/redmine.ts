@@ -1,5 +1,5 @@
 import { formatISO } from "date-fns";
-import { TAccount, TCreateTimeEntry, TIssue, TIssuesPriority, TMembership, TProject, TReference, TSearchResult, TTimeEntry, TTimeEntryActivity, TUpdateIssue } from "../types/redmine";
+import { TAccount, TCreateTimeEntry, TIssue, TIssuesPriority, TMembership, TProject, TReference, TSearchResult, TTimeEntry, TTimeEntryActivity, TUpdateIssue, TVersion } from "../types/redmine";
 import instance from "./axios.config";
 
 export const getMyAccount = async (): Promise<TAccount> => {
@@ -46,6 +46,10 @@ export const searchProjects = async (query: string): Promise<TSearchResult[]> =>
 
 export const getProjectMemberships = async (id: number, offset = 0, limit = 100): Promise<TMembership[]> => {
   return instance.get(`/projects/${id}/memberships.json?offset=${offset}&limit=${limit}`).then((res) => res.data.memberships);
+};
+
+export const getProjectVersions = async (id: number): Promise<TVersion[]> => {
+  return instance.get(`/projects/${id}/versions.json`).then((res) => res.data.versions);
 };
 
 // Time entries

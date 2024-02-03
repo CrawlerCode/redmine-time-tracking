@@ -15,6 +15,9 @@ export type Settings = {
     cacheComments: boolean;
     addNotes: boolean;
   };
+  style: {
+    groupIssuesByVersion: boolean;
+  };
 };
 
 export const defaultSettings: Settings = {
@@ -28,6 +31,9 @@ export const defaultSettings: Settings = {
     addSpentTimeForOtherUsers: false,
     cacheComments: true,
     addNotes: false,
+  },
+  style: {
+    groupIssuesByVersion: true,
   },
 };
 

@@ -1,3 +1,4 @@
+import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import { TIssue } from "../../types/redmine";
@@ -7,41 +8,65 @@ type PropTypes = {
 };
 
 const IssueInfoTooltip = ({ issue }: PropTypes) => {
-  const { formatNumber } = useIntl();
+  const { formatNumber, formatDate } = useIntl();
 
   return (
     <Tooltip id={`tooltip-issue-${issue.id}`} place="right" className="z-10 opacity-100">
-      <div className="relative max-w-[210px]">
-        <table className="text-left text-sm text-gray-300">
-          <caption className="mb-3 text-left font-semibold">
-            {issue.tracker.name} #{issue.id}
-            <p className="mt-1 max-w-[180px] truncate text-xs font-normal">{issue.subject}</p>
-          </caption>
+      <div className="relative max-w-[230px]">
+        <p className="mb-3 text-sm font-semibold">
+          {issue.tracker.name} #{issue.id}
+          <p className="mt-1 max-w-[180px] truncate text-xs font-normal">{issue.subject}</p>
+        </p>
+        <table className="-mx-1 border-separate border-spacing-x-1 text-left text-sm text-gray-300">
           <tbody>
             <tr>
-              <th className="whitespace-nowrap pr-2 font-medium">
-                <FormattedMessage id="issues.info-tooltip.status" />:
+              <th className="text-xs font-medium">
+                <FormattedMessage id="issues.issue-tooltip.status" />:
               </th>
               <td>{issue.status.name}</td>
             </tr>
             <tr>
-              <th className="whitespace-nowrap pr-2 font-medium">
-                <FormattedMessage id="issues.info-tooltip.priority" />:
+              <th className="text-xs font-medium">
+                <FormattedMessage id="issues.issue-tooltip.priority" />:
               </th>
               <td>{issue.priority.name}</td>
             </tr>
             {issue.assigned_to && (
               <tr>
-                <th className="whitespace-nowrap pr-2 font-medium">
-                  <FormattedMessage id="issues.info-tooltip.assignee" />:
+                <th className="text-xs font-medium">
+                  <FormattedMessage id="issues.issue-tooltip.assignee" />:
                 </th>
                 <td>{issue.assigned_to.name}</td>
               </tr>
             )}
+            {issue.fixed_version && (
+              <tr>
+                <th className="text-xs font-medium">
+                  <FormattedMessage id="issues.issue-tooltip.version" />:
+                </th>
+                <td>{issue.fixed_version.name}</td>
+              </tr>
+            )}
+            {issue.start_date && (
+              <tr>
+                <th className="text-xs font-medium">
+                  <FormattedMessage id="issues.issue-tooltip.start-date" />:
+                </th>
+                <td>{formatDate(parseISO(issue.start_date))}</td>
+              </tr>
+            )}
+            {issue.due_date && (
+              <tr>
+                <th className="text-xs font-medium">
+                  <FormattedMessage id="issues.issue-tooltip.due-date" />:
+                </th>
+                <td>{formatDate(parseISO(issue.due_date))}</td>
+              </tr>
+            )}
             {issue.estimated_hours && (
               <tr>
-                <th className="whitespace-nowrap pr-2 font-medium">
-                  <FormattedMessage id="issues.info-tooltip.estimated-time" />:
+                <th className="text-xs font-medium">
+                  <FormattedMessage id="issues.issue-tooltip.estimated-time" />:
                 </th>
                 <td>
                   <FormattedMessage
@@ -54,8 +79,8 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
               </tr>
             )}
             <tr>
-              <th className="whitespace-nowrap pr-2 font-medium">
-                <FormattedMessage id="issues.info-tooltip.spent-time" />:
+              <th className="text-xs font-medium">
+                <FormattedMessage id="issues.issue-tooltip.spent-time" />:
               </th>
               <td>
                 <FormattedMessage
@@ -70,7 +95,7 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
         </table>
       </div>
       <p className="mt-5 italic">
-        <FormattedMessage id="issues.info-tooltip.open-in-redmine" />
+        <FormattedMessage id="issues.issue-tooltip.open-in-redmine" />
       </p>
     </Tooltip>
   );
