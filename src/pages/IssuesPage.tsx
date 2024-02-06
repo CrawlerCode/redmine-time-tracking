@@ -28,7 +28,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
     search,
     filter
   );
-  const issuePriorities = useIssuePriorities();
+  const issuePriorities = useIssuePriorities({ enabled: settings.style.sortIssuesByPriority || settings.style.showIssuesPriority });
   const projectVersions = useProjectVersions([...new Set(myIssuesQuery.data.filter((i) => i.fixed_version).map((i) => i.project.id))], { enabled: settings.style.groupIssuesByVersion });
   const myAccount = useMyAccount();
 
@@ -54,7 +54,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
           />
         )}
 
-        {search.searching && settings.options.extendedSearch && (
+        {search.searching && settings.features.extendedSearch && (
           <>
             <div className="relative">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">

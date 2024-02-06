@@ -57,7 +57,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
   // extended search
   const debouncedSearch = useDebounce(search.query, 300);
   const extendedSearchIssueIdMatch = debouncedSearch.match(/^#(\d+)$/); // search for #<issueId>
-  const extendedSearching = search.searching && (debouncedSearch.length >= 3 || extendedSearchIssueIdMatch !== null) && settings.options.extendedSearch;
+  const extendedSearching = search.searching && (debouncedSearch.length >= 3 || extendedSearchIssueIdMatch !== null) && settings.features.extendedSearch;
 
   const extendedSearchIssuesResultQuery = useQuery({
     queryKey: ["extendedSearchIssuesResult", debouncedSearch],

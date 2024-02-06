@@ -31,7 +31,7 @@ type PropTypes = {
 const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersions, issuesData: { data: issuesData, setData: setIssuesData }, onSearchInProject }: PropTypes) => {
   const { settings } = useSettings();
 
-  const groupedIssues = getGroupedIssues(getSortedIssues(rawIssues, issuePriorities.data, issuesData), projectVersions.data);
+  const groupedIssues = getGroupedIssues(getSortedIssues(rawIssues, settings.style.sortIssuesByPriority ? issuePriorities.data : [], issuesData), projectVersions.data);
 
   return (
     <>
@@ -84,7 +84,7 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
                     remembered={data.remembered}
                     onStart={() => {
                       setIssuesData({
-                        ...(settings.options.autoPauseOnSwitch
+                        ...(settings.features.autoPauseOnSwitch
                           ? Object.entries(issuesData).reduce((res: IssuesData, [id, val]) => {
                               res[Number(id)] = val.active
                                 ? {

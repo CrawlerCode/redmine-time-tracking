@@ -8,6 +8,9 @@ instance.interceptors.request.use(
     if (!config.baseURL) {
       await loadRedmineConfig(config);
     }
+    if (!config.baseURL) {
+      throw new Error("Redmine URL not configured!");
+    }
     return config;
   },
   (error) => {

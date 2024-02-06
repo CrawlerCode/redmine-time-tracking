@@ -10,7 +10,7 @@ const CheckBox = ({ title, description, className, ...props }: PropTypes) => {
   const id = useId();
 
   return (
-    <div className={clsx("flex items-center rounded-lg border border-gray-200 bg-white p-1 pl-2 dark:border-gray-700 dark:bg-gray-700", className)}>
+    <div className={clsx("flex items-center rounded-lg border border-gray-200 bg-gray-50 p-1 pl-2 dark:border-gray-700 dark:bg-gray-700", className)}>
       <div className="flex items-center">
         <input
           {...props}

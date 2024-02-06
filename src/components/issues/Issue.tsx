@@ -114,12 +114,14 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
             "relative block w-full rounded-lg p-1 shadow-sm dark:shadow-gray-700",
             "focus:outline-none focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-800",
             "bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700",
-            {
-              "border-2 border-[#add7f3] dark:border-[#4973f3]/40": priorityType === "lowest",
-              "border border-gray-200 dark:border-gray-700": priorityType === "normal",
-              "border-2 border-[#fcc] dark:border-[#ff6868]/40": priorityType === "high",
-              "border-2 border-[#ffb4b4] dark:border-[#ff5050]/40": priorityType === "higher" || priorityType === "highest",
-            }
+            settings.style.showIssuesPriority
+              ? {
+                  "border-2 border-[#add7f3] dark:border-[#4973f3]/40": priorityType === "lowest",
+                  "border border-gray-200 dark:border-gray-700": priorityType === "normal",
+                  "border-2 border-[#fcc] dark:border-[#ff6868]/40": priorityType === "high",
+                  "border-2 border-[#ffb4b4] dark:border-[#ff5050]/40": priorityType === "higher" || priorityType === "highest",
+                }
+              : "border border-gray-200 dark:border-gray-700"
           )}
           tabIndex={1}
           /**
@@ -142,13 +144,18 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
           data-tooltip-id={`tooltip-toggle-timer-${issue.id}`}
         >
           <h1
-            className={clsx("mb-1 truncate", {
-              "me-4": (pinned && assignedToMe) || (!pinned && !assignedToMe),
-              "me-9": pinned && !assignedToMe,
-              "text-[#559] dark:text-[#9393ed]": priorityType === "lowest",
-              "text-[#900] dark:text-[#fa7070]": priorityType === "high" || priorityType === "higher",
-              "font-bold text-[#900] dark:text-[#fa7070]": priorityType === "highest",
-            })}
+            className={clsx(
+              "mb-1 truncate",
+              {
+                "me-4": (pinned && assignedToMe) || (!pinned && !assignedToMe),
+                "me-9": pinned && !assignedToMe,
+              },
+              settings.style.showIssuesPriority && {
+                "text-[#559] dark:text-[#9393ed]": priorityType === "lowest",
+                "text-[#900] dark:text-[#fa7070]": priorityType === "high" || priorityType === "higher",
+                "font-bold text-[#900] dark:text-[#fa7070]": priorityType === "highest",
+              }
+            )}
           >
             <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" data-tooltip-id={`tooltip-issue-${issue.id}`}>
               #{issue.id}
@@ -181,27 +188,31 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
           <div className="absolute right-2 top-2 flex items-start justify-end gap-x-1">
             {pinned && (
               <>
-                <Tooltip id={`tooltip-pinned-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.pinned" })} className="italic" />
+                {settings.style.showTooltips && <Tooltip id={`tooltip-pinned-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.pinned" })} className="italic" />}
                 <FontAwesomeIcon icon={faThumbTack} className="rotate-[30deg] text-gray-300 focus:outline-none dark:text-gray-600" data-tooltip-id={`tooltip-pinned-${issue.id}`} tabIndex={-1} />
               </>
             )}
             {!assignedToMe && (
               <>
-                <Tooltip id={`tooltip-not-assigned-to-me-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.not-assigned-to-me" })} className="italic" />
+                {settings.style.showTooltips && (
+                  <Tooltip id={`tooltip-not-assigned-to-me-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.not-assigned-to-me" })} className="italic" />
+                )}
                 <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 focus:outline-none dark:text-gray-600" data-tooltip-id={`tooltip-not-assigned-to-me-${issue.id}`} tabIndex={-1} />
               </>
             )}
           </div>
         </div>
       </ContextMenu>
-      <Tooltip id={`tooltip-toggle-timer-${issue.id}`} place="bottom" delayShow={4000} className="z-10 max-w-[275px] italic">
-        <FormattedMessage
-          id="issues.action.toggle-timer.tooltip"
-          values={{
-            KBD: (children) => <KBD>{children}</KBD>,
-          }}
-        />
-      </Tooltip>
+      {settings.style.showTooltips && (
+        <Tooltip id={`tooltip-toggle-timer-${issue.id}`} place="bottom" delayShow={4000} className="z-10 max-w-[275px] italic">
+          <FormattedMessage
+            id="issues.action.toggle-timer.tooltip"
+            values={{
+              KBD: (children) => <KBD>{children}</KBD>,
+            }}
+          />
+        </Tooltip>
+      )}
       {createTimeEntry !== undefined && (
         <CreateTimeEntryModal
           issue={issue}

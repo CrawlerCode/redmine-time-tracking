@@ -28,6 +28,8 @@ export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuesPriori
     (a, b) =>
       (issuesData[b.id]?.pinned ? 1 : 0) - (issuesData[a.id]?.pinned ? 1 : 0) ||
       issuePrioritiesIndices[b.priority.id] - issuePrioritiesIndices[a.priority.id] ||
+      (b.due_date ? 1 : 0) - (a.due_date ? 1 : 0) ||
+      new Date(a.due_date ?? 0).getTime() - new Date(b.due_date ?? 0).getTime() ||
       new Date(b.updated_on).getTime() - new Date(a.updated_on).getTime()
   );
 

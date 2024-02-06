@@ -4,10 +4,15 @@ import { TIssue } from "../types/redmine";
 
 export type PriorityType = "highest" | "higher" | "high" | "normal" | "lowest";
 
-const useIssuePriorities = () => {
+type Options = {
+  enabled?: boolean;
+};
+
+const useIssuePriorities = ({ enabled = true }: Options = {}) => {
   const issuePrioritiesQuery = useQuery({
     queryKey: ["issuePriorities"],
     queryFn: getIssuePriorities,
+    enabled: enabled,
   });
 
   const priorities = issuePrioritiesQuery.data?.filter((priority) => priority.active) ?? [];
@@ -29,6 +34,7 @@ const useIssuePriorities = () => {
   const highest = normalIdx < priorities.length - 1 ? priorities[priorities.length - 1] : undefined;
 
   const getPriorityType = (issue: TIssue): PriorityType => {
+    if (!enabled) return "normal";
     switch (issue.priority.id) {
       case normal?.id:
         return "normal";

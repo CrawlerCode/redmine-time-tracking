@@ -172,48 +172,48 @@ const SettingsPage = () => {
                   </div>
                 </Fieldset>
 
-                <Fieldset legend={<FormattedMessage id="settings.options" />}>
+                <Fieldset legend={<FormattedMessage id="settings.features" />}>
                   <div className="flex flex-col gap-y-2">
                     <Field
                       type="checkbox"
-                      name="options.autoPauseOnSwitch"
-                      title={formatMessage({ id: "settings.options.auto-pause-on-switch.title" })}
-                      description={formatMessage({ id: "settings.options.auto-pause-on-switch.description" })}
+                      name="features.autoPauseOnSwitch"
+                      title={formatMessage({ id: "settings.features.auto-pause-on-switch.title" })}
+                      description={formatMessage({ id: "settings.features.auto-pause-on-switch.description" })}
                       as={CheckBox}
                     />
                     <Field
                       type="checkbox"
-                      name="options.extendedSearch"
-                      title={formatMessage({ id: "settings.options.extended-search.title" })}
-                      description={formatMessage({ id: "settings.options.extended-search.description" })}
+                      name="features.extendedSearch"
+                      title={formatMessage({ id: "settings.features.extended-search.title" })}
+                      description={formatMessage({ id: "settings.features.extended-search.description" })}
                       as={CheckBox}
                     />
                     <Field
                       type="checkbox"
-                      name="options.roundTimeNearestQuarterHour"
-                      title={formatMessage({ id: "settings.options.round-time-nearest-quarter-hour.title" })}
-                      description={formatMessage({ id: "settings.options.round-time-nearest-quarter-hour.description" })}
+                      name="features.roundTimeNearestQuarterHour"
+                      title={formatMessage({ id: "settings.features.round-time-nearest-quarter-hour.title" })}
+                      description={formatMessage({ id: "settings.features.round-time-nearest-quarter-hour.description" })}
                       as={CheckBox}
                     />
                     <Field
                       type="checkbox"
-                      name="options.addSpentTimeForOtherUsers"
-                      title={formatMessage({ id: "settings.options.add-spent-time-for-other-users.title" })}
-                      description={formatMessage({ id: "settings.options.add-spent-time-for-other-users.description" })}
+                      name="features.addSpentTimeForOtherUsers"
+                      title={formatMessage({ id: "settings.features.add-spent-time-for-other-users.title" })}
+                      description={formatMessage({ id: "settings.features.add-spent-time-for-other-users.description" })}
                       as={CheckBox}
                     />
                     <Field
                       type="checkbox"
-                      name="options.addNotes"
-                      title={formatMessage({ id: "settings.options.add-notes.title" })}
-                      description={formatMessage({ id: "settings.options.add-notes.description" })}
+                      name="features.addNotes"
+                      title={formatMessage({ id: "settings.features.add-notes.title" })}
+                      description={formatMessage({ id: "settings.features.add-notes.description" })}
                       as={CheckBox}
                     />
                     <Field
                       type="checkbox"
-                      name="options.cacheComments"
-                      title={formatMessage({ id: "settings.options.cache-comments.title" })}
-                      description={formatMessage({ id: "settings.options.cache-comments.description" })}
+                      name="features.cacheComments"
+                      title={formatMessage({ id: "settings.features.cache-comments.title" })}
+                      description={formatMessage({ id: "settings.features.cache-comments.description" })}
                       as={CheckBox}
                     />
                   </div>
@@ -222,6 +222,9 @@ const SettingsPage = () => {
                 <Fieldset legend={<FormattedMessage id="settings.style" />}>
                   <div className="flex flex-col gap-y-2">
                     <Field type="checkbox" name="style.groupIssuesByVersion" title={formatMessage({ id: "settings.style.group-issues-by-version.title" })} as={CheckBox} />
+                    <Field type="checkbox" name="style.showIssuesPriority" title={formatMessage({ id: "settings.style.show-issues-priority.title" })} as={CheckBox} />
+                    <Field type="checkbox" name="style.sortIssuesByPriority" title={formatMessage({ id: "settings.style.sort-issues-by-priority.title" })} as={CheckBox} />
+                    <Field type="checkbox" name="style.showTooltips" title={formatMessage({ id: "settings.style.show-tooltips.title" })} as={CheckBox} />
                   </div>
                 </Fieldset>
 

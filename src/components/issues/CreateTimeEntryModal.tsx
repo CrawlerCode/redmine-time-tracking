@@ -53,7 +53,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
 
   const myAccount = useMyAccount();
   const timeEntryActivities = useTimeEntryActivities();
-  const users = useProjectUsers(issue.project.id, { enabled: settings.options.addSpentTimeForOtherUsers });
+  const users = useProjectUsers(issue.project.id, { enabled: settings.features.addSpentTimeForOtherUsers });
 
   const cachedComments = useStorage<Record<number, string | undefined>>("cachedComments", _defaultCachedComments);
 
@@ -62,13 +62,13 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
   }, [timeEntryActivities.data]);
 
   useEffect(() => {
-    if (!settings.options.cacheComments) return;
+    if (!settings.features.cacheComments) return;
     // load cached comment to formik
     const comments = cachedComments.data[issue.id];
     if (comments) {
       formik.current?.setFieldValue("comments", comments);
     }
-  }, [settings.options.cacheComments, issue.id, cachedComments.data]);
+  }, [settings.features.cacheComments, issue.id, cachedComments.data]);
 
   const createTimeEntryMutation = useMutation({
     mutationFn: (entry: TCreateTimeEntry) => createTimeEntry(entry),
@@ -97,7 +97,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
       <Modal
         title={formatMessage({ id: "issues.modal.add-spent-time.title" })}
         onClose={() => {
-          if (settings.options.cacheComments) {
+          if (settings.features.cacheComments) {
             // if comment or already cached => save/update comment
             const comments = formik.current?.values.comments;
             if (comments || cachedComments.data[issue.id]) {
@@ -153,7 +153,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
             }
             setSubmitting(false);
             if (!createTimeEntryMutation.isError) {
-              if (settings.options.cacheComments) {
+              if (settings.features.cacheComments) {
                 // if has cached comment => remove it
                 if (cachedComments.data[issue.id]) {
                   cachedComments.setData({ ...cachedComments.data, [issue.id]: undefined });
@@ -228,7 +228,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     />
                   </div>
 
-                  {settings.options.addSpentTimeForOtherUsers && (
+                  {settings.features.addSpentTimeForOtherUsers && (
                     <FastField
                       type="select"
                       name="user_id"
@@ -296,7 +296,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                   </FastField>
                 </Fieldset>
 
-                {settings.options.addNotes &&
+                {settings.features.addNotes &&
                   (!values.add_notes ? (
                     <FastField type="checkbox" name="add_notes" title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} as={Toggle} error={touched.add_notes && errors.add_notes} />
                   ) : (

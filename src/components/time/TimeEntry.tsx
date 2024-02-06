@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import { TTimeEntry } from "../../types/redmine";
 
@@ -9,22 +10,56 @@ type PropTypes = {
 };
 
 const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
+  const { formatNumber } = useIntl();
+
   const sumHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
+
   return (
     <div className="flex items-center gap-x-0.5">
       {entries.map((entry) => (
         <Fragment key={entry.id}>
           <Tooltip id={`tooltip-time-entry-${entry.id}`} place="bottom" className="z-10 opacity-100">
-            <h4 className="text-base">
-              {entry.issue ? (
-                <>
-                  #{entry.issue?.id} <span className="text-sm">({entry.hours} h)</span>
-                </>
-              ) : (
-                <>{entry.hours} h</>
-              )}
-            </h4>
-            <p>{entry.comments}</p>
+            <div className="relative max-w-[230px]">
+              <p className="mb-3 text-sm font-semibold">
+                <FormattedMessage
+                  id="format.hours"
+                  values={{
+                    hours: formatNumber(entry.hours),
+                  }}
+                />
+                {entry.comments && <p className="mt-1 max-w-[180px] truncate text-xs font-normal">{entry.comments}</p>}
+              </p>
+              <table className="-mx-1 border-separate border-spacing-x-1 text-left text-sm text-gray-300">
+                <tbody>
+                  <tr>
+                    <th className="text-xs font-medium">
+                      <FormattedMessage id="time.entry-tooltip.project" />:
+                    </th>
+                    <td>{entry.project.name}</td>
+                  </tr>
+                  {entry.issue && (
+                    <tr>
+                      <th className="text-xs font-medium">
+                        <FormattedMessage id="time.entry-tooltip.issue" />:
+                      </th>
+                      <td>#{entry.issue.id}</td>
+                    </tr>
+                  )}
+                  <tr>
+                    <th className="text-xs font-medium">
+                      <FormattedMessage id="time.entry-tooltip.activity" />:
+                    </th>
+                    <td>{entry.activity.name}</td>
+                  </tr>
+                  <tr>
+                    <th className="text-xs font-medium">
+                      <FormattedMessage id="time.entry-tooltip.hours" />:
+                    </th>
+                    <td>{formatNumber(entry.hours)}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </Tooltip>
           <div
             className="h-4 rounded bg-primary"
@@ -38,7 +73,14 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
       {(previewHours && (
         <>
           <Tooltip id={`tooltip-time-entry-preview`} place="bottom" className="z-10 opacity-100">
-            <h4 className="text-base">{previewHours} h</h4>
+            <p className="text-sm font-semibold">
+              <FormattedMessage
+                id="format.hours"
+                values={{
+                  hours: formatNumber(previewHours),
+                }}
+              />
+            </p>
           </Tooltip>
           <div
             className="h-4 rounded bg-primary/50"
