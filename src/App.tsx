@@ -20,7 +20,7 @@ function App() {
   return (
     <div
       className={clsx("mx-auto w-[320px]", {
-        "w-full min-w-[320px]": locationType === "popout",
+        "w-full min-w-[320px]": locationType === "popout" || locationType === "options",
       })}
       // disable context menu
       onContextMenu={(e) => {

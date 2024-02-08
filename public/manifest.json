@@ -16,7 +16,7 @@
     "default_popup": "index.html?location=popup"
   },
   "options_ui": {
-    "page": "index.html#/settings",
+    "page": "index.html?location=options#/settings",
     "open_in_tab": false
   },
   "background": {
