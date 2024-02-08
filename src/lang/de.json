@@ -104,6 +104,7 @@
   "settings.features.cache-comments.title": "Kommentare zwischenspeichern",
   "settings.features.cache-comments.description": "Kommentare zwischenspeichern, bis sie übermittelt wurden",
   "settings.style": "Styling",
+  "settings.style.sticky-scroll.title": "Sticky scroll",
   "settings.style.group-issues-by-version.title": "Tickets nach Zielversion gruppieren",
   "settings.style.show-issues-priority.title": "Tickets Priorität anzeigen",
   "settings.style.sort-issues-by-priority.title": "Tickets nach Priorität sortieren",

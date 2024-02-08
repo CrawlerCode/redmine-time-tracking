@@ -25,6 +25,7 @@ export type Settings = {
     addNotes: boolean;
   };
   style: {
+    stickyScroll: boolean;
     groupIssuesByVersion: boolean;
     showIssuesPriority: boolean;
     sortIssuesByPriority: boolean;
@@ -53,6 +54,7 @@ export const defaultSettings: Settings = {
     addNotes: false,
   },
   style: {
+    stickyScroll: true,
     groupIssuesByVersion: true,
     showIssuesPriority: true,
     sortIssuesByPriority: true,

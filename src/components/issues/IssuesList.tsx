@@ -1,5 +1,6 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
 import { Fragment } from "react";
 import { FormattedMessage } from "react-intl";
 import useIssuePriorities from "../../hooks/useIssuePriorities";
@@ -37,7 +38,11 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
     <>
       {groupedIssues.map(({ project, versions, issues }) => (
         <Fragment key={project.id}>
-          <div className="flex justify-between gap-x-2">
+          <div
+            className={clsx("flex justify-between gap-x-2", {
+              "sticky top-0 z-10 -my-1 bg-white py-1 shadow-md shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
+            })}
+          >
             <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs text-slate-500 hover:underline dark:text-slate-300">
               {project.name}
             </a>
@@ -48,7 +53,11 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
           {[...versions, ...(issues.length > 0 ? [{ version: undefined, issues: issues }] : [])].map(({ version, issues }) => (
             <>
               {settings.style.groupIssuesByVersion && versions.length > 0 && (
-                <>
+                <div
+                  className={clsx({
+                    "sticky top-6 z-10 -my-1 bg-white py-1 shadow-md shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
+                  })}
+                >
                   {version && <VersionTooltip version={version} />}
                   <span
                     className="w-fit truncate rounded border border-gray-300 bg-gray-100 px-1.5 text-xs text-gray-800 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300"
@@ -62,7 +71,7 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
                       <FormattedMessage id="issues.version.no-version" />
                     )}
                   </span>
-                </>
+                </div>
               )}
 
               {issues.map((issue) => {
