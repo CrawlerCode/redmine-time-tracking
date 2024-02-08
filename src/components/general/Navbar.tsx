@@ -16,7 +16,7 @@ const Navbar = ({ navigation }: PropTypes) => {
   const location = useLocation();
 
   return (
-    <nav className="sticky top-0 z-10 border-b border-gray-200 bg-white p-1 dark:border-gray-700 dark:bg-gray-800">
+    <nav className="fixed top-0 w-full border-b border-gray-200 bg-white p-1 dark:border-gray-700 dark:bg-gray-800">
       <ul className="-mb-px flex flex-wrap gap-x-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
         {navigation.map((item) => (
           <li key={item.href}>

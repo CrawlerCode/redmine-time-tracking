@@ -27,7 +27,7 @@ function App() {
         e.preventDefault();
       }}
     >
-      <header className="relative h-12">
+      <header className="relative z-20 h-12">
         <Navbar
           navigation={[
             {
@@ -47,44 +47,46 @@ function App() {
             },
           ]}
         />
-        {locationType === "popup" && <FontAwesomeIcon icon={faUpRightFromSquare} size="lg" className="absolute right-4 top-1/2 z-20 -translate-y-1/2 cursor-pointer" onClick={createPopOut} />}
+        {locationType === "popup" && <FontAwesomeIcon icon={faUpRightFromSquare} size="lg" className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer" onClick={createPopOut} />}
       </header>
       <main
-        className={clsx("overflow-y-scroll p-2", {
+        className={clsx("overflow-y-scroll", {
           "h-[500px]": locationType !== "popout",
-          "absolute bottom-0 top-12 w-full min-w-[320px]": locationType === "popout",
+          "h-[calc(100vh-3rem)]": locationType === "popout",
         })}
       >
-        <Routes>
-          <Route index element={<Navigate to="/issues" replace />} />
+        <div className="p-2">
+          <Routes>
+            <Route index element={<Navigate to="/issues" replace />} />
 
-          <Route
-            path="/issues"
-            element={
-              <Suspense>
-                <IssuesPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/time"
-            element={
-              <Suspense>
-                <TimePage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <Suspense>
-                <SettingsPage />
-              </Suspense>
-            }
-          />
+            <Route
+              path="/issues"
+              element={
+                <Suspense>
+                  <IssuesPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/time"
+              element={
+                <Suspense>
+                  <TimePage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <Suspense>
+                  <SettingsPage />
+                </Suspense>
+              }
+            />
 
-          <Route path="*" element={<Toast type="error" message={formatMessage({ id: "nav.error.page-not-found" })} allowClose={false} />} />
-        </Routes>
+            <Route path="*" element={<Toast type="error" message={formatMessage({ id: "nav.error.page-not-found" })} allowClose={false} />} />
+          </Routes>
+        </div>
       </main>
     </div>
   );

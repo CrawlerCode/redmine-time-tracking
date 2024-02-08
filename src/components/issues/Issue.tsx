@@ -113,7 +113,7 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
           className={clsxm(
             "relative block w-full rounded-lg p-1 shadow-sm dark:shadow-gray-700",
             "focus:outline-none focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-800",
-            "bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700",
+            "hover:bg-gray-100 dark:hover:bg-gray-700",
             settings.style.showIssuesPriority
               ? {
                   "border-2 border-[#add7f3] dark:border-[#4973f3]/40": priorityType === "lowest",
