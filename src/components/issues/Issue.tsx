@@ -1,3 +1,4 @@
+import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faPause, faPen, faPlay, faStop, faThumbTack, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
@@ -9,6 +10,7 @@ import { TIssue } from "../../types/redmine";
 import { clsxm } from "../../utils/clsxm";
 import ContextMenu from "../general/ContextMenu";
 import KBD from "../general/KBD";
+import Toast from "../general/Toast";
 import CreateTimeEntryModal from "./CreateTimeEntryModal";
 import IssueInfoTooltip from "./IssueInfoTooltip";
 import IssueTimer, { IssueTimerData, TimerActions, TimerRef } from "./IssueTimer";
@@ -39,6 +41,7 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
   const timerRef = useRef<TimerRef>(null);
 
   const [createTimeEntry, setCreateTimeEntry] = useState<number | undefined>(undefined);
+  const [copiedIdToClipboard, setCopiedIdToClipboard] = useState(false);
 
   return (
     <>
@@ -50,6 +53,16 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
               icon: <FontAwesomeIcon icon={faArrowUpRightFromSquare} />,
               onClick: () => {
                 window.open(`${settings.redmineURL}/issues/${issue.id}`, "_blank");
+              },
+            },
+          ],
+          [
+            {
+              name: formatMessage({ id: "issues.context-menu.copy-id-to-clipboard" }),
+              icon: <FontAwesomeIcon icon={faCopy} />,
+              onClick: () => {
+                navigator.clipboard.writeText(`#${issue.id}`);
+                setCopiedIdToClipboard(true);
               },
             },
           ],
@@ -93,20 +106,24 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
               onClick: onUnpin,
             },
           ],
-          [
-            {
-              name: formatMessage({ id: "issues.context-menu.remember" }),
-              icon: <FontAwesomeIcon icon={faBookmark} />,
-              disabled: assignedToMe || remembered,
-              onClick: onRemember,
-            },
-            {
-              name: formatMessage({ id: "issues.context-menu.forgot" }),
-              icon: <FontAwesomeIcon icon={faBan} />,
-              disabled: assignedToMe || !remembered,
-              onClick: onForget,
-            },
-          ],
+          ...(!assignedToMe
+            ? [
+                [
+                  {
+                    name: formatMessage({ id: "issues.context-menu.remember" }),
+                    icon: <FontAwesomeIcon icon={faBookmark} />,
+                    disabled: remembered,
+                    onClick: onRemember,
+                  },
+                  {
+                    name: formatMessage({ id: "issues.context-menu.forgot" }),
+                    icon: <FontAwesomeIcon icon={faBan} />,
+                    disabled: !remembered,
+                    onClick: onForget,
+                  },
+                ],
+              ]
+            : []),
         ]}
       >
         <div
@@ -223,6 +240,9 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
             onStop();
           }}
         />
+      )}
+      {copiedIdToClipboard && (
+        <Toast type="success" message={formatMessage({ id: "issues.id-copied-to-clipboard" }, { issueId: issue.id })} autoClose={2500} onClose={() => setCopiedIdToClipboard(false)} />
       )}
     </>
   );

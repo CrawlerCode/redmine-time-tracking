@@ -4,17 +4,20 @@ type PropTypes = {
   type: "success" | "error";
   message: string;
   allowClose?: boolean;
+  autoClose?: number;
   onClose?: () => void;
 };
 
-const Toast = ({ type, message, allowClose = true, onClose }: PropTypes) => {
+const Toast = ({ type, message, allowClose = true, autoClose, onClose }: PropTypes) => {
+  if (autoClose) setTimeout(() => onClose?.(), autoClose);
+
   return (
     <div className="fixed bottom-0 left-0 z-50 w-full p-2">
       <div className="flex w-full items-center rounded-lg bg-gray-200 p-1 text-gray-700 shadow dark:bg-gray-600 dark:text-gray-300" role="alert">
         <div
           className={clsx("inline-flex h-8 w-8 shrink-0 items-center justify-center", {
-            "text-green-700 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200": type === "success",
-            "text-red-700 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200": type === "error",
+            "rounded-lg bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200": type === "success",
+            "rounded-lg bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200": type === "error",
           })}
         >
           {type === "success" && (
