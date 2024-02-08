@@ -52,7 +52,7 @@ const useIssuePriorities = ({ enabled = true }: Options = {}) => {
 
   return {
     data: priorities,
-    isLoading: issuePrioritiesQuery.isInitialLoading,
+    isLoading: issuePrioritiesQuery.isLoading,
     isError: issuePrioritiesQuery.isError,
     getPriorityType,
   };

@@ -24,7 +24,7 @@ const useMyTimeEntries = (from: Date, to: Date) => {
 
   return {
     data: entries,
-    isLoading: entriesQuery.isInitialLoading,
+    isLoading: entriesQuery.isLoading,
     isError: entriesQuery.isError,
   };
 };

@@ -62,7 +62,7 @@ const useProjectUsers = (id: number, { enabled = true }: Options = {}) => {
 
   return {
     data: users,
-    isLoading: usersQuery.isInitialLoading || issueRolesQuery.isInitialLoading,
+    isLoading: usersQuery.isLoading || issueRolesQuery.isLoading,
     isError: usersQuery.isError || issueRolesQuery.isError,
   };
 };

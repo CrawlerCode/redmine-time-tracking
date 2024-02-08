@@ -11,7 +11,7 @@ const useTimeEntryActivities = () => {
 
   return {
     data: activities,
-    isLoading: timeEntryActivitiesQuery.isInitialLoading,
+    isLoading: timeEntryActivitiesQuery.isLoading,
     isError: timeEntryActivitiesQuery.isError,
   };
 };

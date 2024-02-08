@@ -24,7 +24,7 @@ const useMyProjects = ({ enabled = true }: Options = {}) => {
 
   return {
     data: projects,
-    isLoading: projectsQuery.isInitialLoading,
+    isLoading: projectsQuery.isLoading,
     isError: projectsQuery.isError,
   };
 };

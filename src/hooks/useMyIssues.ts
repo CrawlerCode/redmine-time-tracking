@@ -100,7 +100,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
   return {
     data: issues,
     extendedSearch: extendedSearchIssues,
-    isLoading: issuesQuery.isInitialLoading || additionalIssuesQuery.isInitialLoading,
+    isLoading: issuesQuery.isLoading || additionalIssuesQuery.isLoading,
     isError: issuesQuery.isError || additionalIssuesQuery.isError,
   };
 };

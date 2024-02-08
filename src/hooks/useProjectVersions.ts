@@ -31,7 +31,7 @@ const useProjectVersions = (ids: number[], { enabled = true }: Options = {}) => 
 
   return {
     data: versions,
-    isLoading: versionsQuery.some((q) => q.isInitialLoading),
+    isLoading: versionsQuery.some((q) => q.isLoading),
     isError: versionsQuery.some((q) => q.isError),
   };
 };

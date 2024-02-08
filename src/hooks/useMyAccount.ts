@@ -13,7 +13,7 @@ const useMyAccount = () => {
 
   return {
     data: myAccountQuery.data,
-    isLoading: myAccountQuery.isInitialLoading,
+    isLoading: myAccountQuery.isLoading,
     isError: myAccountQuery.isError,
   };
 };
