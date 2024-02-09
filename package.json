@@ -13,7 +13,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsc && vite build --watch",
-    "build": "tsc && vite build",
+    "build": "node scripts/updateVersion.js && tsc && vite build",
     "pack": "node scripts/pack.js",
     "release": "gh release create v%npm_package_version% release/redmine-time-tracking-v%npm_package_version%.zip --notes-file release_notes.md --generate-notes",
     "publish": "pnpm run build && pnpm run pack && pnpm run release",
