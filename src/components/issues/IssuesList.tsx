@@ -40,7 +40,7 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
         <Fragment key={project.id}>
           <div
             className={clsx("flex justify-between gap-x-2", {
-              "sticky top-0 z-[5] -my-1 bg-white py-1 shadow-md shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
+              "sticky top-0 z-[5] -mx-2 -my-1 bg-white px-2 py-1 shadow shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
             })}
           >
             <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs text-slate-500 hover:underline dark:text-slate-300">
@@ -55,7 +55,7 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
               {settings.style.groupIssuesByVersion && versions.length > 0 && (
                 <div
                   className={clsx({
-                    "sticky top-6 z-[5] -my-1 bg-white py-1 shadow-md shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
+                    "shadow- sticky top-6 z-[5] -mx-2 -my-1 bg-white px-2 py-1 shadow shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
                   })}
                 >
                   {version && <VersionTooltip version={version} />}

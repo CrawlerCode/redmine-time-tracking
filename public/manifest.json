@@ -1,27 +1,32 @@
 {
-  "manifest_version": 3,
-  "version": "1.14.0",
-  "name": "__MSG_extName__",
-  "description": "__MSG_extDesc__",
-  "default_locale": "en",
-  "icons": {
-    "16": "logo16.png",
-    "48": "logo48.png",
-    "128": "logo128.png"
-  },
-  "author": "crawlercode@outlook.de",
-  "homepage_url": "https://github.com/CrawlerCode/redmine-time-tracking",
-  "action": {
-    "default_title": "__MSG_extName__",
-    "default_popup": "index.html?location=popup"
-  },
-  "options_ui": {
-    "page": "index.html?location=options#/settings",
-    "open_in_tab": false
-  },
-  "background": {
-    "service_worker": "background.js"
-  },
-  "permissions": ["storage"],
-  "host_permissions": ["http://*/*", "https://*/*"]
+    "manifest_version": 3,
+    "version": "1.14.1",
+    "name": "__MSG_extName__",
+    "description": "__MSG_extDesc__",
+    "default_locale": "en",
+    "icons": {
+        "16": "logo16.png",
+        "48": "logo48.png",
+        "128": "logo128.png"
+    },
+    "author": "crawlercode@outlook.de",
+    "homepage_url": "https://github.com/CrawlerCode/redmine-time-tracking",
+    "action": {
+        "default_title": "__MSG_extName__",
+        "default_popup": "index.html?location=popup"
+    },
+    "options_ui": {
+        "page": "index.html?location=options#/settings",
+        "open_in_tab": false
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions": [
+        "storage"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ]
 }

@@ -37,14 +37,6 @@ export const defaultSettings: Settings = {
   language: "browser",
   redmineURL: "",
   redmineApiKey: "",
-  options: {
-    autoPauseOnSwitch: true,
-    extendedSearch: true,
-    roundTimeNearestQuarterHour: false,
-    addSpentTimeForOtherUsers: false,
-    cacheComments: true,
-    addNotes: false,
-  },
   features: {
     autoPauseOnSwitch: true,
     extendedSearch: true,
