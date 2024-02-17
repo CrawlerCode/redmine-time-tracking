@@ -27,7 +27,7 @@ function App() {
         e.preventDefault();
       }}
     >
-      <header className="relative z-20 h-12">
+      <header className="relative z-30 h-12">
         <Navbar
           navigation={[
             {

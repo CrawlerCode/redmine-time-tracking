@@ -27,6 +27,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     queryFn: ({ pageParam }) => getOpenIssuesByIds(additionalIssuesIds, pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     enabled: additionalIssuesIds.length > 0,
+    placeholderData: keepPreviousData,
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
   });
