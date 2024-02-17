@@ -31,7 +31,8 @@ export const formatHoursUsually = (hours: number) => {
 
   const h = Math.floor(hours);
   const m = Math.round((hours - h) * 60);
-  return `${h}:${m > 9 ? m : "0" + m}`;
+
+  return `${h}:${m.toString().padStart(2, "0")}`;
 };
 
 /**

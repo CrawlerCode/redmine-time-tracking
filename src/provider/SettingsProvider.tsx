@@ -30,6 +30,7 @@ export type Settings = {
     showIssuesPriority: boolean;
     sortIssuesByPriority: boolean;
     showTooltips: boolean;
+    timeFormat: "decimal" | "minutes";
   };
 };
 
@@ -51,6 +52,7 @@ export const defaultSettings: Settings = {
     showIssuesPriority: true,
     sortIssuesByPriority: true,
     showTooltips: true,
+    timeFormat: "decimal",
   },
 };
 

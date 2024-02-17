@@ -11,15 +11,17 @@ import Fieldset from "../components/general/Fieldset";
 import Indicator from "../components/general/Indicator";
 import InputField from "../components/general/InputField";
 import SelectField from "../components/general/SelectField";
+import Switch from "../components/general/Switch";
 import Toast from "../components/general/Toast";
 import useMyAccount from "../hooks/useMyAccount";
 import useSettings from "../hooks/useSettings";
 import { LANGUAGES } from "../provider/IntlProvider";
 import { Settings } from "../provider/SettingsProvider";
+import { formatHoursUsually } from "../utils/date";
 
 const SettingsPage = () => {
   const queryClient = useQueryClient();
-  const { formatMessage } = useIntl();
+  const { formatMessage, formatNumber } = useIntl();
   const { settings, setSettings } = useSettings();
 
   const formik = useRef<FormikProps<Settings>>(null);
@@ -226,6 +228,31 @@ const SettingsPage = () => {
                     <Field type="checkbox" name="style.showIssuesPriority" title={formatMessage({ id: "settings.style.show-issues-priority.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.sortIssuesByPriority" title={formatMessage({ id: "settings.style.sort-issues-by-priority.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.showTooltips" title={formatMessage({ id: "settings.style.show-tooltips.title" })} as={CheckBox} />
+                    <Field
+                      name="style.timeFormat"
+                      title={formatMessage({ id: "settings.style.time-format.title" })}
+                      options={[
+                        {
+                          value: "decimal",
+                          name: formatMessage(
+                            { id: "format.hours" },
+                            {
+                              hours: formatNumber(0.75),
+                            }
+                          ),
+                        },
+                        {
+                          value: "minutes",
+                          name: formatMessage(
+                            { id: "format.hours" },
+                            {
+                              hours: formatHoursUsually(0.75),
+                            }
+                          ),
+                        },
+                      ]}
+                      as={Switch}
+                    />
                   </div>
                 </Fieldset>
 

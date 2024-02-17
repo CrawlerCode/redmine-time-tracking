@@ -12,6 +12,7 @@ import useSettings from "../../hooks/useSettings";
 import useStorage from "../../hooks/useStorage";
 import useTimeEntryActivities from "../../hooks/useTimeEntryActivities";
 import { TCreateTimeEntry, TIssue, TRedmineError, TUpdateIssue } from "../../types/redmine";
+import { clsxm } from "../../utils/clsxm";
 import { formatHoursUsually } from "../../utils/date";
 import { getGroupedUsers } from "../../utils/user";
 import Button from "../general/Button";
@@ -23,6 +24,7 @@ import Modal from "../general/Modal";
 import ReactSelectFormik from "../general/ReactSelectFormik";
 import SelectField from "../general/SelectField";
 import TextareaField from "../general/TextareaField";
+import TimeField from "../general/TimeField";
 import Toast from "../general/Toast";
 import Toggle from "../general/Toggle";
 import TimeEntryPreview from "../time/TimeEntryPreview";
@@ -182,33 +184,52 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                 {values.spent_on && <TimeEntryPreview date={startOfDay(values.spent_on)} previewHours={values.hours ? values.hours : 0} />}
 
                 <Fieldset className="flex flex-col gap-y-2">
-                  <div className="grid grid-cols-5 gap-x-2">
-                    <FastField
-                      type="number"
-                      name="hours"
-                      title={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
-                      placeholder={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
-                      min="0"
-                      step="0.01"
-                      max="24"
-                      required
-                      as={InputField}
-                      size="sm"
-                      inputClassName="appearance-none"
-                      extraText={
-                        values.hours >= 0 && values.hours <= 24
-                          ? formatMessage(
-                              { id: "format.hours" },
-                              {
-                                hours: formatHoursUsually(values.hours),
-                              }
-                            )
-                          : undefined
-                      }
-                      error={touched.hours && errors.hours}
-                      autoComplete="off"
-                      className="col-span-3"
-                    />
+                  <div
+                    className={clsxm("grid grid-cols-4 gap-x-2", {
+                      "grid-cols-5": settings.style.timeFormat === "decimal",
+                    })}
+                  >
+                    {settings.style.timeFormat === "decimal" ? (
+                      <FastField
+                        type="number"
+                        name="hours"
+                        title={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
+                        placeholder={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
+                        min="0"
+                        step="0.01"
+                        max="24"
+                        required
+                        as={InputField}
+                        size="sm"
+                        inputClassName="appearance-none"
+                        extraText={
+                          values.hours >= 0 && values.hours <= 24
+                            ? formatMessage(
+                                { id: "format.hours" },
+                                {
+                                  hours: formatHoursUsually(values.hours),
+                                }
+                              )
+                            : undefined
+                        }
+                        error={touched.hours && errors.hours}
+                        autoComplete="off"
+                        className="col-span-3"
+                      />
+                    ) : (
+                      <FastField
+                        type="number"
+                        name="hours"
+                        title={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
+                        placeholder={formatMessage({ id: "issues.modal.add-spent-time.hours" })}
+                        required
+                        as={TimeField}
+                        size="sm"
+                        error={touched.hours && errors.hours}
+                        autoComplete="off"
+                        className="col-span-2"
+                      />
+                    )}
 
                     <FastField
                       type="date"

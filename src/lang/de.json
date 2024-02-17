@@ -111,6 +111,7 @@
   "settings.style.show-issues-priority.title": "Tickets Priorität anzeigen",
   "settings.style.sort-issues-by-priority.title": "Tickets nach Priorität sortieren",
   "settings.style.show-tooltips.title": "Tooltips anzeigen",
+  "settings.style.time-format.title": "Format für Zeitspannen",
   "settings.save-settings": "Einstellungen speichern",
   "settings.settings-saved": "Einstellungen gespeichert!",
   "settings.info.version": "Version: {version}",

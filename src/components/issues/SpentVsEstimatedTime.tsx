@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useIntl } from "react-intl";
+import useFormatHours from "../../hooks/useFormatHours";
 import { TIssue } from "../../types/redmine";
 import { roundHours } from "../../utils/date";
 
@@ -8,7 +8,8 @@ interface PropTypes extends React.ComponentProps<"span"> {
   previewHours: number;
 }
 const SpentVsEstimatedTime = ({ issue, previewHours, className, ...props }: PropTypes) => {
-  const { formatMessage, formatNumber } = useIntl();
+  const formatHours = useFormatHours();
+
   return (
     <>
       {issue.estimated_hours && (
@@ -18,22 +19,10 @@ const SpentVsEstimatedTime = ({ issue, previewHours, className, ...props }: Prop
               "text-orange-500 dark:text-orange-400": issue.spent_hours + previewHours > issue.estimated_hours,
             })}
           >
-            {formatMessage(
-              { id: "format.hours" },
-              {
-                hours: formatNumber(roundHours(issue.spent_hours + previewHours)),
-              }
-            )}
+            {formatHours(roundHours(issue.spent_hours + previewHours))}
           </span>
           <span className="text-lg font-light">/</span>
-          <span className="mt-0.5 font-semibold">
-            {formatMessage(
-              { id: "format.hours" },
-              {
-                hours: formatNumber(roundHours(issue.estimated_hours)),
-              }
-            )}
-          </span>
+          <span className="mt-0.5 font-semibold">{formatHours(roundHours(issue.estimated_hours))}</span>
         </span>
       )}
     </>

@@ -1,6 +1,7 @@
 import { Fragment } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { Tooltip } from "react-tooltip";
+import useFormatHours from "../../hooks/useFormatHours";
 import { TTimeEntry } from "../../types/redmine";
 
 type PropTypes = {
@@ -10,7 +11,7 @@ type PropTypes = {
 };
 
 const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
-  const { formatNumber } = useIntl();
+  const formatHours = useFormatHours();
 
   const sumHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
 
@@ -21,12 +22,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
           <Tooltip id={`tooltip-time-entry-${entry.id}`} place="bottom" className="z-10 opacity-100">
             <div className="relative max-w-[230px]">
               <p className="mb-3 text-sm font-semibold">
-                <FormattedMessage
-                  id="format.hours"
-                  values={{
-                    hours: formatNumber(entry.hours),
-                  }}
-                />
+                {formatHours(entry.hours)}
                 {entry.comments && <p className="mt-1 max-w-[180px] truncate text-xs font-normal">{entry.comments}</p>}
               </p>
               <table className="-mx-1 border-separate border-spacing-x-1 text-left text-sm text-gray-300">
@@ -55,7 +51,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
                     <th className="text-xs font-medium">
                       <FormattedMessage id="time.entry-tooltip.hours" />:
                     </th>
-                    <td>{formatNumber(entry.hours)}</td>
+                    <td>{formatHours(entry.hours)}</td>
                   </tr>
                 </tbody>
               </table>
@@ -73,14 +69,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
       {(previewHours && (
         <>
           <Tooltip id={`tooltip-time-entry-preview`} place="bottom" className="z-10 opacity-100">
-            <p className="text-sm font-semibold">
-              <FormattedMessage
-                id="format.hours"
-                values={{
-                  hours: formatNumber(previewHours),
-                }}
-              />
-            </p>
+            <p className="text-sm font-semibold">{formatHours(previewHours)}</p>
           </Tooltip>
           <div
             className="h-4 rounded bg-primary/50"
