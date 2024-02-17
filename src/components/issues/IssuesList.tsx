@@ -32,11 +32,11 @@ type PropTypes = {
 const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersions, issuesData: { data: issuesData, setData: setIssuesData }, onSearchInProject }: PropTypes) => {
   const { settings } = useSettings();
 
-  const groupedIssues = getGroupedIssues(getSortedIssues(rawIssues, settings.style.sortIssuesByPriority ? issuePriorities.data : [], issuesData), projectVersions.data);
+  const groupedIssues = getGroupedIssues(getSortedIssues(rawIssues, settings.style.sortIssuesByPriority ? issuePriorities.data : [], issuesData), projectVersions.data, issuesData);
 
   return (
     <>
-      {groupedIssues.map(({ project, versions, issues }) => (
+      {groupedIssues.map(({ project, versions, groups }) => (
         <Fragment key={project.id}>
           <div
             className={clsx("flex justify-between gap-x-2", {
@@ -50,28 +50,29 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
           </div>
-          {[...versions, ...(issues.length > 0 ? [{ version: undefined, issues: issues }] : [])].map(({ version, issues }) => (
+          {groups.map(({ type, version, issues }) => (
             <>
-              {settings.style.groupIssuesByVersion && versions.length > 0 && (
-                <div
-                  className={clsx({
-                    "shadow- sticky top-6 z-[5] -mx-2 -my-1 bg-white px-2 py-1 shadow shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
-                  })}
-                >
+              {settings.style.groupIssuesByVersion && versions.length > 0 && ["version", "no-version"].includes(type) && (
+                <>
                   {version && <VersionTooltip version={version} />}
-                  <span
-                    className="w-fit truncate rounded border border-gray-300 bg-gray-100 px-1.5 text-xs text-gray-800 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300"
-                    data-tooltip-id={`tooltip-version-${version?.id}`}
+                  <div
+                    className={clsx({
+                      "shadow- sticky top-6 z-[5] -mx-2 -my-1 bg-white px-2 py-1 shadow shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
+                    })}
                   >
-                    {version ? (
-                      <a href={`${settings.redmineURL}/versions/${version.id}`} target="_blank" tabIndex={-1} className="hover:underline">
-                        {version.name}
-                      </a>
-                    ) : (
-                      <FormattedMessage id="issues.version.no-version" />
-                    )}
-                  </span>
-                </div>
+                    <span
+                      className="w-fit truncate rounded border border-gray-300 bg-gray-100 px-1.5 text-xs text-gray-800 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300"
+                      data-tooltip-id={`tooltip-version-${version?.id}`}
+                    >
+                      {type === "version" && version && (
+                        <a href={`${settings.redmineURL}/versions/${version.id}`} target="_blank" tabIndex={-1} className="hover:underline">
+                          {version.name}
+                        </a>
+                      )}
+                      {type === "no-version" && <FormattedMessage id="issues.version.no-version" />}
+                    </span>
+                  </div>
+                </>
               )}
 
               {issues.map((issue) => {

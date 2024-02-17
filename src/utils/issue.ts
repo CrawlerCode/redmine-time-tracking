@@ -1,19 +1,44 @@
 import { IssuesData } from "../components/issues/IssuesList";
 import { TIssue, TIssuesPriority, TReference, TVersion } from "../types/redmine";
 
-type GroupedIssues = Record<
+type IssueGroup = {
+  type: "pinned" | "version" | "no-version";
+  version?: TVersion;
+  issues: TIssue[];
+};
+
+type GroupedIssues = {
+  project: TReference;
+  versions: TVersion[];
+  groups: {
+    type: "pinned" | "version" | "no-version";
+    version?: TVersion;
+    issues: TIssue[];
+  }[];
+}[];
+
+type GroupedIssuesHelper = Record<
   number,
   {
+    // The project reference
     project: TReference;
+    // Pinned issues
+    pinnedIssues: TIssue[];
+    // All versions of project
     versions: Record<
       number,
       {
+        // The version reference
         version: TVersion;
-        issues: TIssue[]; // Issues of this version
+        // Issues of this version
+        issues: TIssue[];
+        // Index for sorting
         sort: number;
       }
     >;
-    issues: TIssue[]; // Issues without version
+    // Issues without version
+    issues: TIssue[];
+    // Index for sorting
     sort: number;
   }
 >;
@@ -36,16 +61,29 @@ export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuesPriori
   return sortedIssues;
 };
 
-export const getGroupedIssues = (issues: TIssue[], projectVersions: Record<number, TVersion[]>) => {
-  const grouped = issues.reduce((result: GroupedIssues, issue) => {
+/**
+ * Group issues
+ * - group issues by project
+ * - group pinned issues
+ * - group issues by version
+ */
+export const getGroupedIssues = (issues: TIssue[], projectVersions: Record<number, TVersion[]>, issuesData: IssuesData): GroupedIssues => {
+  const grouped = issues.reduce((result: GroupedIssuesHelper, issue) => {
     if (!(issue.project.id in result)) {
       result[issue.project.id] = {
         project: issue.project,
+        pinnedIssues: [],
         versions: {},
         issues: [],
         sort: Object.keys(result).length,
       };
     }
+
+    if (issuesData[issue.id]?.pinned) {
+      result[issue.project.id].pinnedIssues.push(issue);
+      return result;
+    }
+
     if (issue.fixed_version && projectVersions[issue.project.id]) {
       if (!(issue.fixed_version.id in result[issue.project.id].versions)) {
         const version = projectVersions[issue.project.id].find((v) => v.id === issue.fixed_version?.id);
@@ -62,6 +100,7 @@ export const getGroupedIssues = (issues: TIssue[], projectVersions: Record<numbe
           sort: projectVersions[issue.project.id].indexOf(version),
         };
       }
+
       result[issue.project.id].versions[issue.fixed_version.id].issues.push(issue);
     } else {
       result[issue.project.id].issues.push(issue);
@@ -71,9 +110,29 @@ export const getGroupedIssues = (issues: TIssue[], projectVersions: Record<numbe
   }, {});
 
   return Object.values(grouped)
-    .map((groupedByProject) => ({
-      ...groupedByProject,
-      versions: Object.values(groupedByProject.versions).sort((a, b) => a.sort - b.sort),
-    }))
-    .sort((a, b) => a.sort - b.sort);
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ project, pinnedIssues, versions, issues }) => ({
+      project: project,
+      versions: projectVersions[project.id] ?? [],
+      groups: [
+        {
+          type: "pinned",
+          issues: pinnedIssues,
+        },
+        ...Object.values(versions)
+          .sort((a, b) => a.sort - b.sort)
+          .map(
+            (version) =>
+              ({
+                type: "version",
+                version: version.version,
+                issues: version.issues,
+              }) satisfies IssueGroup
+          ),
+        {
+          type: "no-version",
+          issues: issues,
+        },
+      ],
+    }));
 };
