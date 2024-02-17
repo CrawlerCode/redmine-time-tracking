@@ -50,6 +50,8 @@ function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group ex
             "rounded-md bg-gray-50 dark:bg-gray-400/10 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-300 ring-1 ring-inset ring-gray-600/10 dark:ring-gray-300/10 max-w-[240px]",
           indicatorsContainer: () => "cursor-pointer",
         }}
+        menuPortalTarget={document.body}
+        styles={{ menuPortal: (base) => ({ ...base, zIndex: 20 }) }}
       />
       {error && <p className="text-sm text-red-600 dark:text-red-500">{error}</p>}
     </div>
