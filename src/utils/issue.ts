@@ -115,10 +115,14 @@ export const getGroupedIssues = (issues: TIssue[], projectVersions: Record<numbe
       project: project,
       versions: projectVersions[project.id] ?? [],
       groups: [
-        {
-          type: "pinned",
-          issues: pinnedIssues,
-        },
+        ...(pinnedIssues.length > 0
+          ? [
+              {
+                type: "pinned",
+                issues: pinnedIssues,
+              } satisfies IssueGroup,
+            ]
+          : []),
         ...Object.values(versions)
           .sort((a, b) => a.sort - b.sort)
           .map(
@@ -129,10 +133,14 @@ export const getGroupedIssues = (issues: TIssue[], projectVersions: Record<numbe
                 issues: version.issues,
               }) satisfies IssueGroup
           ),
-        {
-          type: "no-version",
-          issues: issues,
-        },
+        ...(issues.length > 0
+          ? [
+              {
+                type: "no-version",
+                issues: issues,
+              } satisfies IssueGroup,
+            ]
+          : []),
       ],
     }));
 };
