@@ -1,5 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
-import { getProjectVersions } from "../api/redmine";
+import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { TVersion } from "../types/redmine";
 
 type Options = {
@@ -7,10 +7,12 @@ type Options = {
 };
 
 const useProjectVersions = (ids: number[], { enabled = true }: Options = {}) => {
+  const redmineApi = useRedmineApi();
+
   const versionsQuery = useQueries({
     queries: ids.map((id) => ({
       queryKey: ["versions", id],
-      queryFn: () => getProjectVersions(id),
+      queryFn: () => redmineApi.getProjectVersions(id),
       enabled: enabled && ids.length > 0,
     })),
   });

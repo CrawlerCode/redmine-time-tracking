@@ -1,81 +1,87 @@
+import { AxiosInstance } from "axios";
 import { formatISO } from "date-fns";
 import { TAccount, TCreateTimeEntry, TIssue, TIssuesPriority, TMembership, TProject, TReference, TSearchResult, TTimeEntry, TTimeEntryActivity, TUpdateIssue, TVersion } from "../types/redmine";
-import instance from "./axios.config";
 
-export const getMyAccount = async (): Promise<TAccount> => {
-  return instance.get("/my/account.json").then((res) => res.data.user);
-};
+export class RedmineApi {
+  private instance: AxiosInstance;
+  constructor(instance: AxiosInstance) {
+    this.instance = instance;
+  }
 
-// Issues
-export const getAllMyOpenIssues = async (offset = 0, limit = 100): Promise<TIssue[]> => {
-  return instance.get(`/issues.json?offset=${offset}&limit=${limit}&status_id=open&assigned_to_id=me&sort=updated_on:desc`).then((res) => res.data.issues);
-};
+  async getMyAccount(): Promise<TAccount> {
+    return this.instance.get("/my/account.json").then((res) => res.data.user);
+  }
 
-export const getOpenIssuesByIds = async (ids: number[], offset = 0, limit = 100): Promise<TIssue[]> => {
-  return instance.get(`/issues.json?offset=${offset}&limit=${limit}&status_id=open&issue_id=${ids.join(",")}&sort=updated_on:desc`).then((res) => res.data.issues);
-};
+  // Issues
+  async getAllMyOpenIssues(offset = 0, limit = 100): Promise<TIssue[]> {
+    return this.instance.get(`/issues.json?offset=${offset}&limit=${limit}&status_id=open&assigned_to_id=me&sort=updated_on:desc`).then((res) => res.data.issues);
+  }
 
-export const getOpenIssuesByProject = async (projectId: number, offset = 0, limit = 100): Promise<TIssue[]> => {
-  return instance.get(`/issues.json?offset=${offset}&limit=${limit}&status_id=open&project_id=${projectId}&sort=updated_on:desc`).then((res) => res.data.issues);
-};
+  async getOpenIssuesByIds(ids: number[], offset = 0, limit = 100): Promise<TIssue[]> {
+    return this.instance.get(`/issues.json?offset=${offset}&limit=${limit}&status_id=open&issue_id=${ids.join(",")}&sort=updated_on:desc`).then((res) => res.data.issues);
+  }
 
-export const searchOpenIssues = async (query: string): Promise<TSearchResult[]> => {
-  return instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&issues=1&open_issues=1`).then((res) => res.data.results);
-};
+  async getOpenIssuesByProject(projectId: number, offset = 0, limit = 100): Promise<TIssue[]> {
+    return this.instance.get(`/issues.json?offset=${offset}&limit=${limit}&status_id=open&project_id=${projectId}&sort=updated_on:desc`).then((res) => res.data.issues);
+  }
 
-export const updateIssue = async (id: number, issue: TUpdateIssue) => {
-  return instance
-    .put(`/issues/${id}.json`, {
-      issue: issue,
-    })
-    .then((res) => res.data);
-};
+  async searchOpenIssues(query: string): Promise<TSearchResult[]> {
+    return this.instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&issues=1&open_issues=1`).then((res) => res.data.results);
+  }
 
-export const getIssuePriorities = async (): Promise<TIssuesPriority[]> => {
-  return instance.get("/enumerations/issue_priorities.json").then((res) => res.data.issue_priorities);
-};
+  async updateIssue(id: number, issue: TUpdateIssue) {
+    return this.instance
+      .put(`/issues/${id}.json`, {
+        issue: issue,
+      })
+      .then((res) => res.data);
+  }
 
-// Projects
-export const getAllMyProjects = async (offset = 0, limit = 100): Promise<TProject[]> => {
-  return instance.get(`/projects.json?offset=${offset}&limit=${limit}`).then((res) => res.data.projects);
-};
+  async getIssuePriorities(): Promise<TIssuesPriority[]> {
+    return this.instance.get("/enumerations/issue_priorities.json").then((res) => res.data.issue_priorities);
+  }
 
-export const searchProjects = async (query: string): Promise<TSearchResult[]> => {
-  return instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&projects=1`).then((res) => res.data.results);
-};
+  // Projects
+  async getAllMyProjects(offset = 0, limit = 100): Promise<TProject[]> {
+    return this.instance.get(`/projects.json?offset=${offset}&limit=${limit}`).then((res) => res.data.projects);
+  }
 
-export const getProjectMemberships = async (id: number, offset = 0, limit = 100): Promise<TMembership[]> => {
-  return instance.get(`/projects/${id}/memberships.json?offset=${offset}&limit=${limit}`).then((res) => res.data.memberships);
-};
+  async searchProjects(query: string): Promise<TSearchResult[]> {
+    return this.instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&projects=1`).then((res) => res.data.results);
+  }
 
-export const getProjectVersions = async (id: number): Promise<TVersion[]> => {
-  return instance.get(`/projects/${id}/versions.json`).then((res) => res.data.versions);
-};
+  async getProjectMemberships(id: number, offset = 0, limit = 100): Promise<TMembership[]> {
+    return this.instance.get(`/projects/${id}/memberships.json?offset=${offset}&limit=${limit}`).then((res) => res.data.memberships);
+  }
 
-// Time entries
-export const getAllMyTimeEntries = async (from: Date, to: Date, offset = 0, limit = 100): Promise<TTimeEntry[]> => {
-  return instance
-    .get(`/time_entries.json?offset=${offset}&limit=${limit}&user_id=me&from=${formatISO(from, { representation: "date" })}&to=${formatISO(to, { representation: "date" })}`)
-    .then((res) => res.data.time_entries);
-};
+  async getProjectVersions(id: number): Promise<TVersion[]> {
+    return this.instance.get(`/projects/${id}/versions.json`).then((res) => res.data.versions);
+  }
 
-export const createTimeEntry = async (entry: TCreateTimeEntry) => {
-  return instance
-    .post("/time_entries.json", {
-      time_entry: {
-        ...entry,
-        spent_on: entry.spent_on ? formatISO(entry.spent_on, { representation: "date" }) : undefined,
-      },
-    })
-    .then((res) => res.data);
-};
+  // Time entries
+  async getAllMyTimeEntries(from: Date, to: Date, offset = 0, limit = 100): Promise<TTimeEntry[]> {
+    return this.instance
+      .get(`/time_entries.json?offset=${offset}&limit=${limit}&user_id=me&from=${formatISO(from, { representation: "date" })}&to=${formatISO(to, { representation: "date" })}`)
+      .then((res) => res.data.time_entries);
+  }
 
-export const getTimeEntryActivities = async (): Promise<TTimeEntryActivity[]> => {
-  return instance.get("/enumerations/time_entry_activities.json").then((res) => res.data.time_entry_activities);
-};
+  async createTimeEntry(entry: TCreateTimeEntry) {
+    return this.instance
+      .post("/time_entries.json", {
+        time_entry: {
+          ...entry,
+          spent_on: entry.spent_on ? formatISO(entry.spent_on, { representation: "date" }) : undefined,
+        },
+      })
+      .then((res) => res.data);
+  }
 
-// Other
+  async getTimeEntryActivities(): Promise<TTimeEntryActivity[]> {
+    return this.instance.get("/enumerations/time_entry_activities.json").then((res) => res.data.time_entry_activities);
+  }
 
-export const getAllRoles = async (): Promise<TReference[]> => {
-  return instance.get(`/roles.json`).then((res) => res.data.roles);
-};
+  // Other
+  async getAllRoles(): Promise<TReference[]> {
+    return this.instance.get(`/roles.json`).then((res) => res.data.roles);
+  }
+}

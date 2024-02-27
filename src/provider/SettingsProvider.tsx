@@ -1,6 +1,5 @@
 import deepmerge from "deepmerge";
 import { ReactNode, createContext } from "react";
-import { loadRedmineConfig } from "../api/axios.config";
 import useStorage from "../hooks/useStorage";
 
 export type Settings = {
@@ -34,7 +33,7 @@ export type Settings = {
   };
 };
 
-export const defaultSettings: Settings = {
+const defaultSettings: Settings = {
   language: "browser",
   redmineURL: "",
   redmineApiKey: "",
@@ -78,7 +77,6 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
         settings: deepmerge<Settings>(defaultSettings, data),
         setSettings: (data: Settings) => {
           setData(data);
-          loadRedmineConfig();
         },
       }}
     >

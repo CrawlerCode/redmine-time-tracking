@@ -5,12 +5,12 @@ import { FastField, Form, Formik, FormikProps, getIn } from "formik";
 import { useEffect, useMemo, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
-import { createTimeEntry, updateIssue } from "../../api/redmine";
 import useMyAccount from "../../hooks/useMyAccount";
 import useProjectUsers from "../../hooks/useProjectUsers";
 import useSettings from "../../hooks/useSettings";
 import useStorage from "../../hooks/useStorage";
 import useTimeEntryActivities from "../../hooks/useTimeEntryActivities";
+import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { TCreateTimeEntry, TIssue, TRedmineError, TUpdateIssue } from "../../types/redmine";
 import { clsxm } from "../../utils/clsxm";
 import { formatHoursUsually } from "../../utils/date";
@@ -49,6 +49,7 @@ const _defaultCachedComments = {};
 const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) => {
   const { formatMessage, formatDate } = useIntl();
   const { settings } = useSettings();
+  const redmineApi = useRedmineApi();
   const queryClient = useQueryClient();
 
   const formik = useRef<FormikProps<TCreateTimeEntryForm>>(null);
@@ -73,7 +74,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
   }, [settings.features.cacheComments, issue.id, cachedComments.data]);
 
   const createTimeEntryMutation = useMutation({
-    mutationFn: (entry: TCreateTimeEntry) => createTimeEntry(entry),
+    mutationFn: (entry: TCreateTimeEntry) => redmineApi.createTimeEntry(entry),
     onSuccess: (_, entry) => {
       // if entry created for me => invalidate query
       if (!entry.user_id || entry.user_id === myAccount.data?.id) {
@@ -85,7 +86,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
   });
 
   const updateIssueMutation = useMutation({
-    mutationFn: (data: TUpdateIssue) => updateIssue(issue.id, data),
+    mutationFn: (data: TUpdateIssue) => redmineApi.updateIssue(issue.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["issues"] });
       queryClient.invalidateQueries({ queryKey: ["additionalIssues"] });

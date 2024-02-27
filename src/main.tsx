@@ -6,18 +6,21 @@ import App from "./App.tsx";
 import "./index.css";
 import IntlProvider from "./provider/IntlProvider.tsx";
 import QueryClientProvider from "./provider/QueryClientProvider.tsx";
+import RedmineApiProvider from "./provider/RedmineApiProvider.tsx";
 import SettingsProvider from "./provider/SettingsProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <HashRouter>
-      <QueryClientProvider>
-        <SettingsProvider>
-          <IntlProvider>
-            <App />
-          </IntlProvider>
-        </SettingsProvider>
-      </QueryClientProvider>
+      <SettingsProvider>
+        <RedmineApiProvider>
+          <QueryClientProvider>
+            <IntlProvider>
+              <App />
+            </IntlProvider>
+          </QueryClientProvider>
+        </RedmineApiProvider>
+      </SettingsProvider>
     </HashRouter>
   </React.StrictMode>
 );

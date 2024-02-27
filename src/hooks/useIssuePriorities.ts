@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getIssuePriorities } from "../api/redmine";
+import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { TIssue } from "../types/redmine";
 
 export type PriorityType = "highest" | "higher" | "high" | "normal" | "lowest";
@@ -9,9 +9,11 @@ type Options = {
 };
 
 const useIssuePriorities = ({ enabled = true }: Options = {}) => {
+  const redmineApi = useRedmineApi();
+
   const issuePrioritiesQuery = useQuery({
     queryKey: ["issuePriorities"],
-    queryFn: getIssuePriorities,
+    queryFn: () => redmineApi.getIssuePriorities(),
     enabled: enabled,
   });
 

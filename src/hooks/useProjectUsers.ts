@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
-import { getAllRoles, getProjectMemberships } from "../api/redmine";
+import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { TMembership } from "../types/redmine";
 
 type Options = {
@@ -13,10 +13,12 @@ export type TUser = TMembership["user"] & {
 };
 
 const useProjectUsers = (id: number, { enabled = true }: Options = {}) => {
+  const redmineApi = useRedmineApi();
+
   const usersQuery = useInfiniteQuery({
     queryKey: ["memberships", id],
     initialPageParam: 0,
-    queryFn: ({ pageParam }) => getProjectMemberships(id, pageParam * 100, 100),
+    queryFn: ({ pageParam }) => redmineApi.getProjectMemberships(id, pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     enabled: enabled,
   });
@@ -28,7 +30,7 @@ const useProjectUsers = (id: number, { enabled = true }: Options = {}) => {
 
   const issueRolesQuery = useQuery({
     queryKey: ["roles"],
-    queryFn: getAllRoles,
+    queryFn: () => redmineApi.getAllRoles(),
     enabled: enabled,
   });
 

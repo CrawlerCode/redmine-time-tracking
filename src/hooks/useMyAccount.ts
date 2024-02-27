@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMyAccount } from "../api/redmine";
+import { useRedmineApi } from "../provider/RedmineApiProvider";
 import useSettings from "./useSettings";
 
 const useMyAccount = () => {
   const { settings } = useSettings();
+  const redmineApi = useRedmineApi();
 
   const myAccountQuery = useQuery({
     queryKey: ["myAccount", settings.redmineURL, settings.redmineApiKey],
-    queryFn: getMyAccount,
+    queryFn: () => redmineApi.getMyAccount(),
     retryOnMount: false,
   });
 

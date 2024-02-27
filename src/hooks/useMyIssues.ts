@@ -1,8 +1,8 @@
 import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { getAllMyOpenIssues, getOpenIssuesByIds, searchOpenIssues } from "../api/redmine";
 import { FilterQuery } from "../components/issues/Filter";
 import { SearchQuery } from "../components/issues/Search";
+import { useRedmineApi } from "../provider/RedmineApiProvider";
 import useDebounce from "./useDebounce";
 import useSettings from "./useSettings";
 
@@ -12,11 +12,12 @@ const STALE_DATA_TIME = 1000 * 60;
 
 const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter: FilterQuery) => {
   const { settings } = useSettings();
+  const redmineApi = useRedmineApi();
 
   const issuesQuery = useInfiniteQuery({
     queryKey: ["issues"],
     initialPageParam: 0,
-    queryFn: ({ pageParam }) => getAllMyOpenIssues(pageParam * 100, 100),
+    queryFn: ({ pageParam }) => redmineApi.getAllMyOpenIssues(pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
@@ -24,7 +25,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
   const additionalIssuesQuery = useInfiniteQuery({
     queryKey: ["additionalIssues", additionalIssuesIds],
     initialPageParam: 0,
-    queryFn: ({ pageParam }) => getOpenIssuesByIds(additionalIssuesIds, pageParam * 100, 100),
+    queryFn: ({ pageParam }) => redmineApi.getOpenIssuesByIds(additionalIssuesIds, pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     enabled: additionalIssuesIds.length > 0,
     placeholderData: keepPreviousData,
@@ -62,7 +63,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
 
   const extendedSearchIssuesResultQuery = useQuery({
     queryKey: ["extendedSearchIssuesResult", debouncedSearch],
-    queryFn: () => searchOpenIssues(debouncedSearch),
+    queryFn: () => redmineApi.searchOpenIssues(debouncedSearch),
     enabled: extendedSearching && !debouncedSearch.includes("#"),
     placeholderData: keepPreviousData,
     staleTime: -1,
@@ -74,7 +75,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
   }
   const extendedSearchIssuesQuery = useQuery({
     queryKey: ["extendedSearchIssues", extendedSearchIssuesResultIds],
-    queryFn: () => getOpenIssuesByIds(extendedSearchIssuesResultIds, 0, search.inProject ? 100 : MAX_EXTENDED_SEARCH_LIMIT),
+    queryFn: () => redmineApi.getOpenIssuesByIds(extendedSearchIssuesResultIds, 0, search.inProject ? 100 : MAX_EXTENDED_SEARCH_LIMIT),
     enabled: extendedSearchIssuesResultIds.length > 0,
     staleTime: -1,
   });

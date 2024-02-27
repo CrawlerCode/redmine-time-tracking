@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTimeEntryActivities } from "../api/redmine";
+import { useRedmineApi } from "../provider/RedmineApiProvider";
 
 const useTimeEntryActivities = () => {
+  const redmineApi = useRedmineApi();
+
   const timeEntryActivitiesQuery = useQuery({
     queryKey: ["timeEntryActivities"],
-    queryFn: getTimeEntryActivities,
+    queryFn: () => redmineApi.getTimeEntryActivities(),
   });
 
   const activities = timeEntryActivitiesQuery.data?.filter((activity) => activity.active !== false) ?? [];
