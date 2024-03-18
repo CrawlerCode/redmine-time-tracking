@@ -33,7 +33,7 @@ type PropTypes = {
 } & Omit<TimerActions, "onDoneTimer"> &
   IssueActions;
 
-const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembered, onStart, onPause, onStop, onOverrideTime, onRemember, onForget, onPin, onUnpin, onPinAndRemember }: PropTypes) => {
+const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembered, onStart, onPause, onReset, onOverrideTime, onRemember, onForget, onPin, onUnpin, onPinAndRemember }: PropTypes) => {
   const { formatMessage } = useIntl();
 
   const { settings } = useSettings();
@@ -80,10 +80,10 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
               onClick: () => timerRef.current?.pauseTimer(),
             },
             {
-              name: formatMessage({ id: "issues.context-menu.timer.stop" }),
+              name: formatMessage({ id: "issues.context-menu.timer.reset" }),
               icon: <FontAwesomeIcon icon={faStop} />,
               disabled: timerRef.current?.timer === 0,
-              onClick: onStop,
+              onClick: onReset,
             },
             {
               name: formatMessage({ id: "issues.context-menu.timer.edit" }),
@@ -196,7 +196,7 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
                 data={timerData}
                 onStart={onStart}
                 onPause={onPause}
-                onStop={onStop}
+                onReset={onReset}
                 onOverrideTime={onOverrideTime}
                 onDoneTimer={setCreateTimeEntry}
               />
@@ -237,7 +237,7 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
           onClose={() => setCreateTimeEntry(undefined)}
           onSuccess={() => {
             setCreateTimeEntry(undefined);
-            onStop();
+            onReset();
           }}
         />
       )}

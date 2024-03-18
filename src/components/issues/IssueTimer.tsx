@@ -8,6 +8,8 @@ import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
 import { formatTimer, roundTimeNearestQuarterHour } from "../../utils/date";
+import Button from "../general/Button";
+import Modal from "../general/Modal";
 import EditTimer from "./EditTimer";
 
 export type IssueTimerData = {
@@ -19,7 +21,7 @@ export type IssueTimerData = {
 export type TimerActions = {
   onStart: () => void;
   onPause: (time: number) => void;
-  onStop: () => void;
+  onReset: () => void;
   onOverrideTime: (time: number) => void;
   onDoneTimer: (time: number) => void;
 };
@@ -37,7 +39,7 @@ export type TimerRef = {
   editTimer: () => void;
 };
 
-const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, onPause, onStop, onOverrideTime, onDoneTimer }: PropTypes, ref: ForwardedRef<TimerRef>) => {
+const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, onPause, onReset, onOverrideTime, onDoneTimer }: PropTypes, ref: ForwardedRef<TimerRef>) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
@@ -74,76 +76,110 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
     [timer, editMode, onStart, onPause]
   );
 
+  const [confirmResetModal, setConfirmResetModal] = useState(false);
+
   return (
-    <div className="flex items-center justify-end gap-x-3">
-      {(editMode && (
-        <EditTimer
-          initTime={timer}
-          onOverrideTime={(time) => {
-            onOverrideTime(time);
-            setEditMode(false);
-          }}
-          onCancel={() => setEditMode(false)}
-        />
-      )) || (
-        <>
-          {settings.style.showTooltips && (
-            <Tooltip id={`tooltip-edit-timer-${issue.id}`} place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.edit.tooltip" })} className="italic" />
-          )}
-          <span
-            className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-bold")}
-            onDoubleClick={() => setEditMode(true)}
-            data-tooltip-id={`tooltip-edit-timer-${issue.id}`}
-          >
-            {formatTimer(timer)}
-          </span>
-        </>
-      )}
-
-      {!active ? (
-        <>
-          {settings.style.showTooltips && (
-            <Tooltip id={`tooltip-start-timer-${issue.id}`} place="left" delayShow={700} className="italic">
-              <FormattedMessage id="issues.timer.action.start.tooltip" />
-            </Tooltip>
-          )}
-          <FontAwesomeIcon icon={faPlay} size="2x" className="cursor-pointer text-green-500 focus:outline-none" onClick={onStart} data-tooltip-id={`tooltip-start-timer-${issue.id}`} tabIndex={-1} />
-        </>
-      ) : (
-        <>
-          {settings.style.showTooltips && (
-            <Tooltip id={`tooltip-pause-timer-${issue.id}`} place="left" delayShow={700} className="italic">
-              <FormattedMessage id="issues.timer.action.pause.tooltip" />
-            </Tooltip>
-          )}
-          <FontAwesomeIcon
-            icon={faPause}
-            size="2x"
-            className="cursor-pointer text-red-500 focus:outline-none"
-            onClick={() => onPause(timer)}
-            data-tooltip-id={`tooltip-pause-timer-${issue.id}`}
-            tabIndex={-1}
+    <>
+      <div className="flex items-center justify-end gap-x-3">
+        {(editMode && (
+          <EditTimer
+            initTime={timer}
+            onOverrideTime={(time) => {
+              onOverrideTime(time);
+              setEditMode(false);
+            }}
+            onCancel={() => setEditMode(false)}
           />
-        </>
-      )}
+        )) || (
+          <>
+            {settings.style.showTooltips && (
+              <Tooltip id={`tooltip-edit-timer-${issue.id}`} place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.edit.tooltip" })} className="italic" />
+            )}
+            <span
+              className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-bold")}
+              onDoubleClick={() => setEditMode(true)}
+              data-tooltip-id={`tooltip-edit-timer-${issue.id}`}
+            >
+              {formatTimer(timer)}
+            </span>
+          </>
+        )}
 
-      {settings.style.showTooltips && (
-        <Tooltip id={`tooltip-stop-timer-${issue.id}`} place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.stop.tooltip" })} className="italic" />
-      )}
-      <FontAwesomeIcon icon={faStop} size="2x" className="cursor-pointer text-red-500 focus:outline-none" onClick={onStop} data-tooltip-id={`tooltip-stop-timer-${issue.id}`} tabIndex={-1} />
+        {!active ? (
+          <>
+            {settings.style.showTooltips && (
+              <Tooltip id={`tooltip-start-timer-${issue.id}`} place="left" delayShow={700} className="italic">
+                <FormattedMessage id="issues.timer.action.start.tooltip" />
+              </Tooltip>
+            )}
+            <FontAwesomeIcon icon={faPlay} size="2x" className="cursor-pointer text-green-500 focus:outline-none" onClick={onStart} data-tooltip-id={`tooltip-start-timer-${issue.id}`} tabIndex={-1} />
+          </>
+        ) : (
+          <>
+            {settings.style.showTooltips && (
+              <Tooltip id={`tooltip-pause-timer-${issue.id}`} place="left" delayShow={700} className="italic">
+                <FormattedMessage id="issues.timer.action.pause.tooltip" />
+              </Tooltip>
+            )}
+            <FontAwesomeIcon
+              icon={faPause}
+              size="2x"
+              className="cursor-pointer text-red-500 focus:outline-none"
+              onClick={() => onPause(timer)}
+              data-tooltip-id={`tooltip-pause-timer-${issue.id}`}
+              tabIndex={-1}
+            />
+          </>
+        )}
 
-      {settings.style.showTooltips && (
-        <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} content={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })} className="z-10 italic" />
+        {settings.style.showTooltips && (
+          <Tooltip id={`tooltip-reset-timer-${issue.id}`} place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.reset.tooltip" })} className="italic" />
+        )}
+        <FontAwesomeIcon
+          icon={faStop}
+          size="2x"
+          className="cursor-pointer text-red-500 focus:outline-none"
+          onClick={() => setConfirmResetModal(true)}
+          data-tooltip-id={`tooltip-reset-timer-${issue.id}`}
+          tabIndex={-1}
+        />
+
+        {settings.style.showTooltips && (
+          <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} content={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })} className="z-10 italic" />
+        )}
+        <FontAwesomeIcon
+          icon={faCircleCheck}
+          size="2x"
+          className="cursor-pointer text-green-600 focus:outline-none"
+          onClick={() => onDoneTimer(settings.features.roundTimeNearestQuarterHour ? roundTimeNearestQuarterHour(timer) : timer)}
+          data-tooltip-id={`tooltip-done-timer-${issue.id}`}
+          tabIndex={-1}
+        />
+      </div>
+
+      {confirmResetModal && (
+        <Modal title={formatMessage({ id: "issues.modal.reset-timer.title" })} onClose={() => setConfirmResetModal(false)}>
+          <p className="mb-5">
+            <FormattedMessage id="issues.modal.reset-timer.message" />
+          </p>
+          <div className="flex items-end justify-between">
+            <Button size="sm" variant="outline" onClick={() => setConfirmResetModal(false)}>
+              <FormattedMessage id="issues.modal.reset-timer.cancel" />
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => {
+                setConfirmResetModal(false);
+                onReset();
+              }}
+              autoFocus
+            >
+              <FormattedMessage id="issues.modal.reset-timer.reset" />
+            </Button>
+          </div>
+        </Modal>
       )}
-      <FontAwesomeIcon
-        icon={faCircleCheck}
-        size="2x"
-        className="cursor-pointer text-green-600 focus:outline-none"
-        onClick={() => onDoneTimer(settings.features.roundTimeNearestQuarterHour ? roundTimeNearestQuarterHour(timer) : timer)}
-        data-tooltip-id={`tooltip-done-timer-${issue.id}`}
-        tabIndex={-1}
-      />
-    </div>
+    </>
   );
 });
 

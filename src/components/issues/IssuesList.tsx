@@ -128,7 +128,7 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
                         },
                       });
                     }}
-                    onStop={() => {
+                    onReset={() => {
                       const newIssuesData = {
                         ...issuesData,
                         [issue.id]: {
