@@ -110,6 +110,7 @@
   "settings.style.group-issues-by-version.title": "Группировать задачи по target version",
   "settings.style.show-issues-priority.title": "Показывать приоритет задач",
   "settings.style.sort-issues-by-priority.title": "Сортировать задачи по приоритету",
+  "settings.style.pin-tracked-issues.title": "Pin tracked issues to the top",
   "settings.style.show-tooltips.title": "Показывать всплывающие подсказки",
   "settings.style.time-format.title": "Формат времени",
   "settings.save-settings": "Сохранить настройки",

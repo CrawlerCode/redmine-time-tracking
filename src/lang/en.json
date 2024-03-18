@@ -110,6 +110,7 @@
   "settings.style.group-issues-by-version.title": "Group issues by target version",
   "settings.style.show-issues-priority.title": "Show issues priority",
   "settings.style.sort-issues-by-priority.title": "Sort issues by priority",
+  "settings.style.pin-tracked-issues.title": "Pin tracked issues to the top",
   "settings.style.show-tooltips.title": "Show tooltips",
   "settings.style.time-format.title": "Time span format",
   "settings.save-settings": "Save settings",

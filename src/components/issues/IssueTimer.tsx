@@ -91,7 +91,7 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
             <Tooltip id={`tooltip-edit-timer-${issue.id}`} place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.edit.tooltip" })} className="italic" />
           )}
           <span
-            className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-semibold")}
+            className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-bold")}
             onDoubleClick={() => setEditMode(true)}
             data-tooltip-id={`tooltip-edit-timer-${issue.id}`}
           >

@@ -24,15 +24,15 @@ type PropTypes = {
   account?: TAccount;
   issues: TIssue[];
   issuePriorities: ReturnType<typeof useIssuePriorities>;
-  projectVersions: ReturnType<typeof useProjectVersions>;
+  projectVersions?: ReturnType<typeof useProjectVersions>;
   issuesData: ReturnType<typeof useStorage<IssuesData>>;
-  onSearchInProject: (project: TReference) => void;
+  onSearchInProject?: (project: TReference) => void;
 };
 
 const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersions, issuesData: { data: issuesData, setData: setIssuesData }, onSearchInProject }: PropTypes) => {
   const { settings } = useSettings();
 
-  const groupedIssues = getGroupedIssues(getSortedIssues(rawIssues, settings.style.sortIssuesByPriority ? issuePriorities.data : [], issuesData), projectVersions.data, issuesData);
+  const groupedIssues = getGroupedIssues(getSortedIssues(rawIssues, settings.style.sortIssuesByPriority ? issuePriorities.data : [], issuesData), projectVersions?.data ?? {}, issuesData, settings);
 
   return (
     <>
@@ -46,12 +46,14 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
             <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs text-slate-500 hover:underline dark:text-slate-300">
               {project.name}
             </a>
-            <button type="button" className="text-gray-900 dark:text-white" onClick={() => onSearchInProject(project)} tabIndex={-1}>
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </button>
+            {onSearchInProject && (
+              <button type="button" className="text-gray-900 dark:text-white" onClick={() => onSearchInProject(project)} tabIndex={-1}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </button>
+            )}
           </div>
           {groups.map(({ type, version, issues }) => (
-            <>
+            <Fragment key={`${type}-${version?.id}`}>
               {settings.style.groupIssuesByVersion && versions.length > 0 && ["version", "no-version"].includes(type) && (
                 <>
                   {version && <VersionTooltip version={version} />}
@@ -204,7 +206,7 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
                   />
                 );
               })}
-            </>
+            </Fragment>
           ))}
         </Fragment>
       ))}

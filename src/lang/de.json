@@ -110,6 +110,7 @@
   "settings.style.group-issues-by-version.title": "Tickets nach Zielversion gruppieren",
   "settings.style.show-issues-priority.title": "Tickets Priorität anzeigen",
   "settings.style.sort-issues-by-priority.title": "Tickets nach Priorität sortieren",
+  "settings.style.pin-tracked-issues.title": "Aktive Tickets oben anheften",
   "settings.style.show-tooltips.title": "Tooltips anzeigen",
   "settings.style.time-format.title": "Format für Zeitspannen",
   "settings.save-settings": "Einstellungen speichern",

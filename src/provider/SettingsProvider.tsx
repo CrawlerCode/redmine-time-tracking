@@ -28,6 +28,7 @@ export type Settings = {
     groupIssuesByVersion: boolean;
     showIssuesPriority: boolean;
     sortIssuesByPriority: boolean;
+    pinTrackedIssues: boolean;
     showTooltips: boolean;
     timeFormat: "decimal" | "minutes";
   };
@@ -50,6 +51,7 @@ const defaultSettings: Settings = {
     groupIssuesByVersion: true,
     showIssuesPriority: true,
     sortIssuesByPriority: true,
+    pinTrackedIssues: false,
     showTooltips: true,
     timeFormat: "decimal",
   },

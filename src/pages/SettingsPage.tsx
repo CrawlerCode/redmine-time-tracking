@@ -228,6 +228,7 @@ const SettingsPage = () => {
                     <Field type="checkbox" name="style.groupIssuesByVersion" title={formatMessage({ id: "settings.style.group-issues-by-version.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.showIssuesPriority" title={formatMessage({ id: "settings.style.show-issues-priority.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.sortIssuesByPriority" title={formatMessage({ id: "settings.style.sort-issues-by-priority.title" })} as={CheckBox} />
+                    <Field type="checkbox" name="style.pinTrackedIssues" title={formatMessage({ id: "settings.style.pin-tracked-issues.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.showTooltips" title={formatMessage({ id: "settings.style.show-tooltips.title" })} as={CheckBox} />
                     <Field
                       name="style.timeFormat"
@@ -257,7 +258,7 @@ const SettingsPage = () => {
                   </div>
                 </Fieldset>
 
-                <Button type="submit" disabled={isSubmitting} className="mt-2">
+                <Button type="submit" disabled={isSubmitting || Object.keys(errors).length > 0} className="mt-2">
                   <FormattedMessage id="settings.save-settings" />
                 </Button>
               </div>
