@@ -62,6 +62,7 @@ const Filter = ({ children }: PropTypes) => {
               isMulti
               isClearable
               closeMenuOnSelect={false}
+              menuPortalTarget={document.body}
             />
             <CheckBox
               title={formatMessage({ id: "issues.filter.hide-completed-issues.title" })}
