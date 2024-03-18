@@ -44,7 +44,7 @@ Tested with Google Chrome Version 121
 
 - English
 - German
-- Russian (thanks [@Develop-FM](https://github.com/Develop-FM))
+- Russian (thanks [@ASM-Development](https://github.com/ASM-Development))
 
 > If you want to add more languages or extend existing ones, feel free to contribute. Just create a pull request with the desired changes. The language files are located under [src/lang](src/lang) and [public/\_locales](public/_locales).
 
