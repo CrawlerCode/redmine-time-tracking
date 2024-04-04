@@ -36,8 +36,9 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
 
   return (
     <>
-      {groupedIssues.map(({ project, versions, groups }) => (
-        <Fragment key={project.id}>
+      {groupedIssues.map(({ type, project, versions, groups }) => (
+        <Fragment key={type}>
+          {project && (
           <div
             className={clsx("flex justify-between gap-x-2", {
               "sticky top-0 z-[5] -mx-2 -my-1 bg-white px-2 py-1 shadow shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
@@ -52,6 +53,7 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
               </button>
             )}
           </div>
+          )}
           {groups.map(({ type, version, issues }) => (
             <Fragment key={`${type}-${version?.id}`}>
               {settings.style.groupIssuesByVersion && versions.length > 0 && ["version", "no-version"].includes(type) && (

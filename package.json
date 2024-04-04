@@ -1,7 +1,7 @@
 {
   "name": "redmine-time-tracking",
   "description": "Redmine Time Tracking",
-  "version": "1.16.0",
+  "version": "1.16.1",
   "author": {
     "name": "CrawlerCode",
     "email": "crawlercode@outlook.de"
@@ -12,7 +12,7 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "tsc && vite build --watch",
+    "dev": "node scripts/updateVersion.js && tsc && vite build --watch",
     "build": "node scripts/updateVersion.js && tsc && vite build",
     "pack": "node scripts/pack.js",
     "release": "gh release create v%npm_package_version% release/redmine-time-tracking-v%npm_package_version%.zip --notes-file release_notes.md --generate-notes",
