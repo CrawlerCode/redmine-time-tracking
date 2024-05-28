@@ -39,20 +39,20 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
       {groupedIssues.map(({ type, project, versions, groups }) => (
         <Fragment key={type}>
           {project && (
-          <div
-            className={clsx("flex justify-between gap-x-2", {
-              "sticky top-0 z-[5] -mx-2 -my-1 bg-white px-2 py-1 shadow shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
-            })}
-          >
-            <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs text-slate-500 hover:underline dark:text-slate-300">
-              {project.name}
-            </a>
-            {onSearchInProject && (
-              <button type="button" className="text-gray-900 dark:text-white" onClick={() => onSearchInProject(project)} tabIndex={-1}>
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </button>
-            )}
-          </div>
+            <div
+              className={clsx("flex justify-between gap-x-2", {
+                "sticky top-0 z-[5] -mx-2 -my-1 bg-background px-2 py-1 shadow shadow-background": settings.style.stickyScroll,
+              })}
+            >
+              <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs hover:underline">
+                {project.name}
+              </a>
+              {onSearchInProject && (
+                <button type="button" onClick={() => onSearchInProject(project)} tabIndex={-1}>
+                  <FontAwesomeIcon icon={faMagnifyingGlass} />
+                </button>
+              )}
+            </div>
           )}
           {groups.map(({ type, version, issues }) => (
             <Fragment key={`${type}-${version?.id}`}>
@@ -61,13 +61,10 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
                   {version && <VersionTooltip version={version} />}
                   <div
                     className={clsx({
-                      "shadow- sticky top-6 z-[5] -mx-2 -my-1 bg-white px-2 py-1 shadow shadow-white dark:bg-gray-800 dark:shadow-gray-800": settings.style.stickyScroll,
+                      "shadow- sticky top-6 z-[5] -mx-2 -my-1 bg-background px-2 py-1 shadow shadow-background": settings.style.stickyScroll,
                     })}
                   >
-                    <span
-                      className="w-fit truncate rounded border border-gray-300 bg-gray-100 px-1.5 text-xs text-gray-800 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300"
-                      data-tooltip-id={`tooltip-version-${version?.id}`}
-                    >
+                    <span className="w-fit truncate rounded bg-background-inner px-1.5 text-xs text-gray-950 dark:text-gray-300" data-tooltip-id={`tooltip-version-${version?.id}`}>
                       {type === "version" && version && (
                         <a href={`${settings.redmineURL}/versions/${version.id}`} target="_blank" tabIndex={-1} className="hover:underline">
                           {version.name}

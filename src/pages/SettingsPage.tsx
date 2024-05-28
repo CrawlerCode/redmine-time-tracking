@@ -135,7 +135,7 @@ const SettingsPage = () => {
                             <p className="flex items-center gap-x-1.5">
                               {myAccount.isLoading ? (
                                 <>
-                                  <Indicator variant="primary" />
+                                  <Indicator variant="loading" />
                                   <FormattedMessage id="settings.redmine.connecting" />
                                 </>
                               ) : myAccount.isError ? (

@@ -19,7 +19,7 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title
       {title && (
         <label
           htmlFor={id}
-          className={clsx("mb-1 block font-medium text-gray-900 dark:text-white", {
+          className={clsx("mb-1 block font-medium", {
             "text-xs": size === "sm",
             "text-sm": size === "md",
           })}
@@ -37,9 +37,9 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title
           required={false}
           className={clsx(
             "block w-full rounded-lg text-sm",
-            "border border-gray-300 bg-gray-50 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400",
-            "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
-            "dark:autofill:shadow-fill-gray-700 dark:autofill:text-fill-white",
+            "placeholder:text-field-placeholder border border-field-border bg-field",
+            "focus:outline-none focus:ring-2 focus:ring-primary-focus",
+            "dark:autofill:shadow-fill-field-DEFAULT dark:autofill:text-fill-white",
             {
               "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
               "pl-8": !!icon,
@@ -52,7 +52,7 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title
         />
         {extraText && (
           <span
-            className={clsx("absolute whitespace-nowrap rounded bg-gray-100 font-medium text-gray-800 dark:bg-gray-600 dark:text-gray-400", {
+            className={clsx("absolute whitespace-nowrap rounded bg-field-inner font-medium text-gray-800 dark:text-gray-400", {
               "right-1.5 top-1.5 px-2.5 py-0.5": size === "sm",
               "right-2.5 top-2 px-3.5 py-1": size === "md",
             })}

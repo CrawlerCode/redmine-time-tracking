@@ -72,7 +72,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
             <p className="text-sm font-semibold">{formatHours(previewHours)}</p>
           </Tooltip>
           <div
-            className="h-4 rounded bg-primary/50"
+            className="h-4 rounded bg-primary opacity-50"
             style={{
               width: `${(previewHours / maxHours) * 100}%`,
               backgroundSize: "1rem 1rem",

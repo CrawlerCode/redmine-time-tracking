@@ -16,7 +16,7 @@ const TextareaField = ({ size = "md", title, error, value, rows = 3, className, 
       {title && (
         <label
           htmlFor={id}
-          className={clsx("mb-1 block font-medium text-gray-900 dark:text-white", {
+          className={clsx("mb-1 block font-medium", {
             "text-xs": size === "sm",
             "text-sm": size === "md",
           })}
@@ -29,16 +29,11 @@ const TextareaField = ({ size = "md", title, error, value, rows = 3, className, 
         {...props}
         id={id}
         required={false}
-        className={clsx(
-          "block w-full rounded-lg text-sm",
-          "border border-gray-300 bg-gray-50 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400",
-          "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
-          {
-            "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
-            "p-1.5": size === "sm",
-            "p-2.5": size === "md",
-          }
-        )}
+        className={clsx("block w-full rounded-lg text-sm", "placeholder:text-field-placeholder border border-field-border bg-field", "focus:outline-none focus:ring-2 focus:ring-primary-focus", {
+          "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
+          "p-1.5": size === "sm",
+          "p-2.5": size === "md",
+        })}
         rows={rows}
       >
         {value}

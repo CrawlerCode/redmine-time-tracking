@@ -24,21 +24,21 @@ const Switch = ({ size = "md", title, name, value, onChange, options, required, 
     <div
       className={clsx(
         {
-          "flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-1 pl-2 dark:border-gray-700 dark:bg-gray-700": title,
+          "flex items-center justify-between rounded-lg border border-field-border bg-field p-1 pl-2": title,
         },
         className
       )}
     >
       {title && (
-        <label className="text-sm font-medium text-gray-900 dark:text-gray-300">
+        <label className="text-sm font-medium">
           {title}
           {required && <FontAwesomeIcon icon={faAsterisk} size="2xs" className="ml-1 text-red-600" />}
         </label>
       )}
 
       <div
-        className={clsxm("flex w-fit items-center gap-x-1 rounded-full border border-gray-200 bg-gray-50 text-gray-900 dark:border-gray-700 dark:bg-gray-700 dark:text-white", {
-          "border-gray-300 bg-gray-200 dark:bg-gray-600": title,
+        className={clsxm("flex w-fit items-center gap-x-1 rounded-full border border-field-border bg-field", {
+          "bg-field-inner": title,
           "p-1": size === "md",
           "p-1.5": size === "lg",
         })}
@@ -47,8 +47,8 @@ const Switch = ({ size = "md", title, name, value, onChange, options, required, 
           <div className="flex justify-center" key={option.value}>
             <button
               type="button"
-              className={clsx("w-full whitespace-nowrap rounded-full", "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800", {
-                "bg-primary-700 text-white dark:bg-primary-600": value === option.value,
+              className={clsx("w-full whitespace-nowrap rounded-full", "focus:outline-none focus:ring-2 focus:ring-primary-focus", {
+                "bg-primary text-white": value === option.value,
                 "p-0.5 px-2": size === "md",
                 "p-1 px-3": size === "lg",
               })}

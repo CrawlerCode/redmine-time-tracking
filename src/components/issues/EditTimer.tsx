@@ -36,8 +36,8 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           max={100}
           className={clsx(
             "w-4 appearance-none rounded-md text-center text-lg",
-            "border border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:placeholder:text-gray-400",
-            "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
+            "placeholder:text-field-placeholder border border-field-border bg-field",
+            "focus:outline-none focus:ring-2 focus:ring-primary-focus",
             initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
           )}
           /**
@@ -73,8 +73,8 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           max={59}
           className={clsx(
             "w-6 appearance-none rounded-md text-center text-lg",
-            "border border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:placeholder:text-gray-400",
-            "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
+            "placeholder:text-field-placeholder border border-field-border bg-field",
+            "focus:outline-none focus:ring-2 focus:ring-primary-focus",
             initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
           )}
           onChange={(e) => {
@@ -105,8 +105,8 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           max={59}
           className={clsx(
             "w-6 appearance-none rounded-md text-center text-lg",
-            "border border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:placeholder:text-gray-400",
-            "focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-800",
+            "placeholder:text-field-placeholder border border-field-border bg-field",
+            "focus:outline-none focus:ring-2 focus:ring-primary-focus",
             initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
           )}
           onChange={(e) => {

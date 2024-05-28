@@ -2,9 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-primary: theme("colors.primary.DEFAULT");
-  --color-primary-900: theme("colors.primary.900");
+@layer base {
+  :root {
+    --color-primary: theme("colors.blue.800");
+    --color-primary-hover: theme("colors.blue.700");
+    --color-primary-disabled: theme("colors.blue.400");
+    --color-primary-focus: theme("colors.blue.400");
+
+    --color-background: theme("colors.white");
+    --color-background-hover: theme("colors.gray.100");
+    --color-background-inner: theme("colors.gray.200");
+
+    --color-text: theme("colors.gray.900");
+
+    --color-text-disabled: theme("colors.gray.300");
+
+    --color-field-bg: theme("colors.gray.100");
+    --color-field-inner: theme("colors.gray.200");
+    --color-field-border: theme("colors.gray.300");
+    --color-field-placeholder: theme("colors.gray.500");
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-primary: theme("colors.blue.700");
+      --color-primary-hover: theme("colors.blue.800");
+      --color-primary-disabled: theme("colors.blue.500");
+      --color-primary-focus: theme("colors.blue.800");
+
+      --color-background: theme("colors.dark.800");
+      --color-background-hover: theme("colors.dark.700");
+      --color-background-inner: theme("colors.dark.600");
+
+      --color-text: theme("colors.white");
+      --color-text-disabled: theme("colors.gray.500");
+
+      --color-field-bg: theme("colors.dark.900");
+      --color-field-inner: theme("colors.dark.800");
+      --color-field-border: theme("colors.dark.600");
+      --color-field-placeholder: theme("colors.gray.500");
+    }
+  }
 }
 
 @layer utilities {
@@ -19,7 +56,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--color-primary-900);
+  background-color: var(--color-primary);
   border-radius: 3px;
 }
 

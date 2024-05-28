@@ -25,11 +25,11 @@ const Button = <T extends React.ElementType = "button">({
           "px-1 py-0.5 text-xs focus:ring-1": size === "xs",
           "px-3 py-2 text-xs focus:ring-2": size === "sm",
           "px-5 py-2.5 text-sm focus:ring-4": size === "md",
-          "bg-primary-700 text-white hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-700": variant === "primary",
-          "text-primary-700 ring-2 hover:bg-primary-700/20 dark:hover:bg-primary-700/30": variant === "outline",
-          "bg-primary-300 hover:bg-primary-300 dark:bg-primary-400 dark:hover:bg-primary-400": props.disabled && variant === "primary",
+          "bg-primary text-white hover:bg-primary-hover": variant === "primary",
+          "text-primary ring-1 ring-primary": variant === "outline",
+          "bg-primary-disabled hover:bg-primary-disabled": props.disabled && variant === "primary",
         },
-        "focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800",
+        "focus:outline-none focus:ring-primary-focus",
         className
       )}
       {...props}

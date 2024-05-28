@@ -61,7 +61,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
                 <div className="w-full border-t text-slate-500 dark:text-slate-300"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-white px-2 text-sm text-slate-500 dark:bg-gray-800 dark:text-slate-300">
+                <span className="bg-background px-2 text-sm text-slate-500 dark:text-slate-300">
                   <FormattedMessage id="issues.extended-search" />
                 </span>
               </div>

@@ -87,7 +87,7 @@ const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>
                 id="issues.search.search-in-project"
                 values={{
                   projectName: inProject.name,
-                  badge: (children) => <span className="truncate rounded-full bg-primary-300 px-1.5 text-xs dark:bg-primary-800">{children}</span>,
+                  badge: (children) => <span className="truncate rounded-full bg-primary px-1.5 text-xs text-white">{children}</span>,
                 }}
               />
               <div className="mr-2 flex grow justify-end">

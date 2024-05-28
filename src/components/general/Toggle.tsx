@@ -15,11 +15,11 @@ const Toggle = ({ size = "md", title, onLabel, offLabel, className, ...props }: 
       <input {...props} id={id} type="checkbox" className="peer sr-only" />
       <div
         className={clsx(
-          "peer relative rounded-full bg-gray-200 after:absolute after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-primary-800",
+          "peer relative rounded-full border border-field-border bg-field after:absolute after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-focus",
           {
-            "h-4 w-7 after:left-[2px] after:top-[2px] after:h-3 after:w-3": size === "sm",
-            "h-5 w-9 after:left-[2px] after:top-[2px] after:h-4 after:w-4": size === "md",
-            "h-6 w-11 after:left-[2px] after:top-[2px] after:h-5 after:w-5": size === "lg",
+            "h-4 w-7 after:left-[1px] after:top-[1px] after:size-3": size === "sm",
+            "h-5 w-9 after:left-[1px] after:top-[1px] after:size-4": size === "md",
+            "h-6 w-11 after:left-[1px] after:top-[1px] after:size-5": size === "lg",
           }
         )}
       >
@@ -48,7 +48,7 @@ const Toggle = ({ size = "md", title, onLabel, offLabel, className, ...props }: 
       </div>
       {title && (
         <span
-          className={clsx("ml-2 font-medium text-gray-900 dark:text-gray-300", {
+          className={clsx("ml-2 font-medium", {
             "text-xs": size === "sm",
             "text-sm": size === "md",
             "text-base": size === "lg",

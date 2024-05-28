@@ -80,7 +80,7 @@ const Filter = ({ children }: PropTypes) => {
 
 const FilterButton = ({ onClick }: { onClick?: MouseEventHandler<HTMLButtonElement> }) => {
   return (
-    <button className="text-sm text-slate-500 dark:text-slate-300" tabIndex={-1} onClick={onClick}>
+    <button className="text-sm" tabIndex={-1} onClick={onClick}>
       <FontAwesomeIcon icon={faSliders} className="mr-1" />
       <FormattedMessage id="issues.filter" />
     </button>
