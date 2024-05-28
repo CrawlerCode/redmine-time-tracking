@@ -1,6 +1,7 @@
-import { faInfoCircle, faServer } from "@fortawesome/free-solid-svg-icons";
+import { faGlobe, faInfoCircle, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "@tanstack/react-query";
+import { DE, FlagComponent, GB, RU } from "country-flag-icons/react/3x2";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -10,7 +11,7 @@ import CheckBox from "../components/general/CheckBox";
 import Fieldset from "../components/general/Fieldset";
 import Indicator from "../components/general/Indicator";
 import InputField from "../components/general/InputField";
-import SelectField from "../components/general/SelectField";
+import ReactSelectFormik from "../components/general/ReactSelectFormik";
 import Switch from "../components/general/Switch";
 import Toast from "../components/general/Toast";
 import useMyAccount from "../hooks/useMyAccount";
@@ -18,6 +19,12 @@ import useSettings from "../hooks/useSettings";
 import { LANGUAGES } from "../provider/IntlProvider";
 import { Settings } from "../provider/SettingsProvider";
 import { formatHoursUsually } from "../utils/date";
+
+const LANGUAGE_FLAGS: Record<(typeof LANGUAGES)[number], FlagComponent> = {
+  en: GB,
+  de: DE,
+  ru: RU,
+};
 
 const SettingsPage = () => {
   const queryClient = useQueryClient();
@@ -46,7 +53,7 @@ const SettingsPage = () => {
         validationSchema={Yup.object({
           redmineURL: Yup.string()
             .required(formatMessage({ id: "settings.redmine.url.validation.required" }))
-            .matches(/^(http|https):\/\/[\w\-\.]+(\.\w+)*(:[0-9]+)?\/?$/, formatMessage({ id: "settings.redmine.url.validation.valid-url" })),
+            .matches(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?\/?$/, formatMessage({ id: "settings.redmine.url.validation.valid-url" })),
           redmineApiKey: Yup.string().required(formatMessage({ id: "settings.redmine.api-key.validation.required" })),
         })}
         onSubmit={(values, { setSubmitting }) => {
@@ -71,15 +78,24 @@ const SettingsPage = () => {
                       title={formatMessage({ id: "settings.general.language" })}
                       placeholder={formatMessage({ id: "settings.general.language" })}
                       required
-                      as={SelectField}
-                    >
-                      <option value="browser">Auto (Browser)</option>
-                      {LANGUAGES.map((lang) => (
-                        <option key={lang} value={lang}>
-                          <FormattedMessage id={`settings.general.language.${lang}`} />
-                        </option>
-                      ))}
-                    </Field>
+                      as={ReactSelectFormik}
+                      options={[
+                        {
+                          label: "Auto (Browser)",
+                          icon: <FontAwesomeIcon icon={faGlobe} />,
+                          value: "browser",
+                        },
+                        ...LANGUAGES.map((lang) => {
+                          const FlagComponent = LANGUAGE_FLAGS[lang];
+                          return {
+                            label: formatMessage({ id: `settings.general.language.${lang}` }),
+                            icon: <FlagComponent className="box-content inline-block h-3 align-[-0.125em]" />,
+                            value: lang,
+                          };
+                        }),
+                      ]}
+                    />
+
                     <a href="https://github.com/CrawlerCode/redmine-time-tracking#supported-languages" target="_blank" tabIndex={-1} className="hover:underline">
                       <FormattedMessage id="settings.general.language.missing-hint" />
                     </a>

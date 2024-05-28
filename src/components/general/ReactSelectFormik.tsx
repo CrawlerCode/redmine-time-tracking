@@ -1,9 +1,9 @@
 import { FormikHandlers } from "formik";
-import { ComponentProps } from "react";
+import { ComponentProps, ReactNode } from "react";
 import { GroupBase, OnChangeValue, PropsValue } from "react-select";
 import ReactSelect from "./ReactSelect";
 
-type Option = { value: number; label: string };
+type Option = { value: number; label: string; icon?: ReactNode };
 
 function ReactSelectFormik<IsMulti extends boolean = false, Group extends GroupBase<Option> = GroupBase<Option>>({
   value: _value,

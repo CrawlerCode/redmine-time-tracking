@@ -1,7 +1,7 @@
 import { faAsterisk } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import Select, { GroupBase, Props } from "react-select";
+import Select, { GroupBase, Props, components } from "react-select";
 
 type PropTypes = {
   title?: string;
@@ -22,11 +22,31 @@ function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group ex
           {props.required && <FontAwesomeIcon icon={faAsterisk} size="2xs" className="ml-1 text-red-600" />}
         </label>
       )}
-      <Select
+      <Select<Option, IsMulti, Group>
         {...props}
         components={{
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,
+          Option: (optionProps) => (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            <components.Option {...optionProps}>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {(optionProps.data as any).icon && <span className="mr-2 inline-block w-5">{(optionProps.data as any).icon}</span>}
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {(optionProps.data as any).label}
+            </components.Option>
+          ),
+          SingleValue: (singleValueProps) => (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            <components.SingleValue {...singleValueProps}>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {(singleValueProps.data as any).icon && <span className="mr-2">{(singleValueProps.data as any).icon}</span>}
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {(singleValueProps.data as any).label}
+            </components.SingleValue>
+          ),
         }}
         unstyled
         classNames={{
