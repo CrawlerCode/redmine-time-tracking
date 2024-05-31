@@ -127,6 +127,8 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
         ]}
       >
         <div
+          role="listitem"
+          data-type="issue"
           className={clsxm(
             "relative block w-full rounded-lg p-1",
             "focus:outline-none focus:ring-4 focus:ring-primary-focus",

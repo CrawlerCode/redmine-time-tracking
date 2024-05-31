@@ -53,7 +53,7 @@ const TimeEntryList = ({ entries }: PropTypes) => {
             .map((d, i) => addDays(d, 6 - i));
           const summedHours = groupedEntries.filter((entries) => days.find((d) => d.getTime() === entries.date.getTime())).reduce((sum, entry) => sum + entry.hours, 0);
           return (
-            <div className="mb-5 flex flex-col gap-y-1" key={i}>
+            <div role="group" className="mb-5 flex flex-col gap-y-1" key={i}>
               <div className="flex items-center gap-x-3">
                 <h1 className="text-lg">
                   {formatDate(monday)} - {formatDate(addDays(monday, 6))}

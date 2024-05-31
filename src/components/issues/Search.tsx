@@ -73,6 +73,7 @@ const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>
           <InputField
             ref={searchRef}
             icon={<FontAwesomeIcon icon={faSearch} />}
+            type="search"
             name="query"
             placeholder={formatMessage({ id: "issues.search" })}
             value={query}

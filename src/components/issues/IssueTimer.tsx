@@ -112,7 +112,16 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
                 <FormattedMessage id="issues.timer.action.start.tooltip" />
               </Tooltip>
             )}
-            <FontAwesomeIcon icon={faPlay} size="2x" className="cursor-pointer text-green-500 focus:outline-none" onClick={onStart} data-tooltip-id={`tooltip-start-timer-${issue.id}`} tabIndex={-1} />
+            <FontAwesomeIcon
+              role="button"
+              data-type="start-timer"
+              icon={faPlay}
+              size="2x"
+              className="cursor-pointer text-green-500 focus:outline-none"
+              onClick={onStart}
+              data-tooltip-id={`tooltip-start-timer-${issue.id}`}
+              tabIndex={-1}
+            />
           </>
         ) : (
           <>
@@ -122,6 +131,8 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
               </Tooltip>
             )}
             <FontAwesomeIcon
+              role="button"
+              data-type="pause-timer"
               icon={faPause}
               size="2x"
               className="cursor-pointer text-red-500 focus:outline-none"
@@ -136,6 +147,8 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
           <Tooltip id={`tooltip-reset-timer-${issue.id}`} place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.reset.tooltip" })} className="italic" />
         )}
         <FontAwesomeIcon
+          role="button"
+          data-type="reset-timer"
           icon={faStop}
           size="2x"
           className="cursor-pointer text-red-500 focus:outline-none"
@@ -148,6 +161,8 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
           <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} content={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })} className="z-10 italic" />
         )}
         <FontAwesomeIcon
+          role="button"
+          data-type="done-timer"
           icon={faCircleCheck}
           size="2x"
           className="cursor-pointer text-green-600 focus:outline-none"

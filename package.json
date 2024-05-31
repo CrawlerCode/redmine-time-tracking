@@ -18,7 +18,8 @@
     "release": "gh release create v%npm_package_version% release/redmine-time-tracking-v%npm_package_version%.zip --notes-file release_notes.md --generate-notes",
     "publish": "pnpm run build && pnpm run pack && pnpm run release",
     "publish:beta": "pnpm run build && pnpm run pack && pnpm run release --prerelease --target beta",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix"
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
+    "test": "playwright test"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
@@ -48,6 +49,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.44.1",
     "@types/chrome": "^0.0.268",
     "@types/node": "^20.12.12",
     "@types/react": "^18.3.2",
@@ -58,6 +60,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "adm-zip": "^0.5.12",
     "autoprefixer": "^10.4.19",
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.2",
@@ -66,6 +69,7 @@
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
+    "sharp": "^0.33.4",
     "tailwindcss": "^3.4.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.4.5",

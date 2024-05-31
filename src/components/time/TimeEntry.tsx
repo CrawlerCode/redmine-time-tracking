@@ -16,7 +16,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
   const sumHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
 
   return (
-    <div className="flex items-center gap-x-0.5">
+    <div role="row" className="flex items-center gap-x-0.5">
       {entries.map((entry) => (
         <Fragment key={entry.id}>
           <Tooltip id={`tooltip-time-entry-${entry.id}`} place="bottom" className="z-10 opacity-100">
@@ -58,6 +58,8 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
             </div>
           </Tooltip>
           <div
+            role="cell"
+            data-type="time-entry"
             className="h-4 rounded bg-primary"
             style={{
               width: `${(entry.hours / maxHours) * 100}%`,

@@ -14,7 +14,7 @@ const Modal = ({ title, children, onClose }: PropTypes) => {
 
   return (
     <div tabIndex={-1} className="fixed inset-0 z-40 flex size-full min-w-[320px] items-center justify-center overflow-y-auto bg-gray-800/50 p-2 animate-in fade-in dark:bg-gray-600/50">
-      <div className="relative max-h-full w-full max-w-md">
+      <div className="relative max-h-full w-full max-w-md" role="dialog">
         <div className="relative rounded-lg bg-background drop-shadow-lg animate-in fade-in zoom-in">
           <div className="p-2.5">
             <div className="mb-2 flex items-start justify-between">
