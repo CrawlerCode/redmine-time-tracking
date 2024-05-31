@@ -50,12 +50,12 @@ Tested with Google Chrome Version 121
 
 # Screenshots
 
-![issues](screenshots/issues-dark.png)
-![settings](screenshots/settings-dark.png)
-![issues-search](screenshots/issues-search-dark.png)
-![issues-create-time-spent](screenshots/issues-create-time-spent-dark.png)
-![issues-context-menu](screenshots/issues-context-menu-dark.png)
-![issues-edit](screenshots/time-dark.png)
+![issues](screenshots/en/dark/issues.png)
+![issues-time](screenshots/en/dark/time.png)
+![settings](screenshots/en/dark/settings.png)
+![issues-search](screenshots/en/dark/issues-search.png)
+![issues-add-spent-time](screenshots/en/dark/issues-add-spent-time.png)
+![issues-context-menu](screenshots/en/dark/issues-context-menu.png)
 
 # Credits
 
