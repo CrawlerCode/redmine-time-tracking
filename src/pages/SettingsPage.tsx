@@ -53,7 +53,7 @@ const SettingsPage = () => {
         validationSchema={Yup.object({
           redmineURL: Yup.string()
             .required(formatMessage({ id: "settings.redmine.url.validation.required" }))
-            .matches(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?\/?$/, formatMessage({ id: "settings.redmine.url.validation.valid-url" })),
+            .matches(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?[\w\-/]*\/?$/, formatMessage({ id: "settings.redmine.url.validation.valid-url" })),
           redmineApiKey: Yup.string().required(formatMessage({ id: "settings.redmine.api-key.validation.required" })),
         })}
         onSubmit={(values, { setSubmitting }) => {
