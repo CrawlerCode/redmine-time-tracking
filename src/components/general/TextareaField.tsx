@@ -28,8 +28,8 @@ const TextareaField = ({ size = "md", title, error, value, rows = 3, className, 
       <textarea
         {...props}
         id={id}
-        required={false}
-        className={clsx("block w-full rounded-lg text-sm", "placeholder:text-field-placeholder border border-field-border bg-field", "focus:outline-none focus:ring-2 focus:ring-primary-focus", {
+        required={false} // Remove html required attribute
+        className={clsx("block w-full rounded-lg text-sm", "border border-field-border bg-field placeholder:text-field-placeholder", "focus:outline-none focus:ring-2 focus:ring-primary-focus", {
           "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
           "p-1.5": size === "sm",
           "p-2.5": size === "md",

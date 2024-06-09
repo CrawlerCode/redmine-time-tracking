@@ -23,28 +23,36 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
           <tbody>
             <tr>
               <th className="text-xs font-medium">
-                <FormattedMessage id="issues.issue-tooltip.status" />:
+                <FormattedMessage id="issues.issue.field.status" />:
               </th>
               <td>{issue.status.name}</td>
             </tr>
             <tr>
               <th className="text-xs font-medium">
-                <FormattedMessage id="issues.issue-tooltip.priority" />:
+                <FormattedMessage id="issues.issue.field.priority" />:
               </th>
               <td>{issue.priority.name}</td>
             </tr>
             {issue.assigned_to && (
               <tr>
                 <th className="text-xs font-medium">
-                  <FormattedMessage id="issues.issue-tooltip.assignee" />:
+                  <FormattedMessage id="issues.issue.field.assignee" />:
                 </th>
                 <td>{issue.assigned_to.name}</td>
+              </tr>
+            )}
+            {issue.category && (
+              <tr>
+                <th className="text-xs font-medium">
+                  <FormattedMessage id="issues.issue.field.category" />:
+                </th>
+                <td>{issue.category.name}</td>
               </tr>
             )}
             {issue.fixed_version && (
               <tr>
                 <th className="text-xs font-medium">
-                  <FormattedMessage id="issues.issue-tooltip.version" />:
+                  <FormattedMessage id="issues.issue.field.version" />:
                 </th>
                 <td>{issue.fixed_version.name}</td>
               </tr>
@@ -52,7 +60,7 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
             {issue.start_date && (
               <tr>
                 <th className="text-xs font-medium">
-                  <FormattedMessage id="issues.issue-tooltip.start-date" />:
+                  <FormattedMessage id="issues.issue.field.start-date" />:
                 </th>
                 <td>{formatDate(parseISO(issue.start_date))}</td>
               </tr>
@@ -60,7 +68,7 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
             {issue.due_date && (
               <tr>
                 <th className="text-xs font-medium">
-                  <FormattedMessage id="issues.issue-tooltip.due-date" />:
+                  <FormattedMessage id="issues.issue.field.due-date" />:
                 </th>
                 <td>{formatDate(parseISO(issue.due_date))}</td>
               </tr>
@@ -68,14 +76,14 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
             {issue.estimated_hours && (
               <tr>
                 <th className="text-xs font-medium">
-                  <FormattedMessage id="issues.issue-tooltip.estimated-time" />:
+                  <FormattedMessage id="issues.issue.field.estimated-time" />:
                 </th>
                 <td>{formatHours(issue.estimated_hours)}</td>
               </tr>
             )}
             <tr>
               <th className="text-xs font-medium">
-                <FormattedMessage id="issues.issue-tooltip.spent-time" />:
+                <FormattedMessage id="issues.issue.field.spent-time" />:
               </th>
               <td>{formatHours(issue.spent_hours)}</td>
             </tr>

@@ -225,7 +225,7 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
       {settings.style.showTooltips && (
         <Tooltip id={`tooltip-toggle-timer-${issue.id}`} place="bottom" delayShow={4000} className="z-10 max-w-[275px] italic">
           <FormattedMessage
-            id="issues.action.toggle-timer.tooltip"
+            id="issues.timer.action.toggle.tooltip"
             values={{
               KBD: (children) => <KBD>{children}</KBD>,
             }}

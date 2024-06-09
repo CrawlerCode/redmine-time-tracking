@@ -1,4 +1,4 @@
-import { FormikHandlers } from "formik";
+import { FormikHandlers, getIn } from "formik";
 import { ComponentProps, ReactNode } from "react";
 import { GroupBase, OnChangeValue, PropsValue } from "react-select";
 import ReactSelect from "./ReactSelect";
@@ -76,5 +76,18 @@ function ReactSelectFormik<IsMulti extends boolean = false, Group extends GroupB
     />
   );
 }
+
+// update the FastField component if isLoading or options changed
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const shouldUpdate = (nextProps: any, currentProps: any) =>
+  nextProps.isLoading !== currentProps.isLoading ||
+  nextProps.options !== currentProps.options ||
+  // formik's default shouldUpdate
+  nextProps.name !== currentProps.name ||
+  nextProps.formik.isSubmitting !== currentProps.formik.isSubmitting ||
+  Object.keys(nextProps).length !== Object.keys(currentProps).length ||
+  getIn(nextProps.formik.values, currentProps.name) !== getIn(currentProps.formik.values, currentProps.name) ||
+  getIn(nextProps.formik.errors, currentProps.name) !== getIn(currentProps.formik.errors, currentProps.name) ||
+  getIn(nextProps.formik.touched, currentProps.name) !== getIn(currentProps.formik.touched, currentProps.name);
 
 export default ReactSelectFormik;

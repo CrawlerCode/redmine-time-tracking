@@ -1,7 +1,7 @@
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import useIssuePriorities from "../../hooks/useIssuePriorities";
 import useProjectVersions from "../../hooks/useProjectVersions";
@@ -9,6 +9,7 @@ import useSettings from "../../hooks/useSettings";
 import useStorage from "../../hooks/useStorage";
 import { TAccount, TIssue, TReference } from "../../types/redmine";
 import { getGroupedIssues, getSortedIssues } from "../../utils/issue";
+import CreateIssueModal from "./CreateIssueModal";
 import Issue from "./Issue";
 import { IssueTimerData } from "./IssueTimer";
 import VersionTooltip from "./VersionTooltip";
@@ -34,6 +35,8 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
 
   const groupedIssues = getGroupedIssues(getSortedIssues(rawIssues, settings.style.sortIssuesByPriority ? issuePriorities.data : [], issuesData), projectVersions?.data ?? {}, issuesData, settings);
 
+  const [createIssue, setCreateIssue] = useState<number | undefined>(undefined);
+
   return (
     <>
       {groupedIssues.map(({ type, project, versions, groups }) => (
@@ -47,11 +50,17 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
               <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs hover:underline">
                 {project.name}
               </a>
-              {onSearchInProject && (
-                <button type="button" onClick={() => onSearchInProject(project)} tabIndex={-1}>
-                  <FontAwesomeIcon icon={faMagnifyingGlass} />
+
+              <div className="flex gap-x-2">
+                <button type="button" onClick={() => setCreateIssue(project.id)} tabIndex={-1}>
+                  <FontAwesomeIcon icon={faPlus} />
                 </button>
-              )}
+                {onSearchInProject && (
+                  <button type="button" onClick={() => onSearchInProject(project)} tabIndex={-1}>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} />
+                  </button>
+                )}
+              </div>
             </div>
           )}
           {groups.map(({ type, version, issues }) => (
@@ -211,9 +220,10 @@ const IssuesList = ({ account, issues: rawIssues, issuePriorities, projectVersio
       ))}
       {groupedIssues.length === 0 && (
         <p className="text-center">
-          <FormattedMessage id="issues.list.no-issues" />
+          <FormattedMessage id="issues.list.no-options" />
         </p>
       )}
+      {createIssue !== undefined && <CreateIssueModal projectId={createIssue} onClose={() => setCreateIssue(undefined)} onSuccess={() => setCreateIssue(undefined)} />}
     </>
   );
 };

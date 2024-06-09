@@ -1,6 +1,6 @@
 import { IssuesData } from "../components/issues/IssuesList";
 import { Settings } from "../provider/SettingsProvider";
-import { TIssue, TIssuesPriority, TReference, TVersion } from "../types/redmine";
+import { TIssue, TIssuePriority, TReference, TVersion } from "../types/redmine";
 
 type GroupType = "pinned" | "version" | "no-version";
 
@@ -48,7 +48,7 @@ type GroupedIssuesHelper = Record<
   }
 >;
 
-export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuesPriority[], issuesData: IssuesData) => {
+export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuePriority[], issuesData: IssuesData) => {
   const issuePrioritiesIndices = issuePriorities.reduce((result: Record<number, number>, priority, index) => {
     result[priority.id] = index;
     return result;

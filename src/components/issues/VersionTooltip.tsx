@@ -21,14 +21,14 @@ const VersionTooltip = ({ version }: PropTypes) => {
           <tbody>
             <tr>
               <th className="text-xs font-medium">
-                <FormattedMessage id="issues.version-tooltip.status" />:
+                <FormattedMessage id="issues.version.field.status" />:
               </th>
               <td>{version.status}</td>
             </tr>
             {version.due_date && (
               <tr>
                 <th className="text-xs font-medium">
-                  <FormattedMessage id="issues.version-tooltip.due-date" />:
+                  <FormattedMessage id="issues.version.field.due-date" />:
                 </th>
                 <td>{formatDate(parseISO(version.due_date))}</td>
               </tr>

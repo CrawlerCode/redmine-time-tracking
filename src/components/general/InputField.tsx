@@ -34,10 +34,10 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title
           ref={ref}
           {...props}
           id={id}
-          required={false}
+          required={false} // Remove html required attribute
           className={clsx(
             "block w-full rounded-lg text-sm",
-            "placeholder:text-field-placeholder border border-field-border bg-field",
+            "border border-field-border bg-field placeholder:text-field-placeholder",
             "focus:outline-none focus:ring-2 focus:ring-primary-focus",
             "dark:autofill:shadow-fill-field-DEFAULT dark:autofill:text-fill-white",
             {

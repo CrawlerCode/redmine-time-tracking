@@ -17,7 +17,7 @@ const useIssuePriorities = ({ enabled = true }: Options = {}) => {
     enabled: enabled,
   });
 
-  const priorities = issuePrioritiesQuery.data?.filter((priority) => priority.active) ?? [];
+  const priorities = issuePrioritiesQuery.data?.filter((priority) => priority.active !== false) ?? [];
 
   /**
    * Find priority types
@@ -56,6 +56,7 @@ const useIssuePriorities = ({ enabled = true }: Options = {}) => {
     data: priorities,
     isLoading: issuePrioritiesQuery.isLoading,
     isError: issuePrioritiesQuery.isError,
+    defaultPriority: normal,
     getPriorityType,
   };
 };

@@ -6,24 +6,24 @@ type Options = {
   enabled?: boolean;
 };
 
-const useProjectVersions = (ids: number[], { enabled = true }: Options = {}) => {
+const useProjectVersions = (projectIds: number[], { enabled = true }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
-  const versionsQuery = useQueries({
-    queries: ids.map((id) => ({
-      queryKey: ["versions", id],
+  const versionsQueries = useQueries({
+    queries: projectIds.map((id) => ({
+      queryKey: ["projectVersions", id],
       queryFn: () => redmineApi.getProjectVersions(id),
-      enabled: enabled && ids.length > 0,
+      enabled: enabled,
     })),
   });
 
-  const versions = versionsQuery.reduce((result: Record<number, TVersion[]>, query, i) => {
+  const versions = versionsQueries.reduce((result: Record<number, TVersion[]>, query, i) => {
     if (!enabled) return {};
 
-    result[ids[i]] = query.data ?? [];
+    result[projectIds[i]] = query.data ?? [];
 
     // Sort oldest version first. Versions without date, last
-    result[ids[i]].sort(
+    result[projectIds[i]].sort(
       (a, b) =>
         (b.due_date ? 1 : 0) - (a.due_date ? 1 : 0) || new Date(a.due_date ?? 0).getTime() - new Date(b.due_date ?? 0).getTime() || (b.status === "open" ? 1 : 0) - (a.status === "open" ? 1 : 0)
     );
@@ -33,8 +33,8 @@ const useProjectVersions = (ids: number[], { enabled = true }: Options = {}) => 
 
   return {
     data: versions,
-    isLoading: versionsQuery.some((q) => q.isLoading),
-    isError: versionsQuery.some((q) => q.isError),
+    isLoading: versionsQueries.some((q) => q.isLoading),
+    isError: versionsQueries.some((q) => q.isError),
   };
 };
 

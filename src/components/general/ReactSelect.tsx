@@ -4,11 +4,13 @@ import clsx from "clsx";
 import Select, { GroupBase, Props, components } from "react-select";
 
 type PropTypes = {
+  size?: "sm" | "md";
   title?: string;
   error?: string;
 };
 
 function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group extends GroupBase<Option> = GroupBase<Option>>({
+  size = "md",
   title,
   error,
   className,
@@ -17,13 +19,22 @@ function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group ex
   return (
     <div className={className}>
       {title && (
-        <label className="mb-1 block text-sm font-medium">
+        <label
+          className={clsx("mb-1 block text-sm font-medium", {
+            "text-xs": size === "sm",
+            "text-sm": size === "md",
+          })}
+        >
           {title}
           {props.required && <FontAwesomeIcon icon={faAsterisk} size="2xs" className="ml-1 text-red-600" />}
         </label>
       )}
       <Select<Option, IsMulti, Group>
+        maxMenuHeight={200}
+        menuPlacement="auto"
         {...props}
+        isClearable={props.isClearable ?? !props.required}
+        required={false} // Remove html required attribute
         components={{
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,
@@ -51,7 +62,9 @@ function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group ex
         unstyled
         classNames={{
           control: (state) =>
-            clsx("block w-full rounded-lg border border-field-border bg-field p-2 text-sm", {
+            clsx("block w-full rounded-lg border border-field-border bg-field text-sm", {
+              "!min-h-[unset] p-1.5": size === "sm",
+              "p-2.5": size === "md",
               "outline-none ring-2 ring-primary-focus": state.isFocused,
               "border-red-500 text-red-900 dark:border-red-500 dark:text-red-500": error !== undefined,
             }),

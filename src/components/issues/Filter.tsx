@@ -49,7 +49,7 @@ const Filter = ({ children }: PropTypes) => {
             <ReactSelect
               title={formatMessage({ id: "issues.filter.projects" })}
               placeholder={formatMessage({ id: "issues.filter.projects" })}
-              noOptionsMessage={() => formatMessage({ id: "issues.filter.projects.no-projects" })}
+              noOptionsMessage={() => formatMessage({ id: "issues.filter.projects.no-options" })}
               options={projects.map((project) => ({ value: project.id, label: project.name }))}
               isLoading={isLoadingProjects}
               value={filter.projects.map((id) => ({ value: id, label: projects.find((p) => p.id === id)?.name ?? "..." }))}
