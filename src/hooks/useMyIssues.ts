@@ -66,7 +66,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     queryFn: () => redmineApi.searchOpenIssues(debouncedSearch),
     enabled: extendedSearching && !debouncedSearch.includes("#"),
     placeholderData: keepPreviousData,
-    staleTime: -1,
+    staleTime: 0,
   });
   const extendedSearchIssuesResultIds = (extendedSearchIssuesResultQuery.data?.map((result) => result.id) ?? []).filter((id) => !issues.find((issue) => issue.id === id));
   if (extendedSearching && extendedSearchIssueIdMatch) {
@@ -77,7 +77,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     queryKey: ["extendedSearchIssues", extendedSearchIssuesResultIds],
     queryFn: () => redmineApi.getOpenIssuesByIds(extendedSearchIssuesResultIds, 0, search.inProject ? 100 : MAX_EXTENDED_SEARCH_LIMIT),
     enabled: extendedSearchIssuesResultIds.length > 0,
-    staleTime: -1,
+    staleTime: 0,
   });
 
   const extendedSearchIssuesList =

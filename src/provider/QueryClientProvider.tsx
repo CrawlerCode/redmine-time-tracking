@@ -1,7 +1,8 @@
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { ReactNode } from "react";
+import { ReactNode, Suspense, lazy, useEffect } from "react";
+import useStorage from "../hooks/useStorage";
 
 type PropTypes = {
   children: ReactNode;
@@ -25,10 +26,24 @@ const persister = createAsyncStoragePersister({
     setItem: (key, value) => chrome.storage.local.set({ [key]: value }),
     removeItem: (key) => chrome.storage.local.remove(key),
   },
-  throttleTime: 3000,
+  throttleTime: 1000,
 });
 
+const ReactQueryDevtoolsProduction = lazy(() =>
+  import("@tanstack/react-query-devtools/build/modern/production.js").then((d) => ({
+    default: d.ReactQueryDevtools,
+  }))
+);
+
 const QueryClientProvider = ({ children }: PropTypes) => {
+  const { data: showDevtools, setData: setShowDevtools } = useStorage("tanstackQueryDevtools", false);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    window.toggleDevtools = () => setShowDevtools(!showDevtools);
+  }, [showDevtools, setShowDevtools]);
+
   return (
     <PersistQueryClientProvider
       client={queryClient}
@@ -39,6 +54,11 @@ const QueryClientProvider = ({ children }: PropTypes) => {
       }}
     >
       {children}
+      {showDevtools && (
+        <Suspense fallback={null}>
+          <ReactQueryDevtoolsProduction />
+        </Suspense>
+      )}
     </PersistQueryClientProvider>
   );
 };
