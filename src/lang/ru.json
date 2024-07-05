@@ -80,6 +80,8 @@
   "issues.modal.reset-timer.cancel": "Нет, отменить",
   "issues.modal.reset-timer.reset": "Yes, reset timer",
   "issues.modal.add-issue.title": "Add issue",
+  "issues.modal.add-issue.tracker-with-no-enabled-fields.warning": "It seems that you are using a Redmine version < 5.0.0. It is possible that some fields are not applied",
+  "issues.modal.add-issue.unknown-workflow-permissions.warning": "It is possible that some fields are not applied due to missing permissions in Redmine. There is currently no way to check these permissions",
   "issues.modal.add-issue.submit": "Create",
   "issues.error.fail-to-load-issues": "Не удалось загрузить задачи",
 
@@ -132,6 +134,8 @@
   "settings.settings-saved": "Настройки сохранены!",
   "settings.info.version": "Версия: {version}",
   "settings.info.report-an-issue": "Сообщить о проблеме",
+
+  "dismissible-warning.dont-show-again": "Don't show again",
 
   "general.no-options": "No options",
   "format.hours": "{hours} ч"

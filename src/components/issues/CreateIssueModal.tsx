@@ -13,6 +13,7 @@ import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { TCreateIssue, TRedmineError } from "../../types/redmine";
 import Button from "../general/Button";
 import DateField from "../general/DateField";
+import DismissibleWarning from "../general/DismissableWarning";
 import InputField from "../general/InputField";
 import LoadingSpinner from "../general/LoadingSpinner";
 import Modal from "../general/Modal";
@@ -277,6 +278,16 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
                         ))}
                     </div>
                   </div>
+
+                  {hasTrackerNoEnabledFields && (
+                    <DismissibleWarning name="trackerNoEnabledFields">
+                      <FormattedMessage id="issues.modal.add-issue.tracker-with-no-enabled-fields.warning" />
+                    </DismissibleWarning>
+                  )}
+
+                  <DismissibleWarning name="unknownWorkflowPermissions">
+                    <FormattedMessage id="issues.modal.add-issue.unknown-workflow-permissions.warning" />
+                  </DismissibleWarning>
 
                   <Button type="submit" disabled={isSubmitting} className="flex items-center justify-center gap-x-2">
                     <FormattedMessage id="issues.modal.add-issue.submit" />
