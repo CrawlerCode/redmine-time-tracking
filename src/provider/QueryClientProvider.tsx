@@ -13,7 +13,6 @@ const CACHE_TIME = 1000 * 60 * 60 * 24; // 24 hours
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: true,
       gcTime: CACHE_TIME,
       staleTime: 1000 * 60 * 60, // 1 hour
     },

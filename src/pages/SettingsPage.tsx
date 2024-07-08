@@ -37,7 +37,7 @@ const SettingsPage = () => {
   const [editRedmineInstance, setEditRedmineInstance] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const myAccount = useMyAccount();
+  const myAccount = useMyAccount({ staleTime: 1000 * 10 });
 
   useEffect(() => {
     formik.current?.setValues(settings);
@@ -299,8 +299,8 @@ const Info = () => {
           legend={
             <>
               <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline">
-        {name}
-      </a>
+                {name}
+              </a>
               <span className="mx-1 text-xs">-</span>
               <a href="https://github.com/CrawlerCode/redmine-time-tracking/releases" target="_blank" tabIndex={-1} className="hover:underline">
                 v{version_name || version}
@@ -314,11 +314,11 @@ const Info = () => {
               GitHub
             </a>
 
-      <a href="https://github.com/CrawlerCode/redmine-time-tracking/issues" target="_blank" tabIndex={-1} className="hover:underline">
+            <a href="https://github.com/CrawlerCode/redmine-time-tracking/issues" target="_blank" tabIndex={-1} className="hover:underline">
               <FontAwesomeIcon icon={faBug} className="mr-1" />
-        <FormattedMessage id="settings.info.report-an-issue" />
-      </a>
-    </div>
+              <FormattedMessage id="settings.info.report-an-issue" />
+            </a>
+          </div>
         </Fieldset>
       </div>
     </>
