@@ -1,11 +1,11 @@
-![Package Version](https://img.shields.io/github/package-json/v/CrawlerCode/redmine-time-tracking)
-![License](https://img.shields.io/github/license/CrawlerCode/redmine-time-tracking)
+![Package Version](https://img.shields.io/github/package-json/v/CrawlerCode/redmine-time-tracking?logo=github)
+![License](https://img.shields.io/github/license/CrawlerCode/redmine-time-tracking?logo=github)
 ![GitHub Release Date](https://img.shields.io/github/release-date/CrawlerCode/redmine-time-tracking?logo=github)
-![GitHub issues](https://img.shields.io/github/issues/CrawlerCode/redmine-time-tracking)
+![GitHub issues](https://img.shields.io/github/issues/CrawlerCode/redmine-time-tracking?logo=github)
 
-![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/ldcanhhkffokndenejhafhlkapflgcjg?logo=google-chrome)
-![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldcanhhkffokndenejhafhlkapflgcjg)
-![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/stars/ldcanhhkffokndenejhafhlkapflgcjg)
+![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/ldcanhhkffokndenejhafhlkapflgcjg?logo=google-chrome&logoColor=white)
+![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldcanhhkffokndenejhafhlkapflgcjg?logo=google-chrome&logoColor=white)
+![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/stars/ldcanhhkffokndenejhafhlkapflgcjg?logo=google-chrome&logoColor=white)
 
 # Redmine Time Tracking (Chrome Extensions)
 
@@ -13,7 +13,7 @@
 
 [![Install Button]][Install Link]
 
-[Install Button]: https://img.shields.io/badge/Install-71b500?style=for-the-badge&logoColor=white&logo=DocuSign
+[Install Button]: https://img.shields.io/badge/Install-71b500?style=for-the-badge&logoColor=white&logo=google-chrome
 [Install Link]: https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg "Open in chrome web store"
 
 # Features
