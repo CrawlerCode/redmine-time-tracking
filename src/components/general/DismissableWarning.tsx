@@ -14,7 +14,7 @@ function DismissibleWarning({ name, children }: PropTypes) {
   if (hideWarning || isLoading) return null;
 
   return (
-    <p className="rounded-lg border border-background-inner p-1" role="alert">
+    <p className="rounded-lg border border-gray-200 p-1 dark:border-gray-700" role="alert">
       <FontAwesomeIcon icon={faWarning} className="mr-1 text-yellow-500 dark:text-yellow-400" />
       <span className="mr-1">{children}</span>
       <button className="text-blue-500 underline dark:text-blue-400" onClick={() => setData(true)}>

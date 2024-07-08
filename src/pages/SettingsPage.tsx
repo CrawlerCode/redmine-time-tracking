@@ -1,4 +1,5 @@
-import { faGlobe, faInfoCircle, faServer } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faBug, faGlobe, faInfoCircle, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "@tanstack/react-query";
 import { DE, FlagComponent, GB, RU } from "country-flag-icons/react/3x2";
@@ -290,20 +291,37 @@ const SettingsPage = () => {
 
 const Info = () => {
   const { name, version, version_name } = chrome.runtime.getManifest();
+
   return (
-    <div className="mt-3 flex w-full flex-col items-center gap-y-2 p-2">
-      <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="font-semibold hover:underline">
+    <>
+      <div className="mt-10">
+        <Fieldset
+          legend={
+            <>
+              <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline">
         {name}
       </a>
-
-      <Button variant="outline" size="xs" as="a" href="https://github.com/CrawlerCode/redmine-time-tracking/releases" target="_blank" tabIndex={-1}>
-        <FormattedMessage id="settings.info.version" values={{ version: version_name || version }} />
-      </Button>
+              <span className="mx-1 text-xs">-</span>
+              <a href="https://github.com/CrawlerCode/redmine-time-tracking/releases" target="_blank" tabIndex={-1} className="hover:underline">
+                v{version_name || version}
+              </a>
+            </>
+          }
+        >
+          <div className="flex items-center justify-around p-3">
+            <a href="https://github.com/CrawlerCode/redmine-time-tracking" target="_blank" tabIndex={-1} className="hover:underline">
+              <FontAwesomeIcon icon={faGithub} className="mr-1" />
+              GitHub
+            </a>
 
       <a href="https://github.com/CrawlerCode/redmine-time-tracking/issues" target="_blank" tabIndex={-1} className="hover:underline">
+              <FontAwesomeIcon icon={faBug} className="mr-1" />
         <FormattedMessage id="settings.info.report-an-issue" />
       </a>
     </div>
+        </Fieldset>
+      </div>
+    </>
   );
 };
 
