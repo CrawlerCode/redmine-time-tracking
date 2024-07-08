@@ -6,15 +6,6 @@ export type Settings = {
   language: string;
   redmineURL: string;
   redmineApiKey: string;
-  options?: {
-    // TODO: Remove me after a while
-    autoPauseOnSwitch: boolean;
-    extendedSearch: boolean;
-    roundTimeNearestQuarterHour: boolean;
-    addSpentTimeForOtherUsers: boolean;
-    cacheComments: boolean;
-    addNotes: boolean;
-  };
   features: {
     autoPauseOnSwitch: boolean;
     extendedSearch: boolean;
@@ -65,13 +56,6 @@ const SettingsContext = createContext({
 
 const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const { data, setData } = useStorage<Settings>("settings", defaultSettings);
-
-  // Convert old settings format // TODO: Remove me after a while
-  if (data.options && data.redmineURL) {
-    data.features = data.options;
-    delete data.options;
-    setData(data);
-  }
 
   return (
     <SettingsContext.Provider
