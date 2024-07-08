@@ -12,10 +12,10 @@ const VersionTooltip = ({ version }: PropTypes) => {
 
   return (
     <Tooltip id={`tooltip-version-${version.id}`} place="right" className="z-10 opacity-100">
-      <div className="relative max-w-[230px]">
+      <div className="relative max-w-[230px] truncate">
         <p className="mb-3 text-sm font-semibold">
           {version.name} {version.due_date && <>({formatRelativeTime(differenceInDays(parseISO(version.due_date), startOfDay(new Date())), "days")})</>}
-          {version.description && <p className="mt-1 max-w-[180px] truncate text-xs font-normal">{version.description}</p>}
+          {version.description && <p className="mt-1 truncate text-xs font-normal">{version.description}</p>}
         </p>
         <table className="-mx-1 border-separate border-spacing-x-1 text-left text-sm text-gray-300">
           <tbody>

@@ -20,10 +20,10 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
       {entries.map((entry) => (
         <Fragment key={entry.id}>
           <Tooltip id={`tooltip-time-entry-${entry.id}`} place="bottom" className="z-10 opacity-100">
-            <div className="relative max-w-[230px]">
+            <div className="relative max-w-[230px] truncate">
               <p className="mb-3 text-sm font-semibold">
                 {formatHours(entry.hours)}
-                {entry.comments && <p className="mt-1 max-w-[180px] truncate text-xs font-normal">{entry.comments}</p>}
+                {entry.comments && <p className="mt-1 truncate text-xs font-normal">{entry.comments}</p>}
               </p>
               <table className="-mx-1 border-separate border-spacing-x-1 text-left text-sm text-gray-300">
                 <tbody>

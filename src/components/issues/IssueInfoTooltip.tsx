@@ -14,10 +14,10 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
 
   return (
     <Tooltip id={`tooltip-issue-${issue.id}`} place="right" className="z-10 opacity-100">
-      <div className="relative max-w-[230px]">
+      <div className="relative max-w-[230px] truncate">
         <p className="mb-3 text-sm font-semibold">
           {issue.tracker.name} #{issue.id}
-          <p className="mt-1 max-w-[180px] truncate text-xs font-normal">{issue.subject}</p>
+          <p className="mt-1 truncate text-xs font-normal">{issue.subject}</p>
         </p>
         <table className="-mx-1 border-separate border-spacing-x-1 text-left text-sm text-gray-300">
           <tbody>
