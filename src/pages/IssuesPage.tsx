@@ -1,6 +1,6 @@
 import { RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import ChromeBadge from "../components/general/ChromeBadge";
+import BrowserNotificationBadge from "../components/general/BrowserNotificationBadge";
 import Toast from "../components/general/Toast";
 import Filter, { FilterQuery } from "../components/issues/Filter";
 import IssuesList, { IssuesData } from "../components/issues/IssuesList";
@@ -38,7 +38,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
 
   return (
     <>
-      <ChromeBadge backgroundColor="#1d4ed8" text={activeTimerCount > 0 ? activeTimerCount.toString() : ""} />
+      <BrowserNotificationBadge backgroundColor="#1d4ed8" text={activeTimerCount > 0 ? activeTimerCount.toString() : ""} />
 
       <div className="flex flex-col gap-y-2">
         {isLoading && <IssuesListSkeleton />}

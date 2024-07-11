@@ -5,7 +5,7 @@ type PropTypes = {
   backgroundColor: string;
 };
 
-const ChromeBadge = ({ text, backgroundColor }: PropTypes) => {
+const BrowserNotificationBadge = ({ text, backgroundColor }: PropTypes) => {
   useEffect(() => {
     chrome.action.setBadgeBackgroundColor({ color: backgroundColor });
   }, [backgroundColor]);
@@ -19,4 +19,4 @@ const ChromeBadge = ({ text, backgroundColor }: PropTypes) => {
   return null;
 };
 
-export default ChromeBadge;
+export default BrowserNotificationBadge;

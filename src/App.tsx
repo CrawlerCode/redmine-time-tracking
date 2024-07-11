@@ -6,6 +6,8 @@ import { useIntl } from "react-intl";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./components/general/Navbar";
 import Toast from "./components/general/Toast";
+import { clsxm } from "./utils/clsxm";
+import { getPlatform } from "./utils/platform";
 import { createPopOut, getWindowLocationType } from "./utils/popout";
 
 const IssuesPage = lazy(() => import("./pages/IssuesPage"));
@@ -50,9 +52,8 @@ function App() {
         {locationType === "popup" && <FontAwesomeIcon icon={faUpRightFromSquare} size="lg" className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer" onClick={createPopOut} />}
       </header>
       <main
-        className={clsx("overflow-y-scroll", {
-          "h-[500px]": locationType !== "popout",
-          "h-[calc(100vh-3rem)]": locationType === "popout",
+        className={clsxm("h-[500px] overflow-y-scroll", {
+          "h-[calc(100vh-3rem)]": locationType === "popout" || (locationType === "options" && getPlatform() === "Edge"),
         })}
       >
         <div className="p-2">

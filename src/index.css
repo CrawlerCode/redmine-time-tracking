@@ -49,6 +49,20 @@
   input[type="number"].appearance-none::-webkit-outer-spin-button {
     appearance: none;
   }
+  input[type="number"].appearance-none {
+    -moz-appearance: textfield;
+  }
+
+  input[name="done_ratio"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    width: 2px;
+  }
+  input[name="done_ratio"]::-moz-range-thumb {
+    cursor: pointer;
+    width: 2px;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -58,11 +72,4 @@
 ::-webkit-scrollbar-thumb {
   background-color: var(--color-primary);
   border-radius: 3px;
-}
-
-input[name="done_ratio"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  cursor: pointer;
-  width: 2px;
 }
