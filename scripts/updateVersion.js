@@ -7,7 +7,13 @@ try {
   const manifestPath = resolve("public", "manifest.json");
   const manifestContent = JSON.parse(readFileSync(manifestPath, "utf8"));
 
-  manifestContent.version = packageJsonContent.version;
+  if (packageJsonContent.version.includes("-")) {
+    manifestContent.version = packageJsonContent.version.split("-")[0];
+    manifestContent.version_name = packageJsonContent.version;
+  } else {
+    manifestContent.version = packageJsonContent.version;
+    manifestContent.version_name = undefined;
+  }
 
   writeFileSync(manifestPath, JSON.stringify(manifestContent, null, 4));
 

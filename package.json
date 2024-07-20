@@ -1,7 +1,7 @@
 {
   "name": "redmine-time-tracking",
   "description": "Redmine Time Tracking",
-  "version": "1.17.0",
+  "version": "1.17.1",
   "author": {
     "name": "CrawlerCode",
     "email": "crawlercode@outlook.de"
