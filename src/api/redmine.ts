@@ -38,7 +38,7 @@ export class RedmineApi {
   }
 
   async searchOpenIssues(query: string): Promise<TSearchResult[]> {
-    return this.instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&issues=1&open_issues=1`).then((res) => res.data.results);
+    return this.instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&issues=1&open_issues=1`).then((res) => res.data.results); // available since Redmine 3.3.0
   }
 
   async createIssue(issue: TCreateIssue) {

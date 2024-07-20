@@ -103,8 +103,8 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
           {({ isSubmitting, values, touched, errors, setFieldValue }) => {
             const selectedTracker = issueTrackers.data?.find((tracker) => tracker.id === values.tracker_id);
             const hasTrackerNoEnabledFields = selectedTracker && selectedTracker.enabled_standard_fields === undefined;
-            if (selectedTracker && values.status_id !== selectedTracker.default_status.id) {
-              setFieldValue("status_id", selectedTracker.default_status.id);
+            if (selectedTracker && values.status_id !== selectedTracker.default_status?.id) {
+              setFieldValue("status_id", selectedTracker.default_status?.id);
             }
             return (
               <Form>
@@ -138,7 +138,7 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
                       as={ReactSelectFormik}
                       size="sm"
                       options={
-                        selectedTracker
+                        selectedTracker?.default_status
                           ? [
                               {
                                 label: selectedTracker.default_status.name,

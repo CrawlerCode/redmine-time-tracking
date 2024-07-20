@@ -12,7 +12,7 @@ const SpentVsEstimatedTime = ({ issue, previewHours, className, ...props }: Prop
 
   return (
     <>
-      {issue.estimated_hours && (
+      {issue.spent_hours && issue.estimated_hours && (
         <span className={clsx("flex items-center gap-x-1 truncate", className)} {...props}>
           <span
             className={clsx("mb-0.5 truncate font-bold", {

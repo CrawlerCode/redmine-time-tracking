@@ -81,12 +81,14 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
                 <td>{formatHours(issue.estimated_hours)}</td>
               </tr>
             )}
-            <tr>
-              <th className="text-xs font-medium">
-                <FormattedMessage id="issues.issue.field.spent-time" />:
-              </th>
-              <td>{formatHours(issue.spent_hours)}</td>
-            </tr>
+            {issue.spent_hours && (
+              <tr>
+                <th className="text-xs font-medium">
+                  <FormattedMessage id="issues.issue.field.spent-time" />:
+                </th>
+                <td>{formatHours(issue.spent_hours)}</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

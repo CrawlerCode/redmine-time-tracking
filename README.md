@@ -36,7 +36,18 @@
 
 # Requirements
 
-At least Redmine version `4.1.0` or higher required. Recommended version `5.0` or higher. Some features may not work in old Redmine versions.
+At least Redmine version `3.0` or higher required. Recommended version `5.0` or higher.
+
+### Unsupported features by Redmine versions
+
+| Feature                                                                             | Redmine Version |
+| ----------------------------------------------------------------------------------- | --------------- |
+| Only display **enabled** issue field for selected tracker for _creating new issues_ | `< 5.0.0`       |
+| Show spent vs estimated hours                                                       | `< 5.0.0`       |
+| Select the **default fixed version** for _creating new issues_                      | `< 4.1.1`       |
+| Check permissions for admin users who are not members of a project                  | `< 4.0.0`       |
+| Display project-available time entry activities for _adding spent time entries_     | `< 3.4.0`       |
+| Extended search                                                                     | `< 3.3.0`       |
 
 Tested with Google Chrome Version 121
 

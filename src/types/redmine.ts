@@ -26,7 +26,7 @@ export type TIssue = {
   start_date?: string; // YYYY-MM-DD
   due_date?: string; // YYYY-MM-DD
   estimated_hours?: number;
-  spent_hours: number;
+  spent_hours?: number; // available since Redmine 5.0.0
   parent?: {
     id: number;
   };
@@ -64,13 +64,13 @@ export type TIssuePriority = {
   id: number;
   name: string;
   is_default: boolean;
-  active: boolean;
+  active: boolean; // available since Redmine 4.1.0
 };
 
 export type TIssueTracker = {
   id: number;
   name: string;
-  default_status: TReference;
+  default_status?: TReference; // available since Redmine 3.0.0
   description?: string;
   enabled_standard_fields?: ("assigned_to_id" | "category_id" | "fixed_version_id" | "parent_issue_id" | "start_date" | "due_date" | "estimated_hours" | "done_ratio" | "description")[]; // available since Redmine 5.0.0
 };
@@ -89,14 +89,14 @@ export type TProject = {
   name: string;
   description: string;
   identifier: string;
-  inherit_members: boolean;
+  inherit_members: boolean; // available since Redmine 4.1.0
   is_public: boolean;
   status: number;
   parent?: TReference;
-  default_version?: TReference;
+  default_version?: TReference; // available since Redmine 4.1.1
   trackers?: TReference[];
   issue_categories?: TReference[];
-  time_entry_activities?: TReference[];
+  time_entry_activities?: TReference[]; // available since Redmine 3.4.0
   created_on: string;
   updated_on: string;
 };
@@ -153,7 +153,7 @@ export type TTimeEntryActivity = {
   id: number;
   name: string;
   is_default: boolean;
-  active: boolean;
+  active?: boolean; // available since Redmine 4.1.0
 };
 
 export type TCreateTimeEntry = {
@@ -170,9 +170,9 @@ export type TRole = {
   id: number;
   name: string;
   assignable: boolean;
-  issues_visibility: "all" | "default" | "own";
-  time_entries_visibility: "all" | "own";
-  users_visibility: "all" | "members_of_visible_projects";
+  issues_visibility?: "all" | "default" | "own"; // available since Redmine 4.0.0
+  time_entries_visibility?: "all" | "own"; // available since Redmine 4.0.0
+  users_visibility?: "all" | "members_of_visible_projects"; // available since Redmine 4.0.0
   permissions: (
     | "add_project"
     | "edit_project"
@@ -255,7 +255,7 @@ export type TRole = {
 export type TUser = {
   id: number;
   login: string; // username
-  admin: boolean;
+  admin?: boolean; // available since Redmine 4.0.0
   firstname: string;
   lastname: string;
   created_on: string;
