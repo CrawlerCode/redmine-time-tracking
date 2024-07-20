@@ -18,19 +18,16 @@
 
 # Features
 
-- View all your assigned Redmine issues
+- View all your assigned Redmine issues grouped by projects
 - Filter issues by projects
 - Group issues by target version
 - Search for issues (press `CTRL` + `K` or `CTRL` + `F`)
-- Start and stop the timer for your current tasks
-- Create entry for time spent in Redmine issue
-- Create time spent entries for other users
-- Update done ratio
-- Round timer to nearest 15 min
-- Edit timer (double-click)
-- Pin and unpin issue
+- Start, stop and edit the timer for your current tasks
+- Create entry for time spent (and for multiple users at once)
+- Update done ratio for issues
+- Pin and unpin issues (display at the top of the project)
 - Remember and forget issue (not assigned to you)
-- View time entries overview
+- View time entries for current and last week
 - Multiple languages
 - Dark & light mode (system default)
 
@@ -40,16 +37,16 @@ At least Redmine version `3.0` or higher required. Recommended version `5.0` or 
 
 ### Unsupported features by Redmine versions
 
-| Feature                                                                             | Redmine Version |
-| ----------------------------------------------------------------------------------- | --------------- |
-| Only display **enabled** issue field for selected tracker for _creating new issues_ | `< 5.0.0`       |
-| Show spent vs estimated hours                                                       | `< 5.0.0`       |
-| Select the **default fixed version** for _creating new issues_                      | `< 4.1.1`       |
-| Check permissions for admin users who are not members of a project                  | `< 4.0.0`       |
-| Display project-available time entry activities for _adding spent time entries_     | `< 3.4.0`       |
-| Extended search                                                                     | `< 3.3.0`       |
+| Feature                                                                           | Unsupported Redmine version |
+| --------------------------------------------------------------------------------- | --------------------------- |
+| Show only **enabled** issue field for selected tracker when _creating new issues_ | `< 5.0.0`                   |
+| Show spent vs estimated hours                                                     | `< 5.0.0`                   |
+| Select the **default fixed version** when _creating new issues_                   | `< 4.1.1`                   |
+| Check permissions for admin users who are not members of a project                | `< 4.0.0`                   |
+| Display project-available time entry activities when _adding spent time entries_  | `< 3.4.0`                   |
+| Extended search                                                                   | `< 3.3.0`                   |
 
-Tested with Google Chrome Version 121
+_Tested with Google Chrome Version 126_
 
 # Supported languages
 
