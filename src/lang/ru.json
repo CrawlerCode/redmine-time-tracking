@@ -116,8 +116,6 @@
   "settings.features.extended-search.description": "Разрешить поиск по задачам, которые не назначены на вас",
   "settings.features.round-time-nearest-quarter-hour.title": "Округление до ближайших 15 минут",
   "settings.features.round-time-nearest-quarter-hour.description": "Округлять таймер до ближайших 15 минут",
-  "settings.features.add-spent-time-for-other-users.title": "Добавление затраченного времени для других пользователей",
-  "settings.features.add-spent-time-for-other-users.description": "(Требуются разрешения в Redmine)",
   "settings.features.add-notes.title": "Добавление примечаний",
   "settings.features.add-notes.description": "Добавлять примечания в задачи",
   "settings.features.cache-comments.title": "Кеширование комментариев",

@@ -15,7 +15,7 @@ import InputField from "../components/general/InputField";
 import ReactSelectFormik from "../components/general/ReactSelectFormik";
 import Switch from "../components/general/Switch";
 import Toast from "../components/general/Toast";
-import useMyAccount from "../hooks/useMyAccount";
+import useMyUser from "../hooks/useMyUser";
 import useSettings from "../hooks/useSettings";
 import { LANGUAGES } from "../provider/IntlProvider";
 import { Settings } from "../provider/SettingsProvider";
@@ -37,7 +37,7 @@ const SettingsPage = () => {
   const [editRedmineInstance, setEditRedmineInstance] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const myAccount = useMyAccount({ staleTime: 1000 * 10 });
+  const myUser = useMyUser({ staleTime: 1000 * 10 });
 
   useEffect(() => {
     formik.current?.setValues(settings);
@@ -150,17 +150,17 @@ const SettingsPage = () => {
                               {settings.redmineURL}
                             </h3>
                             <p className="flex items-center gap-x-1.5">
-                              {myAccount.isLoading ? (
+                              {myUser.isLoading ? (
                                 <>
                                   <Indicator variant="loading" />
                                   <FormattedMessage id="settings.redmine.connecting" />
                                 </>
-                              ) : myAccount.isError ? (
+                              ) : myUser.isError ? (
                                 <>
                                   <Indicator variant="danger" />
                                   <FormattedMessage id="settings.redmine.connection-failed" />
                                 </>
-                              ) : myAccount.data ? (
+                              ) : myUser.data ? (
                                 <>
                                   <Indicator variant="success" />
                                   <FormattedMessage id="settings.redmine.connection-successful" />
@@ -169,14 +169,14 @@ const SettingsPage = () => {
                                 "Unknown status"
                               )}
                             </p>
-                            {myAccount.data && (
+                            {myUser.data && (
                               <p>
                                 <FormattedMessage
                                   id="settings.redmine.hello-user"
                                   values={{
-                                    firstName: myAccount.data.firstname,
-                                    lastName: myAccount.data.lastname,
-                                    accountName: myAccount.data.login,
+                                    firstName: myUser.data.firstname,
+                                    lastName: myUser.data.lastname,
+                                    accountName: myUser.data.login,
                                     strong: (children) => <strong>{children}</strong>,
                                   }}
                                 />
@@ -213,13 +213,6 @@ const SettingsPage = () => {
                       name="features.roundTimeNearestQuarterHour"
                       title={formatMessage({ id: "settings.features.round-time-nearest-quarter-hour.title" })}
                       description={formatMessage({ id: "settings.features.round-time-nearest-quarter-hour.description" })}
-                      as={CheckBox}
-                    />
-                    <Field
-                      type="checkbox"
-                      name="features.addSpentTimeForOtherUsers"
-                      title={formatMessage({ id: "settings.features.add-spent-time-for-other-users.title" })}
-                      description={formatMessage({ id: "settings.features.add-spent-time-for-other-users.description" })}
                       as={CheckBox}
                     />
                     <Field

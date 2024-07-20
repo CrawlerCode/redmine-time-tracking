@@ -5,7 +5,9 @@ import { FastField, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
-import useMyAccount from "../../hooks/useMyAccount";
+import useMyProjectRoles from "../../hooks/useMyProjectRoles";
+import useMyUser from "../../hooks/useMyUser";
+import useProject from "../../hooks/useProject";
 import useSettings from "../../hooks/useSettings";
 import useStorage from "../../hooks/useStorage";
 import useTimeEntryActivities from "../../hooks/useTimeEntryActivities";
@@ -52,7 +54,9 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
 
   const formik = useRef<FormikProps<TCreateTimeEntryForm>>(null);
 
-  const myAccount = useMyAccount();
+  const myUser = useMyUser();
+  const project = useProject(issue.project.id);
+  const projectRoles = useMyProjectRoles([issue.project.id]);
   const timeEntryActivities = useTimeEntryActivities(issue.project.id);
 
   const cachedComments = useStorage<Record<number, string | undefined>>("cachedComments", _defaultCachedComments);
@@ -60,6 +64,12 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
   useEffect(() => {
     formik.current?.setFieldValue("activity_id", timeEntryActivities.defaultActivity?.id);
   }, [timeEntryActivities.defaultActivity]);
+
+  useEffect(() => {
+    if (myUser.data?.id) {
+      formik.current?.setFieldValue("user_id", [myUser.data.id]);
+    }
+  }, [myUser.data?.id]);
 
   useEffect(() => {
     if (!settings.features.cacheComments) return;
@@ -74,7 +84,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
     mutationFn: (entry: TCreateTimeEntry) => redmineApi.createTimeEntry(entry),
     onSuccess: (_, entry) => {
       // if entry created for me => invalidate query
-      if (!entry.user_id || entry.user_id === myAccount.data?.id) {
+      if (!entry.user_id || entry.user_id === myUser.data?.id) {
         queryClient.invalidateQueries({
           queryKey: ["timeEntries"],
         });
@@ -245,7 +255,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     />
                   </div>
 
-                  {settings.features.addSpentTimeForOtherUsers && (
+                  {projectRoles.hasProjectPermission(project.data ?? issue.project, "log_time_for_other_users") && (
                     <FastField
                       type="select"
                       name="user_id"
@@ -290,6 +300,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                 </Fieldset>
 
                 {settings.features.addNotes &&
+                  projectRoles.hasProjectPermission(project.data ?? issue.project, "add_issue_notes") &&
                   (!values.add_notes ? (
                     <FastField type="checkbox" name="add_notes" title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} as={Toggle} error={touched.add_notes && errors.add_notes} />
                   ) : (
@@ -319,6 +330,17 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
             isAxiosError(createTimeEntryMutation.error)
               ? (createTimeEntryMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (createTimeEntryMutation.error as AxiosError).message
               : (createTimeEntryMutation.error as Error).message
+          }
+        />
+      )}
+      {updateIssueMutation.isError && (
+        <Toast
+          type="error"
+          allowClose={false}
+          message={
+            isAxiosError(updateIssueMutation.error)
+              ? (updateIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateIssueMutation.error as AxiosError).message
+              : (updateIssueMutation.error as Error).message
           }
         />
       )}

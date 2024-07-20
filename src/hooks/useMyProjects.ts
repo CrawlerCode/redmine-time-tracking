@@ -15,6 +15,7 @@ const useMyProjects = ({ enabled = true }: Options = {}) => {
     queryFn: ({ pageParam }) => redmineApi.getAllMyProjects(pageParam * 100, 100),
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     enabled: enabled,
+    select: (data) => data.pages.flat(),
   });
 
   // auto fetch all pages
@@ -22,7 +23,7 @@ const useMyProjects = ({ enabled = true }: Options = {}) => {
     if (projectsQuery.hasNextPage && !projectsQuery.isFetchingNextPage) projectsQuery.fetchNextPage();
   }, [projectsQuery]);
 
-  const projects = projectsQuery.data?.pages?.flat() ?? [];
+  const projects = projectsQuery.data ?? [];
 
   return {
     data: projects,

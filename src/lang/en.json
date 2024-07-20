@@ -116,8 +116,6 @@
   "settings.features.extended-search.description": "Allows to search issues that are not assigned to you",
   "settings.features.round-time-nearest-quarter-hour.title": "Round to nearest 15 min",
   "settings.features.round-time-nearest-quarter-hour.description": "Round timer to nearest quarter hour",
-  "settings.features.add-spent-time-for-other-users.title": "Add spent time for other users",
-  "settings.features.add-spent-time-for-other-users.description": "(Redmine permission required)",
   "settings.features.add-notes.title": "Add notes",
   "settings.features.add-notes.description": "Adding notes to an issue",
   "settings.features.cache-comments.title": "Cache comments",

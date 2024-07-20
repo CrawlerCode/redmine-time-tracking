@@ -1,6 +1,6 @@
 import { ComponentProps, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
-import useMyAccount from "../../../hooks/useMyAccount";
+import useMyUser from "../../../hooks/useMyUser";
 import useProjectUsers from "../../../hooks/useProjectUsers";
 import { getGroupedUsers } from "../../../utils/user";
 import ReactSelectFormik from "../../general/ReactSelectFormik";
@@ -14,7 +14,7 @@ const TimeEntryUsersField = ({ projectId, ...props }: ComponentProps<typeof Reac
 
   const [loadUsers, setLoadUsers] = useState(false);
 
-  const myAccount = useMyAccount();
+  const myUser = useMyUser();
   const users = useProjectUsers(projectId, {
     enabled: loadUsers,
   });
@@ -33,10 +33,17 @@ const TimeEntryUsersField = ({ projectId, ...props }: ComponentProps<typeof Reac
               label: role.name,
               options: users.map((user) => ({
                 value: user.id,
-                label: user.id === myAccount.data?.id ? `${user.name} <<${formatMessage({ id: "issues.issue.field.assignee.me" })}>>` : user.name,
+                label: user.id === myUser.data?.id ? `${user.name} <<${formatMessage({ id: "issues.issue.field.assignee.me" })}>>` : user.name,
               })),
             }))
-          : []
+          : myUser.data
+            ? [
+                {
+                  value: myUser.data.id,
+                  label: `${myUser.data.firstname} ${myUser.data.lastname} <<${formatMessage({ id: "issues.issue.field.assignee.me" })}>>`,
+                },
+              ]
+            : []
       }
       isLoading={users.isLoading}
     />

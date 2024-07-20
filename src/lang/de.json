@@ -116,8 +116,6 @@
   "settings.features.extended-search.description": "Erlaubt Tickets zu suchen, die Ihnen nicht zugewiesen sind",
   "settings.features.round-time-nearest-quarter-hour.title": "Zu nächsten 15 min runden",
   "settings.features.round-time-nearest-quarter-hour.description": "Timer auf nächsten Viertelstunde runden",
-  "settings.features.add-spent-time-for-other-users.title": "Zeitaufwand für andere Nutzer hinzufügen",
-  "settings.features.add-spent-time-for-other-users.description": "(Redmine-Berechtigung benötigt)",
   "settings.features.add-notes.title": "Notizen hinzufügen",
   "settings.features.add-notes.description": "Notizen zu Ticket hinzufügen",
   "settings.features.cache-comments.title": "Kommentare zwischenspeichern",

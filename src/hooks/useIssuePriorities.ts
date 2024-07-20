@@ -15,9 +15,10 @@ const useIssuePriorities = ({ enabled = true }: Options = {}) => {
     queryKey: ["issuePriorities"],
     queryFn: () => redmineApi.getIssuePriorities(),
     enabled: enabled,
+    select: (data) => data?.filter((priority) => priority.active !== false),
   });
 
-  const priorities = issuePrioritiesQuery.data?.filter((priority) => priority.active !== false) ?? [];
+  const priorities = issuePrioritiesQuery.data ?? [];
 
   /**
    * Find priority types

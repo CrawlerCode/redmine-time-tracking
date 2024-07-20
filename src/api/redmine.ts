@@ -1,7 +1,6 @@
 import { AxiosInstance } from "axios";
 import { formatISO } from "date-fns";
 import {
-  TAccount,
   TCreateIssue,
   TCreateTimeEntry,
   TIssue,
@@ -10,10 +9,12 @@ import {
   TMembership,
   TProject,
   TReference,
+  TRole,
   TSearchResult,
   TTimeEntry,
   TTimeEntryActivity,
   TUpdateIssue,
+  TUser,
   TVersion,
 } from "../types/redmine";
 
@@ -21,10 +22,6 @@ export class RedmineApi {
   private instance: AxiosInstance;
   constructor(instance: AxiosInstance) {
     this.instance = instance;
-  }
-
-  async getMyAccount(): Promise<TAccount> {
-    return this.instance.get("/my/account.json").then((res) => res.data.user);
   }
 
   // Issues
@@ -126,5 +123,13 @@ export class RedmineApi {
   // Roles and permissions
   async getAllRoles(): Promise<TReference[]> {
     return this.instance.get(`/roles.json`).then((res) => res.data.roles);
+  }
+
+  async getRole(id: number): Promise<TRole> {
+    return this.instance.get(`/roles/${id}.json`).then((res) => res.data.role);
+  }
+
+  async getMyUser(): Promise<TUser> {
+    return this.instance.get("/users/current.json?include=memberships").then((res) => res.data.user);
   }
 }

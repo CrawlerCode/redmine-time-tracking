@@ -15,6 +15,7 @@ const useMyTimeEntries = (from: Date, to: Date) => {
     getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
+    select: (data) => data?.pages?.flat(),
   });
 
   // auto fetch all pages
@@ -22,7 +23,7 @@ const useMyTimeEntries = (from: Date, to: Date) => {
     if (entriesQuery.hasNextPage && !entriesQuery.isFetchingNextPage) entriesQuery.fetchNextPage();
   }, [entriesQuery]);
 
-  const entries = entriesQuery.data?.pages?.flat() ?? [];
+  const entries = entriesQuery.data ?? [];
 
   return {
     data: entries,

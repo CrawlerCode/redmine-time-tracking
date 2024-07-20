@@ -6,22 +6,22 @@ type Options = {
   staleTime?: number;
 };
 
-const useMyAccount = ({ staleTime }: Options = {}) => {
+const useMyUser = ({ staleTime }: Options = {}) => {
   const { settings } = useSettings();
   const redmineApi = useRedmineApi();
 
-  const myAccountQuery = useQuery({
-    queryKey: ["myAccount", settings.redmineURL, settings.redmineApiKey],
-    queryFn: () => redmineApi.getMyAccount(),
+  const myUserQuery = useQuery({
+    queryKey: ["myUser", settings.redmineURL, settings.redmineApiKey],
+    queryFn: () => redmineApi.getMyUser(),
     retry: 1,
     ...(staleTime && { staleTime }),
   });
 
   return {
-    data: myAccountQuery.data,
-    isLoading: myAccountQuery.isLoading,
-    isError: myAccountQuery.isError,
+    data: myUserQuery.data,
+    isLoading: myUserQuery.isLoading,
+    isError: myUserQuery.isError,
   };
 };
 
-export default useMyAccount;
+export default useMyUser;

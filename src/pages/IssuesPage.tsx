@@ -7,7 +7,6 @@ import IssuesList, { IssuesData } from "../components/issues/IssuesList";
 import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
 import Search, { SearchQuery, SearchRef } from "../components/issues/Search";
 import useIssuePriorities from "../hooks/useIssuePriorities";
-import useMyAccount from "../hooks/useMyAccount";
 import useMyIssues from "../hooks/useMyIssues";
 import useProjectVersions from "../hooks/useProjectVersions";
 import useSettings from "../hooks/useSettings";
@@ -30,7 +29,6 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
   );
   const issuePriorities = useIssuePriorities({ enabled: settings.style.sortIssuesByPriority || settings.style.showIssuesPriority });
   const projectVersions = useProjectVersions([...new Set(myIssuesQuery.data.filter((i) => i.fixed_version).map((i) => i.project.id))], { enabled: settings.style.groupIssuesByVersion });
-  const myAccount = useMyAccount();
 
   const activeTimerCount = Object.values(issuesData.data).reduce((count, data) => count + (data.active ? 1 : 0), 0);
 
@@ -45,7 +43,6 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
 
         {!isLoading && (
           <IssuesList
-            account={myAccount.data}
             issues={myIssuesQuery.data}
             issuePriorities={issuePriorities}
             projectVersions={projectVersions}
@@ -68,7 +65,6 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
             </div>
 
             <IssuesList
-              account={myAccount.data}
               issues={myIssuesQuery.extendedSearch}
               issuePriorities={issuePriorities}
               projectVersions={projectVersions}

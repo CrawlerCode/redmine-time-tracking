@@ -10,7 +10,6 @@ export type Settings = {
     autoPauseOnSwitch: boolean;
     extendedSearch: boolean;
     roundTimeNearestQuarterHour: boolean;
-    addSpentTimeForOtherUsers: boolean;
     cacheComments: boolean;
     addNotes: boolean;
   };
@@ -33,7 +32,6 @@ const defaultSettings: Settings = {
     autoPauseOnSwitch: true,
     extendedSearch: true,
     roundTimeNearestQuarterHour: false,
-    addSpentTimeForOtherUsers: false,
     cacheComments: true,
     addNotes: false,
   },

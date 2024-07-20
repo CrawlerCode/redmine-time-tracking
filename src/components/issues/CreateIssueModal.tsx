@@ -6,7 +6,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
 import useIssuePriorities from "../../hooks/useIssuePriorities";
 import useIssueTrackers from "../../hooks/useIssueTrackers";
-import useMyAccount from "../../hooks/useMyAccount";
+import useMyUser from "../../hooks/useMyUser";
 import useProject from "../../hooks/useProject";
 import useSettings from "../../hooks/useSettings";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
@@ -39,7 +39,7 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
 
   const formik = useRef<FormikProps<TCreateIssue>>(null);
 
-  const myAccount = useMyAccount();
+  const myUser = useMyUser();
   const project = useProject(projectId);
   const issueTrackers = useIssueTrackers(projectId);
   const issuePriorities = useIssuePriorities();
@@ -53,8 +53,8 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
   }, [issuePriorities.defaultPriority]);
 
   useEffect(() => {
-    formik.current?.setFieldValue("assigned_to_id", myAccount.data?.id);
-  }, [myAccount.data?.id]);
+    formik.current?.setFieldValue("assigned_to_id", myUser.data?.id);
+  }, [myUser.data?.id]);
 
   useEffect(() => {
     formik.current?.setFieldValue("fixed_version_id", project.data?.default_version?.id);
