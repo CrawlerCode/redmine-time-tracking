@@ -5,20 +5,25 @@ import useProject from "./useProject";
 const useTimeEntryActivities = (projectId: number) => {
   const redmineApi = useRedmineApi();
 
-  const timeEntryActivitiesQuery = useQuery({
+  const systemTimeEntryActivitiesQuery = useQuery({
     queryKey: ["timeEntryActivities"],
     queryFn: () => redmineApi.getTimeEntryActivities(),
   });
 
   const project = useProject(projectId);
-  const enabledActivities = project.data?.time_entry_activities?.map((activity) => activity.id);
+  const projectTimeEntryActivities = project.data?.time_entry_activities;
 
-  const activities = enabledActivities ? timeEntryActivitiesQuery.data?.filter((activity) => activity.active !== false && enabledActivities.includes(activity.id)) : timeEntryActivitiesQuery.data;
+  const activities = projectTimeEntryActivities
+    ? projectTimeEntryActivities?.map((activity) => ({
+        ...systemTimeEntryActivitiesQuery.data?.find((systemActivity) => systemActivity.id === activity.id),
+        ...activity,
+      }))
+    : systemTimeEntryActivitiesQuery.data?.filter((activity) => activity.active !== false);
 
   return {
     data: activities,
-    isLoading: timeEntryActivitiesQuery.isLoading,
-    isError: timeEntryActivitiesQuery.isError,
+    isLoading: systemTimeEntryActivitiesQuery.isLoading,
+    isError: systemTimeEntryActivitiesQuery.isError,
     defaultActivity: activities?.find((entry) => entry.is_default),
   };
 };
