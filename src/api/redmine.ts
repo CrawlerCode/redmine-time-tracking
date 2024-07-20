@@ -22,6 +22,21 @@ export class RedmineApi {
   private instance: AxiosInstance;
   constructor(instance: AxiosInstance) {
     this.instance = instance;
+    this.instance.interceptors.response.use(
+      (response) => {
+        const contentType = response.headers["content-type"];
+        if (contentType && !contentType.startsWith("application/json")) {
+          throw new Error(`Invalid content-type '${contentType}'. Expected 'application/json'`);
+        }
+        return response;
+      },
+      (error) => {
+        if (error.response?.status === 401) {
+          throw new Error("Unauthorized");
+        }
+        return Promise.reject(error);
+      }
+    );
   }
 
   // Issues

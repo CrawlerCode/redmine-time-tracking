@@ -21,6 +21,7 @@ const useMyUser = ({ staleTime }: Options = {}) => {
     data: myUserQuery.data,
     isLoading: myUserQuery.isLoading,
     isError: myUserQuery.isError,
+    error: myUserQuery.error,
   };
 };
 

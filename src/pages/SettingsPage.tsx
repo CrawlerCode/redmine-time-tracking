@@ -37,7 +37,7 @@ const SettingsPage = () => {
   const [editRedmineInstance, setEditRedmineInstance] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const myUser = useMyUser({ staleTime: 1000 * 10 });
+  const myUser = useMyUser({ staleTime: 0 });
 
   useEffect(() => {
     formik.current?.setValues(settings);
@@ -169,6 +169,7 @@ const SettingsPage = () => {
                                 "Unknown status"
                               )}
                             </p>
+                            {myUser.isError && myUser.error && <p className="text-red-500 dark:text-red-400">{myUser.error.message}</p>}
                             {myUser.data && (
                               <p>
                                 <FormattedMessage

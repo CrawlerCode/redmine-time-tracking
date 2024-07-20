@@ -16,7 +16,8 @@ const RedmineApiProvider = ({ children }: { children: ReactNode }) => {
             baseURL: settings.redmineURL,
             headers: {
               "X-Redmine-API-Key": settings.redmineApiKey,
-              "cache-control": "no-store",
+              "Cache-Control": "no-store, must-revalidate",
+              Expires: "0",
             },
           })
         )
