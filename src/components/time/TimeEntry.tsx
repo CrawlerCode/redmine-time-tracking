@@ -1,71 +1,53 @@
 import { Fragment } from "react";
-import { FormattedMessage } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import useFormatHours from "../../hooks/useFormatHours";
+import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import { TTimeEntry } from "../../types/redmine";
+import TimeEntryContextMenu from "./TimeEntryContextMenu";
+import TimeEntryTooltip from "./TimeEntryTooltip";
 
 type PropTypes = {
   entries: TTimeEntry[];
   previewHours?: number;
   maxHours?: number;
+  withContextMenu?: boolean;
 };
 
-const TimeEntry = ({ entries, previewHours, maxHours = 24 }: PropTypes) => {
+const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = false }: PropTypes) => {
   const formatHours = useFormatHours();
 
   const sumHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
+
+  const projectRoles = useMyProjectRoles([...new Set(entries.map((e) => e.project.id))]);
 
   return (
     <div role="row" className="flex items-center gap-x-0.5">
       {entries.map((entry) => (
         <Fragment key={entry.id}>
-          <Tooltip id={`tooltip-time-entry-${entry.id}`} place="bottom" className="z-10 opacity-100">
-            <div className="relative max-w-[230px] truncate">
-              <p className="mb-3 text-sm font-semibold">
-                {formatHours(entry.hours)}
-                {entry.comments && <p className="mt-1 truncate text-xs font-normal">{entry.comments}</p>}
-              </p>
-              <table className="-mx-1 border-separate border-spacing-x-1 text-left text-sm text-gray-300">
-                <tbody>
-                  <tr>
-                    <th className="text-xs font-medium">
-                      <FormattedMessage id="time.entry-tooltip.project" />:
-                    </th>
-                    <td>{entry.project.name}</td>
-                  </tr>
-                  {entry.issue && (
-                    <tr>
-                      <th className="text-xs font-medium">
-                        <FormattedMessage id="time.entry-tooltip.issue" />:
-                      </th>
-                      <td>#{entry.issue.id}</td>
-                    </tr>
-                  )}
-                  <tr>
-                    <th className="text-xs font-medium">
-                      <FormattedMessage id="time.entry-tooltip.activity" />:
-                    </th>
-                    <td>{entry.activity.name}</td>
-                  </tr>
-                  <tr>
-                    <th className="text-xs font-medium">
-                      <FormattedMessage id="time.entry-tooltip.hours" />:
-                    </th>
-                    <td>{formatHours(entry.hours)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </Tooltip>
-          <div
-            role="cell"
-            data-type="time-entry"
-            className="h-4 rounded bg-primary"
-            style={{
-              width: `${(entry.hours / maxHours) * 100}%`,
-            }}
-            data-tooltip-id={`tooltip-time-entry-${entry.id}`}
-          />
+          <TimeEntryTooltip entry={entry} />
+          {withContextMenu ? (
+            <TimeEntryContextMenu
+              entry={entry}
+              projectRoles={projectRoles}
+              role="cell"
+              data-type="time-entry"
+              className="h-4 rounded bg-primary"
+              style={{
+                width: `${(entry.hours / maxHours) * 100}%`,
+              }}
+              data-tooltip-id={`tooltip-time-entry-${entry.id}`}
+            />
+          ) : (
+            <div
+              role="cell"
+              data-type="time-entry"
+              className="h-4 rounded bg-primary"
+              style={{
+                width: `${(entry.hours / maxHours) * 100}%`,
+              }}
+              data-tooltip-id={`tooltip-time-entry-${entry.id}`}
+            />
+          )}
         </Fragment>
       ))}
       {(previewHours && (

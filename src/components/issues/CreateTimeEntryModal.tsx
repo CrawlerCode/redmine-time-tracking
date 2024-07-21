@@ -133,13 +133,13 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
           validationSchema={Yup.object({
             done_ratio: Yup.number().min(0).max(100),
             hours: Yup.number()
-              .required(formatMessage({ id: "issues.time-entry.field.hours.validation.required" }))
-              .min(0.01, formatMessage({ id: "issues.time-entry.field.hours.validation.greater-than-zero" }))
-              .max(24, formatMessage({ id: "issues.time-entry.field.hours.validation.less-than-24" })),
-            spent_on: Yup.date().max(new Date(), formatMessage({ id: "issues.time-entry.field.spent-on.validation.in-future" })),
+              .required(formatMessage({ id: "time.time-entry.field.hours.validation.required" }))
+              .min(0.01, formatMessage({ id: "time.time-entry.field.hours.validation.greater-than-zero" }))
+              .max(24, formatMessage({ id: "time.time-entry.field.hours.validation.less-than-24" })),
+            spent_on: Yup.date().max(new Date(), formatMessage({ id: "time.time-entry.field.spent-on.validation.in-future" })),
             user_id: Yup.array(Yup.number()),
             comments: Yup.string(),
-            activity_id: Yup.number().required(formatMessage({ id: "issues.time-entry.field.activity.validation.required" })),
+            activity_id: Yup.number().required(formatMessage({ id: "time.time-entry.field.activity.validation.required" })),
             add_notes: Yup.boolean(),
             notes: Yup.string(),
           })}
@@ -201,8 +201,8 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                       <FastField
                         type="number"
                         name="hours"
-                        title={formatMessage({ id: "issues.time-entry.field.hours" })}
-                        placeholder={formatMessage({ id: "issues.time-entry.field.hours" })}
+                        title={formatMessage({ id: "time.time-entry.field.hours" })}
+                        placeholder={formatMessage({ id: "time.time-entry.field.hours" })}
                         error={touched.hours && errors.hours}
                         min="0"
                         step="0.01"
@@ -228,8 +228,8 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                       <FastField
                         type="number"
                         name="hours"
-                        title={formatMessage({ id: "issues.time-entry.field.hours" })}
-                        placeholder={formatMessage({ id: "issues.time-entry.field.hours" })}
+                        title={formatMessage({ id: "time.time-entry.field.hours" })}
+                        placeholder={formatMessage({ id: "time.time-entry.field.hours" })}
                         error={touched.hours && errors.hours}
                         required
                         as={TimeField}
@@ -242,8 +242,8 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     <FastField
                       type="date"
                       name="spent_on"
-                      title={formatMessage({ id: "issues.time-entry.field.spent-on" })}
-                      placeholder={formatMessage({ id: "issues.time-entry.field.spent-on" })}
+                      title={formatMessage({ id: "time.time-entry.field.spent-on" })}
+                      placeholder={formatMessage({ id: "time.time-entry.field.spent-on" })}
                       error={touched.spent_on && errors.spent_on}
                       required
                       as={DateField}
@@ -272,8 +272,8 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                   <FastField
                     type="text"
                     name="comments"
-                    title={formatMessage({ id: "issues.time-entry.field.comments" })}
-                    placeholder={formatMessage({ id: "issues.time-entry.field.comments" })}
+                    title={formatMessage({ id: "time.time-entry.field.comments" })}
+                    placeholder={formatMessage({ id: "time.time-entry.field.comments" })}
                     error={touched.comments && errors.comments}
                     as={InputField}
                     size="sm"
@@ -283,8 +283,8 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                   <FastField
                     type="select"
                     name="activity_id"
-                    title={formatMessage({ id: "issues.time-entry.field.activity" })}
-                    placeholder={formatMessage({ id: "issues.time-entry.field.activity" })}
+                    title={formatMessage({ id: "time.time-entry.field.activity" })}
+                    placeholder={formatMessage({ id: "time.time-entry.field.activity" })}
                     noOptionsMessage={() => formatMessage({ id: "general.no-options" })}
                     error={touched.activity_id && errors.activity_id}
                     required

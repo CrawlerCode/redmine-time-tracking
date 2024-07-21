@@ -82,7 +82,7 @@ const TimeEntryList = ({ entries }: PropTypes) => {
                     <h4 className="w-8 text-sm">{format(date, "EEE")}</h4>
                     <h3 className="w-14 truncate text-end text-sm font-semibold">{formatHours(roundHours(hours))}</h3>
                     <div className="grow">
-                      <TimeEntry entries={groupEntries} maxHours={maxHours > 0 ? maxHours : undefined} />
+                      <TimeEntry entries={groupEntries} maxHours={maxHours > 0 ? maxHours : undefined} withContextMenu />
                     </div>
                   </div>
                 );

@@ -14,6 +14,7 @@ import {
   TTimeEntry,
   TTimeEntryActivity,
   TUpdateIssue,
+  TUpdateTimeEntry,
   TUser,
   TVersion,
 } from "../types/redmine";
@@ -33,6 +34,9 @@ export class RedmineApi {
       (error) => {
         if (error.response?.status === 401) {
           throw new Error("Unauthorized");
+        }
+        if (error.response?.status === 403) {
+          throw new Error("Forbidden");
         }
         return Promise.reject(error);
       }
@@ -54,6 +58,10 @@ export class RedmineApi {
 
   async searchOpenIssues(query: string): Promise<TSearchResult[]> {
     return this.instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&issues=1&open_issues=1`).then((res) => res.data.results); // available since Redmine 3.3.0
+  }
+
+  async getIssue(id: number): Promise<TIssue> {
+    return this.instance.get(`/issues/${id}.json`).then((res) => res.data.issue);
   }
 
   async createIssue(issue: TCreateIssue) {
@@ -123,6 +131,17 @@ export class RedmineApi {
   async createTimeEntry(entry: TCreateTimeEntry) {
     return this.instance
       .post("/time_entries.json", {
+        time_entry: {
+          ...entry,
+          spent_on: entry.spent_on ? formatISO(entry.spent_on, { representation: "date" }) : undefined,
+        },
+      })
+      .then((res) => res.data);
+  }
+
+  async updateTimeEntry(id: number, entry: TUpdateTimeEntry) {
+    return this.instance
+      .put(`/time_entries/${id}.json`, {
         time_entry: {
           ...entry,
           spent_on: entry.spent_on ? formatISO(entry.spent_on, { representation: "date" }) : undefined,

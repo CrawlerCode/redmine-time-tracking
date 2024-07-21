@@ -165,6 +165,10 @@ export type TCreateTimeEntry = {
   comments?: string;
 };
 
+export type TUpdateTimeEntry = Partial<TCreateTimeEntry> & {
+  project_id?: number;
+};
+
 // Roles and permissions
 export type TRole = {
   id: number;

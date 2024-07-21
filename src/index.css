@@ -21,6 +21,7 @@
     --color-field-inner: theme("colors.gray.200");
     --color-field-border: theme("colors.gray.300");
     --color-field-placeholder: theme("colors.gray.500");
+    --color-field-disabled: theme("colors.gray.200");
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -40,6 +41,7 @@
       --color-field-inner: theme("colors.dark.800");
       --color-field-border: theme("colors.dark.600");
       --color-field-placeholder: theme("colors.gray.500");
+      --color-field-disabled: theme("colors.dark.700");
     }
   }
 }

@@ -10,10 +10,9 @@ type MenuItem = {
 };
 type PropTypes = {
   menu: MenuItem[] | MenuItem[][];
-  children: React.ReactNode;
-};
+} & Omit<React.ComponentProps<"div">, "onContextMenu">;
 
-const ContextMenu = ({ menu, children }: PropTypes) => {
+const ContextMenu = ({ menu, children, ...props }: PropTypes) => {
   const [position, setPosition] = useState<{ x: number; y: number } | undefined>(undefined);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -37,6 +36,7 @@ const ContextMenu = ({ menu, children }: PropTypes) => {
   return (
     <>
       <div
+        {...props}
         onContextMenu={(e) => {
           e.preventDefault();
           setPosition({ x: e.pageX, y: e.pageY });

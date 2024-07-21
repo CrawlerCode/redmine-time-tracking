@@ -23,9 +23,9 @@ const TimeEntryUsersField = ({ projectId, ...props }: ComponentProps<typeof Reac
   return (
     <ReactSelectFormik
       {...props}
-      title={formatMessage({ id: "issues.time-entry.field.user" })}
-      placeholder={formatMessage({ id: "issues.time-entry.field.user" })}
-      noOptionsMessage={() => formatMessage({ id: "issues.time-entry.field.user.no-options" })}
+      title={formatMessage({ id: "time.time-entry.field.user" })}
+      placeholder={formatMessage({ id: "time.time-entry.field.user" })}
+      noOptionsMessage={() => formatMessage({ id: "time.time-entry.field.user.no-options" })}
       onFocus={() => setLoadUsers(true)}
       options={
         loadUsers

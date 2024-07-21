@@ -26,6 +26,7 @@ module.exports = {
           inner: "var(--color-field-inner)",
           border: "var(--color-field-border)",
           placeholder: "var(--color-field-placeholder)",
+          disabled: "var(--color-field-disabled)",
         },
         dark: {
           50: "#C9C9C9",

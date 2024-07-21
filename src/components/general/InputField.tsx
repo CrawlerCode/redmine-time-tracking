@@ -42,6 +42,7 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title
             "dark:autofill:shadow-fill-field-DEFAULT dark:autofill:text-fill-white",
             {
               "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
+              "bg-field-disabled": props.disabled,
               "pl-8": !!icon,
               "p-1.5": size === "sm",
               "p-2.5": size === "md",

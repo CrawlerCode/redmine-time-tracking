@@ -67,6 +67,7 @@ function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group ex
               "p-2.5": size === "md",
               "outline-none ring-2 ring-primary-focus": state.isFocused,
               "border-red-500 text-red-900 dark:border-red-500 dark:text-red-500": error !== undefined,
+              "bg-field-disabled": props.isDisabled,
             }),
           placeholder: () =>
             clsx("text-field-placeholder", {
