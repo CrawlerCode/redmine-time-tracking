@@ -17,7 +17,7 @@ function DismissibleWarning({ name, children }: PropTypes) {
     <p className="rounded-lg border border-gray-200 p-1 dark:border-gray-700" role="alert">
       <FontAwesomeIcon icon={faWarning} className="mr-1 text-yellow-500 dark:text-yellow-400" />
       <span className="mr-1">{children}</span>
-      <button className="text-blue-500 underline dark:text-blue-400" onClick={() => setData(true)}>
+      <button type="button" className="text-blue-500 underline dark:text-blue-400" onClick={() => setData(true)}>
         <FormattedMessage id="dismissible-warning.dont-show-again" />
       </button>
     </p>
