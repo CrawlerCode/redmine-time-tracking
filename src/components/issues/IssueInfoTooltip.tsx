@@ -73,7 +73,7 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
                 <td>{formatDate(parseISO(issue.due_date))}</td>
               </tr>
             )}
-            {issue.estimated_hours && (
+            {issue.estimated_hours != null && (
               <tr>
                 <th className="text-xs font-medium">
                   <FormattedMessage id="issues.issue.field.estimated-hours" />:
@@ -81,7 +81,7 @@ const IssueInfoTooltip = ({ issue }: PropTypes) => {
                 <td>{formatHours(issue.estimated_hours)}</td>
               </tr>
             )}
-            {issue.spent_hours && (
+            {issue.spent_hours != null && (
               <tr>
                 <th className="text-xs font-medium">
                   <FormattedMessage id="issues.issue.field.spent-time" />:

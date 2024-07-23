@@ -186,7 +186,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                 <div className="flex justify-between gap-x-3">
                   <FastField type="range" name="done_ratio" as={DoneSlider} className="mb-1" />
 
-                  {issue.estimated_hours && <SpentVsEstimatedTime issue={issue} previewHours={values.hours ? values.hours : 0} />}
+                  <SpentVsEstimatedTime issue={issue} previewHours={values.hours ? values.hours : 0} />
                 </div>
 
                 {values.spent_on && <TimeEntryPreview date={startOfDay(values.spent_on)} previewHours={values.hours ? values.hours : 0} />}
