@@ -12,6 +12,7 @@ import ContextMenu from "../general/ContextMenu";
 import KBD from "../general/KBD";
 import Toast from "../general/Toast";
 import CreateTimeEntryModal from "./CreateTimeEntryModal";
+import EditIssueModal from "./EditIssueModal";
 import IssueInfoTooltip from "./IssueInfoTooltip";
 import IssueTimer, { IssueTimerData, TimerActions, TimerRef } from "./IssueTimer";
 
@@ -28,12 +29,30 @@ type PropTypes = {
   priorityType: PrimitiveType;
   timerData: IssueTimerData;
   assignedToMe: boolean;
+  canEdit: boolean;
   pinned: boolean;
   remembered: boolean;
 } & Omit<TimerActions, "onDoneTimer"> &
   IssueActions;
 
-const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembered, onStart, onPause, onReset, onOverrideTime, onRemember, onForget, onPin, onUnpin, onPinAndRemember }: PropTypes) => {
+const Issue = ({
+  issue,
+  priorityType,
+  timerData,
+  assignedToMe,
+  pinned,
+  remembered,
+  onStart,
+  onPause,
+  onReset,
+  onOverrideTime,
+  onRemember,
+  onForget,
+  onPin,
+  onUnpin,
+  onPinAndRemember,
+  canEdit,
+}: PropTypes) => {
   const { formatMessage } = useIntl();
 
   const { settings } = useSettings();
@@ -42,6 +61,7 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
 
   const [createTimeEntry, setCreateTimeEntry] = useState<number | undefined>(undefined);
   const [copiedIdToClipboard, setCopiedIdToClipboard] = useState(false);
+  const [editIssue, setEditIssue] = useState(false);
 
   return (
     <>
@@ -64,6 +84,14 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
                 navigator.clipboard.writeText(`#${issue.id}`);
                 setCopiedIdToClipboard(true);
               },
+            },
+          ],
+          [
+            {
+              name: formatMessage({ id: "issues.context-menu.edit" }),
+              icon: <FontAwesomeIcon icon={faPen} />,
+              onClick: () => setEditIssue(true),
+              disabled: !canEdit,
             },
           ],
           [
@@ -243,6 +271,7 @@ const Issue = ({ issue, priorityType, timerData, assignedToMe, pinned, remembere
           }}
         />
       )}
+      {editIssue && <EditIssueModal issue={issue} onClose={() => setEditIssue(false)} onSuccess={() => setEditIssue(false)} />}
       {copiedIdToClipboard && (
         <Toast type="success" message={formatMessage({ id: "issues.id-copied-to-clipboard" }, { issueId: issue.id })} autoClose={2500} onClose={() => setCopiedIdToClipboard(false)} />
       )}

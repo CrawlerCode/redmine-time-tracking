@@ -1,16 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, isAxiosError } from "axios";
+import { parseISO } from "date-fns";
 import { FastField, Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
-import useIssuePriorities from "../../hooks/useIssuePriorities";
+import useIssue from "../../hooks/useIssue";
+import useIssueStatuses from "../../hooks/useIssueStatuses";
 import useIssueTrackers from "../../hooks/useIssueTrackers";
-import useMyUser from "../../hooks/useMyUser";
-import useProject from "../../hooks/useProject";
 import useSettings from "../../hooks/useSettings";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
-import { TCreateIssue, TRedmineError } from "../../types/redmine";
+import { TCreateIssue, TIssue, TRedmineError, TUpdateIssue } from "../../types/redmine";
 import Button from "../general/Button";
 import DateField, { shouldUpdate as shouldUpdateDateField } from "../general/DateField";
 import DismissibleWarning from "../general/DismissableWarning";
@@ -28,44 +28,54 @@ import PriorityField from "./fields/PriorityField";
 import VersionField from "./fields/VersionField";
 
 type PropTypes = {
-  projectId: number;
+  issue: TIssue;
   onClose: () => void;
   onSuccess: () => void;
 };
 
-const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
+const EditIssueModal = ({ issue: currentIssue, onClose, onSuccess }: PropTypes) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
   const redmineApi = useRedmineApi();
   const queryClient = useQueryClient();
 
-  const formik = useRef<FormikProps<TCreateIssue>>(null);
+  const formik = useRef<FormikProps<TUpdateIssue>>(null);
 
-  const myUser = useMyUser();
-  const project = useProject(projectId);
-  const issueTrackers = useIssueTrackers(projectId);
-  const issuePriorities = useIssuePriorities();
+  const issueQuery = useIssue(currentIssue.id, { staleTime: 0 });
+  const issueTrackers = useIssueTrackers(currentIssue.project.id);
+  const hasIssueNoAllowedStatuses = !!issueQuery.data && issueQuery.data.allowed_statuses === undefined;
+  const issueStatuses = useIssueStatuses({
+    enabled: hasIssueNoAllowedStatuses,
+  });
 
-  useEffect(() => {
-    formik.current?.setFieldValue("tracker_id", issueTrackers.defaultTracker?.id);
-  }, [issueTrackers.defaultTracker]);
-
-  useEffect(() => {
-    formik.current?.setFieldValue("priority_id", issuePriorities.defaultPriority?.id);
-  }, [issuePriorities.defaultPriority]);
+  const issue = issueQuery.data ?? currentIssue;
 
   useEffect(() => {
-    formik.current?.setFieldValue("assigned_to_id", myUser.data?.id);
-  }, [myUser.data?.id]);
+    if (!issue) return;
+    formik.current?.setValues(
+      {
+        tracker_id: issue.tracker.id,
+        status_id: issue.status.id,
+        subject: issue.subject,
+        description: issue.description,
+        priority_id: issue.priority.id,
+        assigned_to_id: issue.assigned_to?.id,
+        category_id: issue.category?.id,
+        fixed_version_id: issue.fixed_version?.id,
+        start_date: issue.start_date ? parseISO(issue.start_date) : undefined,
+        due_date: issue.due_date ? parseISO(issue.due_date) : undefined,
+        estimated_hours: issue.estimated_hours,
+        done_ratio: issue.done_ratio,
+      },
+      false
+    );
+  }, [issue]);
 
-  useEffect(() => {
-    formik.current?.setFieldValue("fixed_version_id", project.data?.default_version?.id);
-  }, [project.data?.default_version?.id]);
-
-  const createIssueMutation = useMutation({
-    mutationFn: (issue: TCreateIssue) => redmineApi.createIssue(issue),
+  const updateIssueMutation = useMutation({
+    mutationFn: (data: TUpdateIssue) => redmineApi.updateIssue(issue.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries({ queryKey: ["issue", issue.id] });
       queryClient.invalidateQueries({ queryKey: ["additionalIssues"] });
       onSuccess();
     },
@@ -73,19 +83,28 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
 
   return (
     <>
-      <Modal title={formatMessage({ id: "issues.modal.add-issue.title" })} onClose={onClose}>
-        <Formik<TCreateIssue>
+      <Modal title={formatMessage({ id: "issues.modal.edit-issue.title" })} onClose={onClose}>
+        <Formik<TUpdateIssue>
           innerRef={formik}
-          initialValues={
-            {
-              project_id: projectId,
-            } satisfies Partial<TCreateIssue> as TCreateIssue
-          }
+          initialValues={{
+            tracker_id: issue.tracker.id,
+            status_id: issue.status.id,
+            subject: issue.subject,
+            description: issue.description,
+            priority_id: issue.priority.id,
+            assigned_to_id: issue.assigned_to?.id,
+            category_id: issue.category?.id,
+            fixed_version_id: issue.fixed_version?.id,
+            start_date: issue.start_date ? parseISO(issue.start_date) : undefined,
+            due_date: issue.due_date ? parseISO(issue.due_date) : undefined,
+            estimated_hours: issue.estimated_hours,
+            done_ratio: issue.done_ratio,
+          }}
           validationSchema={Yup.object({
             tracker_id: Yup.number().required(formatMessage({ id: "issues.issue.field.tracker.validation.required" })),
             status_id: Yup.number().required(formatMessage({ id: "issues.issue.field.status.validation.required" })),
             subject: Yup.string().required(formatMessage({ id: "issues.issue.field.subject.validation.required" })),
-            description: Yup.string(),
+            description: Yup.string().nullable(),
             priority_id: Yup.number().required(formatMessage({ id: "issues.issue.field.priority.validation.required" })),
             assigned_to_id: Yup.number().nullable(),
             category_id: Yup.number().nullable(),
@@ -100,19 +119,23 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
             done_ratio: Yup.number().nullable().min(0).max(100),
           })}
           onSubmit={async (values, { setSubmitting }) => {
-            await createIssueMutation.mutateAsync(values as unknown as TCreateIssue);
+            await updateIssueMutation.mutateAsync(values as unknown as TCreateIssue);
             setSubmitting(false);
           }}
         >
-          {({ isSubmitting, values, touched, errors, setFieldValue }) => {
+          {({ isSubmitting, values, touched, errors }) => {
             const selectedTracker = issueTrackers.data?.find((tracker) => tracker.id === values.tracker_id);
             const hasTrackerNoEnabledFields = selectedTracker && selectedTracker.enabled_standard_fields === undefined;
-            if (selectedTracker && values.status_id !== selectedTracker.default_status?.id) {
-              setFieldValue("status_id", selectedTracker.default_status?.id);
-            }
             return (
               <Form>
                 <div className="flex flex-col gap-y-2">
+                  <h1 className="mb-1 truncate">
+                    <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline">
+                      {issue.tracker.name} #{issue.id}
+                    </a>{" "}
+                    {issue.subject}
+                  </h1>
+
                   <div className="grid grid-cols-2 gap-x-2">
                     <Field
                       type="select"
@@ -140,19 +163,26 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
                       noOptionsMessage={() => formatMessage({ id: "general.no-options" })}
                       error={touched.status_id && errors.status_id}
                       required
-                      isDisabled
+                      isDisabled={issue.allowed_statuses?.length === 0}
                       as={ReactSelectFormik}
                       size="sm"
                       options={
-                        selectedTracker?.default_status
-                          ? [
-                              {
-                                label: selectedTracker.default_status.name,
-                                value: selectedTracker.default_status.id,
-                              },
-                            ]
-                          : []
+                        hasIssueNoAllowedStatuses
+                          ? issueStatuses.data?.map((status) => ({ label: status.name, value: status.id })) // If the issue has no allowed statuses, we use all statuses
+                          : issue.allowed_statuses?.length === 0 // If the issue has empty allowed statuses, we use the current status (status change is not allowed)
+                            ? [
+                                {
+                                  label: issue.status.name,
+                                  value: issue.status.id,
+                                },
+                              ]
+                            : // If the issue has allowed statuses, we use them
+                              issue.allowed_statuses?.map((status) => ({
+                                label: status.name,
+                                value: status.id,
+                              }))
                       }
+                      isLoading={issueQuery.isLoading || issueStatuses.isLoading}
                       shouldUpdate={shouldUpdateReactSelect}
                     />
                   </div>
@@ -193,7 +223,7 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
                           error={touched.assigned_to_id && errors.assigned_to_id}
                           as={AssigneeField}
                           size="sm"
-                          projectId={projectId}
+                          projectId={issue.project.id}
                           shouldUpdate={shouldUpdateReactSelect}
                         />
                       )}
@@ -205,7 +235,7 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
                           error={touched.category_id && errors.category_id}
                           as={CategoryField}
                           size="sm"
-                          projectId={projectId}
+                          projectId={issue.project.id}
                           shouldUpdate={shouldUpdateReactSelect}
                         />
                       )}
@@ -217,7 +247,7 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
                           error={touched.fixed_version_id && errors.fixed_version_id}
                           as={VersionField}
                           size="sm"
-                          projectId={projectId}
+                          projectId={issue.project.id}
                           shouldUpdate={shouldUpdateReactSelect}
                         />
                       )}
@@ -290,6 +320,12 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
                     </div>
                   </div>
 
+                  {hasIssueNoAllowedStatuses && (
+                    <DismissibleWarning name="issueNoAllowedStatuses">
+                      <FormattedMessage id="issues.modal.edit-issue.issue-with-no-allowed-statuses.warning" />
+                    </DismissibleWarning>
+                  )}
+
                   {hasTrackerNoEnabledFields && (
                     <DismissibleWarning name="trackerNoEnabledFields">
                       <FormattedMessage id="issues.modal.add-issue.tracker-with-no-enabled-fields.warning" />
@@ -301,7 +337,7 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
                   </DismissibleWarning>
 
                   <Button type="submit" disabled={isSubmitting} className="flex items-center justify-center gap-x-2">
-                    <FormattedMessage id="issues.modal.add-issue.submit" />
+                    <FormattedMessage id="issues.modal.edit-issue.submit" />
                     {isSubmitting && <LoadingSpinner />}
                   </Button>
                 </div>
@@ -310,14 +346,14 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
           }}
         </Formik>
       </Modal>
-      {createIssueMutation.isError && (
+      {updateIssueMutation.isError && (
         <Toast
           type="error"
           allowClose={false}
           message={
-            isAxiosError(createIssueMutation.error)
-              ? (createIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (createIssueMutation.error as AxiosError).message
-              : (createIssueMutation.error as Error).message
+            isAxiosError(updateIssueMutation.error)
+              ? (updateIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateIssueMutation.error as AxiosError).message
+              : (updateIssueMutation.error as Error).message
           }
         />
       )}
@@ -325,4 +361,4 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
   );
 };
 
-export default CreateIssueModal;
+export default EditIssueModal;

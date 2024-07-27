@@ -64,7 +64,7 @@ function ReactSelectFormik<IsMulti extends boolean = false, Group extends GroupB
           onChange?.({
             target: {
               name: props.name,
-              value: (selected as OnChangeValue<Option, false>)?.value,
+              value: (selected as OnChangeValue<Option, false>)?.value ?? null,
             },
           });
         }

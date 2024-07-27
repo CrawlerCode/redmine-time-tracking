@@ -96,6 +96,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
     mutationFn: (data: TUpdateIssue) => redmineApi.updateIssue(issue.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries({ queryKey: ["issue", issue.id] });
       queryClient.invalidateQueries({ queryKey: ["additionalIssues"] });
     },
   });
@@ -136,7 +137,9 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
               .required(formatMessage({ id: "time.time-entry.field.hours.validation.required" }))
               .min(0.01, formatMessage({ id: "time.time-entry.field.hours.validation.greater-than-zero" }))
               .max(24, formatMessage({ id: "time.time-entry.field.hours.validation.less-than-24" })),
-            spent_on: Yup.date().max(new Date(), formatMessage({ id: "time.time-entry.field.spent-on.validation.in-future" })),
+            spent_on: Yup.date()
+              .required(formatMessage({ id: "time.time-entry.field.spent-on.validation.required" }))
+              .max(new Date(), formatMessage({ id: "time.time-entry.field.spent-on.validation.in-future" })),
             user_id: Yup.array(Yup.number()),
             comments: Yup.string(),
             activity_id: Yup.number().required(formatMessage({ id: "time.time-entry.field.activity.validation.required" })),
@@ -145,7 +148,6 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
           })}
           onSubmit={async (originalValues, { setSubmitting }) => {
             const values = { ...originalValues };
-            //console.log("onSubmit", values);
             if (values.done_ratio !== issue.done_ratio || (values.add_notes && values.notes)) {
               await updateIssueMutation.mutateAsync({ done_ratio: values.done_ratio !== issue.done_ratio ? values.done_ratio : undefined, notes: values.add_notes ? values.notes : undefined });
             }
@@ -178,7 +180,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
               <div className="flex flex-col gap-y-2">
                 <h1 className="mb-1 truncate">
                   <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline">
-                    #{issue.id}
+                    {issue.tracker.name} #{issue.id}
                   </a>{" "}
                   {issue.subject}
                 </h1>

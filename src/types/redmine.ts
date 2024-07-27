@@ -36,6 +36,7 @@ export type TIssue = {
   created_on: string;
   updated_on: string;
   closed_on?: string;
+  allowed_statuses?: TIssueStatus[]; // available since Redmine 5.0.0
 };
 
 export type TCreateIssue = {
@@ -50,12 +51,13 @@ export type TCreateIssue = {
   fixed_version_id?: number;
   parent_issue_id?: number;
   is_private?: boolean;
-  start_date?: string; // YYYY-MM-DD
-  due_date?: string; // YYYY-MM-DD
+  start_date?: Date;
+  due_date?: Date;
   estimated_hours?: number;
+  done_ratio?: number;
 };
 
-export type TUpdateIssue = Partial<Omit<TIssue, "id">> & {
+export type TUpdateIssue = Partial<TCreateIssue> & {
   notes?: string;
   private_notes?: boolean;
 };

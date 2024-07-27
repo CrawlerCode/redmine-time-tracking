@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { ChangeEventHandler, useId, useRef } from "react";
 import Flatpickr, { DateTimePickerProps } from "react-flatpickr";
 
+import { getIn } from "formik";
 import { useIntl } from "react-intl";
 import "../../assets/themes/dark.css";
 import "../../assets/themes/light.css";
@@ -52,7 +53,7 @@ const DateField = ({ size = "md", title, icon, error, className, value, onChange
             onChange?.({
               target: {
                 name: props.name,
-                value: instance.config.mode === "single" ? dates[0] : dates,
+                value: instance.config.mode === "single" ? dates[0] ?? null : dates,
               },
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any);
@@ -83,5 +84,17 @@ const DateField = ({ size = "md", title, icon, error, className, value, onChange
     </div>
   );
 };
+
+// update the FastField component if options changed
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const shouldUpdate = (nextProps: any, currentProps: any) =>
+  nextProps.options !== currentProps.options ||
+  // formik's default shouldUpdate
+  nextProps.name !== currentProps.name ||
+  nextProps.formik.isSubmitting !== currentProps.formik.isSubmitting ||
+  Object.keys(nextProps).length !== Object.keys(currentProps).length ||
+  getIn(nextProps.formik.values, currentProps.name) !== getIn(currentProps.formik.values, currentProps.name) ||
+  getIn(nextProps.formik.errors, currentProps.name) !== getIn(currentProps.formik.errors, currentProps.name) ||
+  getIn(nextProps.formik.touched, currentProps.name) !== getIn(currentProps.formik.touched, currentProps.name);
 
 export default DateField;

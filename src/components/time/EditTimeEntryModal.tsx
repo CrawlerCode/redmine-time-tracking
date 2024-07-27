@@ -69,12 +69,13 @@ const EditTimeEntryModal = ({ entry, onClose, onSuccess }: PropTypes) => {
               .required(formatMessage({ id: "time.time-entry.field.hours.validation.required" }))
               .min(0.01, formatMessage({ id: "time.time-entry.field.hours.validation.greater-than-zero" }))
               .max(24, formatMessage({ id: "time.time-entry.field.hours.validation.less-than-24" })),
-            spent_on: Yup.date().max(new Date(), formatMessage({ id: "time.time-entry.field.spent-on.validation.in-future" })),
+            spent_on: Yup.date()
+              .required(formatMessage({ id: "time.time-entry.field.spent-on.validation.required" }))
+              .max(new Date(), formatMessage({ id: "time.time-entry.field.spent-on.validation.in-future" })),
             comments: Yup.string(),
             activity_id: Yup.number().required(formatMessage({ id: "time.time-entry.field.activity.validation.required" })),
           })}
           onSubmit={async (values, { setSubmitting }) => {
-            //console.log("onSubmit", values);
             await updateTimeEntryMutation.mutateAsync(values);
             setSubmitting(false);
             if (!updateTimeEntryMutation.isError) {

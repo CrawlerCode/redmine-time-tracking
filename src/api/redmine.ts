@@ -5,6 +5,7 @@ import {
   TCreateTimeEntry,
   TIssue,
   TIssuePriority,
+  TIssueStatus,
   TIssueTracker,
   TMembership,
   TProject,
@@ -61,7 +62,7 @@ export class RedmineApi {
   }
 
   async getIssue(id: number): Promise<TIssue> {
-    return this.instance.get(`/issues/${id}.json`).then((res) => res.data.issue);
+    return this.instance.get(`/issues/${id}.json?include=allowed_statuses`).then((res) => res.data.issue);
   }
 
   async createIssue(issue: TCreateIssue) {
@@ -79,7 +80,12 @@ export class RedmineApi {
   async updateIssue(id: number, issue: TUpdateIssue) {
     return this.instance
       .put(`/issues/${id}.json`, {
-        issue: issue,
+        issue: {
+          ...issue,
+          assigned_to_id: issue.assigned_to_id === null ? "" : issue.assigned_to_id, // Use empty string instead of null to remove the assignee
+          start_date: issue.start_date ? formatISO(issue.start_date, { representation: "date" }) : issue.start_date,
+          due_date: issue.due_date ? formatISO(issue.due_date, { representation: "date" }) : issue.due_date,
+        },
       })
       .then((res) => res.data);
   }
@@ -92,9 +98,9 @@ export class RedmineApi {
     return this.instance.get("/trackers.json").then((res) => res.data.trackers);
   }
 
-  /* async getIssueStatuses(): Promise<TIssueStatus[]> {
+  async getIssueStatuses(): Promise<TIssueStatus[]> {
     return this.instance.get("/issue_statuses.json").then((res) => res.data.issue_statuses);
-  } */
+  }
 
   // Projects
   async getAllMyProjects(offset = 0, limit = 100): Promise<TProject[]> {

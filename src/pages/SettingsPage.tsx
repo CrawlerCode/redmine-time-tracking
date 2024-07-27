@@ -59,7 +59,6 @@ const SettingsPage = () => {
         })}
         onSubmit={(values, { setSubmitting }) => {
           values.redmineURL = values.redmineURL.replace(/\/$/, "");
-          //console.log("onSubmit", values);
           setSettings(values);
           queryClient.clear();
           setSubmitting(false);

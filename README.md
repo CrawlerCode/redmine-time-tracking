@@ -40,6 +40,7 @@ At least Redmine version `3.0` or higher required. Recommended version `5.0` or 
 | Feature                                                                           | Unsupported Redmine version |
 | --------------------------------------------------------------------------------- | --------------------------- |
 | Show only **enabled** issue field for selected tracker when _creating new issues_ | `< 5.0.0`                   |
+| Show only **allowed statuses** when _updating issue_                              | `< 5.0.0`                   |
 | Show spent vs estimated hours                                                     | `< 5.0.0`                   |
 | Select the **default fixed version** when _creating new issues_                   | `< 4.1.1`                   |
 | Check permissions for admin users who are not members of a project                | `< 4.0.0`                   |

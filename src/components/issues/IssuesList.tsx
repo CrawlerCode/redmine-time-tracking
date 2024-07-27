@@ -109,6 +109,9 @@ const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, issue
                       priorityType={issuePriorities.getPriorityType(issue)}
                       timerData={{ active: data.active, start: data.start, time: data.time }}
                       assignedToMe={myUser.data ? myUser.data.id === issue.assigned_to?.id : true}
+                      canEdit={
+                        projectRoles.hasProjectPermission(issue.project, "edit_issues") || (projectRoles.hasProjectPermission(issue.project, "edit_own_issues") && issue.author.id === myUser.data?.id)
+                      }
                       pinned={data.pinned}
                       remembered={data.remembered}
                       onStart={() => {

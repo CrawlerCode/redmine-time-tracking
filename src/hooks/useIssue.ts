@@ -1,17 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
 
+const STALE_DATA_TIME = 1000 * 60;
+
 type Options = {
   enabled?: boolean;
+  staleTime?: number;
 };
 
-const useIssue = (id: number, { enabled = true }: Options = {}) => {
+const useIssue = (id: number, { enabled = true, staleTime = STALE_DATA_TIME }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
   const issueQuery = useQuery({
     queryKey: ["issue", id],
     queryFn: () => redmineApi.getIssue(id),
     enabled: enabled,
+    staleTime: staleTime,
   });
 
   return {
