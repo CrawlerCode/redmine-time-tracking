@@ -58,7 +58,7 @@ const TimeField = ({ size = "md", title, icon, error, className, type = "date", 
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any);
           }}
-          className={clsx("block w-full rounded-lg text-sm", "placeholder:text-field-placeholder border border-field-border bg-field", "focus:outline-none focus:ring-2 focus:ring-primary-focus", {
+          className={clsx("block w-full rounded-lg text-sm", "border border-field-border bg-field placeholder:text-field-placeholder", "focus:outline-none focus:ring-2 focus:ring-primary-focus", {
             "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
             "pl-8": !!icon,
             "p-1.5": size === "sm",

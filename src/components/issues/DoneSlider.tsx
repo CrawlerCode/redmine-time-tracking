@@ -13,7 +13,7 @@ const DoneSlider = ({ value, className, ...props }: PropTypes) => {
         max="100"
         step="10"
         type="range"
-        className={clsx("h-5 w-[80px] cursor-pointer appearance-none border-transparent", "focus:ring-primary-focus focus:outline-none focus:ring-2")}
+        className={clsx("h-5 w-[80px] cursor-pointer appearance-none border-transparent", "focus:outline-none focus:ring-2 focus:ring-primary-focus")}
         style={{ background: `linear-gradient(90deg, #bae0ba ${value * 0.9 + 10}%, #eeeeee ${value * 0.9 + 10}%)` }}
       />
       <p className="pointer-events-none absolute left-1 top-1 select-none text-xs font-medium leading-none text-gray-600">{value}%</p>

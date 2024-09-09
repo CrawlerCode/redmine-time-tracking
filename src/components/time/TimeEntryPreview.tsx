@@ -17,7 +17,7 @@ const TimeEntryPreview = ({ date, previewHours }: PropTypes) => {
 
   return (
     <div className="flex items-center gap-x-1">
-      <h3 className="max-w-[5rem] truncate text-sm font-semibold">{formatHours(roundHours(sumHours))}</h3>
+      <h3 className="max-w-20 truncate text-sm font-semibold">{formatHours(roundHours(sumHours))}</h3>
       <div className="grow">
         <TimeEntry entries={myTimeEntriesQuery.data} previewHours={previewHours} maxHours={sumHours > 12 ? sumHours : 12} />
       </div>
