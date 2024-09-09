@@ -4,7 +4,7 @@ import { resolve } from "path";
 try {
   const packageJsonContent = JSON.parse(readFileSync(resolve("package.json"), "utf8"));
 
-  const manifestPath = resolve("public", "manifest.json");
+  const manifestPath = resolve("src", "manifest.json");
   const manifestContent = JSON.parse(readFileSync(manifestPath, "utf8"));
 
   if (packageJsonContent.version.includes("-")) {

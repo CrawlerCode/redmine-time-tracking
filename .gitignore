@@ -11,5 +11,5 @@ dist
 /blob-report/
 /playwright/.cache/
 
-release
+releases
 release_notes.md
