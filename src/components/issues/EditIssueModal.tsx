@@ -43,9 +43,8 @@ const EditIssueModal = ({ issue: currentIssue, onClose, onSuccess }: PropTypes) 
 
   const issueQuery = useIssue(currentIssue.id, { staleTime: 0 });
   const issueTrackers = useIssueTrackers(currentIssue.project.id);
-  const hasIssueNoAllowedStatuses = !!issueQuery.data && issueQuery.data.allowed_statuses === undefined;
-  const issueStatuses = useIssueStatuses({
-    enabled: hasIssueNoAllowedStatuses,
+  const issueStatuses = useIssueStatuses(currentIssue.id, {
+    issueStaleTime: 0,
   });
 
   const issue = issueQuery.data ?? currentIssue;
@@ -166,22 +165,10 @@ const EditIssueModal = ({ issue: currentIssue, onClose, onSuccess }: PropTypes) 
                       isDisabled={issue.allowed_statuses?.length === 0}
                       as={ReactSelectFormik}
                       size="sm"
-                      options={
-                        hasIssueNoAllowedStatuses
-                          ? issueStatuses.data?.map((status) => ({ label: status.name, value: status.id })) // If the issue has no allowed statuses, we use all statuses
-                          : issue.allowed_statuses?.length === 0 // If the issue has empty allowed statuses, we use the current status (status change is not allowed)
-                            ? [
-                                {
-                                  label: issue.status.name,
-                                  value: issue.status.id,
-                                },
-                              ]
-                            : // If the issue has allowed statuses, we use them
-                              issue.allowed_statuses?.map((status) => ({
-                                label: status.name,
-                                value: status.id,
-                              }))
-                      }
+                      options={issueStatuses.data?.map((status) => ({
+                        label: status.name,
+                        value: status.id,
+                      }))}
                       isLoading={issueQuery.isLoading || issueStatuses.isLoading}
                       shouldUpdate={shouldUpdateReactSelect}
                     />
@@ -320,7 +307,7 @@ const EditIssueModal = ({ issue: currentIssue, onClose, onSuccess }: PropTypes) 
                     </div>
                   </div>
 
-                  {hasIssueNoAllowedStatuses && (
+                  {issueStatuses.hasIssueNoAllowedStatuses && (
                     <DismissibleWarning name="issueNoAllowedStatuses">
                       <FormattedMessage id="issues.modal.edit-issue.issue-with-no-allowed-statuses.warning" />
                     </DismissibleWarning>
