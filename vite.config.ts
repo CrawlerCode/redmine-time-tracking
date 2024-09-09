@@ -38,6 +38,12 @@ export default defineConfig({
               manifest.background = {
                 page: "background.js",
               };
+              manifest.browser_specific_settings = {
+                gecko: {
+                  id: "{ea2ad5bc-e458-414d-8565-5cfe9f7cf0c2}",
+                  strict_min_version: "109.0",
+                },
+              };
             }
 
             return JSON.stringify(manifest, null, 4);
