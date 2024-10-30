@@ -101,6 +101,7 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
 
   return {
     data: issues,
+    extendedSearching,
     extendedSearch: extendedSearchIssues,
     isLoading: issuesQuery.isLoading || additionalIssuesQuery.isLoading,
     isError: issuesQuery.isError || additionalIssuesQuery.isError,

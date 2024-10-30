@@ -51,7 +51,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
           />
         )}
 
-        {search.searching && settings.features.extendedSearch && (
+        {myIssuesQuery.extendedSearching && (
           <>
             <div className="relative">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
