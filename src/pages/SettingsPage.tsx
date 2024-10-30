@@ -234,6 +234,7 @@ const SettingsPage = () => {
 
                 <Fieldset legend={<FormattedMessage id="settings.style" />}>
                   <div className="flex flex-col gap-y-2">
+                    <Field type="checkbox" name="style.displaySearchAlways" title={formatMessage({ id: "settings.style.display-search-always.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.stickyScroll" title={formatMessage({ id: "settings.style.sticky-scroll.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.groupIssuesByVersion" title={formatMessage({ id: "settings.style.group-issues-by-version.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.showIssuesPriority" title={formatMessage({ id: "settings.style.show-issues-priority.title" })} as={CheckBox} />

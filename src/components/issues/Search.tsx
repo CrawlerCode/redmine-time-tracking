@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ForwardedRef, ReactNode, forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import useHotKey from "../../hooks/useHotkey";
+import useSettings from "../../hooks/useSettings";
 import { TReference } from "../../types/redmine";
 import InputField from "../general/InputField";
 
@@ -24,11 +25,13 @@ export type SearchRef = {
 
 const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>) => {
   const { formatMessage } = useIntl();
+  const { settings } = useSettings();
 
   const searchRef = useRef<HTMLInputElement>(null);
   const [searching, setSearching] = useState(defaultSearchQuery.searching);
   const [query, setQuery] = useState(defaultSearchQuery.query);
   const [inProject, setInProject] = useState<TReference | undefined>(defaultSearchQuery.inProject);
+  const isSearching = searching || settings.style.displaySearchAlways;
 
   useImperativeHandle(ref, () => ({
     searchInProject(project: TReference) {
@@ -68,7 +71,7 @@ const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>
 
   return (
     <>
-      {searching && (
+      {isSearching && (
         <div className="relative mb-3">
           <InputField
             ref={searchRef}
@@ -100,7 +103,7 @@ const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>
       )}
       {children({
         search: {
-          searching,
+          searching: isSearching,
           query,
           inProject,
         },

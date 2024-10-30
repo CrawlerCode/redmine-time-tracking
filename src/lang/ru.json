@@ -130,6 +130,7 @@
   "settings.features.cache-comments.title": "Кеширование комментариев",
   "settings.features.cache-comments.description": "Кешировать комментарии пока они не отправлены",
   "settings.style": "Отображение",
+  "settings.style.display-search-always.title": "Display search always",
   "settings.style.sticky-scroll.title": "Закрепить названия проектов при прокрутке списка задач",
   "settings.style.group-issues-by-version.title": "Группировать задачи по target version",
   "settings.style.show-issues-priority.title": "Показывать приоритет задач",
