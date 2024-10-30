@@ -2,6 +2,7 @@ import { IssuesData } from "../components/issues/IssuesList";
 import { Settings } from "../provider/SettingsProvider";
 import { TIssue, TIssuePriority, TReference, TVersion } from "../types/redmine";
 
+type GroupId = "active-tab" | "active" | "paused" | `${number}`;
 type GroupType = "pinned" | "version" | "no-version";
 
 type IssueGroup = {
@@ -11,7 +12,7 @@ type IssueGroup = {
 };
 
 type GroupedIssues = {
-  type: string;
+  id: GroupId;
   project?: TReference;
   versions: TVersion[];
   groups: {
@@ -24,7 +25,7 @@ type GroupedIssues = {
 type GroupedIssuesHelper = Record<
   number | string,
   {
-    type: string;
+    id: GroupId;
     // The project reference
     project?: TReference;
     // Pinned issues
@@ -72,13 +73,36 @@ export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuePriorit
  * - group pinned issues
  * - group issues by version
  */
-export const getGroupedIssues = (issues: TIssue[], projectVersions: Record<number, TVersion[]>, issuesData: IssuesData, settings: Settings): GroupedIssues => {
+export const getGroupedIssues = ({
+  issues,
+  projectVersions,
+  issuesData,
+  settings,
+  activeTabIssueId,
+}: {
+  issues: TIssue[];
+  projectVersions: Record<number, TVersion[]>;
+  issuesData: IssuesData;
+  settings: Settings;
+  activeTabIssueId?: number;
+}): GroupedIssues => {
   const grouped = issues.reduce((result: GroupedIssuesHelper, issue) => {
+    if (settings.style.pinActiveTabIssue && activeTabIssueId && issue.id === activeTabIssueId) {
+      result["active-tab"] = {
+        id: "active-tab",
+        pinnedIssues: [],
+        versions: {},
+        issues: [issue],
+        sort: -3,
+      };
+      return result;
+    }
+
     if (settings.style.pinTrackedIssues) {
       if (issuesData[issue.id]?.active) {
         if (!("active" in result)) {
           result["active"] = {
-            type: "active",
+            id: "active",
             pinnedIssues: [],
             versions: {},
             issues: [],
@@ -93,7 +117,7 @@ export const getGroupedIssues = (issues: TIssue[], projectVersions: Record<numbe
       if (issuesData[issue.id]?.time) {
         if (!("paused" in result)) {
           result["paused"] = {
-            type: "paused",
+            id: "paused",
             pinnedIssues: [],
             versions: {},
             issues: [],
@@ -108,7 +132,7 @@ export const getGroupedIssues = (issues: TIssue[], projectVersions: Record<numbe
 
     if (!(issue.project.id in result)) {
       result[issue.project.id] = {
-        type: issue.project.id.toString(),
+        id: issue.project.id.toString() as GroupId,
         project: issue.project,
         pinnedIssues: [],
         versions: {},
@@ -149,9 +173,9 @@ export const getGroupedIssues = (issues: TIssue[], projectVersions: Record<numbe
 
   return Object.values(grouped)
     .sort((a, b) => a.sort - b.sort)
-    .map(({ type, project, pinnedIssues, versions, issues }) => ({
-      type,
-      project: project,
+    .map(({ id, project, pinnedIssues, versions, issues }) => ({
+      id,
+      project,
       versions: (project ? projectVersions[project.id] : undefined) ?? [],
       groups: [
         ...(pinnedIssues.length > 0

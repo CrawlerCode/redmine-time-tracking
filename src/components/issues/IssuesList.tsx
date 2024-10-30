@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Fragment, useState } from "react";
 import { FormattedMessage } from "react-intl";
+import useActiveRedmineTab from "../../hooks/useActiveRedmineTab";
 import useIssuePriorities from "../../hooks/useIssuePriorities";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useMyProjects from "../../hooks/useMyProjects";
@@ -35,19 +36,27 @@ type PropTypes = {
 const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, issuesData: { data: issuesData, setData: setIssuesData }, onSearchInProject }: PropTypes) => {
   const { settings } = useSettings();
 
+  const activeTab = useActiveRedmineTab();
+
   const myUser = useMyUser();
   const projects = useMyProjects();
   const projectRoles = useMyProjectRoles([...new Set(rawIssues.map((i) => i.project.id))]);
-  const groupedIssues = getGroupedIssues(getSortedIssues(rawIssues, settings.style.sortIssuesByPriority ? issuePriorities.data : [], issuesData), projectVersions?.data ?? {}, issuesData, settings);
+  const groupedIssues = getGroupedIssues({
+    issues: getSortedIssues(rawIssues, settings.style.sortIssuesByPriority ? issuePriorities.data : [], issuesData),
+    projectVersions: projectVersions?.data ?? {},
+    issuesData,
+    settings,
+    activeTabIssueId: activeTab?.data?.type === "issue" ? activeTab?.data?.id : undefined,
+  });
 
   const [createIssue, setCreateIssue] = useState<number | undefined>(undefined);
 
   return (
     <>
-      {groupedIssues.map(({ type, project: projectRef, versions, groups }) => {
+      {groupedIssues.map(({ id, project: projectRef, versions, groups }) => {
         const project: TProject | TReference | undefined = projects.data?.find((p) => p.id === projectRef?.id) ?? projectRef;
         return (
-          <Fragment key={type}>
+          <Fragment key={id}>
             {project && (
               <div
                 className={clsx("flex justify-between gap-x-2", {

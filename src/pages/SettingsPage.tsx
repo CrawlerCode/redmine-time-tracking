@@ -240,6 +240,7 @@ const SettingsPage = () => {
                     <Field type="checkbox" name="style.showIssuesPriority" title={formatMessage({ id: "settings.style.show-issues-priority.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.sortIssuesByPriority" title={formatMessage({ id: "settings.style.sort-issues-by-priority.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.pinTrackedIssues" title={formatMessage({ id: "settings.style.pin-tracked-issues.title" })} as={CheckBox} />
+                    <Field type="checkbox" name="style.pinActiveTabIssue" title={formatMessage({ id: "settings.style.pin-active-tab-issue.title" })} as={CheckBox} />
                     <Field type="checkbox" name="style.showTooltips" title={formatMessage({ id: "settings.style.show-tooltips.title" })} as={CheckBox} />
                     <Field
                       name="style.timeFormat"
