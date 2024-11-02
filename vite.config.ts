@@ -8,7 +8,7 @@ import packageJson from "./package.json";
 const platform = process.env.PLATFORM ?? "chrome";
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig((env) => ({
   build: {
     emptyOutDir: true,
     rollupOptions: {
@@ -27,6 +27,16 @@ export default defineConfig({
           dest: ".",
           transform: (content) => {
             const manifest = JSON.parse(content);
+
+            if (packageJson.version.includes("-")) {
+              manifest.version = packageJson.version.split("-")[0];
+              manifest.version_name = packageJson.version;
+            } else {
+              manifest.version = packageJson.version;
+            }
+            if (env.mode === "development") {
+              manifest.version_name = packageJson.version + " (dev)";
+            }
 
             if (platform === "chrome") {
               manifest.background = {
@@ -57,4 +67,4 @@ export default defineConfig({
       enableLogging: false,
     }),
   ],
-});
+}));

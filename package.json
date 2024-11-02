@@ -12,7 +12,7 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "node scripts/updateVersion.js && tsc && vite build --watch",
+    "dev": "tsc && vite build --watch --mode development",
     "build": "pnpm run build:chrome && pnpm run build:firefox",
     "build:chrome": "tsc && cross-env PLATFORM=chrome vite build",
     "build:firefox": "tsc && cross-env PLATFORM=firefox vite build",
