@@ -56,6 +56,32 @@ const SettingsPage = () => {
             .required(formatMessage({ id: "settings.redmine.url.validation.required" }))
             .matches(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?[\w\-/]*\/?$/, formatMessage({ id: "settings.redmine.url.validation.valid-url" })),
           redmineApiKey: Yup.string().required(formatMessage({ id: "settings.redmine.api-key.validation.required" })),
+          features: Yup.object({
+            autoPauseOnSwitch: Yup.boolean(),
+            extendedSearch: Yup.boolean(),
+            roundToNearestInterval: Yup.boolean(),
+            roundingInterval: Yup.number().when("roundToNearestInterval", {
+              is: true,
+              then: (schema) =>
+                schema
+                  .required(formatMessage({ id: "settings.features.rounding-interval.validation.required" }))
+                  .min(1, formatMessage({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
+                  .max(60, formatMessage({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
+            }),
+            addNotes: Yup.boolean(),
+            cacheComments: Yup.boolean(),
+          }),
+          style: Yup.object({
+            displaySearchAlways: Yup.boolean(),
+            stickyScroll: Yup.boolean(),
+            groupIssuesByVersion: Yup.boolean(),
+            showIssuesPriority: Yup.boolean(),
+            sortIssuesByPriority: Yup.boolean(),
+            pinTrackedIssues: Yup.boolean(),
+            pinActiveTabIssue: Yup.boolean(),
+            showTooltips: Yup.boolean(),
+            timeFormat: Yup.string().oneOf(["decimal", "minutes"]),
+          }),
         })}
         onSubmit={(values, { setSubmitting }) => {
           values.redmineURL = values.redmineURL.replace(/\/$/, "");
@@ -208,13 +234,30 @@ const SettingsPage = () => {
                       description={formatMessage({ id: "settings.features.extended-search.description" })}
                       as={CheckBox}
                     />
-                    <Field
-                      type="checkbox"
-                      name="features.roundTimeNearestQuarterHour"
-                      title={formatMessage({ id: "settings.features.round-time-nearest-quarter-hour.title" })}
-                      description={formatMessage({ id: "settings.features.round-time-nearest-quarter-hour.description" })}
-                      as={CheckBox}
-                    />
+                    <div className="flex items-center gap-x-1">
+                      <Field
+                        type="checkbox"
+                        name="features.roundToNearestInterval"
+                        title={formatMessage({ id: "settings.features.round-to-nearest-interval.title" })}
+                        description={formatMessage({ id: "settings.features.round-to-nearest-interval.description" })}
+                        as={CheckBox}
+                        className="grow"
+                      />
+                      {values.features.roundToNearestInterval && (
+                        <Field
+                          type="number"
+                          name="features.roundingInterval"
+                          placeholder={formatMessage({ id: "settings.features.rounding-interval.placeholder" })}
+                          as={InputField}
+                          min={1}
+                          max={60}
+                          step={1}
+                          className="w-12"
+                          inputClassName="appearance-none"
+                          error={touched.features?.roundingInterval && errors.features?.roundingInterval}
+                        />
+                      )}
+                    </div>
                     <Field
                       type="checkbox"
                       name="features.addNotes"

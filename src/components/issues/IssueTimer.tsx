@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
 import { TIssue } from "../../types/redmine";
-import { formatTimer, roundTimeNearestQuarterHour } from "../../utils/date";
+import { formatTimer, roundTimeNearestInterval } from "../../utils/date";
 import Button from "../general/Button";
 import Modal from "../general/Modal";
 import EditTimer from "./EditTimer";
@@ -166,7 +166,7 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
           icon={faCircleCheck}
           size="2x"
           className="cursor-pointer text-green-600 focus:outline-none"
-          onClick={() => onDoneTimer(settings.features.roundTimeNearestQuarterHour ? roundTimeNearestQuarterHour(timer) : timer)}
+          onClick={() => onDoneTimer(settings.features.roundToNearestInterval ? roundTimeNearestInterval(timer, settings.features.roundingInterval) : timer)}
           data-tooltip-id={`tooltip-done-timer-${issue.id}`}
           tabIndex={-1}
         />

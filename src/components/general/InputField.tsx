@@ -2,6 +2,7 @@ import { faAsterisk } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { forwardRef, useId } from "react";
+import { Tooltip } from "react-tooltip";
 
 interface PropTypes extends Omit<React.ComponentProps<"input">, "id" | "size"> {
   size?: "sm" | "md";
@@ -62,7 +63,14 @@ const InputField = forwardRef<HTMLInputElement, PropTypes>(({ size = "md", title
           </span>
         )}
       </div>
-      {error && <p className="text-sm text-red-600 dark:text-red-500">{error}</p>}
+      {error && (
+        <>
+          <p className="truncate text-sm text-red-600 dark:text-red-500">
+            <span data-tooltip-id={`tooltip-error-${id}`}>{error}</span>
+          </p>
+          <Tooltip id={`tooltip-error-${id}`} delayShow={200} content={error} className="text-red-600 dark:text-red-500" />
+        </>
+      )}
     </div>
   );
 });

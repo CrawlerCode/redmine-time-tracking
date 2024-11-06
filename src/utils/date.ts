@@ -9,16 +9,16 @@ export const formatTimer = (milliseconds: number) => {
 };
 
 /**
- * Round time to nearest quarter hour
+ * Round time to nearest interval
  *
- * for example:
- * 0:07:59 => 0:00:00
- * 0:08:00 => 0:15:00
+ * for example with interval 15:
+ * 0:07:29 => 0:00:00
+ * 0:07:30 => 0:15:00
  * 0:23:00 => 0:30:00
  */
-export const roundTimeNearestQuarterHour = (milliseconds: number) => {
+export const roundTimeNearestInterval = (milliseconds: number, interval: number) => {
   const seconds = milliseconds / 1000;
-  const m = Math.round(Math.floor((seconds / 60) % 60) / 15) * 15;
+  const m = Math.round(seconds / 60 / interval) * interval;
   const h = Math.floor(seconds / 60 / 60) + Math.floor(m / 60);
   return (h * 60 + (m % 60)) * 60 * 1000;
 };

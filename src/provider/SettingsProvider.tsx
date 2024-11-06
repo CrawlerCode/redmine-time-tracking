@@ -9,7 +9,9 @@ export type Settings = {
   features: {
     autoPauseOnSwitch: boolean;
     extendedSearch: boolean;
-    roundTimeNearestQuarterHour: boolean;
+    roundTimeNearestQuarterHour?: boolean;
+    roundToNearestInterval: boolean;
+    roundingInterval: number;
     cacheComments: boolean;
     addNotes: boolean;
   };
@@ -33,7 +35,8 @@ const defaultSettings: Settings = {
   features: {
     autoPauseOnSwitch: true,
     extendedSearch: true,
-    roundTimeNearestQuarterHour: false,
+    roundToNearestInterval: false,
+    roundingInterval: 15,
     cacheComments: true,
     addNotes: false,
   },
@@ -58,6 +61,14 @@ const SettingsContext = createContext({
 
 const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const { data, setData } = useStorage<Settings>("settings", defaultSettings);
+
+  // Migrate old settings TODO: Remove in future
+  if (data.features.roundTimeNearestQuarterHour === true) {
+    data.features.roundTimeNearestQuarterHour = undefined;
+    data.features.roundToNearestInterval = true;
+    data.features.roundingInterval = 15;
+    setData(data);
+  }
 
   return (
     <SettingsContext.Provider
