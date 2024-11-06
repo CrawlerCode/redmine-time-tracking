@@ -80,5 +80,6 @@
     "vite": "^5.4.10",
     "vite-plugin-static-copy": "^2.0.0",
     "vite-plugin-zip-pack": "^1.2.4"
-  }
+  },
+  "packageManager": "pnpm@9.12.3"
 }
