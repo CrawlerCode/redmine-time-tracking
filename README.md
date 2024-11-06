@@ -7,14 +7,21 @@
 ![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldcanhhkffokndenejhafhlkapflgcjg?logo=google-chrome&logoColor=white)
 ![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/stars/ldcanhhkffokndenejhafhlkapflgcjg?logo=google-chrome&logoColor=white)
 
-# Redmine Time Tracking (Chrome Extensions)
+![Mozilla Add-on Version](https://img.shields.io/amo/v/redmine-time-tracking?logo=firefox-browser&logoColor=white)
+![Mozilla Add-on Users](https://img.shields.io/amo/users/redmine-time-tracking?logo=firefox-browser&logoColor=white)
+![Mozilla Add-on Rating](https://img.shields.io/amo/stars/redmine-time-tracking?logo=firefox-browser&logoColor=white)
+
+# Redmine Time Tracking (Chrome Extension / Firefox Extension)
 
 > Start-stop timer for [Redmine](https://www.redmine.org/).
 
-[![Install Button]][Install Link]
+[![Install-Button-Chrome]][Install-Link-Chrome]
+[![Install-Button-Firefox]][Install-Link-Firefox]
 
-[Install Button]: https://img.shields.io/badge/Install-71b500?style=for-the-badge&logoColor=white&logo=google-chrome
-[Install Link]: https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg "Open in chrome web store"
+[Install-Button-Chrome]: https://img.shields.io/badge/Install-71b500?style=for-the-badge&logoColor=white&logo=google-chrome
+[Install-Link-Chrome]: https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg "Open in chrome web store"
+[Install-Button-Firefox]: https://img.shields.io/badge/Install-71b500?style=for-the-badge&logoColor=white&logo=firefox-browser
+[Install-Link-Firefox]: https://addons.mozilla.org/de/firefox/addon/redmine-time-tracking "Open in firefox add-on store"
 
 # Features
 
@@ -47,7 +54,7 @@ At least Redmine version `3.0` or higher required. Recommended version `5.0` or 
 | Display project-available time entry activities when _adding spent time entries_  | `< 3.4.0`                   |
 | Extended search                                                                   | `< 3.3.0`                   |
 
-_Tested with Google Chrome Version 126_
+_Tested with Google Chrome Version 130 and Firefox 132_
 
 # Supported languages
 
