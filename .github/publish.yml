@@ -1,0 +1,79 @@
+name: Publish
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+
+jobs:
+  publish-chrome:
+    name: Publish to Chrome Web Store
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build:chrome
+
+      - run: gh release upload ${{ github.event.release.tag_name }} releases/redmine-time-tracking-${{ github.event.release.tag_name }}-chrome.zip
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+
+      - uses: mnao305/chrome-extension-upload@v5.0.0
+        with:
+          file-path: releases/redmine-time-tracking-${{ github.event.release.tag_name }}-chrome.zip
+          extension-id: ldcanhhkffokndenejhafhlkapflgcjg
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+  publish-firefox:
+    name: Publish to Firefox Addon Store
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build:firefox
+
+      - run: gh release upload ${{ github.event.release.tag_name }} releases/redmine-time-tracking-${{ github.event.release.tag_name }}-firefox.zip
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+
+      - uses: kewisch/action-web-ext@v1
+        id: web-ext-sign
+        with:
+          cmd: sign
+          source: releases/redmine-time-tracking-${{ github.event.release.tag_name }}-firefox.zip
+          artifacts: releases
+          channel: listed
+          approvalNotes: "GitHub: https://github.com/CrawlerCode/redmine-time-tracking"
+          apiKey: ${{ secrets.FIREFOX_API_KEY }}
+          apiSecret: ${{ secrets.FIREFOX_API_SECRET }}
+
+      - run: mv ${{ steps.web-ext-sign.outputs.target }} releases/redmine-time-tracking-${{ github.event.release.tag_name }}-firefox.xpi
+
+      - run: gh release upload ${{ github.event.release.tag_name }} releases/redmine-time-tracking-${{ github.event.release.tag_name }}-firefox.xpi
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}

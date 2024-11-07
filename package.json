@@ -17,9 +17,7 @@
     "build": "pnpm run build:chrome && pnpm run build:firefox",
     "build:chrome": "tsc && cross-env PLATFORM=chrome vite build",
     "build:firefox": "tsc && cross-env PLATFORM=firefox vite build",
-    "release": "gh release create v%npm_package_version% releases/redmine-time-tracking-v%npm_package_version%-chrome.zip releases/redmine-time-tracking-v%npm_package_version%-firefox.zip --notes-file release_notes.md --generate-notes",
-    "publish": "pnpm run build && pnpm run release",
-    "publish:beta": "pnpm run build && pnpm run release --prerelease --target beta",
+    "release": "gh release create v%npm_package_version% --notes-file release_notes.md --generate-notes",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
     "test": "playwright test"
   },
