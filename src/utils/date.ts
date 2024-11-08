@@ -18,7 +18,7 @@ export const formatTimer = (milliseconds: number) => {
  */
 export const roundTimeNearestInterval = (milliseconds: number, interval: number) => {
   const seconds = milliseconds / 1000;
-  const m = Math.round(seconds / 60 / interval) * interval;
+  const m = Math.round(Math.round((seconds / 60) % 60) / interval) * interval;
   const h = Math.floor(seconds / 60 / 60) + Math.floor(m / 60);
   return (h * 60 + (m % 60)) * 60 * 1000;
 };
