@@ -100,7 +100,7 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
             done_ratio: Yup.number().nullable().min(0).max(100),
           })}
           onSubmit={async (values, { setSubmitting }) => {
-            await createIssueMutation.mutateAsync(values as unknown as TCreateIssue);
+            await createIssueMutation.mutateAsync(values);
             setSubmitting(false);
           }}
         >
@@ -316,7 +316,7 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
           allowClose={false}
           message={
             isAxiosError(createIssueMutation.error)
-              ? (createIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (createIssueMutation.error as AxiosError).message
+              ? ((createIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (createIssueMutation.error as AxiosError).message)
               : (createIssueMutation.error as Error).message
           }
         />

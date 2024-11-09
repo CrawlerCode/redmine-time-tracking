@@ -1,5 +1,5 @@
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
-import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faPause, faPen, faPlay, faStop, faThumbTack, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpRightFromSquare, faBan, faBookmark, faCircleUser, faNoteSticky, faPause, faPen, faPlay, faStop, faThumbTack, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useRef, useState } from "react";
@@ -12,6 +12,7 @@ import { clsxm } from "../../utils/clsxm";
 import ContextMenu from "../general/ContextMenu";
 import KBD from "../general/KBD";
 import Toast from "../general/Toast";
+import AddIssueNotesModal from "./AddIssueNotesModal";
 import CreateTimeEntryModal from "./CreateTimeEntryModal";
 import EditIssueModal from "./EditIssueModal";
 import IssueInfoTooltip from "./IssueInfoTooltip";
@@ -23,10 +24,11 @@ type PropTypes = {
   assignedToMe: boolean;
   canEdit: boolean;
   canLogTime: boolean;
+  canAddNotes: boolean;
   timer: Timer;
 };
 
-const Issue = ({ issue, priorityType, assignedToMe, canEdit, canLogTime, timer }: PropTypes) => {
+const Issue = ({ issue, priorityType, assignedToMe, canEdit, canLogTime, canAddNotes, timer }: PropTypes) => {
   const { formatMessage } = useIntl();
 
   const { settings } = useSettings();
@@ -36,6 +38,7 @@ const Issue = ({ issue, priorityType, assignedToMe, canEdit, canLogTime, timer }
   const [createTimeEntry, setCreateTimeEntry] = useState<number | undefined>(undefined);
   const [copiedIdToClipboard, setCopiedIdToClipboard] = useState(false);
   const [editIssue, setEditIssue] = useState(false);
+  const [addNotes, setAddNotes] = useState(false);
 
   return (
     <>
@@ -66,6 +69,12 @@ const Issue = ({ issue, priorityType, assignedToMe, canEdit, canLogTime, timer }
               icon: <FontAwesomeIcon icon={faPen} />,
               onClick: () => setEditIssue(true),
               disabled: !canEdit,
+            },
+            {
+              name: formatMessage({ id: "issues.context-menu.add-notes" }),
+              icon: <FontAwesomeIcon icon={faNoteSticky} />,
+              onClick: () => setAddNotes(true),
+              disabled: !canAddNotes,
             },
           ],
           [
@@ -239,6 +248,7 @@ const Issue = ({ issue, priorityType, assignedToMe, canEdit, canLogTime, timer }
         />
       )}
       {editIssue && <EditIssueModal issue={issue} onClose={() => setEditIssue(false)} onSuccess={() => setEditIssue(false)} />}
+      {addNotes && <AddIssueNotesModal issue={issue} onClose={() => setAddNotes(false)} onSuccess={() => setAddNotes(false)} />}
       {copiedIdToClipboard && (
         <Toast type="success" message={formatMessage({ id: "issues.id-copied-to-clipboard" }, { issueId: issue.id })} autoClose={2500} onClose={() => setCopiedIdToClipboard(false)} />
       )}

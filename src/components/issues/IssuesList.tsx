@@ -108,6 +108,7 @@ const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, timer
                         projectRoles.hasProjectPermission(issue.project, "edit_issues") || (projectRoles.hasProjectPermission(issue.project, "edit_own_issues") && issue.author.id === myUser.data?.id)
                       }
                       canLogTime={projectRoles.hasProjectPermission(issue.project, "log_time")}
+                      canAddNotes={projectRoles.hasProjectPermission(issue.project, "add_issue_notes")}
                       timer={timer}
                     />
                   );
