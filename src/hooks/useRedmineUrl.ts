@@ -16,7 +16,7 @@ function useRedmineUrl() {
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_, issueId] = window.location.href.match(new RegExp(`^${settings.redmineURL}/issues/(\\d+)(\\?.*)?$`)) || [];
+    const [_, issueId] = window.location.href.match(new RegExp(`^${settings.redmineURL}/issues/(\\d+)(\\?.*)?(#.*)?$`)) || [];
 
     if (issueId) {
       setCurrentUrl({ url: window.location.href, data: { type: "issue", id: Number(issueId) } });

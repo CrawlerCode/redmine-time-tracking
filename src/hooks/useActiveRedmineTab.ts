@@ -21,7 +21,7 @@ function useActiveRedmineTab() {
         const currentTab = tabs[0];
         if (currentTab?.url) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const [_, issueId] = currentTab.url.match(new RegExp(`^${settings.redmineURL}/issues/(\\d+)$`)) || [];
+          const [_, issueId] = currentTab.url.match(new RegExp(`^${settings.redmineURL}/issues/(\\d+)(\\?.*)?(#.*)?$`)) || [];
           if (issueId) {
             setCurrentUrl({ url: currentTab.url, data: { type: "issue", id: Number(issueId) } });
           } else {
