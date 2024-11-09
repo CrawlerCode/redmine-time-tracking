@@ -22,7 +22,7 @@
   "web_accessible_resources": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "resources": ["content.js", "content.css", "assets/*"]
+      "resources": ["*.css", "*.js"]
     }
   ],
   "permissions": ["storage", "tabs", "activeTab", "scripting"],

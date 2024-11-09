@@ -20,10 +20,10 @@ export default defineConfig((env) => ({
     },
   },
   experimental: {
-    renderBuiltUrl(_, { hostId, type, hostType }) {
+    renderBuiltUrl(file, { type, hostType }) {
       if (type === "asset" && hostType !== "html") {
         return {
-          runtime: `chrome.runtime.getURL("${hostId}")`,
+          runtime: `chrome.runtime.getURL("${file}")`,
         };
       }
     },
