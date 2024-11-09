@@ -73,10 +73,11 @@ export default defineConfig((env) => ({
         },
       ],
     }),
-    zipPack({
-      outDir: "releases",
-      outFileName: `${packageJson.name}-v${packageJson.version}-${platform}.zip`,
-      enableLogging: false,
-    }),
+    env.mode === "production" &&
+      zipPack({
+        outDir: "releases",
+        outFileName: `${packageJson.name}-v${packageJson.version}-${platform}.zip`,
+        enableLogging: false,
+      }),
   ],
 }));
