@@ -22,10 +22,11 @@ type PropTypes = {
   priorityType: PrimitiveType;
   assignedToMe: boolean;
   canEdit: boolean;
+  canLogTime: boolean;
   timer: Timer;
 };
 
-const Issue = ({ issue, priorityType, assignedToMe, canEdit, timer }: PropTypes) => {
+const Issue = ({ issue, priorityType, assignedToMe, canEdit, canLogTime, timer }: PropTypes) => {
   const { formatMessage } = useIntl();
 
   const { settings } = useSettings();
@@ -71,25 +72,25 @@ const Issue = ({ issue, priorityType, assignedToMe, canEdit, timer }: PropTypes)
             {
               name: formatMessage({ id: "issues.context-menu.timer.start" }),
               icon: <FontAwesomeIcon icon={faPlay} />,
-              disabled: timer.active,
+              disabled: timer.active || !canLogTime,
               onClick: timer.startTimer,
             },
             {
               name: formatMessage({ id: "issues.context-menu.timer.pause" }),
               icon: <FontAwesomeIcon icon={faPause} />,
-              disabled: !timer.active,
+              disabled: !timer.active || !canLogTime,
               onClick: timer.pauseTimer,
             },
             {
               name: formatMessage({ id: "issues.context-menu.timer.reset" }),
               icon: <FontAwesomeIcon icon={faStop} />,
-              disabled: timer.getCurrentTime() === 0,
+              disabled: timer.getCurrentTime() === 0 || !canLogTime,
               onClick: timer.resetTimer,
             },
             {
               name: formatMessage({ id: "issues.context-menu.timer.edit" }),
               icon: <FontAwesomeIcon icon={faPen} />,
-              disabled: timer.getCurrentTime() === 0,
+              disabled: timer.getCurrentTime() === 0 || !canLogTime,
               onClick: () => timerRef.current?.editTimer(),
             },
           ],
@@ -152,6 +153,8 @@ const Issue = ({ issue, priorityType, assignedToMe, canEdit, timer }: PropTypes)
               // ignore in edit mode
               if (timerRef.current?.isInEditMode) return;
 
+              if (!canLogTime) return;
+
               if (timer.active) {
                 timer.pauseTimer();
               } else {
@@ -190,9 +193,11 @@ const Issue = ({ issue, priorityType, assignedToMe, canEdit, timer }: PropTypes)
                 </div>
               </div>
             </div>
-            <div className="flex flex-col">
-              <IssueTimer key={issue.id} ref={timerRef} issue={issue} timer={timer} onDoneTimer={setCreateTimeEntry} />
-            </div>
+            {canLogTime && (
+              <div className="flex flex-col">
+                <IssueTimer key={issue.id} ref={timerRef} issue={issue} timer={timer} onDoneTimer={setCreateTimeEntry} />
+              </div>
+            )}
           </div>
           <div className="absolute right-2 top-2 flex items-start justify-end gap-x-1">
             {timer.pinned && (
