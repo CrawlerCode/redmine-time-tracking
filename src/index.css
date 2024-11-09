@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  :host {
     --color-primary: theme("colors.blue.800");
     --color-primary-hover: theme("colors.blue.700");
     --color-primary-disabled: theme("colors.blue.400");
@@ -24,7 +25,8 @@
     --color-field-disabled: theme("colors.gray.200");
   }
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root,
+    :host {
       --color-primary: theme("colors.blue.700");
       --color-primary-hover: theme("colors.blue.800");
       --color-primary-disabled: theme("colors.blue.500");

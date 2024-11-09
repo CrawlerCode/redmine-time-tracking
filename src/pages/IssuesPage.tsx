@@ -3,36 +3,34 @@ import { FormattedMessage, useIntl } from "react-intl";
 import BrowserNotificationBadge from "../components/general/BrowserNotificationBadge";
 import Toast from "../components/general/Toast";
 import Filter, { FilterQuery } from "../components/issues/Filter";
-import IssuesList, { IssuesData } from "../components/issues/IssuesList";
+import IssuesList from "../components/issues/IssuesList";
 import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
 import Search, { SearchQuery, SearchRef } from "../components/issues/Search";
 import useIssuePriorities from "../hooks/useIssuePriorities";
 import useMyIssues from "../hooks/useMyIssues";
 import useProjectVersions from "../hooks/useProjectVersions";
 import useSettings from "../hooks/useSettings";
-import useStorage from "../hooks/useStorage";
-
-const _defaultIssues = {};
+import useTimers from "../hooks/useTimers";
 
 const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { search: SearchQuery; filter: FilterQuery; searchRef: RefObject<SearchRef>; isLoading: boolean }) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
-  const issuesData = useStorage<IssuesData>("issues", _defaultIssues);
+  const timers = useTimers();
 
   const myIssuesQuery = useMyIssues(
-    Object.keys(issuesData.data)
+    Object.keys(timers.timers)
       .map((id) => Number(id))
-      .filter((id) => issuesData.data[id].remembered || issuesData.data[id].active || issuesData.data[id].time > 0),
+      .filter((id) => timers.timers[id].remembered || timers.timers[id].active || timers.timers[id].time > 0),
     search,
     filter
   );
   const issuePriorities = useIssuePriorities({ enabled: settings.style.sortIssuesByPriority || settings.style.showIssuesPriority });
   const projectVersions = useProjectVersions([...new Set(myIssuesQuery.data.filter((i) => i.fixed_version).map((i) => i.project.id))], { enabled: settings.style.groupIssuesByVersion });
 
-  const activeTimerCount = Object.values(issuesData.data).reduce((count, data) => count + (data.active ? 1 : 0), 0);
+  const activeTimerCount = timers.getActiveTimerCount();
 
-  const isLoading = issuesData.isLoading || myIssuesQuery.isLoading || issuePriorities.isLoading || projectVersions.isLoading || isPageLoading;
+  const isLoading = timers.isLoading || myIssuesQuery.isLoading || issuePriorities.isLoading || projectVersions.isLoading || isPageLoading;
 
   return (
     <>
@@ -46,7 +44,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
             issues={myIssuesQuery.data}
             issuePriorities={issuePriorities}
             projectVersions={projectVersions}
-            issuesData={issuesData}
+            timers={timers}
             onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
           />
         )}
@@ -68,7 +66,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
               issues={myIssuesQuery.extendedSearch}
               issuePriorities={issuePriorities}
               projectVersions={projectVersions}
-              issuesData={issuesData}
+              timers={timers}
               onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
             />
           </>

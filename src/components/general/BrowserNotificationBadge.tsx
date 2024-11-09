@@ -7,14 +7,13 @@ type PropTypes = {
 
 const BrowserNotificationBadge = ({ text, backgroundColor }: PropTypes) => {
   useEffect(() => {
-    chrome.action.setBadgeBackgroundColor({ color: backgroundColor });
-  }, [backgroundColor]);
+    if (!chrome.action) return; // Not available in content scripts
 
-  useEffect(() => {
     chrome.action.setBadgeText({
       text: text,
     });
-  }, [text]);
+    chrome.action.setBadgeBackgroundColor({ color: backgroundColor });
+  }, [text, backgroundColor]);
 
   return null;
 };

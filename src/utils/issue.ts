@@ -1,4 +1,4 @@
-import { IssuesData } from "../components/issues/IssuesList";
+import { TimersData } from "../hooks/useTimers";
 import { Settings } from "../provider/SettingsProvider";
 import { TIssue, TIssuePriority, TReference, TVersion } from "../types/redmine";
 
@@ -49,7 +49,7 @@ type GroupedIssuesHelper = Record<
   }
 >;
 
-export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuePriority[], issuesData: IssuesData) => {
+export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuePriority[], timersData: TimersData) => {
   const issuePrioritiesIndices = issuePriorities.reduce((result: Record<number, number>, priority, index) => {
     result[priority.id] = index;
     return result;
@@ -57,7 +57,7 @@ export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuePriorit
 
   const sortedIssues = issues.sort(
     (a, b) =>
-      (issuesData[b.id]?.pinned ? 1 : 0) - (issuesData[a.id]?.pinned ? 1 : 0) ||
+      (timersData[b.id]?.pinned ? 1 : 0) - (timersData[a.id]?.pinned ? 1 : 0) ||
       issuePrioritiesIndices[b.priority.id] - issuePrioritiesIndices[a.priority.id] ||
       (b.due_date ? 1 : 0) - (a.due_date ? 1 : 0) ||
       new Date(a.due_date ?? 0).getTime() - new Date(b.due_date ?? 0).getTime() ||
@@ -76,13 +76,13 @@ export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuePriorit
 export const getGroupedIssues = ({
   issues,
   projectVersions,
-  issuesData,
+  timersData,
   settings,
   activeTabIssueId,
 }: {
   issues: TIssue[];
   projectVersions: Record<number, TVersion[]>;
-  issuesData: IssuesData;
+  timersData: TimersData;
   settings: Settings;
   activeTabIssueId?: number;
 }): GroupedIssues => {
@@ -99,7 +99,7 @@ export const getGroupedIssues = ({
     }
 
     if (settings.style.pinTrackedIssues) {
-      if (issuesData[issue.id]?.active) {
+      if (timersData[issue.id]?.active) {
         if (!("active" in result)) {
           result["active"] = {
             id: "active",
@@ -114,7 +114,7 @@ export const getGroupedIssues = ({
         return result;
       }
 
-      if (issuesData[issue.id]?.time) {
+      if (timersData[issue.id]?.time) {
         if (!("paused" in result)) {
           result["paused"] = {
             id: "paused",
@@ -141,7 +141,7 @@ export const getGroupedIssues = ({
       };
     }
 
-    if (issuesData[issue.id]?.pinned) {
+    if (timersData[issue.id]?.pinned) {
       result[issue.project.id].pinnedIssues.push(issue);
       return result;
     }

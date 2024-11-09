@@ -6,74 +6,52 @@ import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useState } fr
 import { FormattedMessage, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
+import { Timer } from "../../hooks/useTimers";
 import { TIssue } from "../../types/redmine";
 import { formatTimer, roundTimeNearestInterval } from "../../utils/date";
 import Button from "../general/Button";
 import Modal from "../general/Modal";
 import EditTimer from "./EditTimer";
 
-export type IssueTimerData = {
-  active: boolean;
-  start?: number;
-  time: number;
-};
-
-export type TimerActions = {
-  onStart: () => void;
-  onPause: (time: number) => void;
-  onReset: () => void;
-  onOverrideTime: (time: number) => void;
-  onDoneTimer: (time: number) => void;
-};
-
 type PropTypes = {
   issue: TIssue;
-  data: IssueTimerData;
-} & TimerActions;
+  timer: Timer;
+  onDoneTimer?: (time: number) => void;
+};
 
 export type TimerRef = {
-  timer: number;
   isInEditMode: boolean;
-  startTimer: () => void;
-  pauseTimer: () => void;
   editTimer: () => void;
 };
 
-const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, onPause, onReset, onOverrideTime, onDoneTimer }: PropTypes, ref: ForwardedRef<TimerRef>) => {
+const IssueTimer = forwardRef(({ issue, timer, onDoneTimer }: PropTypes, ref: ForwardedRef<TimerRef>) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
   const [editMode, setEditMode] = useState(false);
 
-  const [timer, setTimer] = useState(calcTime(time, start));
+  const [currenTime, setCurrentTime] = useState(timer.getCurrentTime());
 
   useEffect(() => {
-    setTimer(calcTime(time, start));
-    if (active && start) {
+    setCurrentTime(timer.getCurrentTime());
+    if (timer.active && timer.start) {
       const timerInterval = setInterval(() => {
-        setTimer(calcTime(time, start));
+        setCurrentTime(timer.getCurrentTime());
       }, 1000);
       return () => clearInterval(timerInterval);
     }
-  }, [active, time, start]);
+  }, [timer]);
 
   useImperativeHandle(
     ref,
     () =>
       ({
-        timer: timer,
         isInEditMode: editMode,
-        startTimer: () => {
-          onStart();
-        },
-        pauseTimer: () => {
-          onPause(timer);
-        },
         editTimer: () => {
           setEditMode(true);
         },
       }) satisfies TimerRef,
-    [timer, editMode, onStart, onPause]
+    [editMode]
   );
 
   const [confirmResetModal, setConfirmResetModal] = useState(false);
@@ -83,10 +61,10 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
       <div className="flex items-center justify-end gap-x-3">
         {(editMode && (
           <EditTimer
-            initTime={timer}
+            initTime={currenTime}
             onOverrideTime={(time) => {
-              onOverrideTime(time);
               setEditMode(false);
+              timer.setTimer(time);
             }}
             onCancel={() => setEditMode(false)}
           />
@@ -96,16 +74,16 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
               <Tooltip id={`tooltip-edit-timer-${issue.id}`} place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.edit.tooltip" })} className="italic" />
             )}
             <span
-              className={clsx("text-lg", timer > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", active && "font-bold")}
+              className={clsx("text-lg", currenTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", timer.active && "font-bold")}
               onDoubleClick={() => setEditMode(true)}
               data-tooltip-id={`tooltip-edit-timer-${issue.id}`}
             >
-              {formatTimer(timer)}
+              {formatTimer(currenTime)}
             </span>
           </>
         )}
 
-        {!active ? (
+        {!timer.active ? (
           <>
             {settings.style.showTooltips && (
               <Tooltip id={`tooltip-start-timer-${issue.id}`} place="left" delayShow={700} className="italic">
@@ -118,7 +96,7 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
               icon={faPlay}
               size="2x"
               className="cursor-pointer text-green-500 focus:outline-none"
-              onClick={onStart}
+              onClick={timer.startTimer}
               data-tooltip-id={`tooltip-start-timer-${issue.id}`}
               tabIndex={-1}
             />
@@ -136,7 +114,7 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
               icon={faPause}
               size="2x"
               className="cursor-pointer text-red-500 focus:outline-none"
-              onClick={() => onPause(timer)}
+              onClick={timer.pauseTimer}
               data-tooltip-id={`tooltip-pause-timer-${issue.id}`}
               tabIndex={-1}
             />
@@ -157,19 +135,23 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
           tabIndex={-1}
         />
 
-        {settings.style.showTooltips && (
-          <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} content={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })} className="z-10 italic" />
+        {onDoneTimer && (
+          <>
+            {settings.style.showTooltips && (
+              <Tooltip id={`tooltip-done-timer-${issue.id}`} place="bottom" delayShow={700} content={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })} className="z-10 italic" />
+            )}
+            <FontAwesomeIcon
+              role="button"
+              data-type="done-timer"
+              icon={faCircleCheck}
+              size="2x"
+              className="cursor-pointer text-green-600 focus:outline-none"
+              onClick={() => onDoneTimer(settings.features.roundToNearestInterval ? roundTimeNearestInterval(currenTime, settings.features.roundingInterval) : currenTime)}
+              data-tooltip-id={`tooltip-done-timer-${issue.id}`}
+              tabIndex={-1}
+            />
+          </>
         )}
-        <FontAwesomeIcon
-          role="button"
-          data-type="done-timer"
-          icon={faCircleCheck}
-          size="2x"
-          className="cursor-pointer text-green-600 focus:outline-none"
-          onClick={() => onDoneTimer(settings.features.roundToNearestInterval ? roundTimeNearestInterval(timer, settings.features.roundingInterval) : timer)}
-          data-tooltip-id={`tooltip-done-timer-${issue.id}`}
-          tabIndex={-1}
-        />
       </div>
 
       {confirmResetModal && (
@@ -185,7 +167,7 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
               size="sm"
               onClick={() => {
                 setConfirmResetModal(false);
-                onReset();
+                timer.resetTimer();
               }}
               autoFocus
             >
@@ -197,10 +179,6 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
     </>
   );
 });
-
-const calcTime = (time: number, start?: number) => {
-  return time + (start ? new Date().getTime() - start : 0);
-};
 
 IssueTimer.displayName = "IssueTimer";
 

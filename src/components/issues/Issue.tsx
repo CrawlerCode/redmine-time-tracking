@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { FormattedMessage, PrimitiveType, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
+import { Timer } from "../../hooks/useTimers";
 import { TIssue } from "../../types/redmine";
 import { clsxm } from "../../utils/clsxm";
 import ContextMenu from "../general/ContextMenu";
@@ -14,45 +15,17 @@ import Toast from "../general/Toast";
 import CreateTimeEntryModal from "./CreateTimeEntryModal";
 import EditIssueModal from "./EditIssueModal";
 import IssueInfoTooltip from "./IssueInfoTooltip";
-import IssueTimer, { IssueTimerData, TimerActions, TimerRef } from "./IssueTimer";
-
-type IssueActions = {
-  onRemember: () => void;
-  onForget: () => void;
-  onPin: () => void;
-  onUnpin: () => void;
-  onPinAndRemember: () => void;
-};
+import IssueTimer, { TimerRef } from "./IssueTimer";
 
 type PropTypes = {
   issue: TIssue;
   priorityType: PrimitiveType;
-  timerData: IssueTimerData;
   assignedToMe: boolean;
   canEdit: boolean;
-  pinned: boolean;
-  remembered: boolean;
-} & Omit<TimerActions, "onDoneTimer"> &
-  IssueActions;
+  timer: Timer;
+};
 
-const Issue = ({
-  issue,
-  priorityType,
-  timerData,
-  assignedToMe,
-  pinned,
-  remembered,
-  onStart,
-  onPause,
-  onReset,
-  onOverrideTime,
-  onRemember,
-  onForget,
-  onPin,
-  onUnpin,
-  onPinAndRemember,
-  canEdit,
-}: PropTypes) => {
+const Issue = ({ issue, priorityType, assignedToMe, canEdit, timer }: PropTypes) => {
   const { formatMessage } = useIntl();
 
   const { settings } = useSettings();
@@ -98,40 +71,40 @@ const Issue = ({
             {
               name: formatMessage({ id: "issues.context-menu.timer.start" }),
               icon: <FontAwesomeIcon icon={faPlay} />,
-              disabled: timerData.active,
-              onClick: onStart,
+              disabled: timer.active,
+              onClick: timer.startTimer,
             },
             {
               name: formatMessage({ id: "issues.context-menu.timer.pause" }),
               icon: <FontAwesomeIcon icon={faPause} />,
-              disabled: !timerData.active,
-              onClick: () => timerRef.current?.pauseTimer(),
+              disabled: !timer.active,
+              onClick: timer.pauseTimer,
             },
             {
               name: formatMessage({ id: "issues.context-menu.timer.reset" }),
               icon: <FontAwesomeIcon icon={faStop} />,
-              disabled: timerRef.current?.timer === 0,
-              onClick: onReset,
+              disabled: timer.getCurrentTime() === 0,
+              onClick: timer.resetTimer,
             },
             {
               name: formatMessage({ id: "issues.context-menu.timer.edit" }),
               icon: <FontAwesomeIcon icon={faPen} />,
-              disabled: timerRef.current?.timer === 0,
+              disabled: timer.getCurrentTime() === 0,
               onClick: () => timerRef.current?.editTimer(),
             },
           ],
           [
             {
-              name: formatMessage({ id: assignedToMe || remembered ? "issues.context-menu.pin" : "issues.context-menu.pin-and-remember" }),
+              name: formatMessage({ id: assignedToMe || timer.remembered ? "issues.context-menu.pin" : "issues.context-menu.pin-and-remember" }),
               icon: <FontAwesomeIcon icon={faThumbTack} className="rotate-[30deg]" />,
-              disabled: pinned,
-              onClick: assignedToMe || remembered ? onPin : onPinAndRemember,
+              disabled: timer.pinned,
+              onClick: () => (assignedToMe || timer.remembered ? timer.setPinned(true) : timer.setRememberedAndPinned(true, true)),
             },
             {
               name: formatMessage({ id: "issues.context-menu.unpin" }),
               icon: <FontAwesomeIcon icon={faXmark} />,
-              disabled: !pinned,
-              onClick: onUnpin,
+              disabled: !timer.pinned,
+              onClick: () => timer.setPinned(false),
             },
           ],
           ...(!assignedToMe
@@ -140,14 +113,14 @@ const Issue = ({
                   {
                     name: formatMessage({ id: "issues.context-menu.remember" }),
                     icon: <FontAwesomeIcon icon={faBookmark} />,
-                    disabled: remembered,
-                    onClick: onRemember,
+                    disabled: timer.remembered,
+                    onClick: () => timer.setRemembered(true),
                   },
                   {
                     name: formatMessage({ id: "issues.context-menu.forgot" }),
                     icon: <FontAwesomeIcon icon={faBan} />,
-                    disabled: !remembered,
-                    onClick: onForget,
+                    disabled: !timer.remembered,
+                    onClick: () => timer.setRemembered(false),
                   },
                 ],
               ]
@@ -177,13 +150,12 @@ const Issue = ({
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.code === "Space") {
               // ignore in edit mode
-              if (timerRef.current?.isInEditMode) {
-                return;
-              }
-              if (timerData.active) {
-                timerRef.current?.pauseTimer();
+              if (timerRef.current?.isInEditMode) return;
+
+              if (timer.active) {
+                timer.pauseTimer();
               } else {
-                timerRef.current?.startTimer();
+                timer.startTimer();
               }
               e.preventDefault();
             }
@@ -194,8 +166,8 @@ const Issue = ({
             className={clsx(
               "mb-1 truncate",
               {
-                "me-4": (pinned && assignedToMe) || (!pinned && !assignedToMe),
-                "me-9": pinned && !assignedToMe,
+                "me-4": (timer.pinned && assignedToMe) || (!timer.pinned && !assignedToMe),
+                "me-9": timer.pinned && !assignedToMe,
               },
               settings.style.showIssuesPriority && {
                 "text-[#559] dark:text-[#9393ed]": priorityType === "lowest",
@@ -218,22 +190,12 @@ const Issue = ({
                 </div>
               </div>
             </div>
-            <div className="mr-2 flex flex-col">
-              <IssueTimer
-                key={issue.id}
-                ref={timerRef}
-                issue={issue}
-                data={timerData}
-                onStart={onStart}
-                onPause={onPause}
-                onReset={onReset}
-                onOverrideTime={onOverrideTime}
-                onDoneTimer={setCreateTimeEntry}
-              />
+            <div className="flex flex-col">
+              <IssueTimer key={issue.id} ref={timerRef} issue={issue} timer={timer} onDoneTimer={setCreateTimeEntry} />
             </div>
           </div>
           <div className="absolute right-2 top-2 flex items-start justify-end gap-x-1">
-            {pinned && (
+            {timer.pinned && (
               <>
                 {settings.style.showTooltips && <Tooltip id={`tooltip-pinned-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.pinned" })} className="italic" />}
                 <FontAwesomeIcon icon={faThumbTack} className="rotate-[30deg] text-gray-300 focus:outline-none dark:text-gray-600" data-tooltip-id={`tooltip-pinned-${issue.id}`} tabIndex={-1} />
@@ -267,7 +229,7 @@ const Issue = ({
           onClose={() => setCreateTimeEntry(undefined)}
           onSuccess={() => {
             setCreateTimeEntry(undefined);
-            onReset();
+            timer.resetTimer();
           }}
         />
       )}

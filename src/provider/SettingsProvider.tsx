@@ -74,8 +74,11 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
     <SettingsContext.Provider
       value={{
         settings: deepmerge<Settings>(defaultSettings, data),
-        setSettings: (data: Settings) => {
-          setData(data);
+        setSettings: (newData: Settings) => {
+          setData(newData);
+          if (newData.redmineURL !== data.redmineURL) {
+            chrome.runtime.sendMessage("redmine-url-changed");
+          }
         },
       }}
     >

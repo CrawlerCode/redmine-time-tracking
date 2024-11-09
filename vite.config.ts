@@ -12,10 +12,20 @@ export default defineConfig((env) => ({
   build: {
     emptyOutDir: true,
     rollupOptions: {
-      input: ["index.html", "src/background.ts"],
+      input: ["index.html", "src/background.ts", "src/content.tsx", "src/inject-content-module.ts"],
       output: {
         entryFileNames: "[name].js",
+        assetFileNames: "[name].[ext]",
       },
+    },
+  },
+  experimental: {
+    renderBuiltUrl(_, { hostId, type, hostType }) {
+      if (type === "asset" && hostType !== "html") {
+        return {
+          runtime: `chrome.runtime.getURL("${hostId}")`,
+        };
+      }
     },
   },
   plugins: [
@@ -41,12 +51,14 @@ export default defineConfig((env) => ({
             if (platform === "chrome") {
               manifest.background = {
                 service_worker: "background.js",
+                type: "module",
               };
             }
 
             if (platform === "firefox") {
               manifest.background = {
-                page: "background.js",
+                scripts: ["background.js"],
+                type: "module",
               };
               manifest.browser_specific_settings = {
                 gecko: {
