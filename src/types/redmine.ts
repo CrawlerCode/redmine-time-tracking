@@ -275,3 +275,9 @@ export type TUser = {
 export type TRedmineError = {
   errors: string[];
 };
+
+export type TPaginatedResponse<T> = {
+  total_count: number;
+  offset: number;
+  limit: number;
+} & T;

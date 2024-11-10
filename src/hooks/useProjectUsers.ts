@@ -1,7 +1,8 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { TMembership } from "../types/redmine";
+import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 type Options = {
   enabled?: boolean;
@@ -15,18 +16,13 @@ export type TUser = TMembership["user"] & {
 const useProjectUsers = (projectId: number, { enabled = true }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
-  const membershipsQuery = useInfiniteQuery({
+  const membershipsQuery = useRedminePaginatedInfiniteQuery({
     queryKey: ["projectMemberships", projectId],
-    initialPageParam: 0,
-    queryFn: ({ pageParam }) => redmineApi.getProjectMemberships(projectId, pageParam * 100, 100),
-    getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
+    queryFn: ({ pageParam }) => redmineApi.getProjectMemberships(projectId, pageParam),
+    select: (data) => data?.pages.map((page) => page.memberships).flat(),
     enabled: enabled,
+    autoFetchPages: true,
   });
-
-  // auto fetch all pages
-  useEffect(() => {
-    if (membershipsQuery.hasNextPage && !membershipsQuery.isFetchingNextPage) membershipsQuery.fetchNextPage();
-  }, [membershipsQuery]);
 
   const rolesQuery = useQuery({
     queryKey: ["roles"],
@@ -43,9 +39,8 @@ const useProjectUsers = (projectId: number, { enabled = true }: Options = {}) =>
       }, {}) ?? {};
 
     return (
-      membershipsQuery.data?.pages
-        ?.flat()
-        .filter((m) => m.user)
+      membershipsQuery.data
+        ?.filter((m) => m.user)
         .map(
           (m) =>
             ({

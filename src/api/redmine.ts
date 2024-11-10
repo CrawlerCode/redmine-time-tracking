@@ -1,5 +1,6 @@
 import { AxiosInstance } from "axios";
 import { formatISO } from "date-fns";
+import qs from "qs";
 import {
   TCreateIssue,
   TCreateTimeEntry,
@@ -8,6 +9,7 @@ import {
   TIssueStatus,
   TIssueTracker,
   TMembership,
+  TPaginatedResponse,
   TProject,
   TReference,
   TRole,
@@ -45,20 +47,50 @@ export class RedmineApi {
   }
 
   // Issues
-  async getAllMyOpenIssues(offset = 0, limit = 100): Promise<TIssue[]> {
-    return this.instance.get(`/issues.json?offset=${offset}&limit=${limit}&status_id=open&assigned_to_id=me&sort=updated_on:desc`).then((res) => res.data.issues);
+  async getOpenIssues(
+    { projectId, issueIds, assignedTo }: { projectId?: number; issueIds?: number[]; assignedTo?: number | "me" },
+    { offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }
+  ): Promise<
+    TPaginatedResponse<{
+      issues: TIssue[];
+    }>
+  > {
+    return this.instance
+      .get(
+        `/issues.json?${qs.stringify({
+          project_id: projectId,
+          issue_id: issueIds?.join(","),
+          assigned_to_id: assignedTo,
+          status_id: "open",
+          sort: "updated_on:desc",
+          offset,
+          limit,
+        })}`
+      )
+      .then((res) => res.data);
   }
 
-  async getOpenIssuesByIds(ids: number[], offset = 0, limit = 100): Promise<TIssue[]> {
-    return this.instance.get(`/issues.json?offset=${offset}&limit=${limit}&status_id=open&issue_id=${ids.join(",")}&sort=updated_on:desc`).then((res) => res.data.issues);
-  }
-
-  async getOpenIssuesByProject(projectId: number, offset = 0, limit = 100): Promise<TIssue[]> {
-    return this.instance.get(`/issues.json?offset=${offset}&limit=${limit}&status_id=open&project_id=${projectId}&sort=updated_on:desc`).then((res) => res.data.issues);
-  }
-
-  async searchOpenIssues(query: string): Promise<TSearchResult[]> {
-    return this.instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&issues=1&open_issues=1`).then((res) => res.data.results); // available since Redmine 3.3.0
+  async searchOpenIssues(
+    query: string,
+    { offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }
+  ): Promise<
+    TPaginatedResponse<{
+      results: TSearchResult[];
+    }>
+  > {
+    return this.instance
+      .get(
+        `/search.json?${qs.stringify({
+          q: query,
+          scope: "my_project",
+          titles_only: 1,
+          issues: 1,
+          open_issues: 1,
+          offset,
+          limit,
+        })}`
+      )
+      .then((res) => res.data); // available since Redmine 3.3.0
   }
 
   async getIssue(id: number): Promise<TIssue> {
@@ -103,8 +135,19 @@ export class RedmineApi {
   }
 
   // Projects
-  async getAllMyProjects(offset = 0, limit = 100): Promise<TProject[]> {
-    return this.instance.get(`/projects.json?offset=${offset}&limit=${limit}`).then((res) => res.data.projects);
+  async getAllMyProjects({ offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }): Promise<
+    TPaginatedResponse<{
+      projects: TProject[];
+    }>
+  > {
+    return this.instance
+      .get(
+        `/projects.json?${qs.stringify({
+          offset,
+          limit,
+        })}`
+      )
+      .then((res) => res.data);
   }
 
   async getProject(id: number): Promise<TProject> {
@@ -115,8 +158,22 @@ export class RedmineApi {
     return this.instance.get(`/search.json?q=${query}&scope=my_project&titles_only=1&projects=1`).then((res) => res.data.results);
   }
 
-  async getProjectMemberships(id: number, offset = 0, limit = 100): Promise<TMembership[]> {
-    return this.instance.get(`/projects/${id}/memberships.json?offset=${offset}&limit=${limit}`).then((res) => res.data.memberships);
+  async getProjectMemberships(
+    id: number,
+    { offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }
+  ): Promise<
+    TPaginatedResponse<{
+      memberships: TMembership[];
+    }>
+  > {
+    return this.instance
+      .get(
+        `/projects/${id}/memberships.json?${qs.stringify({
+          offset,
+          limit,
+        })}`
+      )
+      .then((res) => res.data);
   }
 
   async getProjectVersions(id: number): Promise<TVersion[]> {
@@ -128,10 +185,26 @@ export class RedmineApi {
   } */
 
   // Time entries
-  async getAllMyTimeEntries(from: Date, to: Date, offset = 0, limit = 100): Promise<TTimeEntry[]> {
+  async getAllMyTimeEntries(
+    from: Date,
+    to: Date,
+    { offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }
+  ): Promise<
+    TPaginatedResponse<{
+      time_entries: TTimeEntry[];
+    }>
+  > {
     return this.instance
-      .get(`/time_entries.json?offset=${offset}&limit=${limit}&user_id=me&from=${formatISO(from, { representation: "date" })}&to=${formatISO(to, { representation: "date" })}`)
-      .then((res) => res.data.time_entries);
+      .get(
+        `/time_entries.json?${qs.stringify({
+          user_id: "me",
+          from: formatISO(from, { representation: "date" }),
+          to: formatISO(to, { representation: "date" }),
+          offset,
+          limit,
+        })}`
+      )
+      .then((res) => res.data);
   }
 
   async createTimeEntry(entry: TCreateTimeEntry) {

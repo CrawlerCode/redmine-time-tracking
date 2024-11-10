@@ -56,6 +56,9 @@ importers:
       formik:
         specifier: ^2.4.6
         version: 2.4.6(react@18.3.1)
+      qs:
+        specifier: ^6.13.0
+        version: 6.13.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -99,6 +102,9 @@ importers:
       '@types/node':
         specifier: ^22.9.0
         version: 22.9.0
+      '@types/qs':
+        specifier: ^6.9.17
+        version: 6.9.17
       '@types/react':
         specifier: ^18.3.12
         version: 18.3.12
@@ -908,6 +914,9 @@ packages:
 
   '@types/prop-types@15.7.5':
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
+
+  '@types/qs@6.9.17':
+    resolution: {integrity: sha512-rX4/bPcfmvxHDv0XjfJELTTr+iB+tn032nPILqHm5wbthUUUuVtNGGqzhya9XUxjTP8Fpr0qYgSZZKxGY++svQ==}
 
   '@types/react-dom@18.3.1':
     resolution: {integrity: sha512-qW1Mfv8taImTthu4KoXgDfLuk4bydU6Q/TkADnDWWHwi4NX4BR+LWfTp2sVmTqRrsHvyDDTelgelxJ+SsejKKQ==}
@@ -2080,6 +2089,10 @@ packages:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
     engines: {node: '>=6'}
 
+  qs@6.13.0:
+    resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
+    engines: {node: '>=0.6'}
+
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
@@ -3222,6 +3235,8 @@ snapshots:
   '@types/parse-json@4.0.0': {}
 
   '@types/prop-types@15.7.5': {}
+
+  '@types/qs@6.9.17': {}
 
   '@types/react-dom@18.3.1':
     dependencies:
@@ -4491,6 +4506,10 @@ snapshots:
   proxy-from-env@1.1.0: {}
 
   punycode@2.3.0: {}
+
+  qs@6.13.0:
+    dependencies:
+      side-channel: 1.0.6
 
   queue-microtask@1.2.3: {}
 

@@ -1,108 +1,71 @@
-import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { keepPreviousData } from "@tanstack/react-query";
 import { FilterQuery } from "../components/issues/Filter";
 import { SearchQuery } from "../components/issues/Search";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
-import useDebounce from "./useDebounce";
-import useSettings from "./useSettings";
+import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
-const MAX_EXTENDED_SEARCH_LIMIT = 75;
 const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 15;
 const STALE_DATA_TIME = 1000 * 60;
 
 const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter: FilterQuery) => {
-  const { settings } = useSettings();
   const redmineApi = useRedmineApi();
 
-  const issuesQuery = useInfiniteQuery({
-    queryKey: ["issues"],
-    initialPageParam: 0,
-    queryFn: ({ pageParam }) => redmineApi.getAllMyOpenIssues(pageParam * 100, 100),
-    getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
+  const issuesQuery = useRedminePaginatedInfiniteQuery({
+    queryKey: ["issues", "me"],
+    queryFn: ({ pageParam }) =>
+      redmineApi.getOpenIssues(
+        {
+          assignedTo: "me",
+        },
+        pageParam
+      ),
+    select: (data) => data?.pages.map((page) => page.issues).flat(),
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
+    autoFetchPages: true,
   });
-  const additionalIssuesQuery = useInfiniteQuery({
-    queryKey: ["additionalIssues", additionalIssuesIds],
-    initialPageParam: 0,
-    queryFn: ({ pageParam }) => redmineApi.getOpenIssuesByIds(additionalIssuesIds, pageParam * 100, 100),
-    getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
+  const additionalIssuesQuery = useRedminePaginatedInfiniteQuery({
+    queryKey: ["issues", additionalIssuesIds],
+    queryFn: ({ pageParam }) =>
+      redmineApi.getOpenIssues(
+        {
+          issueIds: additionalIssuesIds,
+        },
+        pageParam
+      ),
+    select: (data) => data?.pages.map((page) => page.issues).flat(),
     enabled: additionalIssuesIds.length > 0,
     placeholderData: keepPreviousData,
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
+    autoFetchPages: true,
   });
 
-  // auto fetch all pages
-  useEffect(() => {
-    if (issuesQuery.hasNextPage && !issuesQuery.isFetchingNextPage) issuesQuery.fetchNextPage();
-  }, [issuesQuery]);
-  useEffect(() => {
-    if (additionalIssuesQuery.hasNextPage && !additionalIssuesQuery.isFetchingNextPage) additionalIssuesQuery.fetchNextPage();
-  }, [additionalIssuesQuery]);
-
-  let issues = issuesQuery.data?.pages?.flat() ?? [];
-  issues.push(...(additionalIssuesQuery.data?.pages?.flat().filter((issue) => !issues.find((iss) => iss.id === issue.id)) ?? []));
+  let issues = issuesQuery.data ?? [];
+  issues.push(...(additionalIssuesQuery.data?.filter((issue) => !issues.find((iss) => iss.id === issue.id)) ?? []));
 
   // filter by project (search in project)
-  if (search.inProject) {
+  if (search.searching && search.inProject) {
     issues = issues.filter((issue) => issue.project.id === search.inProject?.id);
   }
 
-  // filter by search
+  // local search
   if (search.searching && search.query) {
     issues = issues.filter((issue) => new RegExp(search.query, "i").test(`#${issue.id} ${issue.subject}`));
   }
 
-  // ---
-
-  // extended search
-  const debouncedSearch = useDebounce(search.query, 300);
-  const extendedSearchIssueIdMatch = debouncedSearch.match(/^#(\d+)$/); // search for #<issueId>
-  const extendedSearching = search.searching && (debouncedSearch.length >= 3 || extendedSearchIssueIdMatch !== null) && settings.features.extendedSearch;
-
-  const extendedSearchIssuesResultQuery = useQuery({
-    queryKey: ["extendedSearchIssuesResult", debouncedSearch],
-    queryFn: () => redmineApi.searchOpenIssues(debouncedSearch),
-    enabled: extendedSearching && !debouncedSearch.includes("#"),
-    placeholderData: keepPreviousData,
-    staleTime: 0,
-  });
-  const extendedSearchIssuesResultIds = (extendedSearchIssuesResultQuery.data?.map((result) => result.id) ?? []).filter((id) => !issues.find((issue) => issue.id === id));
-  if (extendedSearching && extendedSearchIssueIdMatch) {
-    const issueId = Number(extendedSearchIssueIdMatch[1]);
-    if (!issues.find((issue) => issue.id === issueId)) extendedSearchIssuesResultIds.push(issueId);
-  }
-  const extendedSearchIssuesQuery = useQuery({
-    queryKey: ["extendedSearchIssues", extendedSearchIssuesResultIds],
-    queryFn: () => redmineApi.getOpenIssuesByIds(extendedSearchIssuesResultIds, 0, search.inProject ? 100 : MAX_EXTENDED_SEARCH_LIMIT),
-    enabled: extendedSearchIssuesResultIds.length > 0,
-    staleTime: 0,
-  });
-
-  const extendedSearchIssuesList =
-    (search.inProject ? extendedSearchIssuesQuery.data?.filter((issue) => issue.project.id === search.inProject?.id) : extendedSearchIssuesQuery.data)?.slice(0, MAX_EXTENDED_SEARCH_LIMIT) ?? [];
-
-  let extendedSearchIssues = extendedSearching ? extendedSearchIssuesList : [];
-
-  // ---
-
   // filter: projects
   if (filter.projects.length > 0) {
     issues = issues.filter((issue) => filter.projects.includes(issue.project.id));
-    extendedSearchIssues = extendedSearchIssues.filter((issue) => filter.projects.includes(issue.project.id));
   }
 
   // filter: hide completed issues (done_ratio = 100%)
   if (filter.hideCompletedIssues) {
     issues = issues.filter((issue) => issue.done_ratio !== 100);
-    extendedSearchIssues = extendedSearchIssues.filter((issue) => issue.done_ratio !== 100);
   }
 
   return {
     data: issues,
-    extendedSearching,
-    extendedSearch: extendedSearchIssues,
     isLoading: issuesQuery.isLoading || additionalIssuesQuery.isLoading,
     isError: issuesQuery.isError || additionalIssuesQuery.isError,
   };

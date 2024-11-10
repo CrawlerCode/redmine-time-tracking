@@ -96,8 +96,6 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
     mutationFn: (data: TUpdateIssue) => redmineApi.updateIssue(issue.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["issues"] });
-      queryClient.invalidateQueries({ queryKey: ["issue", issue.id] });
-      queryClient.invalidateQueries({ queryKey: ["additionalIssues"] });
     },
   });
 
@@ -330,7 +328,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
           allowClose={false}
           message={
             isAxiosError(createTimeEntryMutation.error)
-              ? (createTimeEntryMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (createTimeEntryMutation.error as AxiosError).message
+              ? ((createTimeEntryMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (createTimeEntryMutation.error as AxiosError).message)
               : (createTimeEntryMutation.error as Error).message
           }
         />
@@ -341,7 +339,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
           allowClose={false}
           message={
             isAxiosError(updateIssueMutation.error)
-              ? (updateIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateIssueMutation.error as AxiosError).message
+              ? ((updateIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateIssueMutation.error as AxiosError).message)
               : (updateIssueMutation.error as Error).message
           }
         />

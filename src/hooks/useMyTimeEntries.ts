@@ -1,6 +1,5 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
+import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 15;
 const STALE_DATA_TIME = 1000 * 60;
@@ -8,20 +7,14 @@ const STALE_DATA_TIME = 1000 * 60;
 const useMyTimeEntries = (from: Date, to: Date) => {
   const redmineApi = useRedmineApi();
 
-  const entriesQuery = useInfiniteQuery({
+  const entriesQuery = useRedminePaginatedInfiniteQuery({
     queryKey: ["timeEntries", from, to],
-    initialPageParam: 0,
-    queryFn: ({ pageParam }) => redmineApi.getAllMyTimeEntries(from, to, pageParam * 100, 100),
-    getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
+    queryFn: ({ pageParam }) => redmineApi.getAllMyTimeEntries(from, to, pageParam),
+    select: (data) => data?.pages.map((page) => page.time_entries).flat(),
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
-    select: (data) => data?.pages?.flat(),
+    autoFetchPages: true,
   });
-
-  // auto fetch all pages
-  useEffect(() => {
-    if (entriesQuery.hasNextPage && !entriesQuery.isFetchingNextPage) entriesQuery.fetchNextPage();
-  }, [entriesQuery]);
 
   const entries = entriesQuery.data ?? [];
 

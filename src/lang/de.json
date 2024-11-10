@@ -13,6 +13,7 @@
   "issues.filter.hide-completed-issues.title": "Verstecke fertige Tickets",
   "issues.filter.hide-completed-issues.description": "100% erledigt, aber weiterhin offen",
   "issues.list.no-options": "Keine Tickets",
+  "issues.list.load-more": "Mehr laden",
   "issues.context-menu.open-in-redmine": "In Redmine öffnen",
   "issues.context-menu.copy-id-to-clipboard": "In Zwischenablage kopieren",
   "issues.context-menu.edit": "Ticket Bearbeiten",

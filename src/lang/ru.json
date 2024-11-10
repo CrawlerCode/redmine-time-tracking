@@ -13,6 +13,7 @@
   "issues.filter.hide-completed-issues.title": "Скрыть выполненные задачи",
   "issues.filter.hide-completed-issues.description": "Готовность 100%, но еще открыты",
   "issues.list.no-options": "Нет задач",
+  "issues.list.load-more": "Load more",
   "issues.context-menu.open-in-redmine": "Открыть в Redmine",
   "issues.context-menu.copy-id-to-clipboard": "Скопировать номер",
   "issues.context-menu.edit": "Edit issue",

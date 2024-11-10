@@ -66,7 +66,6 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
     mutationFn: (issue: TCreateIssue) => redmineApi.createIssue(issue),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["issues"] });
-      queryClient.invalidateQueries({ queryKey: ["additionalIssues"] });
       onSuccess();
     },
   });

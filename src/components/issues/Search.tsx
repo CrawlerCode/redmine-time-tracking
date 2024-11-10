@@ -2,6 +2,7 @@ import { faChevronRight, faSearch, faX } from "@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ForwardedRef, ReactNode, forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import useDebounce from "../../hooks/useDebounce";
 import useHotKey from "../../hooks/useHotkey";
 import useSettings from "../../hooks/useSettings";
 import { TReference } from "../../types/redmine";
@@ -10,6 +11,7 @@ import InputField from "../general/InputField";
 export type SearchQuery = {
   searching: boolean;
   query: string;
+  debouncedQuery?: string;
   inProject?: TReference;
 };
 
@@ -30,6 +32,7 @@ const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>
   const searchRef = useRef<HTMLInputElement>(null);
   const [searching, setSearching] = useState(defaultSearchQuery.searching);
   const [query, setQuery] = useState(defaultSearchQuery.query);
+  const debouncedQuery = useDebounce(query, 300);
   const [inProject, setInProject] = useState<TReference | undefined>(defaultSearchQuery.inProject);
   const isSearching = searching || settings.style.displaySearchAlways;
 
@@ -105,6 +108,7 @@ const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>
         search: {
           searching: isSearching,
           query,
+          debouncedQuery,
           inProject,
         },
       })}

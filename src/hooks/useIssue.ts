@@ -12,7 +12,7 @@ const useIssue = (id: number, { enabled = true, staleTime = STALE_DATA_TIME }: O
   const redmineApi = useRedmineApi();
 
   const issueQuery = useQuery({
-    queryKey: ["issue", id],
+    queryKey: ["issues", id],
     queryFn: () => redmineApi.getIssue(id),
     enabled: enabled,
     staleTime: staleTime,

@@ -1,6 +1,5 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
+import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 type Options = {
   enabled?: boolean;
@@ -9,19 +8,13 @@ type Options = {
 const useMyProjects = ({ enabled = true }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
-  const projectsQuery = useInfiniteQuery({
+  const projectsQuery = useRedminePaginatedInfiniteQuery({
     queryKey: ["projects"],
-    initialPageParam: 0,
-    queryFn: ({ pageParam }) => redmineApi.getAllMyProjects(pageParam * 100, 100),
-    getNextPageParam: (lastPage, allPages) => (lastPage.length === 100 ? allPages.length : undefined),
+    queryFn: ({ pageParam }) => redmineApi.getAllMyProjects(pageParam),
+    select: (data) => data?.pages.map((page) => page.projects).flat(),
     enabled: enabled,
-    select: (data) => data.pages.flat(),
+    autoFetchPages: true,
   });
-
-  // auto fetch all pages
-  useEffect(() => {
-    if (projectsQuery.hasNextPage && !projectsQuery.isFetchingNextPage) projectsQuery.fetchNextPage();
-  }, [projectsQuery]);
 
   const projects = projectsQuery.data ?? [];
 

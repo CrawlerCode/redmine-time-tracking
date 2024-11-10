@@ -13,6 +13,7 @@
   "issues.filter.hide-completed-issues.title": "Hide completed issues",
   "issues.filter.hide-completed-issues.description": "100% done, but still open",
   "issues.list.no-options": "No issues",
+  "issues.list.load-more": "Load more",
   "issues.context-menu.open-in-redmine": "Open in Redmine",
   "issues.context-menu.copy-id-to-clipboard": "Copy to clipboard",
   "issues.context-menu.edit": "Edit issue",

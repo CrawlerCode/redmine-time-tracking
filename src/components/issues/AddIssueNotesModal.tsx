@@ -32,8 +32,6 @@ const AddIssueNotesModal = ({ issue, onClose, onSuccess }: PropTypes) => {
     mutationFn: (data: TUpdateIssue) => redmineApi.updateIssue(issue.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["issues"] });
-      queryClient.invalidateQueries({ queryKey: ["issue", issue.id] });
-      queryClient.invalidateQueries({ queryKey: ["additionalIssues"] });
       onSuccess();
     },
   });
