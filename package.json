@@ -18,7 +18,8 @@
     "build:chrome": "tsc && cross-env PLATFORM=chrome vite build",
     "build:firefox": "tsc && cross-env PLATFORM=firefox vite build",
     "release": "gh release create v%npm_package_version% --notes-file release_notes.md --generate-notes",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
+    "lint": "eslint --fix src tests fixtures",
+    "format": "prettier --write src tests public fixtures",
     "test": "playwright test"
   },
   "dependencies": {
@@ -52,6 +53,7 @@
     "yup": "^1.5.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.16.0",
     "@playwright/test": "^1.49.1",
     "@types/chrome": "^0.0.287",
     "@types/node": "^22.10.2",
@@ -65,11 +67,12 @@
     "autoprefixer": "^10.4.20",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
-    "eslint": "^8.57.0",
+    "eslint": "^9.16.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.16",
+    "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-tailwindcss": "^3.17.5",
+    "globals": "^15.13.0",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
@@ -77,6 +80,7 @@
     "tailwindcss": "^3.4.16",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0",
     "vite": "^6.0.3",
     "vite-plugin-static-copy": "^2.2.0",
     "vite-plugin-zip-pack": "^1.2.4"
