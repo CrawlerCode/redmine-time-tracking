@@ -215,7 +215,7 @@ const EditTimeEntryModal = ({ entry, onClose, onSuccess }: PropTypes) => {
           allowClose={false}
           message={
             isAxiosError(updateTimeEntryMutation.error)
-              ? (updateTimeEntryMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateTimeEntryMutation.error as AxiosError).message
+              ? ((updateTimeEntryMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateTimeEntryMutation.error as AxiosError).message)
               : (updateTimeEntryMutation.error as Error).message
           }
         />

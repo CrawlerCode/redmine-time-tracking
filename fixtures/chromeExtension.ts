@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { test as base, chromium, type BrowserContext, type Page } from "@playwright/test";
 import "dotenv/config";
 import path from "path";

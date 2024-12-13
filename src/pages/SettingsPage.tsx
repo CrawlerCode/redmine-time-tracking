@@ -122,7 +122,7 @@ const SettingsPage = () => {
                       ]}
                     />
 
-                    <a href="https://github.com/CrawlerCode/redmine-time-tracking#supported-languages" target="_blank" tabIndex={-1} className="hover:underline">
+                    <a href="https://github.com/CrawlerCode/redmine-time-tracking#supported-languages" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
                       <FormattedMessage id="settings.general.language.missing-hint" />
                     </a>
                   </div>
@@ -157,7 +157,7 @@ const SettingsPage = () => {
                               id="settings.redmine.api-key.hint"
                               values={{
                                 link: (children) => (
-                                  <a href={`${values.redmineURL}/my/account`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline">
+                                  <a href={`${values.redmineURL}/my/account`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" rel="noreferrer">
                                     {children}
                                   </a>
                                 ),
@@ -336,23 +336,23 @@ const Info = () => {
         <Fieldset
           legend={
             <>
-              <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline">
+              <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
                 {name}
               </a>
               <span className="mx-1 text-xs">-</span>
-              <a href="https://github.com/CrawlerCode/redmine-time-tracking/releases" target="_blank" tabIndex={-1} className="hover:underline">
+              <a href="https://github.com/CrawlerCode/redmine-time-tracking/releases" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
                 v{version_name || version}
               </a>
             </>
           }
         >
           <div className="flex items-center justify-around p-3">
-            <a href="https://github.com/CrawlerCode/redmine-time-tracking" target="_blank" tabIndex={-1} className="hover:underline">
+            <a href="https://github.com/CrawlerCode/redmine-time-tracking" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
               <FontAwesomeIcon icon={faGithub} className="mr-1" />
               GitHub
             </a>
 
-            <a href="https://github.com/CrawlerCode/redmine-time-tracking/issues" target="_blank" tabIndex={-1} className="hover:underline">
+            <a href="https://github.com/CrawlerCode/redmine-time-tracking/issues" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
               <FontAwesomeIcon icon={faBug} className="mr-1" />
               <FormattedMessage id="settings.info.report-an-issue" />
             </a>

@@ -55,7 +55,7 @@ const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, timer
                   "sticky top-0 z-[5] -mx-2 -my-1 bg-background px-2 py-1 shadow shadow-background": settings.style.stickyScroll,
                 })}
               >
-                <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs hover:underline">
+                <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs hover:underline" rel="noreferrer">
                   {project.name}
                 </a>
 
@@ -85,7 +85,7 @@ const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, timer
                     >
                       <span className="w-fit truncate rounded bg-background-inner px-1.5 text-xs text-gray-950 dark:text-gray-300" data-tooltip-id={`tooltip-version-${version?.id}`}>
                         {type === "version" && version && (
-                          <a href={`${settings.redmineURL}/versions/${version.id}`} target="_blank" tabIndex={-1} className="hover:underline">
+                          <a href={`${settings.redmineURL}/versions/${version.id}`} target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
                             {version.name}
                           </a>
                         )}

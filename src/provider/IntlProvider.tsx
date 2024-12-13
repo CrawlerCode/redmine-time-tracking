@@ -14,7 +14,6 @@ import { German as flatpickrDE } from "flatpickr/dist/l10n/de.js";
 import { english as flatpickrEN } from "flatpickr/dist/l10n/default";
 import { Russian as flatpickrRU } from "flatpickr/dist/l10n/ru.js";
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const LANGUAGES = ["en", "de", "ru"] as const;
 
 type Language = (typeof LANGUAGES)[number];

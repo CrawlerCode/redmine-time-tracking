@@ -188,7 +188,14 @@ const Issue = ({ issue, priorityType, assignedToMe, canEdit, canLogTime, canAddN
               }
             )}
           >
-            <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" data-tooltip-id={`tooltip-issue-${issue.id}`}>
+            <a
+              href={`${settings.redmineURL}/issues/${issue.id}`}
+              target="_blank"
+              tabIndex={-1}
+              className="text-blue-500 hover:underline"
+              data-tooltip-id={`tooltip-issue-${issue.id}`}
+              rel="noreferrer"
+            >
               #{issue.id}
             </a>{" "}
             {issue.subject}

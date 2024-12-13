@@ -31,7 +31,7 @@ const useStorage = <T>(name: string, defaultValue: T) => {
       setLocalData(data);
       setIsLoading(false);
     });
-  }, []);
+  }, [name, defaultValue]);
 
   // On chrome storage change => load data
   useEffect(() => {
