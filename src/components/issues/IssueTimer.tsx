@@ -2,7 +2,7 @@ import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { Ref, useEffect, useImperativeHandle, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Tooltip } from "react-tooltip";
 import useSettings from "../../hooks/useSettings";
@@ -29,6 +29,7 @@ export type TimerActions = {
 type PropTypes = {
   issue: TIssue;
   data: IssueTimerData;
+  ref: Ref<TimerRef>;
 } & TimerActions;
 
 export type TimerRef = {
@@ -39,7 +40,7 @@ export type TimerRef = {
   editTimer: () => void;
 };
 
-const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, onPause, onReset, onOverrideTime, onDoneTimer }: PropTypes, ref: ForwardedRef<TimerRef>) => {
+const IssueTimer = ({ issue, data: { active, time, start }, onStart, onPause, onReset, onOverrideTime, onDoneTimer, ref }: PropTypes) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
@@ -196,12 +197,10 @@ const IssueTimer = forwardRef(({ issue, data: { active, time, start }, onStart, 
       )}
     </>
   );
-});
+};
 
 const calcTime = (time: number, start?: number) => {
   return time + (start ? new Date().getTime() - start : 0);
 };
-
-IssueTimer.displayName = "IssueTimer";
 
 export default IssueTimer;

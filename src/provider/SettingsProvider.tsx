@@ -71,7 +71,7 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <SettingsContext.Provider
+    <SettingsContext
       value={{
         settings: deepmerge<Settings>(defaultSettings, data),
         setSettings: (data: Settings) => {
@@ -80,7 +80,7 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-    </SettingsContext.Provider>
+    </SettingsContext>
   );
 };
 

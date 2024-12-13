@@ -339,7 +339,7 @@ const EditIssueModal = ({ issue: currentIssue, onClose, onSuccess }: PropTypes) 
           allowClose={false}
           message={
             isAxiosError(updateIssueMutation.error)
-              ? (updateIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateIssueMutation.error as AxiosError).message
+              ? ((updateIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateIssueMutation.error as AxiosError).message)
               : (updateIssueMutation.error as Error).message
           }
         />
