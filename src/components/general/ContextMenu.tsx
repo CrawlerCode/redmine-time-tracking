@@ -12,6 +12,8 @@ type PropTypes = {
   menu: MenuItem[] | MenuItem[][];
 } & Omit<React.ComponentProps<"div">, "onContextMenu">;
 
+const OUTER_SPACING = 5;
+
 const ContextMenu = ({ menu, children, ...props }: PropTypes) => {
   const [position, setPosition] = useState<{ x: number; y: number } | undefined>(undefined);
 
@@ -24,12 +26,24 @@ const ContextMenu = ({ menu, children, ...props }: PropTypes) => {
   useLayoutEffect(() => {
     if (ref.current && position) {
       const { width, height } = ref.current.getBoundingClientRect();
-      if (position.y + height > window.innerHeight) {
-        ref.current.style.top = `${position.y - height}px`;
+      let newTop = position.y;
+      let newLeft = position.x;
+
+      if (newTop + height + OUTER_SPACING > window.innerHeight) {
+        newTop = window.innerHeight - height - OUTER_SPACING;
+        if (newTop < OUTER_SPACING) {
+          newTop = OUTER_SPACING;
+        }
       }
-      if (position.x + width > window.innerWidth && position.x - width > 0) {
-        ref.current.style.left = `${position.x - width}px`;
+      if (newLeft + width + OUTER_SPACING > window.innerWidth) {
+        newLeft = window.innerWidth - width - OUTER_SPACING;
+        if (newLeft < OUTER_SPACING) {
+          newLeft = OUTER_SPACING;
+        }
       }
+
+      ref.current.style.top = `${newTop}px`;
+      ref.current.style.left = `${newLeft}px`;
     }
   }, [ref, position]);
 
@@ -48,7 +62,7 @@ const ContextMenu = ({ menu, children, ...props }: PropTypes) => {
         <div
           ref={ref}
           role="menu"
-          className="absolute z-20 w-40 divide-y divide-gray-200 rounded-lg border border-gray-200 bg-background shadow dark:divide-gray-600 dark:border-gray-600"
+          className="absolute z-50 w-40 divide-y divide-gray-200 rounded-lg border border-gray-200 bg-background shadow dark:divide-gray-600 dark:border-gray-600"
           style={{ top: `${position.y}px`, left: `${position.x}px` }}
           onClick={() => setPosition(undefined)}
         >
