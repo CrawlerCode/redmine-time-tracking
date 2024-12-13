@@ -43,6 +43,7 @@ const DateField = ({ size = "md", title, icon, error, className, value, onChange
           id={id}
           ref={ref}
           {...props}
+          type="hidden"
           options={{
             ...props.options,
             altInput: true,
@@ -53,7 +54,7 @@ const DateField = ({ size = "md", title, icon, error, className, value, onChange
             onChange?.({
               target: {
                 name: props.name,
-                value: instance.config.mode === "single" ? dates[0] ?? null : dates,
+                value: instance.config.mode === "single" ? (dates[0] ?? null) : dates,
               },
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any);

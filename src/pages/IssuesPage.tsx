@@ -14,7 +14,7 @@ import useSearch from "../hooks/useSearch";
 import useSettings from "../hooks/useSettings";
 import useTimers from "../hooks/useTimers";
 
-const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { search: SearchQuery; filter: FilterQuery; searchRef: RefObject<SearchRef>; isLoading: boolean }) => {
+const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { search: SearchQuery; filter: FilterQuery; searchRef: RefObject<SearchRef | null>; isLoading: boolean }) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 

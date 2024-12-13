@@ -1,6 +1,6 @@
 import { faChevronRight, faSearch, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ForwardedRef, ReactNode, forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { ReactNode, Ref, useImperativeHandle, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import useDebounce from "../../hooks/useDebounce";
 import useHotKey from "../../hooks/useHotkey";
@@ -19,13 +19,14 @@ const defaultSearchQuery: SearchQuery = { searching: false, query: "" };
 
 type PropTypes = {
   children: (state: { search: SearchQuery }) => ReactNode;
+  ref: Ref<SearchRef>;
 };
 
 export type SearchRef = {
   searchInProject: (project: TReference) => void;
 };
 
-const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>) => {
+const Search = ({ children, ref }: PropTypes) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
@@ -114,8 +115,6 @@ const Search = forwardRef(({ children }: PropTypes, ref: ForwardedRef<SearchRef>
       })}
     </>
   );
-});
-
-Search.displayName = "Search";
+};
 
 export default Search;

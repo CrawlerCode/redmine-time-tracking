@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ReactNode, createContext, useContext } from "react";
+import { ReactNode, createContext, use } from "react";
 import { RedmineApi } from "../api/redmine";
 import useSettings from "../hooks/useSettings";
 
@@ -9,7 +9,7 @@ const RedmineApiProvider = ({ children }: { children: ReactNode }) => {
   const { settings } = useSettings();
 
   return (
-    <RedmineApiContext.Provider
+    <RedmineApiContext
       value={
         new RedmineApi(
           axios.create({
@@ -24,11 +24,11 @@ const RedmineApiProvider = ({ children }: { children: ReactNode }) => {
       }
     >
       {children}
-    </RedmineApiContext.Provider>
+    </RedmineApiContext>
   );
 };
 
-const useRedmineApi = () => useContext(RedmineApiContext)!;
+const useRedmineApi = () => use(RedmineApiContext)!;
 
 export { useRedmineApi };
 export default RedmineApiProvider;

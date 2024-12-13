@@ -1,6 +1,6 @@
 import { RefObject, useEffect } from "react";
 
-const useOnClickOutside = <T extends HTMLElement>(ref: RefObject<T>, handler: (event: Event) => void) => {
+const useOnClickOutside = <T extends HTMLElement>(ref: RefObject<T | null>, handler: (event: Event) => void) => {
   useEffect(() => {
     const listener = (event: Event) => {
       if (!ref.current || ref.current.contains(event.target as Node)) {
