@@ -1,21 +1,18 @@
 import { setDefaultOptions } from "date-fns";
 import flatpickr from "flatpickr";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IntlProvider as ReactIntlProvider } from "react-intl";
 import useSettings from "../hooks/useSettings";
 
-import messagesDE from "../lang/de.json";
 import messagesEN from "../lang/en.json";
-import messagesRU from "../lang/ru.json";
-
-import { de as dateFnsLocalDE, enUS as dateFnsLocalEN, ru as dateFnsLocalRu } from "date-fns/locale";
 
 import { German as flatpickrDE } from "flatpickr/dist/l10n/de.js";
 import { english as flatpickrEN } from "flatpickr/dist/l10n/default";
+import { French as flatpickrFR } from "flatpickr/dist/l10n/fr.js";
 import { Russian as flatpickrRU } from "flatpickr/dist/l10n/ru.js";
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const LANGUAGES = ["en", "de", "ru"] as const;
+export const LANGUAGES = ["en", "de", "ru", "fr"] as const;
 
 type Language = (typeof LANGUAGES)[number];
 
@@ -33,35 +30,36 @@ const IntlProvider = ({ children }: PropTypes) => {
     locale = LANGUAGES.find((lang) => settings.language === lang) ?? "en";
   }
 
-  let messages;
-  let dateFnsLocal;
-  let flatpickrLocal;
+  const [messages, setMessages] = useState(messagesEN);
 
-  switch (locale) {
-    case "en":
-      messages = messagesEN;
-      dateFnsLocal = dateFnsLocalEN;
-      flatpickrLocal = flatpickrEN;
-      break;
-    case "de":
-      messages = messagesDE;
-      dateFnsLocal = dateFnsLocalDE;
-      flatpickrLocal = flatpickrDE;
-      break;
-    case "ru":
-      messages = messagesRU;
-      dateFnsLocal = dateFnsLocalRu;
-      flatpickrLocal = flatpickrRU;
-      break;
-  }
+  useEffect(() => {
+    (async () => {
+      setMessages((await import(`../lang/${locale}.json`)).default);
 
-  setDefaultOptions({
-    locale: dateFnsLocal,
-  });
+      setDefaultOptions({
+        locale: (await import("date-fns/locale"))[locale === "en" ? "enUS" : locale],
+      });
+    })();
 
-  flatpickr.setDefaults({
-    locale: flatpickrLocal,
-  });
+    let flatpickrLocal;
+    switch (locale) {
+      case "en":
+        flatpickrLocal = flatpickrEN;
+        break;
+      case "de":
+        flatpickrLocal = flatpickrDE;
+        break;
+      case "ru":
+        flatpickrLocal = flatpickrRU;
+        break;
+      case "fr":
+        flatpickrLocal = flatpickrFR;
+        break;
+    }
+    flatpickr.setDefaults({
+      locale: flatpickrLocal,
+    });
+  }, [locale]);
 
   return (
     <ReactIntlProvider locale={locale} messages={messages}>
