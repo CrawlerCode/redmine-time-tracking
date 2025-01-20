@@ -61,6 +61,7 @@ _Tested with Google Chrome Version 130 and Firefox 132_
 - English
 - German
 - Russian (thanks [@ASM-Development](https://github.com/ASM-Development))
+- French (thanks [@S8N02000](https://github.com/S8N02000))
 
 > If you want to add more languages or extend existing ones, feel free to contribute. Just create a pull request with the desired changes. The language files are located under [src/lang](src/lang) and [public/\_locales](public/_locales).
 

@@ -105,6 +105,7 @@
   "settings.general.language.en": "Englisch (English)",
   "settings.general.language.de": "Deutsch (German)",
   "settings.general.language.ru": "Russisch (Russian)",
+  "settings.general.language.fr": "Französisch (French)",
   "settings.general.language.missing-hint": "Vermissen Sie Ihre Sprache?",
   "settings.redmine": "Redmine",
   "settings.redmine.url": "Redmine URL",
