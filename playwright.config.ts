@@ -1,7 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const LANGUAGES = ["en", "de", "ru", "fr"] as const;
+const COLOR_SCHEMES = ["dark", "light"] as const;
+
 /**
- * See https://playwright.dev/docs/test-configuration.
+ * @see https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
   testDir: "./tests",
@@ -16,14 +19,11 @@ export default defineConfig({
   },
 
   projects: [
-    ...["en", "de", "ru"]
-      .map((locale) =>
-        (["dark", "light"] as const).map((colorScheme) => ({
-          name: `Chrome | ${locale} (${colorScheme})`,
-          use: { ...devices["Desktop Chrome"], viewport: { width: 320, height: 548 }, colorScheme, locale, timezoneId: "Europe/Berlin" },
-          fullyParallel: false,
-        }))
-      )
-      .flat(),
+    ...LANGUAGES.map((locale) =>
+      COLOR_SCHEMES.map((colorScheme) => ({
+        name: `Chrome | ${locale} (${colorScheme})`,
+        use: { ...devices["Desktop Chrome"], viewport: { width: 320, height: 548 }, colorScheme, locale, timezoneId: "Europe/Berlin" },
+      }))
+    ).flat(),
   ],
 });
