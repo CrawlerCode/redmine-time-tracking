@@ -146,7 +146,6 @@
   "settings.style.time-format.title": "Time span format",
   "settings.save-settings": "Save settings",
   "settings.settings-saved": "Settings saved!",
-  "settings.info.version": "Version: {version}",
   "settings.info.report-an-issue": "Report an issue",
 
   "dismissible-warning.dont-show-again": "Don't show again",

@@ -147,7 +147,6 @@
   "settings.style.time-format.title": "Format für Zeitspannen",
   "settings.save-settings": "Einstellungen speichern",
   "settings.settings-saved": "Einstellungen gespeichert!",
-  "settings.info.version": "Version: {version}",
   "settings.info.report-an-issue": "Einen Fehler melden",
 
   "dismissible-warning.dont-show-again": "Nicht erneut anzeigen",

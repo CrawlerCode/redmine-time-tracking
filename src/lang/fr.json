@@ -146,7 +146,6 @@
   "settings.style.time-format.title": "Format de l'intervalle de temps",
   "settings.save-settings": "Enregistrer les paramètres",
   "settings.settings-saved": "Paramètres enregistrés !",
-  "settings.info.version": "Version : {version}",
   "settings.info.report-an-issue": "Signaler un problème",
 
   "dismissible-warning.dont-show-again": "Ne plus afficher",

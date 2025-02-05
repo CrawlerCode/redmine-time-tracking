@@ -146,7 +146,6 @@
   "settings.style.time-format.title": "Формат времени",
   "settings.save-settings": "Сохранить настройки",
   "settings.settings-saved": "Настройки сохранены!",
-  "settings.info.version": "Версия: {version}",
   "settings.info.report-an-issue": "Сообщить о проблеме",
 
   "dismissible-warning.dont-show-again": "Don't show again",
