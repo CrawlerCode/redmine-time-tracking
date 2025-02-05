@@ -111,6 +111,7 @@
   "settings.general.language.en": "English",
   "settings.general.language.de": "German",
   "settings.general.language.ru": "Russian",
+  "settings.general.language.fr": "French",
   "settings.general.language.missing-hint": "Missing your language?",
   "settings.redmine": "Redmine",
   "settings.redmine.url": "Redmine URL",
@@ -151,7 +152,6 @@
   "settings.style.time-format.title": "Time span format",
   "settings.save-settings": "Save settings",
   "settings.settings-saved": "Settings saved!",
-  "settings.info.version": "Version: {version}",
   "settings.info.report-an-issue": "Report an issue",
 
   "dismissible-warning.dont-show-again": "Don't show again",

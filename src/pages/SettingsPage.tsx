@@ -2,7 +2,7 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faBug, faGlobe, faInfoCircle, faServer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryClient } from "@tanstack/react-query";
-import { DE, FlagComponent, GB, RU } from "country-flag-icons/react/3x2";
+import { DE, FlagComponent, FR, GB, RU } from "country-flag-icons/react/3x2";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -25,6 +25,7 @@ const LANGUAGE_FLAGS: Record<(typeof LANGUAGES)[number], FlagComponent> = {
   en: GB,
   de: DE,
   ru: RU,
+  fr: FR,
 };
 
 const SettingsPage = () => {

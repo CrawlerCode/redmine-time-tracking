@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Redmine Time Tracking",
+    "description": "Extension name"
+  },
+  "extDesc": {
+    "message": "Start-stop timer for Redmine",
+    "description": "Extension description"
+  }
+}
