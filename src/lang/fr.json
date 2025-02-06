@@ -140,6 +140,8 @@
   "settings.features.add-notes.description": "Ajouter des notes à un ticket",
   "settings.features.cache-comments.title": "Mise en cache des commentaires",
   "settings.features.cache-comments.description": "Mettre en cache les commentaires jusqu'à leur soumission",
+  "settings.features.show-current-issue-timer.title": "Show current issue timer",
+  "settings.features.show-current-issue-timer.description": "Show current issue timer on Redmine page",
   "settings.style": "Style",
   "settings.style.display-search-always.title": "Afficher toujours la recherche",
   "settings.style.sticky-scroll.title": "Défilement fixe",

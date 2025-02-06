@@ -19,11 +19,17 @@ const registerContentScript = async () => {
   const settings = await getStorage<Partial<Settings>>("settings", {});
   if (!settings.redmineURL) return;
 
+  // Unregister content script
   await chrome.scripting
     .unregisterContentScripts({
       ids: ["content"],
     })
     .catch(() => undefined);
+
+  // If showCurrentIssueTimer is disabled, do not register content script
+  if (!settings.features?.showCurrentIssueTimer) return;
+
+  // Register content script
   await chrome.scripting.registerContentScripts([
     {
       id: "content",
@@ -35,7 +41,7 @@ const registerContentScript = async () => {
 };
 registerContentScript();
 chrome.runtime.onMessage.addListener((message) => {
-  if (message === "redmine-url-changed") {
+  if (["settings-changed:redmineURL", "settings-changed:showCurrentIssueTimer"].includes(message)) {
     registerContentScript();
   }
 });

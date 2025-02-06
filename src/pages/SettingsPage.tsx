@@ -71,6 +71,7 @@ const SettingsPage = () => {
             }),
             addNotes: Yup.boolean(),
             cacheComments: Yup.boolean(),
+            showCurrentIssueTimer: Yup.boolean(),
           }),
           style: Yup.object({
             displaySearchAlways: Yup.boolean(),
@@ -271,6 +272,13 @@ const SettingsPage = () => {
                       name="features.cacheComments"
                       title={formatMessage({ id: "settings.features.cache-comments.title" })}
                       description={formatMessage({ id: "settings.features.cache-comments.description" })}
+                      as={CheckBox}
+                    />
+                    <Field
+                      type="checkbox"
+                      name="features.showCurrentIssueTimer"
+                      title={formatMessage({ id: "settings.features.show-current-issue-timer.title" })}
+                      description={formatMessage({ id: "settings.features.show-current-issue-timer.description" })}
                       as={CheckBox}
                     />
                   </div>

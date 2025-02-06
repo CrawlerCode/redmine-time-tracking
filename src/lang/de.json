@@ -141,6 +141,8 @@
   "settings.features.add-notes.description": "Notizen zu Ticket hinzufügen",
   "settings.features.cache-comments.title": "Kommentare zwischenspeichern",
   "settings.features.cache-comments.description": "Kommentare zwischenspeichern, bis sie übermittelt wurden",
+  "settings.features.show-current-issue-timer.title": "Aktuellen Ticket-Timer anzeigen",
+  "settings.features.show-current-issue-timer.description": "Aktuellen Ticket-Timer auf Redmine Seite anzeigen",
   "settings.style": "Styling",
   "settings.style.display-search-always.title": "Suche immer anzeigen",
   "settings.style.sticky-scroll.title": "Sticky scroll",

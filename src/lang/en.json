@@ -140,6 +140,8 @@
   "settings.features.add-notes.description": "Adding notes to an issue",
   "settings.features.cache-comments.title": "Cache comments",
   "settings.features.cache-comments.description": "Cache comments until they are submitted",
+  "settings.features.show-current-issue-timer.title": "Show current issue timer",
+  "settings.features.show-current-issue-timer.description": "Show current issue timer on Redmine page",
   "settings.style": "Styling",
   "settings.style.display-search-always.title": "Display search always",
   "settings.style.sticky-scroll.title": "Sticky scroll",

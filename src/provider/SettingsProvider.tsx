@@ -14,6 +14,7 @@ export type Settings = {
     roundingInterval: number;
     cacheComments: boolean;
     addNotes: boolean;
+    showCurrentIssueTimer: boolean;
   };
   style: {
     displaySearchAlways: boolean;
@@ -39,6 +40,7 @@ const defaultSettings: Settings = {
     roundingInterval: 15,
     cacheComments: true,
     addNotes: false,
+    showCurrentIssueTimer: true,
   },
   style: {
     displaySearchAlways: false,
@@ -77,7 +79,10 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
         setSettings: (newData: Settings) => {
           setData(newData);
           if (newData.redmineURL !== data.redmineURL) {
-            chrome.runtime.sendMessage("redmine-url-changed");
+            chrome.runtime.sendMessage("settings-changed:redmineURL");
+          }
+          if (newData.features.showCurrentIssueTimer !== data.features.showCurrentIssueTimer) {
+            chrome.runtime.sendMessage("settings-changed:showCurrentIssueTimer");
           }
         },
       }}

@@ -140,6 +140,8 @@
   "settings.features.add-notes.description": "Добавлять примечания в задачи",
   "settings.features.cache-comments.title": "Кеширование комментариев",
   "settings.features.cache-comments.description": "Кешировать комментарии пока они не отправлены",
+  "settings.features.show-current-issue-timer.title": "Show current issue timer",
+  "settings.features.show-current-issue-timer.description": "Show current issue timer on Redmine page",
   "settings.style": "Отображение",
   "settings.style.display-search-always.title": "Display search always",
   "settings.style.sticky-scroll.title": "Закрепить названия проектов при прокрутке списка задач",
