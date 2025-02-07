@@ -1,6 +1,6 @@
 import deepmerge from "deepmerge";
 import { ReactNode, createContext, use } from "react";
-import useStorage from "../hooks/useStorage";
+import useStorage, { getStorage } from "../hooks/useStorage";
 
 export type Settings = {
   language: string;
@@ -55,6 +55,11 @@ const defaultSettings: Settings = {
   },
 };
 
+export const getSettings = async () => {
+  const data = await getStorage<Partial<Settings>>("settings", defaultSettings);
+  return deepmerge<Settings>(defaultSettings, data);
+};
+
 const SettingsContext = createContext({
   settings: defaultSettings,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -62,10 +67,10 @@ const SettingsContext = createContext({
 });
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-  const { data, setData } = useStorage<Settings>("settings", defaultSettings);
+  const { data, setData } = useStorage<Partial<Settings>>("settings", defaultSettings);
 
   // Migrate old settings TODO: Remove in future
-  if (data.features.roundTimeNearestQuarterHour === true) {
+  if (data?.features?.roundTimeNearestQuarterHour === true) {
     data.features.roundTimeNearestQuarterHour = undefined;
     data.features.roundToNearestInterval = true;
     data.features.roundingInterval = 15;
@@ -81,7 +86,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
           if (newData.redmineURL !== data.redmineURL) {
             chrome.runtime.sendMessage("settings-changed:redmineURL");
           }
-          if (newData.features.showCurrentIssueTimer !== data.features.showCurrentIssueTimer) {
+          if (newData.features.showCurrentIssueTimer !== data.features?.showCurrentIssueTimer) {
             chrome.runtime.sendMessage("settings-changed:showCurrentIssueTimer");
           }
         },

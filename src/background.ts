@@ -1,5 +1,4 @@
-import { getStorage } from "./hooks/useStorage";
-import { Settings } from "./provider/SettingsProvider";
+import { getSettings } from "./provider/SettingsProvider";
 
 /**
  * Open options page on install and set uninstall URL
@@ -16,7 +15,7 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
  * and re-register on Redmine URL change
  */
 const registerContentScript = async () => {
-  const settings = await getStorage<Partial<Settings>>("settings", {});
+  const settings = await getSettings();
   if (!settings.redmineURL) return;
 
   // Unregister content script
@@ -27,7 +26,7 @@ const registerContentScript = async () => {
     .catch(() => undefined);
 
   // If showCurrentIssueTimer is disabled, do not register content script
-  if (!settings.features?.showCurrentIssueTimer) return;
+  if (!settings.features.showCurrentIssueTimer) return;
 
   // Register content script
   await chrome.scripting.registerContentScripts([
