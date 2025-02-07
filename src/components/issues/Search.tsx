@@ -4,7 +4,7 @@ import { ReactNode, Ref, useImperativeHandle, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import useDebounce from "../../hooks/useDebounce";
 import useHotKey from "../../hooks/useHotkey";
-import useSettings from "../../hooks/useSettings";
+import { useSettings } from "../../provider/SettingsProvider";
 import { TReference } from "../../types/redmine";
 import InputField from "../general/InputField";
 

@@ -11,8 +11,8 @@ import useIssuePriorities from "../hooks/useIssuePriorities";
 import useMyIssues from "../hooks/useMyIssues";
 import useProjectVersions from "../hooks/useProjectVersions";
 import useSearch from "../hooks/useSearch";
-import useSettings from "../hooks/useSettings";
 import useTimers from "../hooks/useTimers";
+import { useSettings } from "../provider/SettingsProvider";
 
 const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { search: SearchQuery; filter: FilterQuery; searchRef: RefObject<SearchRef | null>; isLoading: boolean }) => {
   const { formatMessage } = useIntl();

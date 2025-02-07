@@ -1,4 +1,4 @@
-import useSettings from "./useSettings";
+import { useSettings } from "../provider/SettingsProvider";
 import useStorage from "./useStorage";
 
 type TimerData = {

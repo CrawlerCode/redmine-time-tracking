@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useSettings from "./useSettings";
+import { useSettings } from "../provider/SettingsProvider";
 
 function useActiveRedmineTab() {
   const { settings } = useSettings();

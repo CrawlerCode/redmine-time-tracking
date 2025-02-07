@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
+import { useSettings } from "../provider/SettingsProvider";
 import { formatHoursUsually } from "../utils/date";
-import useSettings from "./useSettings";
 
 const useFormatHours = () => {
   const { formatMessage, formatNumber } = useIntl();

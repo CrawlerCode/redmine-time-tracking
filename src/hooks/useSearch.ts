@@ -2,9 +2,9 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { FilterQuery } from "../components/issues/Filter";
 import { SearchQuery } from "../components/issues/Search";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
+import { useSettings } from "../provider/SettingsProvider";
 import { TIssue } from "../types/redmine";
 import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
-import useSettings from "./useSettings";
 
 const STALE_DATA_TIME = 1000 * 60;
 

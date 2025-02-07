@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ComponentProps, useState } from "react";
 import { useIntl } from "react-intl";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
-import useSettings from "../../hooks/useSettings";
+import { useSettings } from "../../provider/SettingsProvider";
 import { TTimeEntry } from "../../types/redmine";
 import ContextMenu from "../general/ContextMenu";
 import EditTimeEntryModal from "./EditTimeEntryModal";

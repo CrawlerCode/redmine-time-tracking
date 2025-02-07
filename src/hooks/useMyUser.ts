@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
-import useSettings from "./useSettings";
+import { useSettings } from "../provider/SettingsProvider";
 
 type Options = {
   staleTime?: number;

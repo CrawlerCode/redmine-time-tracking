@@ -1,5 +1,5 @@
 import deepmerge from "deepmerge";
-import { ReactNode, createContext } from "react";
+import { ReactNode, createContext, use } from "react";
 import useStorage from "../hooks/useStorage";
 
 export type Settings = {
@@ -61,7 +61,7 @@ const SettingsContext = createContext({
   setSettings: (_data: Settings) => undefined,
 });
 
-const SettingsProvider = ({ children }: { children: ReactNode }) => {
+export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const { data, setData } = useStorage<Settings>("settings", defaultSettings);
 
   // Migrate old settings TODO: Remove in future
@@ -92,5 +92,6 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export { SettingsContext };
+export const useSettings = () => use(SettingsContext);
+
 export default SettingsProvider;

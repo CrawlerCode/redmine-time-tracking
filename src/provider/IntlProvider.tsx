@@ -2,7 +2,7 @@ import { setDefaultOptions } from "date-fns";
 import flatpickr from "flatpickr";
 import React, { ComponentProps, useEffect, useState } from "react";
 import { IntlProvider as ReactIntlProvider } from "react-intl";
-import useSettings from "../hooks/useSettings";
+import { useSettings } from "./SettingsProvider";
 
 import messagesEN from "../lang/en.json";
 

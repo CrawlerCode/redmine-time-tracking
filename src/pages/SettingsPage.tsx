@@ -16,9 +16,8 @@ import ReactSelectFormik from "../components/general/ReactSelectFormik";
 import Switch from "../components/general/Switch";
 import Toast from "../components/general/Toast";
 import useMyUser from "../hooks/useMyUser";
-import useSettings from "../hooks/useSettings";
 import { LANGUAGES } from "../provider/IntlProvider";
-import { Settings } from "../provider/SettingsProvider";
+import { Settings, useSettings } from "../provider/SettingsProvider";
 import { formatHoursUsually } from "../utils/date";
 
 const LANGUAGE_FLAGS: Record<(typeof LANGUAGES)[number], FlagComponent> = {
