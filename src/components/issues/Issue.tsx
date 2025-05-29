@@ -246,7 +246,10 @@ const Issue = ({ issue, priorityType, assignedToMe, canEdit, canLogTime, canAddN
       {createTimeEntry !== undefined && (
         <CreateTimeEntryModal
           issue={issue}
-          time={createTimeEntry}
+          initialValues={{
+            done_ratio: issue.done_ratio,
+            hours: Number((createTimeEntry / 1000 / 60 / 60).toFixed(2)),
+          }}
           onClose={() => setCreateTimeEntry(undefined)}
           onSuccess={() => {
             setCreateTimeEntry(undefined);

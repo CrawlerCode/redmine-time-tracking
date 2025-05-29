@@ -5,11 +5,10 @@ import { FastField, Form, Formik, FormikProps } from "formik";
 import { useEffect, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
+import useCachedComments from "../../hooks/useCachedComments";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useMyUser from "../../hooks/useMyUser";
 import useProject from "../../hooks/useProject";
-import useStorage from "../../hooks/useStorage";
-import useTimeEntryActivities from "../../hooks/useTimeEntryActivities";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";
 import { TCreateTimeEntry, TIssue, TRedmineError, TUpdateIssue } from "../../types/redmine";
@@ -21,7 +20,7 @@ import Fieldset from "../general/Fieldset";
 import InputField from "../general/InputField";
 import LoadingSpinner from "../general/LoadingSpinner";
 import Modal from "../general/Modal";
-import ReactSelectFormik, { shouldUpdate } from "../general/ReactSelectFormik";
+import { shouldUpdate as shouldUpdateReactSelect } from "../general/ReactSelectFormik";
 import TextareaField from "../general/TextareaField";
 import TimeField from "../general/TimeField";
 import Toast from "../general/Toast";
@@ -29,11 +28,12 @@ import Toggle from "../general/Toggle";
 import TimeEntryPreview from "../time/TimeEntryPreview";
 import DoneSlider from "./DoneSlider";
 import SpentVsEstimatedTime from "./SpentVsEstimatedTime";
+import ActivityField from "./fields/ActivityField";
 import TimeEntryUsersField from "./fields/TimeEntryUsersField";
 
 type PropTypes = {
   issue: TIssue;
-  time: number;
+  initialValues?: Partial<TCreateTimeEntryForm>;
   onClose: () => void;
   onSuccess: () => void;
 };
@@ -44,9 +44,7 @@ type TCreateTimeEntryForm = Omit<TCreateTimeEntry, "user_id"> &
     add_notes?: boolean;
   };
 
-const _defaultCachedComments = {};
-
-const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) => {
+const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: PropTypes) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
   const redmineApi = useRedmineApi();
@@ -57,13 +55,6 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
   const myUser = useMyUser();
   const project = useProject(issue.project.id);
   const projectRoles = useMyProjectRoles([issue.project.id], project.data ? [project.data] : undefined);
-  const timeEntryActivities = useTimeEntryActivities(issue.project.id);
-
-  const cachedComments = useStorage<Record<number, string | undefined>>("cachedComments", _defaultCachedComments);
-
-  useEffect(() => {
-    formik.current?.setFieldValue("activity_id", timeEntryActivities.defaultActivity?.id);
-  }, [timeEntryActivities.defaultActivity]);
 
   useEffect(() => {
     if (myUser.data?.id) {
@@ -71,14 +62,13 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
     }
   }, [myUser.data?.id]);
 
-  useEffect(() => {
-    if (!settings.features.cacheComments) return;
-    // load cached comment to formik
-    const comments = cachedComments.data[issue.id];
-    if (comments) {
-      formik.current?.setFieldValue("comments", comments);
-    }
-  }, [settings.features.cacheComments, issue.id, cachedComments.data]);
+  const cachedComments = useCachedComments({
+    identifier: issue.id,
+    enabled: settings.features.cacheComments,
+    onLoad: (comment) => {
+      formik.current?.setFieldValue("comments", comment);
+    },
+  });
 
   const createTimeEntryMutation = useMutation({
     mutationFn: (entry: TCreateTimeEntry) => redmineApi.createTimeEntry(entry),
@@ -104,13 +94,12 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
       <Modal
         title={formatMessage({ id: "issues.modal.add-spent-time.title" })}
         onClose={() => {
-          if (settings.features.cacheComments) {
-            // if comment or already cached => save/update comment
-            const comments = formik.current?.values.comments;
-            if (comments || cachedComments.data[issue.id]) {
-              cachedComments.setData({ ...cachedComments.data, [issue.id]: comments });
-            }
+          // if comment exist => save/update comment
+          const comment = formik.current?.values.comments;
+          if (cachedComments.isEnabled && comment) {
+            cachedComments.saveComment(comment);
           }
+
           onClose();
         }}
       >
@@ -119,17 +108,19 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
           initialValues={
             {
               issue_id: issue.id,
-              done_ratio: issue.done_ratio,
-              hours: Number((time / 1000 / 60 / 60).toFixed(2)),
+              done_ratio: 0,
+              hours: 0,
               spent_on: new Date(),
               user_id: undefined,
               comments: "",
               activity_id: undefined,
               add_notes: false,
               notes: "",
+              ...initialValues,
             } satisfies Partial<TCreateTimeEntryForm> as unknown as TCreateTimeEntryForm
           }
           validationSchema={Yup.object({
+            issue_id: Yup.number(),
             done_ratio: Yup.number().min(0).max(100),
             hours: Yup.number()
               .required(formatMessage({ id: "time.time-entry.field.hours.validation.required" }))
@@ -145,13 +136,19 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
             notes: Yup.string(),
           })}
           onSubmit={async (originalValues, { setSubmitting }) => {
-            const values = { ...originalValues };
-            if (values.done_ratio !== issue.done_ratio || (values.add_notes && values.notes)) {
-              await updateIssueMutation.mutateAsync({ done_ratio: values.done_ratio !== issue.done_ratio ? values.done_ratio : undefined, notes: values.add_notes ? values.notes : undefined });
+            const { done_ratio, add_notes, notes, ...values } = { ...originalValues };
+
+            // Update issue done_ratio and notes
+            const updatedDoneRatio = done_ratio && done_ratio !== issue.done_ratio ? done_ratio : undefined;
+            const addNotes = add_notes && notes ? notes : undefined;
+            if (updatedDoneRatio || addNotes) {
+              await updateIssueMutation.mutateAsync({
+                done_ratio: updatedDoneRatio,
+                notes: addNotes,
+              });
             }
-            delete values.done_ratio;
-            delete values.add_notes;
-            delete values.notes;
+
+            // Create time entry
             if (values.user_id && Array.isArray(values.user_id) && values.user_id.length > 0) {
               // create for multiple users
               for (const userId of values.user_id) {
@@ -161,19 +158,20 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
               // create for me
               await createTimeEntryMutation.mutateAsync({ ...values, user_id: undefined as never });
             }
+
             setSubmitting(false);
+
             if (!createTimeEntryMutation.isError) {
-              if (settings.features.cacheComments) {
-                // if has cached comment => remove it
-                if (cachedComments.data[issue.id]) {
-                  cachedComments.setData({ ...cachedComments.data, [issue.id]: undefined });
-                }
+              // if has cached comment => remove it
+              if (cachedComments.isEnabled && cachedComments.isCached) {
+                cachedComments.removeComment();
               }
+
               onSuccess();
             }
           }}
         >
-          {({ isSubmitting, touched, errors, values }) => (
+          {({ isSubmitting, touched, errors, values, setFieldValue }) => (
             <Form>
               <div className="flex flex-col gap-y-2">
                 <h1 className="mb-1 truncate">
@@ -223,6 +221,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                         }
                         autoComplete="off"
                         className="col-span-3"
+                        autoFocus={values.hours === 0}
                       />
                     ) : (
                       <FastField
@@ -236,6 +235,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                         size="sm"
                         autoComplete="off"
                         className="col-span-2"
+                        autoFocus={values.hours === 0}
                       />
                     )}
 
@@ -265,7 +265,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                       size="sm"
                       isMulti
                       closeMenuOnSelect={false}
-                      shouldUpdate={shouldUpdate}
+                      shouldUpdate={shouldUpdateReactSelect}
                     />
                   )}
 
@@ -277,25 +277,19 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     error={touched.comments && errors.comments}
                     as={InputField}
                     size="sm"
-                    autoFocus
+                    autoFocus={values.hours > 0}
                   />
 
                   <FastField
                     type="select"
                     name="activity_id"
-                    title={formatMessage({ id: "time.time-entry.field.activity" })}
-                    placeholder={formatMessage({ id: "time.time-entry.field.activity" })}
-                    noOptionsMessage={() => formatMessage({ id: "general.no-options" })}
                     error={touched.activity_id && errors.activity_id}
                     required
-                    as={ReactSelectFormik}
+                    as={ActivityField}
+                    projectId={issue.project.id}
+                    onDefaultActivityChange={(activityId: number) => setFieldValue("activity_id", activityId)}
                     size="sm"
-                    options={timeEntryActivities.data?.map((activity) => ({
-                      label: activity.name,
-                      value: activity.id,
-                    }))}
-                    isLoading={timeEntryActivities.isLoading}
-                    shouldUpdate={shouldUpdate}
+                    shouldUpdate={shouldUpdateReactSelect}
                   />
                 </Fieldset>
 
