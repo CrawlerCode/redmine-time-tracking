@@ -13,7 +13,7 @@ const CurrentIssueTimer = ({ issueId }: PropTypes) => {
 
   const { data: issue } = useIssue(issueId);
   const projectRoles = useMyProjectRoles(issue ? [issue.project.id] : []);
-  if (!issue || !projectRoles.hasProjectPermission(issue.project, "log_time")) return;
+  if (!issue || !projectRoles.hasProjectPermission(issue.project.id, "log_time")) return;
 
   const timer = timers.getTimer(issue.id);
 

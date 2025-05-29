@@ -4,7 +4,7 @@ import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { TProject, TReference, TRole } from "../types/redmine";
 import useMyUser from "./useMyUser";
 
-const useMyProjectRoles = (projectIds: number[]) => {
+const useMyProjectRoles = (projectIds: number[], projects?: TProject[]) => {
   const redmineApi = useRedmineApi();
 
   const myUser = useMyUser();
@@ -60,9 +60,10 @@ const useMyProjectRoles = (projectIds: number[]) => {
     data: projectRoles,
     isLoading: myUser.isLoading || rolesQueries.isLoading,
     isError: myUser.isError || rolesQueries.isError,
-    hasProjectPermission: (project: TProject | TReference, permission: TRole["permissions"][number]) =>
+    hasProjectPermission: (projectId: number, permission: TRole["permissions"][number]) =>
       // First check if user is admin, then check if user has the permission in the project roles or if the project is public and the non member role has the permission
-      myUser.data?.admin || (projectRoles[project.id] ?? ("is_public" in project && project.is_public && nonMemberRole ? [nonMemberRole] : undefined))?.some((r) => r.permissions.includes(permission)),
+      myUser.data?.admin ||
+      (projectRoles[projectId] ?? (projects?.find((p) => p.id === projectId)?.is_public && nonMemberRole ? [nonMemberRole] : undefined))?.some((r) => r.permissions.includes(permission)),
   };
 };
 

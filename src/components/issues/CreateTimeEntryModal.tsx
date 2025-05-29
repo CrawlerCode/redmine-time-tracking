@@ -56,7 +56,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
 
   const myUser = useMyUser();
   const project = useProject(issue.project.id);
-  const projectRoles = useMyProjectRoles([issue.project.id]);
+  const projectRoles = useMyProjectRoles([issue.project.id], project.data ? [project.data] : undefined);
   const timeEntryActivities = useTimeEntryActivities(issue.project.id);
 
   const cachedComments = useStorage<Record<number, string | undefined>>("cachedComments", _defaultCachedComments);
@@ -255,7 +255,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                     />
                   </div>
 
-                  {projectRoles.hasProjectPermission(project.data ?? issue.project, "log_time_for_other_users") && (
+                  {projectRoles.hasProjectPermission(issue.project.id, "log_time_for_other_users") && (
                     <FastField
                       type="select"
                       name="user_id"
@@ -300,7 +300,7 @@ const CreateTimeEntryModal = ({ issue, time, onClose, onSuccess }: PropTypes) =>
                 </Fieldset>
 
                 {settings.features.addNotes &&
-                  projectRoles.hasProjectPermission(project.data ?? issue.project, "add_issue_notes") &&
+                  projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes") &&
                   (!values.add_notes ? (
                     <FastField type="checkbox" name="add_notes" title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} as={Toggle} error={touched.add_notes && errors.add_notes} />
                   ) : (

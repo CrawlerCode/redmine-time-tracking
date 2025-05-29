@@ -11,7 +11,7 @@ import useMyUser from "../../hooks/useMyUser";
 import useProjectVersions from "../../hooks/useProjectVersions";
 import useTimers from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
-import { TIssue, TProject, TReference } from "../../types/redmine";
+import { TIssue, TReference } from "../../types/redmine";
 import { getGroupedIssues, getSortedIssues } from "../../utils/issue";
 import CreateIssueModal from "./CreateIssueModal";
 import Issue from "./Issue";
@@ -32,7 +32,7 @@ const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, timer
 
   const myUser = useMyUser();
   const projects = useMyProjects();
-  const projectRoles = useMyProjectRoles([...new Set(rawIssues.map((i) => i.project.id))]);
+  const projectRoles = useMyProjectRoles([...new Set(rawIssues.map((i) => i.project.id))], projects.data);
   const groupedIssues = getGroupedIssues({
     issues: getSortedIssues(rawIssues, settings.style.sortIssuesByPriority ? issuePriorities.data : [], timers.timers),
     projectVersions: projectVersions?.data ?? {},
@@ -45,8 +45,7 @@ const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, timer
 
   return (
     <>
-      {groupedIssues.map(({ id, project: projectRef, versions, groups }) => {
-        const project: TProject | TReference | undefined = projects.data?.find((p) => p.id === projectRef?.id) ?? projectRef;
+      {groupedIssues.map(({ id, project, versions, groups }) => {
         return (
           <Fragment key={id}>
             {project && (
@@ -60,7 +59,7 @@ const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, timer
                 </a>
 
                 <div className="flex gap-x-2">
-                  {projectRoles?.hasProjectPermission(project, "add_issues") && (
+                  {projectRoles?.hasProjectPermission(project.id, "add_issues") && (
                     <button type="button" onClick={() => setCreateIssue(project.id)} tabIndex={-1}>
                       <FontAwesomeIcon icon={faPlus} />
                     </button>
@@ -105,10 +104,11 @@ const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, timer
                       priorityType={issuePriorities.getPriorityType(issue)}
                       assignedToMe={myUser.data ? myUser.data.id === issue.assigned_to?.id : true}
                       canEdit={
-                        projectRoles.hasProjectPermission(issue.project, "edit_issues") || (projectRoles.hasProjectPermission(issue.project, "edit_own_issues") && issue.author.id === myUser.data?.id)
+                        projectRoles.hasProjectPermission(issue.project.id, "edit_issues") ||
+                        (projectRoles.hasProjectPermission(issue.project.id, "edit_own_issues") && issue.author.id === myUser.data?.id)
                       }
-                      canLogTime={projectRoles.hasProjectPermission(issue.project, "log_time")}
-                      canAddNotes={projectRoles.hasProjectPermission(issue.project, "add_issue_notes")}
+                      canLogTime={projectRoles.hasProjectPermission(issue.project.id, "log_time")}
+                      canAddNotes={projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes")}
                       timer={timer}
                     />
                   );
