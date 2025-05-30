@@ -15,6 +15,18 @@ export const LANGUAGES = ["en", "de", "ru", "fr"] as const;
 
 type Language = (typeof LANGUAGES)[number];
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace FormatjsIntl {
+    interface Message {
+      ids: keyof typeof messagesEN;
+    }
+    interface IntlConfig {
+      locale: Language;
+    }
+  }
+}
+
 type PropTypes = {
   children: React.ReactNode;
 };

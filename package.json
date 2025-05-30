@@ -20,7 +20,8 @@
     "release": "gh release create v%npm_package_version% --notes-file release_notes.md --generate-notes",
     "lint": "eslint --fix src tests fixtures",
     "format": "prettier --write src tests public fixtures",
-    "test": "playwright test"
+    "test": "playwright test",
+    "lang:verify": "formatjs verify --source-locale en --missing-keys src/lang/*.json"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -43,7 +44,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-flatpickr": "^3.10.13",
-    "react-intl": "^7.1.5",
+    "react-intl": "^7.1.11",
     "react-router-dom": "^7.1.5",
     "react-select": "^5.10.0",
     "react-tooltip": "^5.28.0",
@@ -54,6 +55,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@formatjs/cli": "^6.7.1",
     "@playwright/test": "^1.50.1",
     "@types/chrome": "^0.0.301",
     "@types/node": "^22.13.1",
@@ -85,7 +87,7 @@
     "vite-plugin-static-copy": "^2.2.0",
     "vite-plugin-zip-pack": "^1.2.4"
   },
-  "packageManager": "pnpm@10.2.0",
+  "packageManager": "pnpm@10.11.0",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
