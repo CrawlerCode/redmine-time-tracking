@@ -11,10 +11,11 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
   const redmineApi = useRedmineApi();
 
   const issuesQuery = useRedminePaginatedInfiniteQuery({
-    queryKey: ["issues", "me"],
+    queryKey: ["issues", "open", "me"],
     queryFn: ({ pageParam }) =>
-      redmineApi.getOpenIssues(
+      redmineApi.getIssues(
         {
+          statusId: "open",
           assignedTo: "me",
         },
         pageParam
@@ -25,10 +26,11 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     autoFetchPages: true,
   });
   const additionalIssuesQuery = useRedminePaginatedInfiniteQuery({
-    queryKey: ["issues", additionalIssuesIds],
+    queryKey: ["issues", "open", additionalIssuesIds],
     queryFn: ({ pageParam }) =>
-      redmineApi.getOpenIssues(
+      redmineApi.getIssues(
         {
+          statusId: "open",
           issueIds: additionalIssuesIds,
         },
         pageParam

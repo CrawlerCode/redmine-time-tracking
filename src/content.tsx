@@ -18,6 +18,7 @@ config.autoAddCss = false;
     const container = document.createElement("div");
     container.style.float = "right";
     container.style.marginTop = "-4px";
+    container.style.marginRight = "5px";
     contextual.parentElement?.insertBefore(container, contextual.nextSibling);
 
     // Create a shadow root

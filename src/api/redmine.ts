@@ -47,8 +47,8 @@ export class RedmineApi {
   }
 
   // Issues
-  async getOpenIssues(
-    { projectId, issueIds, assignedTo }: { projectId?: number; issueIds?: number[]; assignedTo?: number | "me" },
+  async getIssues(
+    { projectId, issueIds, statusId, assignedTo }: { projectId?: number; issueIds?: number[]; statusId?: number | "open" | "closed" | "*"; assignedTo?: number | "me" },
     { offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }
   ): Promise<
     TPaginatedResponse<{
@@ -61,7 +61,7 @@ export class RedmineApi {
           project_id: projectId,
           issue_id: issueIds?.join(","),
           assigned_to_id: assignedTo,
-          status_id: "open",
+          status_id: statusId,
           sort: "updated_on:desc",
           offset,
           limit,

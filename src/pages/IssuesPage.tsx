@@ -1,13 +1,14 @@
 import { RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import BrowserNotificationBadge from "../components/general/BrowserNotificationBadge";
 import Button from "../components/general/Button";
 import Toast from "../components/general/Toast";
 import Filter, { FilterQuery } from "../components/issues/Filter";
 import IssuesList from "../components/issues/IssuesList";
 import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
 import Search, { SearchQuery, SearchRef } from "../components/issues/Search";
+import TimersBadge from "../components/timers/TimersBadge";
 import useIssuePriorities from "../hooks/useIssuePriorities";
+import useLocalIssues from "../hooks/useLocalIssues";
 import useMyIssues from "../hooks/useMyIssues";
 import useProjectVersions from "../hooks/useProjectVersions";
 import useSearch from "../hooks/useSearch";
@@ -18,26 +19,19 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
+  const localIssues = useLocalIssues();
   const timers = useTimers();
 
-  const myIssuesQuery = useMyIssues(
-    Object.keys(timers.timers)
-      .map((id) => Number(id))
-      .filter((id) => timers.timers[id].remembered || timers.timers[id].active || timers.timers[id].time > 0),
-    search,
-    filter
-  );
+  const myIssuesQuery = useMyIssues(Array.from(new Set([...timers.getIssuesIds(), ...localIssues.getIssuesIds()])), search, filter);
   const searchIssues = useSearch(search, filter, myIssuesQuery.data);
   const issuePriorities = useIssuePriorities({ enabled: settings.style.sortIssuesByPriority || settings.style.showIssuesPriority });
   const projectVersions = useProjectVersions([...new Set(myIssuesQuery.data.filter((i) => i.fixed_version).map((i) => i.project.id))], { enabled: settings.style.groupIssuesByVersion });
 
-  const activeTimerCount = timers.getActiveTimerCount();
-
-  const isLoading = timers.isLoading || myIssuesQuery.isLoading || issuePriorities.isLoading || projectVersions.isLoading || isPageLoading;
+  const isLoading = timers.isLoading || localIssues.isLoading || myIssuesQuery.isLoading || issuePriorities.isLoading || projectVersions.isLoading || isPageLoading;
 
   return (
     <>
-      <BrowserNotificationBadge backgroundColor="#1d4ed8" text={activeTimerCount > 0 ? activeTimerCount.toString() : ""} />
+      <TimersBadge activeTimerCount={timers.getActiveTimerCount()} />
 
       <div className="flex flex-col gap-y-2">
         {isLoading ? (
@@ -45,6 +39,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
         ) : (
           <IssuesList
             issues={myIssuesQuery.data}
+            localIssues={localIssues}
             issuePriorities={issuePriorities}
             projectVersions={projectVersions}
             timers={timers}
@@ -67,6 +62,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
 
             <IssuesList
               issues={searchIssues.data}
+              localIssues={localIssues}
               issuePriorities={issuePriorities}
               projectVersions={projectVersions}
               timers={timers}

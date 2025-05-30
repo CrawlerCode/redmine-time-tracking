@@ -5,6 +5,7 @@ import { Fragment, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import useActiveRedmineTab from "../../hooks/useActiveRedmineTab";
 import useIssuePriorities from "../../hooks/useIssuePriorities";
+import useLocalIssues from "../../hooks/useLocalIssues";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useMyProjects from "../../hooks/useMyProjects";
 import useMyUser from "../../hooks/useMyUser";
@@ -19,13 +20,14 @@ import VersionTooltip from "./VersionTooltip";
 
 type PropTypes = {
   issues: TIssue[];
+  localIssues: ReturnType<typeof useLocalIssues>;
   issuePriorities: ReturnType<typeof useIssuePriorities>;
   projectVersions?: ReturnType<typeof useProjectVersions>;
   timers: ReturnType<typeof useTimers>;
   onSearchInProject?: (project: TReference) => void;
 };
 
-const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, timers, onSearchInProject }: PropTypes) => {
+const IssuesList = ({ issues: rawIssues, localIssues, issuePriorities, projectVersions, timers, onSearchInProject }: PropTypes) => {
   const { settings } = useSettings();
 
   const activeTab = useActiveRedmineTab();
@@ -34,9 +36,14 @@ const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, timer
   const projects = useMyProjects();
   const projectRoles = useMyProjectRoles([...new Set(rawIssues.map((i) => i.project.id))], projects.data);
   const groupedIssues = getGroupedIssues({
-    issues: getSortedIssues(rawIssues, settings.style.sortIssuesByPriority ? issuePriorities.data : [], timers.timers),
+    issues: getSortedIssues({
+      issues: rawIssues,
+      localIssues: localIssues.localIssues,
+      issuePriorities: settings.style.sortIssuesByPriority ? issuePriorities.data : [],
+    }),
+    localIssues: localIssues.localIssues,
     projectVersions: projectVersions?.data ?? {},
-    timersData: timers.timers,
+    timers: timers.getAllTimers(),
     settings,
     activeTabIssueId: activeTab?.data?.type === "issue" ? activeTab?.data?.id : undefined,
   });
@@ -94,25 +101,23 @@ const IssuesList = ({ issues: rawIssues, issuePriorities, projectVersions, timer
                   </>
                 )}
 
-                {issues.map((issue) => {
-                  const timer = timers.getTimer(issue.id);
-
-                  return (
-                    <Issue
-                      key={issue.id}
-                      issue={issue}
-                      priorityType={issuePriorities.getPriorityType(issue)}
-                      assignedToMe={myUser.data ? myUser.data.id === issue.assigned_to?.id : true}
-                      canEdit={
-                        projectRoles.hasProjectPermission(issue.project.id, "edit_issues") ||
-                        (projectRoles.hasProjectPermission(issue.project.id, "edit_own_issues") && issue.author.id === myUser.data?.id)
-                      }
-                      canLogTime={projectRoles.hasProjectPermission(issue.project.id, "log_time")}
-                      canAddNotes={projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes")}
-                      timer={timer}
-                    />
-                  );
-                })}
+                {issues.map((issue) => (
+                  <Issue
+                    key={issue.id}
+                    issue={issue}
+                    localIssue={localIssues.getLocalIssue(issue.id)}
+                    priorityType={issuePriorities.getPriorityType(issue)}
+                    assignedToMe={myUser.data ? myUser.data.id === issue.assigned_to?.id : true}
+                    timers={timers.getTimersByIssue(issue.id)}
+                    onAddTimer={() => timers.addTimer(issue.id)}
+                    canEdit={
+                      projectRoles.hasProjectPermission(issue.project.id, "edit_issues") ||
+                      (projectRoles.hasProjectPermission(issue.project.id, "edit_own_issues") && issue.author.id === myUser.data?.id)
+                    }
+                    canLogTime={projectRoles.hasProjectPermission(issue.project.id, "log_time")}
+                    canAddNotes={projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes")}
+                  />
+                ))}
               </Fragment>
             ))}
           </Fragment>

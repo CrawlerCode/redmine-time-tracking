@@ -5,7 +5,6 @@ import { useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as Yup from "yup";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
-import { useSettings } from "../../provider/SettingsProvider";
 import { TIssue, TRedmineError, TUpdateIssue } from "../../types/redmine";
 import Button from "../general/Button";
 import LoadingSpinner from "../general/LoadingSpinner";
@@ -13,6 +12,7 @@ import Modal from "../general/Modal";
 import TextareaField from "../general/TextareaField";
 import Toast from "../general/Toast";
 import Toggle from "../general/Toggle";
+import IssueTitle from "./IssueTitle";
 
 type PropTypes = {
   issue: TIssue;
@@ -22,7 +22,7 @@ type PropTypes = {
 
 const AddIssueNotesModal = ({ issue, onClose, onSuccess }: PropTypes) => {
   const { formatMessage } = useIntl();
-  const { settings } = useSettings();
+
   const redmineApi = useRedmineApi();
   const queryClient = useQueryClient();
 
@@ -58,12 +58,7 @@ const AddIssueNotesModal = ({ issue, onClose, onSuccess }: PropTypes) => {
             return (
               <Form>
                 <div className="flex flex-col gap-y-2">
-                  <h1 className="mb-1 truncate">
-                    <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" rel="noreferrer">
-                      {issue.tracker.name} #{issue.id}
-                    </a>{" "}
-                    {issue.subject}
-                  </h1>
+                  <IssueTitle issue={issue} />
 
                   <FastField
                     type="textarea"

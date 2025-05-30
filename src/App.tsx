@@ -1,4 +1,4 @@
-import { faGear, faList, faStopwatch, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarDays, faGear, faList, faStopwatch, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Suspense, lazy } from "react";
@@ -10,6 +10,7 @@ import { clsxm } from "./utils/clsxm";
 import { getPlatform } from "./utils/platform";
 import { createPopOut, getWindowLocationType } from "./utils/popout";
 
+const TimersPage = lazy(() => import("./pages/TimersPage"));
 const IssuesPage = lazy(() => import("./pages/IssuesPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const TimePage = lazy(() => import("./pages/TimePage"));
@@ -33,13 +34,18 @@ function App() {
         <Navbar
           navigation={[
             {
+              href: "/timers",
+              icon: <FontAwesomeIcon icon={faStopwatch} />,
+              name: formatMessage({ id: "nav.tabs.timers" }),
+            },
+            {
               href: "/issues",
               icon: <FontAwesomeIcon icon={faList} />,
               name: formatMessage({ id: "nav.tabs.issues" }),
             },
             {
               href: "/time",
-              icon: <FontAwesomeIcon icon={faStopwatch} />,
+              icon: <FontAwesomeIcon icon={faCalendarDays} />,
               name: formatMessage({ id: "nav.tabs.time" }),
             },
             {
@@ -49,7 +55,9 @@ function App() {
             },
           ]}
         />
-        {locationType === "popup" && <FontAwesomeIcon icon={faUpRightFromSquare} size="lg" className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer" onClick={createPopOut} />}
+        {locationType === "popup" && (
+          <FontAwesomeIcon icon={faUpRightFromSquare} size="sm" className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-background-inner p-1.5" onClick={createPopOut} />
+        )}
       </header>
       <main
         className={clsxm("h-[500px] overflow-y-scroll", {
@@ -60,6 +68,14 @@ function App() {
           <Routes>
             <Route index element={<Navigate to="/issues" replace />} />
 
+            <Route
+              path="/timers"
+              element={
+                <Suspense>
+                  <TimersPage />
+                </Suspense>
+              }
+            />
             <Route
               path="/issues"
               element={

@@ -1,4 +1,5 @@
-import { TimersData } from "../hooks/useTimers";
+import { LocalIssueData } from "../hooks/useLocalIssues";
+import { TimerController } from "../hooks/useTimers";
 import { Settings } from "../provider/SettingsProvider";
 import { TIssue, TIssuePriority, TReference, TVersion } from "../types/redmine";
 
@@ -49,15 +50,17 @@ type GroupedIssuesHelper = Record<
   }
 >;
 
-export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuePriority[], timersData: TimersData) => {
+export const getSortedIssues = ({ issues, localIssues, issuePriorities }: { issues: TIssue[]; localIssues: LocalIssueData[]; issuePriorities: TIssuePriority[] }) => {
   const issuePrioritiesIndices = issuePriorities.reduce((result: Record<number, number>, priority, index) => {
     result[priority.id] = index;
     return result;
   }, {});
 
+  const pinnedIssues = localIssues.filter((issue) => issue.pinned).map((issue) => issue.id);
+
   const sortedIssues = issues.sort(
     (a, b) =>
-      (timersData[b.id]?.pinned ? 1 : 0) - (timersData[a.id]?.pinned ? 1 : 0) ||
+      (pinnedIssues.includes(b.id) ? 1 : 0) - (pinnedIssues.includes(a.id) ? 1 : 0) ||
       issuePrioritiesIndices[b.priority.id] - issuePrioritiesIndices[a.priority.id] ||
       (b.due_date ? 1 : 0) - (a.due_date ? 1 : 0) ||
       new Date(a.due_date ?? 0).getTime() - new Date(b.due_date ?? 0).getTime() ||
@@ -75,14 +78,16 @@ export const getSortedIssues = (issues: TIssue[], issuePriorities: TIssuePriorit
  */
 export const getGroupedIssues = ({
   issues,
+  localIssues,
   projectVersions,
-  timersData,
+  timers,
   settings,
   activeTabIssueId,
 }: {
   issues: TIssue[];
+  localIssues: LocalIssueData[];
   projectVersions: Record<number, TVersion[]>;
-  timersData: TimersData;
+  timers: TimerController[];
   settings: Settings;
   activeTabIssueId?: number;
 }): GroupedIssues => {
@@ -99,7 +104,7 @@ export const getGroupedIssues = ({
     }
 
     if (settings.style.pinTrackedIssues) {
-      if (timersData[issue.id]?.active) {
+      if (timers.some((timer) => timer.issueId === issue.id && timer.isActive)) {
         if (!("active" in result)) {
           result["active"] = {
             id: "active",
@@ -114,7 +119,7 @@ export const getGroupedIssues = ({
         return result;
       }
 
-      if (timersData[issue.id]?.time) {
+      if (timers.some((timer) => timer.issueId === issue.id && timer.elapsedTime)) {
         if (!("paused" in result)) {
           result["paused"] = {
             id: "paused",
@@ -141,7 +146,7 @@ export const getGroupedIssues = ({
       };
     }
 
-    if (timersData[issue.id]?.pinned) {
+    if (localIssues.find((l) => l.id === issue.id)?.pinned) {
       result[issue.project.id].pinnedIssues.push(issue);
       return result;
     }

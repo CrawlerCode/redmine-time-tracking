@@ -27,9 +27,10 @@ import Toast from "../general/Toast";
 import Toggle from "../general/Toggle";
 import TimeEntryPreview from "../time/TimeEntryPreview";
 import DoneSlider from "./DoneSlider";
-import SpentVsEstimatedTime from "./SpentVsEstimatedTime";
 import ActivityField from "./fields/ActivityField";
 import TimeEntryUsersField from "./fields/TimeEntryUsersField";
+import IssueTitle from "./IssueTitle";
+import SpentVsEstimatedTime from "./SpentVsEstimatedTime";
 
 type PropTypes = {
   issue: TIssue;
@@ -174,12 +175,7 @@ const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: Prop
           {({ isSubmitting, touched, errors, values, setFieldValue }) => (
             <Form>
               <div className="flex flex-col gap-y-2">
-                <h1 className="mb-1 truncate">
-                  <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" rel="noreferrer">
-                    {issue.tracker.name} #{issue.id}
-                  </a>{" "}
-                  {issue.subject}
-                </h1>
+                <IssueTitle issue={issue} />
 
                 <div className="flex justify-between gap-x-3">
                   <FastField type="range" name="done_ratio" as={DoneSlider} className="mb-1" />

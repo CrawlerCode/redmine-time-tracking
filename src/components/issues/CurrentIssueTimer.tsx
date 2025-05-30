@@ -2,7 +2,7 @@ import useIssue from "../../hooks/useIssue";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useRedmineUrl from "../../hooks/useRedmineUrl";
 import useTimers from "../../hooks/useTimers";
-import IssueTimer from "./IssueTimer";
+import Timer from "../timers/Timer";
 
 type PropTypes = {
   issueId: number;
@@ -10,25 +10,22 @@ type PropTypes = {
 
 const CurrentIssueTimer = ({ issueId }: PropTypes) => {
   const timers = useTimers();
-
   const { data: issue } = useIssue(issueId);
   const projectRoles = useMyProjectRoles(issue ? [issue.project.id] : []);
+
   if (!issue || !projectRoles.hasProjectPermission(issue.project.id, "log_time")) return;
 
-  const timer = timers.getTimer(issue.id);
+  const issueTimers = timers.getTimersByIssue(issue.id);
+  const primaryTimer = issueTimers[0];
 
-  return (
-    <div className="rounded-lg border border-gray-200 bg-background px-2 py-0.5 dark:border-gray-700">
-      <IssueTimer issue={issue} timer={timer} />
-    </div>
-  );
+  return <Timer timer={primaryTimer} issue={issue} variant="standalone" />;
 };
 
 const CurrentIssueTimerWrapper = () => {
   const currentUrl = useRedmineUrl();
   const issueId = currentUrl?.data?.type === "issue" ? currentUrl?.data?.id : undefined;
 
-  if (!issueId) return null;
+  if (!issueId) return;
 
   return <CurrentIssueTimer issueId={issueId} />;
 };

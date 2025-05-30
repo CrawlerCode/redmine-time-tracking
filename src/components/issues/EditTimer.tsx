@@ -56,6 +56,7 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
             if (e.key === "Enter") {
               onOverrideTime(updatedTime);
               e.preventDefault();
+              e.stopPropagation();
             }
           }}
           /**
@@ -88,6 +89,7 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
             if (e.key === "Enter") {
               onOverrideTime(updatedTime);
               e.preventDefault();
+              e.stopPropagation();
             }
           }}
           /**
@@ -120,6 +122,7 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
             if (e.key === "Enter") {
               onOverrideTime(updatedTime);
               e.preventDefault();
+              e.stopPropagation();
             }
           }}
           /**

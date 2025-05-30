@@ -43,12 +43,13 @@ const useSearch = (search: SearchQuery, filter: FilterQuery, excludeIssues: TIss
 
   // Query issues by ids
   const issuesQuery = useRedminePaginatedInfiniteQuery({
-    queryKey: ["issues", issueIds, search.inProject?.id],
+    queryKey: ["issues", "open", issueIds, search.inProject?.id],
     queryFn: ({ pageParam }) =>
-      redmineApi.getOpenIssues(
+      redmineApi.getIssues(
         {
           projectId: search.inProject?.id,
           issueIds: issueIds,
+          statusId: "open",
         },
         pageParam
       ),

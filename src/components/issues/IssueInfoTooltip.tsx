@@ -6,14 +6,15 @@ import { TIssue } from "../../types/redmine";
 
 type PropTypes = {
   issue: TIssue;
+  id?: string;
 };
 
-const IssueInfoTooltip = ({ issue }: PropTypes) => {
+const IssueInfoTooltip = ({ issue, id = `tooltip-issue-${issue.id}` }: PropTypes) => {
   const { formatDate } = useIntl();
   const formatHours = useFormatHours();
 
   return (
-    <Tooltip id={`tooltip-issue-${issue.id}`} place="right" className="z-10 opacity-100">
+    <Tooltip id={id} place="right" className="z-10 opacity-100">
       <div className="relative max-w-[230px] truncate">
         <p className="mb-3 text-sm font-semibold">
           {issue.tracker.name} #{issue.id}

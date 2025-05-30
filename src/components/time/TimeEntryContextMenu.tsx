@@ -38,8 +38,8 @@ function TimeEntryContextMenu({ entry, projectRoles, children, ...props }: PropT
             {
               name: formatMessage({ id: "time.time-entry.context-menu.edit" }),
               icon: <FontAwesomeIcon icon={faPen} />,
-              disabled: !projectRoles.hasProjectPermission(entry.project.id, "edit_own_time_entries"),
               onClick: () => setEdit(true),
+              disabled: !projectRoles.hasProjectPermission(entry.project.id, "edit_own_time_entries"),
             },
           ],
         ]}

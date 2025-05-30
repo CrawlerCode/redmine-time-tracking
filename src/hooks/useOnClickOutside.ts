@@ -6,6 +6,9 @@ const useOnClickOutside = <T extends HTMLElement>(ref: RefObject<T | null>, hand
       if (!ref.current || ref.current.contains(event.target as Node)) {
         return;
       }
+      if (event.target instanceof Element && event.target.shadowRoot) {
+        return;
+      }
       handler(event);
     };
 

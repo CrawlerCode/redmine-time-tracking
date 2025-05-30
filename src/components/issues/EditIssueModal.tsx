@@ -26,6 +26,7 @@ import CategoryField from "./fields/CategoryField";
 import DoneRatioField from "./fields/DoneRatioField";
 import PriorityField from "./fields/PriorityField";
 import VersionField from "./fields/VersionField";
+import IssueTitle from "./IssueTitle";
 
 type PropTypes = {
   issue: TIssue;
@@ -126,12 +127,7 @@ const EditIssueModal = ({ issue: currentIssue, onClose, onSuccess }: PropTypes) 
             return (
               <Form>
                 <div className="flex flex-col gap-y-2">
-                  <h1 className="mb-1 truncate">
-                    <a href={`${settings.redmineURL}/issues/${issue.id}`} target="_blank" tabIndex={-1} className="text-blue-500 hover:underline" rel="noreferrer">
-                      {issue.tracker.name} #{issue.id}
-                    </a>{" "}
-                    {issue.subject}
-                  </h1>
+                  <IssueTitle issue={issue} />
 
                   <div className="grid grid-cols-2 gap-x-2">
                     <Field
