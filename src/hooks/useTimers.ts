@@ -1,4 +1,4 @@
-import { SearchQuery } from "../components/issues/Search";
+import { SearchQuery } from "../components/issue/Search";
 import { useSettings } from "../provider/SettingsProvider";
 import { TIssue } from "../types/redmine";
 import useIssues from "./useIssues";

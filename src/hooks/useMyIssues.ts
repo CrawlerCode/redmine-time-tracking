@@ -1,6 +1,6 @@
 import { keepPreviousData } from "@tanstack/react-query";
-import { FilterQuery } from "../components/issues/Filter";
-import { SearchQuery } from "../components/issues/Search";
+import { FilterQuery } from "../components/issue/Filter";
+import { SearchQuery } from "../components/issue/Search";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 

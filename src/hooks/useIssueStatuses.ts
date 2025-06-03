@@ -3,20 +3,21 @@ import { useRedmineApi } from "../provider/RedmineApiProvider";
 import useIssue from "./useIssue";
 
 type Options = {
+  enabled?: boolean;
   issueStaleTime?: number;
 };
 
-const useIssueStatuses = (issueId: number, { issueStaleTime }: Options = {}) => {
+const useIssueStatuses = (issueId: number, { enabled = true, issueStaleTime }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
-  const issueQuery = useIssue(issueId, { staleTime: issueStaleTime });
+  const issueQuery = useIssue(issueId, { enabled, staleTime: issueStaleTime });
 
   const hasIssueNoAllowedStatuses = !!issueQuery.data && issueQuery.data.allowed_statuses === undefined;
 
   const issueStatusesQuery = useQuery({
     queryKey: ["issueStatuses"],
     queryFn: () => redmineApi.getIssueStatuses(),
-    enabled: hasIssueNoAllowedStatuses,
+    enabled: enabled && hasIssueNoAllowedStatuses,
   });
 
   const statuses = hasIssueNoAllowedStatuses

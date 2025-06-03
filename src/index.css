@@ -57,13 +57,13 @@
     -moz-appearance: textfield;
   }
 
-  input[name="done_ratio"]::-webkit-slider-thumb {
+  input[type="range"].appearance-none::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     cursor: pointer;
     width: 2px;
   }
-  input[name="done_ratio"]::-moz-range-thumb {
+  input[type="range"].appearance-none::-moz-range-thumb {
     cursor: pointer;
     width: 2px;
   }

@@ -3,7 +3,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "react-tooltip/dist/react-tooltip.css";
-import CurrentIssueTimer from "./components/issues/CurrentIssueTimer.tsx";
+import CurrentIssueTimer from "./components/timer/CurrentIssueTimer.tsx";
 import "./content.css";
 import Providers from "./provider/Providers.tsx";
 config.autoAddCss = false;

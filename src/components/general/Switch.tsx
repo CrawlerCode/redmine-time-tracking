@@ -9,6 +9,7 @@ interface PropTypes {
   name?: string;
   value: string;
   onChange?: (e: { target: { name?: string; value: string } }) => void;
+  onBlur?: () => void;
   options: {
     value: string;
     name: string;
@@ -19,7 +20,7 @@ interface PropTypes {
   tabIndex?: number;
 }
 
-const Switch = ({ size = "md", title, name, value, onChange, options, required, className, tabIndex }: PropTypes) => {
+const Switch = ({ size = "md", title, name, value, onChange, onBlur, options, required, className, tabIndex }: PropTypes) => {
   return (
     <div
       className={clsx(
@@ -53,7 +54,10 @@ const Switch = ({ size = "md", title, name, value, onChange, options, required, 
                 "p-1 px-3": size === "lg",
               })}
               disabled={option.disabled}
-              onClick={() => onChange?.({ target: { name: name, value: option.value } })}
+              onClick={() => {
+                onChange?.({ target: { name: name, value: option.value } });
+                onBlur?.();
+              }}
               tabIndex={tabIndex}
             >
               {option.name}

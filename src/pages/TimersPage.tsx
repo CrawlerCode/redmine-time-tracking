@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import { FormattedMessage } from "react-intl";
-import IssuesListSkeleton from "../components/issues/IssuesListSkeleton";
-import Search, { SearchQuery, SearchRef } from "../components/issues/Search";
-import Timer from "../components/timers/Timer";
-import TimersBadge from "../components/timers/TimersBadge";
+import IssuesListSkeleton from "../components/issue/IssuesListSkeleton";
+import Search, { SearchQuery, SearchRef } from "../components/issue/Search";
+import Timer from "../components/timer/Timer";
+import TimersBadge from "../components/timer/TimersBadge";
 import useIssuePriorities from "../hooks/useIssuePriorities";
 import useTimers from "../hooks/useTimers";
 import { useSettings } from "../provider/SettingsProvider";

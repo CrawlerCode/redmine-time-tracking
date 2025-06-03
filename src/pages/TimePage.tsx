@@ -1,8 +1,8 @@
 import { isMonday, previousMonday, startOfDay, subWeeks } from "date-fns";
 import { useIntl } from "react-intl";
 import Toast from "../components/general/Toast";
-import TimeEntryList from "../components/time/TimeEntryList";
-import TimeEntryListSkeleton from "../components/time/TimeEntryListSkeleton";
+import TimeEntryList from "../components/time-entry/TimeEntryList";
+import TimeEntryListSkeleton from "../components/time-entry/TimeEntryListSkeleton";
 import useMyTimeEntries from "../hooks/useMyTimeEntries";
 
 const TimePage = () => {

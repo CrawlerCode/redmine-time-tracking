@@ -23,10 +23,10 @@ const useCachedComments = ({ identifier, enabled = true, onLoad }: Options) => {
   return {
     isEnabled: enabled,
     isCached: !!cachedComments.data[identifier],
-    saveComment: (comment: string) =>
+    saveComment: (comment?: string) =>
       cachedComments.setData({
         ...cachedComments.data,
-        [identifier]: comment,
+        [identifier]: comment ? comment : undefined,
       }),
     removeComment: () =>
       cachedComments.setData({

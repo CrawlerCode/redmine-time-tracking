@@ -44,21 +44,21 @@ export type TCreateIssue = {
   tracker_id: number;
   status_id: number;
   priority_id: number;
-  category_id?: number;
-  assigned_to_id?: number;
+  category_id?: number | null;
+  assigned_to_id?: number | null;
   subject: string;
-  description?: string;
-  fixed_version_id?: number;
-  parent_issue_id?: number;
+  description?: string | null;
+  fixed_version_id?: number | null;
+  parent_issue_id?: number | null;
   is_private?: boolean;
-  start_date?: Date;
-  due_date?: Date;
-  estimated_hours?: number;
-  done_ratio?: number;
+  start_date?: Date | null;
+  due_date?: Date | null;
+  estimated_hours?: number | null;
+  done_ratio?: number | null;
 };
 
 export type TUpdateIssue = Partial<TCreateIssue> & {
-  notes?: string;
+  notes?: string | null;
   private_notes?: boolean;
 };
 

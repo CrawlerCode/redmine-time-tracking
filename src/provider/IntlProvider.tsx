@@ -10,6 +10,7 @@ import { German as flatpickrDE } from "flatpickr/dist/l10n/de.js";
 import { english as flatpickrEN } from "flatpickr/dist/l10n/default";
 import { French as flatpickrFR } from "flatpickr/dist/l10n/fr.js";
 import { Russian as flatpickrRU } from "flatpickr/dist/l10n/ru.js";
+import z from "zod/v4";
 
 export const LANGUAGES = ["en", "de", "ru", "fr"] as const;
 
@@ -52,6 +53,8 @@ const IntlProvider = ({ children }: PropTypes) => {
         locale: (await import("date-fns/locale"))[locale === "en" ? "enUS" : locale],
       });
     })();
+
+    z.config(z.locales[locale]());
 
     let flatpickrLocal;
     switch (locale) {
