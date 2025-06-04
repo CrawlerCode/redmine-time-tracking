@@ -25,7 +25,7 @@ const Switch = ({ size = "md", title, name, value, onChange, onBlur, options, re
     <div
       className={clsx(
         {
-          "flex items-center justify-between rounded-lg border border-field-border bg-field p-1 pl-2": title,
+          "border-field-border bg-field flex items-center justify-between rounded-lg border p-1 pl-2": title,
         },
         className
       )}
@@ -38,7 +38,7 @@ const Switch = ({ size = "md", title, name, value, onChange, onBlur, options, re
       )}
 
       <div
-        className={clsxm("flex w-fit items-center gap-x-1 rounded-full border border-field-border bg-field", {
+        className={clsxm("border-field-border bg-field flex w-fit items-center gap-x-1 rounded-full border", {
           "bg-field-inner": title,
           "p-1": size === "md",
           "p-1.5": size === "lg",
@@ -48,7 +48,7 @@ const Switch = ({ size = "md", title, name, value, onChange, onBlur, options, re
           <div className="flex justify-center" key={option.value}>
             <button
               type="button"
-              className={clsx("w-full whitespace-nowrap rounded-full", "focus:outline-none focus:ring-2 focus:ring-primary-focus", {
+              className={clsx("w-full rounded-full whitespace-nowrap", "focus:ring-primary-focus focus:ring-2 focus:outline-hidden", {
                 "bg-primary text-white": value === option.value,
                 "p-0.5 px-2": size === "md",
                 "p-1 px-3": size === "lg",

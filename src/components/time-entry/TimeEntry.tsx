@@ -31,7 +31,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
               projectRoles={projectRoles}
               role="cell"
               data-type="time-entry"
-              className="h-4 rounded bg-primary"
+              className="bg-primary h-4 rounded-sm"
               style={{
                 width: `${(entry.hours / maxHours) * 100}%`,
               }}
@@ -41,7 +41,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
             <div
               role="cell"
               data-type="time-entry"
-              className="h-4 rounded bg-primary"
+              className="bg-primary h-4 rounded-sm"
               style={{
                 width: `${(entry.hours / maxHours) * 100}%`,
               }}
@@ -56,7 +56,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
             <p className="text-sm font-semibold">{formatHours(previewHours)}</p>
           </Tooltip>
           <div
-            className="h-4 rounded bg-primary opacity-50"
+            className="bg-primary h-4 rounded-sm opacity-50"
             style={{
               width: `${(previewHours / maxHours) * 100}%`,
               backgroundSize: "1rem 1rem",
@@ -68,7 +68,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
       )) ||
         undefined}
       <div
-        className="h-3 rounded bg-gray-400/40 dark:bg-gray-700/40"
+        className="h-3 rounded-sm bg-gray-400/40 dark:bg-gray-700/40"
         style={{
           width: `${((maxHours - sumHours - (previewHours ?? 0)) / maxHours) * 100}%`,
           backgroundSize: "1rem 1rem",

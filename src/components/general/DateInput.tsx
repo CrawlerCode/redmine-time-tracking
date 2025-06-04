@@ -66,7 +66,7 @@ const DateInput = ({ size = "md", title, icon, error, className, value, onChange
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any);
           }}
-          className={clsx("block w-full rounded-lg text-sm", "border border-field-border bg-field placeholder:text-field-placeholder", "focus:outline-none focus:ring-2 focus:ring-primary-focus", {
+          className={clsx("block w-full rounded-lg text-sm", "border-field-border bg-field placeholder:text-field-placeholder border", "focus:ring-primary-focus focus:ring-2 focus:outline-hidden", {
             "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
             "pl-8": !!icon,
             "pr-8": !props.required && value,
@@ -75,7 +75,7 @@ const DateInput = ({ size = "md", title, icon, error, className, value, onChange
           })}
         />
         {!props.required && value && (
-          <svg viewBox="0 0 20 20" aria-hidden="true" className="absolute right-2 top-1/2 size-5 -translate-y-1/2 cursor-pointer fill-current" onClick={() => ref.current?.flatpickr.clear()}>
+          <svg viewBox="0 0 20 20" aria-hidden="true" className="absolute top-1/2 right-2 size-5 -translate-y-1/2 cursor-pointer fill-current" onClick={() => ref.current?.flatpickr.clear()}>
             <path d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"></path>
           </svg>
         )}

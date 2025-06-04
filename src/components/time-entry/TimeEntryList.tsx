@@ -58,7 +58,7 @@ const TimeEntryList = ({ entries }: PropTypes) => {
                 <h1 className="text-lg">
                   {formatDate(monday)} - {formatDate(addDays(monday, 6))}
                 </h1>
-                <span className="inline-flex items-center rounded border border-primary bg-background-inner px-2.5 py-0.5 text-xs font-medium text-primary">
+                <span className="border-primary bg-background-inner text-primary inline-flex items-center rounded-sm border px-2.5 py-0.5 text-xs font-medium">
                   <svg aria-hidden="true" className="mr-1 size-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"></path>
                   </svg>

@@ -16,10 +16,10 @@ const DoneSliderField = ({ className, ...props }: Omit<ComponentProps<"input">, 
         max="100"
         step="10"
         type="range"
-        className={clsx("h-5 w-[80px] cursor-pointer appearance-none border-transparent", "focus:outline-none focus:ring-2 focus:ring-primary-focus")}
+        className={clsx("h-5 w-[80px] cursor-pointer appearance-none border-transparent", "focus:ring-primary-focus focus:ring-2 focus:outline-hidden")}
         style={{ background: `linear-gradient(90deg, #bae0ba ${state.value * 0.9 + 10}%, #eeeeee ${state.value * 0.9 + 10}%)` }}
       />
-      <p className="pointer-events-none absolute left-1 top-1 select-none text-xs font-medium leading-none text-gray-600">{state.value}%</p>
+      <p className="pointer-events-none absolute top-1 left-1 text-xs leading-none font-medium text-gray-600 select-none">{state.value}%</p>
     </div>
   );
 };

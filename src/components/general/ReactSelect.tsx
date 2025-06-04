@@ -62,10 +62,10 @@ function ReactSelect<Option = unknown, IsMulti extends boolean = false, Group ex
         unstyled
         classNames={{
           control: (state) =>
-            clsx("block w-full rounded-lg border border-field-border bg-field text-sm", {
-              "!min-h-[unset] p-1.5": size === "sm",
+            clsx("border-field-border bg-field block w-full rounded-lg border text-sm", {
+              "min-h-[unset]! p-1.5": size === "sm",
               "p-2.5": size === "md",
-              "outline-none ring-2 ring-primary-focus": state.isFocused,
+              "ring-primary-focus ring-2 outline-hidden": state.isFocused,
               "border-red-500 text-red-900 dark:border-red-500 dark:text-red-500": error !== undefined,
               "bg-field-disabled": props.isDisabled,
             }),

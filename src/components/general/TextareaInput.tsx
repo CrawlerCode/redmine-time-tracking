@@ -29,7 +29,7 @@ const TextareaInput = ({ size = "md", title, error, value, rows = 3, className, 
         {...props}
         id={id}
         required={false} // Remove html required attribute
-        className={clsx("block w-full rounded-lg text-sm", "border border-field-border bg-field placeholder:text-field-placeholder", "focus:outline-none focus:ring-2 focus:ring-primary-focus", {
+        className={clsx("block w-full rounded-lg text-sm", "border-field-border bg-field placeholder:text-field-placeholder border", "focus:ring-primary-focus focus:ring-2 focus:outline-hidden", {
           "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
           "p-1.5": size === "sm",
           "p-2.5": size === "md",

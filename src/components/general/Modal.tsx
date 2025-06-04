@@ -13,13 +13,13 @@ const Modal = ({ title, children, onClose }: PropTypes) => {
   useHotKey(onClose, { key: "Escape" });
 
   return (
-    <div tabIndex={-1} className="fixed inset-0 z-40 flex size-full min-w-[320px] items-center justify-center overflow-y-auto bg-gray-800/50 p-2 animate-in fade-in dark:bg-gray-600/50">
+    <div tabIndex={-1} className="animate-in fade-in fixed inset-0 z-40 flex size-full min-w-[320px] items-center justify-center overflow-y-auto bg-gray-800/50 p-2 dark:bg-gray-600/50">
       <div className="relative max-h-full w-full max-w-md" role="dialog">
-        <div className="relative rounded-lg bg-background drop-shadow-lg animate-in fade-in zoom-in">
+        <div className="bg-background animate-in fade-in zoom-in relative rounded-lg drop-shadow-lg">
           <div className="p-2.5">
             <div className="mb-2 flex items-start justify-between">
               <h3 className="text-lg font-medium">{title}</h3>
-              <button type="button" className="rounded-lg bg-transparent p-1.5 text-sm hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary-focus" onClick={onClose}>
+              <button type="button" className="hover:text-primary focus:ring-primary-focus rounded-lg bg-transparent p-1.5 text-sm focus:ring-2 focus:outline-hidden" onClick={onClose}>
                 <svg aria-hidden="true" className="size-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                   <path
                     fillRule="evenodd"

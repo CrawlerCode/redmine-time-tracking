@@ -94,7 +94,7 @@ const Search = ({ children, ref }: PropTypes) => {
                 id="issues.search.search-in-project"
                 values={{
                   projectName: inProject.name,
-                  badge: (children) => <span className="truncate rounded-full bg-primary px-1.5 text-xs text-white">{children}</span>,
+                  badge: (children) => <span className="bg-primary truncate rounded-full px-1.5 text-xs text-white">{children}</span>,
                 }}
               />
               <div className="mr-2 flex grow justify-end">

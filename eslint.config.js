@@ -2,7 +2,6 @@ import js from "@eslint/js";
 import prettierConfig from "eslint-config-prettier";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
-import tailwind from "eslint-plugin-tailwindcss";
 import globals from "globals";
 import ts from "typescript-eslint";
 
@@ -39,5 +38,5 @@ export default [
   // Prettier
   prettierConfig,
   // Tailwind CSS
-  ...tailwind.configs["flat/recommended"],
+  //...tailwind.configs["flat/recommended"], // TODO: Wait until working with Tailwind CSS v4
 ];

@@ -92,7 +92,7 @@ const IssueContextMenu = ({ issue, localIssue, primaryTimer, assignedToMe, canEd
           [
             {
               name: formatMessage({ id: assignedToMe || localIssue.remembered ? "issues.context-menu.pin" : "issues.context-menu.pin-and-remember" }),
-              icon: <FontAwesomeIcon icon={faThumbTack} className="rotate-[30deg]" />,
+              icon: <FontAwesomeIcon icon={faThumbTack} className="rotate-30" />,
               onClick: () => localIssue.setLocalIssue({ pinned: true, remembered: !assignedToMe ? true : undefined }),
               disabled: localIssue.pinned,
             },

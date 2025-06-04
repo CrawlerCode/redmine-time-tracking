@@ -64,8 +64,8 @@ const TimerWrapper = ({ variant = "inner", timer, issue, issuePriorityType }: Ti
               ref={timerRef}
               displayNameField={variant === "expanded"}
               className={clsx(
-                "rounded-lg border border-gray-200 bg-background p-0.5 px-1.5 hover:bg-background-hover dark:border-gray-700",
-                "focus:outline-none focus:ring-4 focus:ring-primary-focus"
+                "bg-background hover:bg-background-hover rounded-lg border border-gray-200 p-0.5 px-1.5 dark:border-gray-700",
+                "focus:ring-primary-focus focus:ring-4 focus:outline-hidden"
               )}
               tabIndex={1}
               // On "Enter" or "Space" => toggle timer
@@ -91,8 +91,8 @@ const TimerWrapper = ({ variant = "inner", timer, issue, issuePriorityType }: Ti
               data-type="timer"
               className={clsxm(
                 "relative block w-full rounded-lg p-1",
-                "focus:outline-none focus:ring-4 focus:ring-primary-focus",
-                "border border-gray-200 bg-background hover:bg-background-hover dark:border-gray-700"
+                "focus:ring-primary-focus focus:ring-4 focus:outline-hidden",
+                "bg-background hover:bg-background-hover border border-gray-200 dark:border-gray-700"
               )}
               tabIndex={1}
               // On "Enter" or "Space" => toggle timer
@@ -162,7 +162,7 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
         {displayNameField && (
           <input
             type="text"
-            className="min-w-0 grow truncate bg-transparent text-gray-600 placeholder:italic placeholder:text-field-placeholder focus:outline-none dark:text-gray-200"
+            className="placeholder:text-field-placeholder min-w-0 grow truncate bg-transparent text-gray-600 placeholder:italic focus:outline-hidden dark:text-gray-200"
             value={timer.name}
             placeholder={formatMessage({ id: "timer.unnamed-timer" })}
             tabIndex={-1}
@@ -209,7 +209,7 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
               data-type="start-timer"
               icon={faPlay}
               size="2x"
-              className="cursor-pointer text-green-500 focus:outline-none"
+              className="cursor-pointer text-green-500 focus:outline-hidden"
               onClick={timer.startTimer}
               data-tooltip-id={`tooltip-start-timer-${timer.id}`}
               tabIndex={-1}
@@ -227,7 +227,7 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
               data-type="pause-timer"
               icon={faPause}
               size="2x"
-              className="cursor-pointer text-red-500 focus:outline-none"
+              className="cursor-pointer text-red-500 focus:outline-hidden"
               onClick={timer.pauseTimer}
               data-tooltip-id={`tooltip-pause-timer-${timer.id}`}
               tabIndex={-1}
@@ -244,7 +244,7 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
             data-type="reset-timer"
             icon={faStop}
             size="2x"
-            className="cursor-pointer text-red-500 focus:outline-none"
+            className="cursor-pointer text-red-500 focus:outline-hidden"
             onClick={() => setConfirmResetModal(true)}
             data-tooltip-id={`tooltip-reset-timer-${timer.id}`}
             tabIndex={-1}
@@ -260,7 +260,7 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
             data-type="done-timer"
             icon={faCircleCheck}
             size="2x"
-            className="cursor-pointer text-green-600 focus:outline-none"
+            className="cursor-pointer text-green-600 focus:outline-hidden"
             onClick={() => {
               const time = settings.features.roundToNearestInterval ? roundTimeNearestInterval(currenTime, settings.features.roundingInterval) : currenTime;
               const hours = Number((time / 1000 / 60 / 60).toFixed(2));

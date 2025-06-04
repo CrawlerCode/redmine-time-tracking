@@ -37,9 +37,8 @@ const TextInput = ({ size = "md", title, icon, error, extraText, className, inpu
           required={false} // Remove html required attribute
           className={clsx(
             "block w-full rounded-lg text-sm",
-            "border border-field-border bg-field placeholder:text-field-placeholder",
-            "focus:outline-none focus:ring-2 focus:ring-primary-focus",
-            "dark:autofill:shadow-fill-field-DEFAULT dark:autofill:text-fill-white",
+            "border-field-border bg-field placeholder:text-field-placeholder border",
+            "focus:ring-primary-focus focus:ring-2 focus:outline-hidden",
             {
               "border-red-500 text-red-900 placeholder:text-red-700 dark:border-red-500 dark:text-red-500 dark:placeholder:text-red-500": error !== undefined,
               "bg-field-disabled": props.disabled,
@@ -53,9 +52,9 @@ const TextInput = ({ size = "md", title, icon, error, extraText, className, inpu
         />
         {extraText && (
           <span
-            className={clsx("absolute whitespace-nowrap rounded bg-field-inner font-medium text-gray-800 dark:text-gray-400", {
-              "right-1.5 top-1/2 -translate-y-1/2 px-2.5 py-0.5": size === "sm",
-              "right-2.5 top-1/2 -translate-y-1/2 px-3.5 py-1": size === "md",
+            className={clsx("bg-field-inner absolute rounded-sm font-medium whitespace-nowrap text-gray-800 dark:text-gray-400", {
+              "top-1/2 right-1.5 -translate-y-1/2 px-2.5 py-0.5": size === "sm",
+              "top-1/2 right-2.5 -translate-y-1/2 px-3.5 py-1": size === "md",
             })}
           >
             {extraText}

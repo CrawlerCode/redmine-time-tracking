@@ -63,7 +63,7 @@ const ContextMenu = ({ menu, children, ...props }: PropTypes) => {
         <div
           ref={ref}
           role="menu"
-          className="fixed z-50 w-40 divide-y divide-gray-200 rounded-lg border border-gray-200 bg-background shadow dark:divide-gray-600 dark:border-gray-600"
+          className="bg-background fixed z-50 w-40 divide-y divide-gray-200 rounded-lg border border-gray-200 shadow-sm dark:divide-gray-600 dark:border-gray-600"
           style={{ top: `${position.y}px`, left: `${position.x}px` }}
           onClick={() => setPosition(undefined)}
         >

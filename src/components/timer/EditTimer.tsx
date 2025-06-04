@@ -36,8 +36,8 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           max={100}
           className={clsx(
             "w-4 appearance-none rounded-md text-center text-lg",
-            "border border-field-border bg-field placeholder:text-field-placeholder",
-            "focus:outline-none focus:ring-2 focus:ring-primary-focus",
+            "border-field-border bg-field placeholder:text-field-placeholder border",
+            "focus:ring-primary-focus focus:ring-2 focus:outline-hidden",
             initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
           )}
           /**
@@ -74,8 +74,8 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           max={59}
           className={clsx(
             "w-6 appearance-none rounded-md text-center text-lg",
-            "border border-field-border bg-field placeholder:text-field-placeholder",
-            "focus:outline-none focus:ring-2 focus:ring-primary-focus",
+            "border-field-border bg-field placeholder:text-field-placeholder border",
+            "focus:ring-primary-focus focus:ring-2 focus:outline-hidden",
             initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
           )}
           onChange={(e) => {
@@ -107,8 +107,8 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           max={59}
           className={clsx(
             "w-6 appearance-none rounded-md text-center text-lg",
-            "border border-field-border bg-field placeholder:text-field-placeholder",
-            "focus:outline-none focus:ring-2 focus:ring-primary-focus",
+            "border-field-border bg-field placeholder:text-field-placeholder border",
+            "focus:ring-primary-focus focus:ring-2 focus:outline-hidden",
             initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
           )}
           onChange={(e) => {

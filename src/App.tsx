@@ -56,7 +56,7 @@ function App() {
           ]}
         />
         {locationType === "popup" && (
-          <FontAwesomeIcon icon={faUpRightFromSquare} size="sm" className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-background-inner p-1.5" onClick={createPopOut} />
+          <FontAwesomeIcon icon={faUpRightFromSquare} size="sm" className="bg-background-inner absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full p-1.5" onClick={createPopOut} />
         )}
       </header>
       <main

@@ -13,7 +13,7 @@ const Toast = ({ type, message, allowClose = true, autoClose, onClose }: PropTyp
 
   return (
     <div className="fixed bottom-0 left-0 z-50 w-full p-2">
-      <div className="flex w-full items-center rounded-lg bg-background-inner p-1 shadow" role="alert">
+      <div className="bg-background-inner flex w-full items-center rounded-lg p-1 shadow-sm" role="alert">
         <div
           className={clsx("inline-flex size-8 shrink-0 items-center justify-center", {
             "rounded-lg bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200": type === "success",
@@ -39,7 +39,7 @@ const Toast = ({ type, message, allowClose = true, autoClose, onClose }: PropTyp
         {allowClose && (
           <button
             type="button"
-            className="ml-auto inline-flex size-8 rounded-lg p-1.5 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary-focus"
+            className="hover:text-primary focus:ring-primary-focus ml-auto inline-flex size-8 rounded-lg p-1.5 focus:ring-2 focus:outline-hidden"
             aria-label="Close"
             onClick={onClose}
           >

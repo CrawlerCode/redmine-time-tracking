@@ -204,7 +204,7 @@ const SettingsPage = () => {
                           />
                         </p>
                       )}
-                      <Button className="absolute bottom-0 right-0" size="sm" onClick={() => setEditRedmineInstance(true)}>
+                      <Button className="absolute right-0 bottom-0" size="sm" onClick={() => setEditRedmineInstance(true)}>
                         <FormattedMessage id="settings.redmine.edit" />
                       </Button>
                     </div>

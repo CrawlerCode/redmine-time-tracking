@@ -52,7 +52,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
           data-type="issue"
           className={clsxm(
             "relative block w-full rounded-lg p-1",
-            "focus:outline-none focus:ring-4 focus:ring-primary-focus",
+            "focus:ring-primary-focus focus:ring-4 focus:outline-hidden",
             "bg-background hover:bg-background-hover",
             settings.style.showIssuesPriority
               ? {
@@ -86,7 +86,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
           <div className="flex flex-row justify-between gap-x-2">
             <div className="mt-1">
               <div className="w-[80px] bg-[#eeeeee]">
-                <div className="select-none bg-[#bae0ba] p-1 text-center text-xs font-medium leading-none text-gray-600" style={{ width: `${issue.done_ratio}%` }}>
+                <div className="bg-[#bae0ba] p-1 text-center text-xs leading-none font-medium text-gray-600 select-none" style={{ width: `${issue.done_ratio}%` }}>
                   {issue.done_ratio}%
                 </div>
               </div>
@@ -109,11 +109,11 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
               ))}
             </div>
           )}
-          <div className="absolute right-2 top-2 flex items-start justify-end gap-x-1">
+          <div className="absolute top-2 right-2 flex items-start justify-end gap-x-1">
             {localIssue.pinned && (
               <>
                 {settings.style.showTooltips && <Tooltip id={`tooltip-pinned-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.pinned" })} className="italic" />}
-                <FontAwesomeIcon icon={faThumbTack} className="rotate-[30deg] text-gray-300 focus:outline-none dark:text-gray-600" data-tooltip-id={`tooltip-pinned-${issue.id}`} tabIndex={-1} />
+                <FontAwesomeIcon icon={faThumbTack} className="rotate-30 text-gray-300 focus:outline-hidden dark:text-gray-600" data-tooltip-id={`tooltip-pinned-${issue.id}`} tabIndex={-1} />
               </>
             )}
             {!assignedToMe && (
@@ -121,7 +121,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
                 {settings.style.showTooltips && (
                   <Tooltip id={`tooltip-not-assigned-to-me-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.not-assigned-to-me" })} className="italic" />
                 )}
-                <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 focus:outline-none dark:text-gray-600" data-tooltip-id={`tooltip-not-assigned-to-me-${issue.id}`} tabIndex={-1} />
+                <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 focus:outline-hidden dark:text-gray-600" data-tooltip-id={`tooltip-not-assigned-to-me-${issue.id}`} tabIndex={-1} />
               </>
             )}
           </div>
