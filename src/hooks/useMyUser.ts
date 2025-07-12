@@ -4,9 +4,10 @@ import { useSettings } from "../provider/SettingsProvider";
 
 type Options = {
   staleTime?: number;
+  displayErrorToast?: boolean;
 };
 
-const useMyUser = ({ staleTime }: Options = {}) => {
+const useMyUser = ({ staleTime, displayErrorToast }: Options = {}) => {
   const { settings } = useSettings();
   const redmineApi = useRedmineApi();
 
@@ -15,6 +16,9 @@ const useMyUser = ({ staleTime }: Options = {}) => {
     queryFn: () => redmineApi.getMyUser(),
     retry: 1,
     ...(staleTime && { staleTime }),
+    meta: {
+      displayErrorToast,
+    },
   });
 
   return {

@@ -1,6 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import "dotenv/config";
+import path from "path";
 import { defineConfig } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import zipPack from "vite-plugin-zip-pack";
@@ -10,6 +11,11 @@ const platform = process.env.PLATFORM ?? "chrome";
 
 // https://vitejs.dev/config/
 export default defineConfig((env) => ({
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   build: {
     emptyOutDir: true,
     rollupOptions: {

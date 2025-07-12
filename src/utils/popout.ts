@@ -8,8 +8,8 @@ export const createPopOut = () => {
   chrome.windows.create({
     url: chrome.runtime.getURL("/index.html?location=popout"),
     type: "popup",
-    width: width + 14,
-    height: height + 14,
+    width: Math.round(width + 14),
+    height: Math.round(height + 14),
     focused: true,
   });
 };

@@ -164,7 +164,7 @@ export type TCreateTimeEntry = {
   spent_on: Date;
   activity_id: number;
   hours: number;
-  comments?: string;
+  comments?: string | null;
 };
 
 export type TUpdateTimeEntry = Partial<TCreateTimeEntry> & {

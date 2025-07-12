@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Tooltip } from "react-tooltip";
 import { PriorityType } from "../../hooks/useIssuePriorities";
 import { LocalIssue } from "../../hooks/useLocalIssues";
 import { TimerController } from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
 import { TIssue } from "../../types/redmine";
 import { clsxm } from "../../utils/clsxm";
+import HelpTooltip from "../general/HelpTooltip";
 import Timer from "../timer/Timer";
 import IssueContextMenu from "./IssueContextMenu";
 import IssueTitle from "./IssueTitle";
@@ -51,13 +51,11 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
           role="listitem"
           data-type="issue"
           className={clsxm(
-            "relative block w-full rounded-lg p-1",
-            "focus:ring-primary-focus focus:ring-4 focus:outline-hidden",
-            "bg-background hover:bg-background-hover",
-            settings.style.showIssuesPriority
+            "bg-card relative flex w-full flex-col gap-1 rounded-lg p-1",
+            "focus-visible:border-ring focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
+            settings.style.showIssuesPriority && priorityType !== "normal"
               ? {
                   "border-2 border-[#add7f3] dark:border-[#4973f3]/40": priorityType === "lowest",
-                  "border border-gray-200 dark:border-gray-700": priorityType === "normal",
                   "border-2 border-[#fcc] dark:border-[#ff6868]/40": priorityType === "high",
                   "border-2 border-[#ffb4b4] dark:border-[#ff5050]/40": priorityType === "higher" || priorityType === "highest",
                 }
@@ -79,11 +77,11 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
             issue={issue}
             priorityType={priorityType}
             className={clsx({
-              "me-4": (localIssue.pinned && assignedToMe) || (!localIssue.pinned && !assignedToMe),
-              "me-9": localIssue.pinned && !assignedToMe,
+              "me-5": (localIssue.pinned && assignedToMe) || (!localIssue.pinned && !assignedToMe),
+              "me-10": localIssue.pinned && !assignedToMe,
             })}
           />
-          <div className="flex flex-row justify-between gap-x-2">
+          <div className="flex justify-between gap-x-2">
             <div className="mt-1">
               <div className="w-[80px] bg-[#eeeeee]">
                 <div className="bg-[#bae0ba] p-1 text-center text-xs leading-none font-medium text-gray-600 select-none" style={{ width: `${issue.done_ratio}%` }}>
@@ -109,20 +107,16 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
               ))}
             </div>
           )}
-          <div className="absolute top-2 right-2 flex items-start justify-end gap-x-1">
+          <div className="absolute top-2 right-2 flex items-start justify-end gap-x-2">
             {localIssue.pinned && (
-              <>
-                {settings.style.showTooltips && <Tooltip id={`tooltip-pinned-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.pinned" })} className="italic" />}
-                <FontAwesomeIcon icon={faThumbTack} className="rotate-30 text-gray-300 focus:outline-hidden dark:text-gray-600" data-tooltip-id={`tooltip-pinned-${issue.id}`} tabIndex={-1} />
-              </>
+              <HelpTooltip message={formatMessage({ id: "issues.issue.pinned" })}>
+                <FontAwesomeIcon icon={faThumbTack} className="rotate-30 text-gray-300 focus:outline-hidden dark:text-gray-600" tabIndex={-1} />
+              </HelpTooltip>
             )}
             {!assignedToMe && (
-              <>
-                {settings.style.showTooltips && (
-                  <Tooltip id={`tooltip-not-assigned-to-me-${issue.id}`} place="left" delayShow={700} content={formatMessage({ id: "issues.issue.not-assigned-to-me" })} className="italic" />
-                )}
-                <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 focus:outline-hidden dark:text-gray-600" data-tooltip-id={`tooltip-not-assigned-to-me-${issue.id}`} tabIndex={-1} />
-              </>
+              <HelpTooltip message={formatMessage({ id: "issues.issue.not-assigned-to-me" })}>
+                <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 focus:outline-hidden dark:text-gray-600" tabIndex={-1} />
+              </HelpTooltip>
             )}
           </div>
         </div>

@@ -1,7 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { RefObject, useRef } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import Button from "../components/general/Button";
-import Toast from "../components/general/Toast";
 import Filter, { FilterQuery } from "../components/issue/Filter";
 import IssuesList from "../components/issue/IssuesList";
 import IssuesListSkeleton from "../components/issue/IssuesListSkeleton";
@@ -71,15 +70,13 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
 
             {searchIssues.hasNextPage && (
               <div className="flex justify-center">
-                <Button size="xs" variant="outline" onClick={() => searchIssues.fetchNextPage()}>
+                <Button variant="outline" onClick={() => searchIssues.fetchNextPage()}>
                   {formatMessage({ id: "issues.list.load-more" })}
                 </Button>
               </div>
             )}
           </>
         )}
-
-        {myIssuesQuery.isError && <Toast type="error" message={formatMessage({ id: "issues.error.fail-to-load-issues" })} allowClose={false} />}
       </div>
     </>
   );
@@ -91,15 +88,13 @@ const SearchFilterWrapper = () => {
   return (
     <Search ref={searchRef}>
       {({ search }) => (
-        <>
-          <Filter>
-            {({ filter, isLoading: isLoadingFilter }) => (
-              <>
-                <IssuesPage search={search} filter={filter} searchRef={searchRef} isLoading={isLoadingFilter} />
-              </>
-            )}
-          </Filter>
-        </>
+        <Filter>
+          {({ filter, isLoading: isLoadingFilter }) => (
+            <>
+              <IssuesPage search={search} filter={filter} searchRef={searchRef} isLoading={isLoadingFilter} />
+            </>
+          )}
+        </Filter>
       )}
     </Search>
   );

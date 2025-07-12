@@ -1,26 +1,30 @@
 import { parseISO } from "date-fns";
+import { ReactNode } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Tooltip } from "react-tooltip";
 import useFormatHours from "../../hooks/useFormatHours";
 import { TIssue } from "../../types/redmine";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type PropTypes = {
   issue: TIssue;
-  id?: string;
+  children?: ReactNode;
 };
 
-const IssueInfoTooltip = ({ issue, id = `tooltip-issue-${issue.id}` }: PropTypes) => {
+const IssueInfoTooltip = ({ issue, children }: PropTypes) => {
   const { formatDate } = useIntl();
   const formatHours = useFormatHours();
 
   return (
-    <Tooltip id={id} place="right" className="z-10 opacity-100">
-      <div className="relative max-w-[230px] truncate">
-        <p className="mb-3 text-sm font-semibold">
-          {issue.tracker.name} #{issue.id}
-          <p className="mt-1 truncate text-xs font-normal">{issue.subject}</p>
-        </p>
-        <table className="-mx-1 border-separate border-spacing-x-1 text-left text-sm text-gray-300">
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent className="flex max-w-[270px] flex-col gap-y-3 truncate">
+        <div>
+          <p className="text-sm font-semibold">
+            {issue.tracker.name} #{issue.id}
+          </p>
+          <p className="truncate text-xs font-normal">{issue.subject}</p>
+        </div>
+        <table className="-mx-1 border-separate border-spacing-x-1 truncate text-left text-sm">
           <tbody>
             <tr>
               <th className="text-xs font-medium">
@@ -92,10 +96,10 @@ const IssueInfoTooltip = ({ issue, id = `tooltip-issue-${issue.id}` }: PropTypes
             )}
           </tbody>
         </table>
-      </div>
-      <p className="mt-5 italic">
-        <FormattedMessage id="issues.issue-tooltip.open-in-redmine" />
-      </p>
+        <p className="italic">
+          <FormattedMessage id="issues.issue-tooltip.open-in-redmine" />
+        </p>
+      </TooltipContent>
     </Tooltip>
   );
 };

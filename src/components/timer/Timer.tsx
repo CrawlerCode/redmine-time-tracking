@@ -3,18 +3,17 @@ import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { ComponentProps, Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
-import { Tooltip } from "react-tooltip";
+import { useIntl } from "react-intl";
 import { PriorityType } from "../../hooks/useIssuePriorities";
 import { TimerController } from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
 import { TIssue } from "../../types/redmine";
 import { clsxm } from "../../utils/clsxm";
 import { formatTimer, roundTimeNearestInterval } from "../../utils/date";
-import Button from "../general/Button";
-import Modal from "../general/Modal";
+import HelpTooltip from "../general/HelpTooltip";
 import IssueTitle from "../issue/IssueTitle";
 import CreateTimeEntryModal from "../time-entry/CreateTimeEntryModal";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 import EditTimer from "./EditTimer";
 import TimerContextMenu from "./TimerContextMenu";
 
@@ -64,8 +63,8 @@ const TimerWrapper = ({ variant = "inner", timer, issue, issuePriorityType }: Ti
               ref={timerRef}
               displayNameField={variant === "expanded"}
               className={clsx(
-                "bg-background hover:bg-background-hover rounded-lg border border-gray-200 p-0.5 px-1.5 dark:border-gray-700",
-                "focus:ring-primary-focus focus:ring-4 focus:outline-hidden"
+                "bg-card rounded-lg border border-gray-200 p-0.5 px-1.5 dark:border-gray-700",
+                "focus-visible:border-ring focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]"
               )}
               tabIndex={1}
               // On "Enter" or "Space" => toggle timer
@@ -90,9 +89,9 @@ const TimerWrapper = ({ variant = "inner", timer, issue, issuePriorityType }: Ti
               role="listitem"
               data-type="timer"
               className={clsxm(
-                "relative block w-full rounded-lg p-1",
-                "focus:ring-primary-focus focus:ring-4 focus:outline-hidden",
-                "bg-background hover:bg-background-hover border border-gray-200 dark:border-gray-700"
+                "bg-card relative flex w-full flex-col gap-1 rounded-lg p-1",
+                "border border-gray-200 dark:border-gray-700",
+                "focus-visible:border-ring focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]"
               )}
               tabIndex={1}
               // On "Enter" or "Space" => toggle timer
@@ -104,7 +103,7 @@ const TimerWrapper = ({ variant = "inner", timer, issue, issuePriorityType }: Ti
                 }
               }}
             >
-              {issue ? <IssueTitle issue={issue} priorityType={issuePriorityType} /> : <h1 className="mb-1 truncate">#{timer.issueId}</h1>}
+              {issue ? <IssueTitle issue={issue} priorityType={issuePriorityType} /> : <h1 className="truncate">#{timer.issueId}</h1>}
               <Timer timer={timer} ref={timerRef} displayNameField onTimerDone={(hours) => setCreateTimeEntryHours(hours)} />
             </div>
           </TimerContextMenu>
@@ -162,7 +161,7 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
         {displayNameField && (
           <input
             type="text"
-            className="placeholder:text-field-placeholder min-w-0 grow truncate bg-transparent text-gray-600 placeholder:italic focus:outline-hidden dark:text-gray-200"
+            className="placeholder:text-muted-foreground min-w-0 grow truncate bg-transparent text-gray-600 placeholder:italic focus:outline-hidden dark:text-gray-200"
             value={timer.name}
             placeholder={formatMessage({ id: "timer.unnamed-timer" })}
             tabIndex={-1}
@@ -183,62 +182,24 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
             onCancel={() => setEditMode(false)}
           />
         )) || (
-          <>
-            {settings.style.showTooltips && (
-              <Tooltip id={`tooltip-edit-timer-${timer.id}`} place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.edit.tooltip" })} className="italic" />
-            )}
-            <span
-              className={clsx("text-lg", currenTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", timer.isActive && "font-bold")}
-              onDoubleClick={() => setEditMode(true)}
-              data-tooltip-id={`tooltip-edit-timer-${timer.id}`}
-            >
+          <HelpTooltip message={formatMessage({ id: "issues.timer.action.edit.tooltip" })}>
+            <span className={clsx("text-lg", currenTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", timer.isActive && "font-bold")} onDoubleClick={() => setEditMode(true)}>
               {formatTimer(currenTime)}
             </span>
-          </>
+          </HelpTooltip>
         )}
 
         {!timer.isActive ? (
-          <>
-            {settings.style.showTooltips && (
-              <Tooltip id={`tooltip-start-timer-${timer.id}`} place="left" delayShow={700} className="italic">
-                <FormattedMessage id="issues.timer.action.start.tooltip" />
-              </Tooltip>
-            )}
-            <FontAwesomeIcon
-              role="button"
-              data-type="start-timer"
-              icon={faPlay}
-              size="2x"
-              className="cursor-pointer text-green-500 focus:outline-hidden"
-              onClick={timer.startTimer}
-              data-tooltip-id={`tooltip-start-timer-${timer.id}`}
-              tabIndex={-1}
-            />
-          </>
+          <HelpTooltip message={formatMessage({ id: "issues.timer.action.start.tooltip" })}>
+            <FontAwesomeIcon role="button" data-type="start-timer" icon={faPlay} size="2x" className="cursor-pointer text-green-500 focus:outline-hidden" onClick={timer.startTimer} tabIndex={-1} />
+          </HelpTooltip>
         ) : (
-          <>
-            {settings.style.showTooltips && (
-              <Tooltip id={`tooltip-pause-timer-${timer.id}`} place="left" delayShow={700} className="italic">
-                <FormattedMessage id="issues.timer.action.pause.tooltip" />
-              </Tooltip>
-            )}
-            <FontAwesomeIcon
-              role="button"
-              data-type="pause-timer"
-              icon={faPause}
-              size="2x"
-              className="cursor-pointer text-red-500 focus:outline-hidden"
-              onClick={timer.pauseTimer}
-              data-tooltip-id={`tooltip-pause-timer-${timer.id}`}
-              tabIndex={-1}
-            />
-          </>
+          <HelpTooltip message={formatMessage({ id: "issues.timer.action.pause.tooltip" })}>
+            <FontAwesomeIcon role="button" data-type="pause-timer" icon={faPause} size="2x" className="cursor-pointer text-red-500 focus:outline-hidden" onClick={timer.pauseTimer} tabIndex={-1} />
+          </HelpTooltip>
         )}
 
-        <>
-          {settings.style.showTooltips && (
-            <Tooltip id={`tooltip-reset-timer-${timer.id}`} place="top" delayShow={700} content={formatMessage({ id: "issues.timer.action.reset.tooltip" })} className="italic" />
-          )}
+        <HelpTooltip message={formatMessage({ id: "issues.timer.action.reset.tooltip" })}>
           <FontAwesomeIcon
             role="button"
             data-type="reset-timer"
@@ -246,15 +207,11 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
             size="2x"
             className="cursor-pointer text-red-500 focus:outline-hidden"
             onClick={() => setConfirmResetModal(true)}
-            data-tooltip-id={`tooltip-reset-timer-${timer.id}`}
             tabIndex={-1}
           />
-        </>
+        </HelpTooltip>
 
-        <>
-          {settings.style.showTooltips && (
-            <Tooltip id={`tooltip-done-timer-${timer.id}`} place="bottom" delayShow={700} content={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })} className="z-10 italic" />
-          )}
+        <HelpTooltip message={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })}>
           <FontAwesomeIcon
             role="button"
             data-type="done-timer"
@@ -266,33 +223,24 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
               const hours = Number((time / 1000 / 60 / 60).toFixed(2));
               onTimerDone(hours);
             }}
-            data-tooltip-id={`tooltip-done-timer-${timer.id}`}
             tabIndex={-1}
           />
-        </>
+        </HelpTooltip>
       </div>
 
       {confirmResetModal && (
-        <Modal title={formatMessage({ id: "issues.modal.reset-timer.title" })} onClose={() => setConfirmResetModal(false)}>
-          <p className="mb-5">
-            <FormattedMessage id="issues.modal.reset-timer.message" />
-          </p>
-          <div className="flex items-end justify-between">
-            <Button size="sm" variant="outline" onClick={() => setConfirmResetModal(false)}>
-              <FormattedMessage id="issues.modal.reset-timer.cancel" />
-            </Button>
-            <Button
-              size="sm"
-              onClick={() => {
-                setConfirmResetModal(false);
-                timer.resetTimer();
-              }}
-              autoFocus
-            >
-              <FormattedMessage id="issues.modal.reset-timer.reset" />
-            </Button>
-          </div>
-        </Modal>
+        <AlertDialog open onOpenChange={() => setConfirmResetModal(false)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{formatMessage({ id: "issues.modal.reset-timer.title" })}</AlertDialogTitle>
+              <AlertDialogDescription>{formatMessage({ id: "issues.modal.reset-timer.message" })}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{formatMessage({ id: "issues.modal.reset-timer.cancel" })}</AlertDialogCancel>
+              <AlertDialogAction onClick={() => timer.resetTimer()}>{formatMessage({ id: "issues.modal.reset-timer.reset" })}</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
     </>
   );

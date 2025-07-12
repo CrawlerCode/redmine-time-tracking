@@ -1,13 +1,12 @@
 /* eslint-disable react/no-children-prop */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, isAxiosError } from "axios";
 import { useIntl } from "react-intl";
 import { z } from "zod/v4";
 import { useAppForm } from "../../hooks/useAppForm";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
-import { TIssue, TRedmineError, TUpdateIssue } from "../../types/redmine";
-import Modal from "../general/Modal";
-import Toast from "../general/Toast";
+import { TIssue, TUpdateIssue } from "../../types/redmine";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Form, FormGrid } from "../ui/form";
 import IssueTitle from "./IssueTitle";
 
 const addIssueNotesFormSchema = ({ formatMessage }: { formatMessage: ReturnType<typeof useIntl>["formatMessage"] }) =>
@@ -36,6 +35,9 @@ const AddIssueNotesModal = ({ issue, onClose, onSuccess }: PropTypes) => {
       queryClient.invalidateQueries({ queryKey: ["issues"] });
       onSuccess();
     },
+    meta: {
+      successMessage: formatMessage({ id: "issues.modal.add-issue-notes.success" }),
+    },
   });
 
   const form = useAppForm({
@@ -51,43 +53,31 @@ const AddIssueNotesModal = ({ issue, onClose, onSuccess }: PropTypes) => {
 
   return (
     <>
-      <Modal title={formatMessage({ id: "issues.modal.add-issue-notes.title" })} onClose={onClose}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-          }}
-        >
-          <div className="flex flex-col gap-y-2">
+      <Dialog open onOpenChange={onClose}>
+        <DialogContent>
+          <Form onSubmit={form.handleSubmit} className="contents">
+            <DialogHeader>
+              <DialogTitle>{formatMessage({ id: "issues.modal.add-issue-notes.title" })}</DialogTitle>
+            </DialogHeader>
             <IssueTitle issue={issue} />
+            <FormGrid>
+              <form.AppField
+                name="notes"
+                children={(field) => (
+                  <field.TextareaField title={formatMessage({ id: "issues.issue.field.notes" })} placeholder={formatMessage({ id: "issues.issue.field.notes" })} required autoFocus />
+                )}
+              />
 
-            <form.AppField
-              name="notes"
-              children={(field) => (
-                <field.TextareaField title={formatMessage({ id: "issues.issue.field.notes" })} placeholder={formatMessage({ id: "issues.issue.field.notes" })} required size="sm" autoFocus />
-              )}
-            />
-
-            <form.AppField name="private_notes" children={(field) => <field.ToggleField title={formatMessage({ id: "issues.issue.field.private-notes" })} />} />
-
-            <form.AppForm>
-              <form.SubmitButton children={formatMessage({ id: "issues.modal.add-issue-notes.submit" })} />
-            </form.AppForm>
-          </div>
-        </form>
-      </Modal>
-      {updateIssueMutation.isError && (
-        <Toast
-          type="error"
-          allowClose={false}
-          message={
-            isAxiosError(updateIssueMutation.error)
-              ? ((updateIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateIssueMutation.error as AxiosError).message)
-              : (updateIssueMutation.error as Error).message
-          }
-        />
-      )}
+              <form.AppField name="private_notes" children={(field) => <field.ToggleField title={formatMessage({ id: "issues.issue.field.private-notes" })} />} />
+            </FormGrid>
+            <DialogFooter>
+              <form.AppForm>
+                <form.SubmitButton children={formatMessage({ id: "issues.modal.add-issue-notes.submit" })} />
+              </form.AppForm>
+            </DialogFooter>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

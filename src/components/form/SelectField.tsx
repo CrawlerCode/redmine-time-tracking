@@ -1,36 +1,58 @@
-import { ComponentProps, ReactNode } from "react";
-import { GroupBase, MultiValue, SingleValue } from "react-select";
+import { ReactNode, useId } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
-import ReactSelect from "../general/ReactSelect";
+import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 
 type Option<Value> = { value: Value; label: string; icon?: ReactNode };
+type Group<Value> = { label: string; options: Option<Value>[] };
 
-export const SelectField = <Value extends number | string, IsMulti extends boolean = false, Group extends GroupBase<Option<Value>> = GroupBase<Option<Value>>>(
-  props: Omit<ComponentProps<typeof ReactSelect<Option<Value>, IsMulti, Group>>, "value" | "onChange" | "onBlur">
-) => {
-  const { state, handleChange, handleBlur } = useFieldContext<IsMulti extends true ? Value[] : Value>();
+type SelectFieldProps<Value> = {
+  title?: string;
+  placeholder?: string;
+  required?: boolean;
+  disabled?: boolean;
+  options: Option<Value>[] | Group<Value>[];
+  className?: string;
+};
 
-  const flattedOptions = props.options?.reduce((result, option) => {
-    if (typeof option === "object" && "options" in option) {
-      return [...result, ...option.options];
-    }
-    return [...result, option];
-  }, [] as Option<Value>[]);
-
-  const selectedValue = Array.isArray(state.value)
-    ? flattedOptions?.filter((option) => (state.value as Value[])?.includes(option.value))
-    : flattedOptions?.find((option) => (state.value as Value) === option.value);
+export const SelectField = <Value extends string | number>({ title, placeholder, required, disabled, options, className }: SelectFieldProps<Value>) => {
+  const { state, handleChange, handleBlur } = useFieldContext<Value>();
+  const id = useId();
 
   return (
-    <ReactSelect
-      {...props}
-      value={selectedValue}
-      onChange={(selected) => {
-        const value = Array.isArray(selected) ? (selected as MultiValue<Option<Value>>)?.map((v) => v.value) : ((selected as SingleValue<Option<Value>>)?.value ?? null);
-        handleChange(value as IsMulti extends true ? Value[] : Value);
-      }}
-      onBlur={handleBlur}
-      error={!state.meta.isValid && state.meta.isTouched ? state.meta.errors.map((error) => error.message).join(", ") : undefined}
-    />
+    <FormItem className={className}>
+      <FormLabel fieldState={state} htmlFor={id} required={required}>
+        {title}
+      </FormLabel>
+      <FormControl>
+        <Select required={required} disabled={disabled} defaultValue={JSON.stringify(state.value)} onValueChange={(value) => handleChange(JSON.parse(value) as Value)}>
+          <SelectTrigger id={id} className="w-full truncate" onBlur={handleBlur}>
+            <SelectValue placeholder={placeholder} />
+          </SelectTrigger>
+          <SelectContent>
+            {options?.map((option) =>
+              typeof option === "object" && "options" in option ? (
+                <SelectGroup key={option.label}>
+                  <SelectLabel>{option.label}</SelectLabel>
+                  {option.options.map((subOption) => (
+                    <SelectOption key={subOption.value} option={subOption} />
+                  ))}
+                </SelectGroup>
+              ) : (
+                <SelectOption key={option.value} option={option} />
+              )
+            )}
+          </SelectContent>
+        </Select>
+      </FormControl>
+      <FormMessage fieldState={state} />
+    </FormItem>
   );
 };
+
+const SelectOption = <Value extends string | number>({ option }: { option: Option<Value> }) => (
+  <SelectItem value={JSON.stringify(option.value)} className="flex items-center gap-1">
+    {option.icon}
+    {option.label}
+  </SelectItem>
+);

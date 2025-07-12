@@ -1,21 +1,26 @@
+import { Alert, AlertTitle } from "@//components/ui/alert";
+import Navbar from "@/components/general/Navbar";
+import { clsxm } from "@/utils/clsxm";
+import { getPlatform } from "@/utils/platform";
+import { createPopOut, getWindowLocationType } from "@/utils/popout";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import { faCalendarDays, faGear, faList, faStopwatch, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
+import { AlertCircleIcon } from "lucide-react";
 import { Suspense, lazy } from "react";
 import { useIntl } from "react-intl";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Navbar from "./components/general/Navbar";
-import Toast from "./components/general/Toast";
-import { clsxm } from "./utils/clsxm";
-import { getPlatform } from "./utils/platform";
-import { createPopOut, getWindowLocationType } from "./utils/popout";
+config.autoAddCss = false;
 
-const TimersPage = lazy(() => import("./pages/TimersPage"));
-const IssuesPage = lazy(() => import("./pages/IssuesPage"));
-const SettingsPage = lazy(() => import("./pages/SettingsPage"));
-const TimePage = lazy(() => import("./pages/TimePage"));
+const TimersPage = lazy(() => import("@/pages/TimersPage"));
+const IssuesPage = lazy(() => import("@/pages/IssuesPage"));
+const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
+const TimePage = lazy(() => import("@/pages/TimePage"));
 
-function App() {
+// TODO: Fix browser options page
+function MainApp() {
   const { formatMessage } = useIntl();
 
   const locationType = getWindowLocationType();
@@ -30,7 +35,7 @@ function App() {
         e.preventDefault();
       }}
     >
-      <header className="relative z-30 h-12">
+      <header className="relative">
         <Navbar
           navigation={[
             {
@@ -56,7 +61,7 @@ function App() {
           ]}
         />
         {locationType === "popup" && (
-          <FontAwesomeIcon icon={faUpRightFromSquare} size="sm" className="bg-background-inner absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full p-1.5" onClick={createPopOut} />
+          <FontAwesomeIcon icon={faUpRightFromSquare} size="sm" className="bg-card absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full p-1.5" onClick={createPopOut} />
         )}
       </header>
       <main
@@ -101,7 +106,15 @@ function App() {
               }
             />
 
-            <Route path="*" element={<Toast type="error" message={formatMessage({ id: "nav.error.page-not-found" })} allowClose={false} />} />
+            <Route
+              path="*"
+              element={
+                <Alert variant="destructive">
+                  <AlertCircleIcon />
+                  <AlertTitle>{formatMessage({ id: "nav.error.page-not-found" })}</AlertTitle>
+                </Alert>
+              }
+            />
           </Routes>
         </div>
       </main>
@@ -109,4 +122,4 @@ function App() {
   );
 }
 
-export default App;
+export default MainApp;

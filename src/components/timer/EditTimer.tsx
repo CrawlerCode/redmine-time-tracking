@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { FocusEvent, useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import useHotKey from "../../hooks/useHotkey";
-import Button from "../general/Button";
-import Modal from "../general/Modal";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
+import { Input } from "../ui/input";
 
 type PropTypes = {
   initTime: number;
@@ -29,17 +29,15 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
   return (
     <>
       <div className="flex items-center gap-x-0">
-        <input
+        <Input
           type="number"
           value={h}
           min={0}
-          max={100}
-          className={clsx(
-            "w-4 appearance-none rounded-md text-center text-lg",
-            "border-field-border bg-field placeholder:text-field-placeholder border",
-            "focus:ring-primary-focus focus:ring-2 focus:outline-hidden",
-            initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
-          )}
+          className={clsx("h-8 appearance-none p-0 text-center", initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", {
+            "w-4": h.length === 1,
+            "w-6": h.length === 2,
+            "w-8": h.length >= 3,
+          })}
           /**
            * auto focus & select input on focus
            */
@@ -67,17 +65,12 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           }}
         />
         :
-        <input
+        <Input
           type="number"
           value={m}
           min={0}
           max={59}
-          className={clsx(
-            "w-6 appearance-none rounded-md text-center text-lg",
-            "border-field-border bg-field placeholder:text-field-placeholder border",
-            "focus:ring-primary-focus focus:ring-2 focus:outline-hidden",
-            initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
-          )}
+          className={clsx("h-8 w-6 appearance-none p-0 text-center", initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500")}
           onChange={(e) => {
             const { value, min, max } = e.target;
             setM(to2Digit(Math.max(Number(min), Math.min(Number(max), Number(value)))));
@@ -100,17 +93,12 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
           }}
         />
         :
-        <input
+        <Input
           type="number"
           value={s}
           min={0}
           max={59}
-          className={clsx(
-            "w-6 appearance-none rounded-md text-center text-lg",
-            "border-field-border bg-field placeholder:text-field-placeholder border",
-            "focus:ring-primary-focus focus:ring-2 focus:outline-hidden",
-            initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500"
-          )}
+          className={clsx("h-8 w-6 appearance-none p-0 text-center", initTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500")}
           onChange={(e) => {
             const { value, min, max } = e.target;
             setS(to2Digit(Math.max(Number(min), Math.min(Number(max), Number(value)))));
@@ -134,19 +122,18 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
         />
       </div>
       {confirmCancelModal && (
-        <Modal title={formatMessage({ id: "issues.modal.save-changes.title" })} onClose={onConfirmCancel}>
-          <p className="mb-5">
-            <FormattedMessage id="issues.modal.save-changes.message" />
-          </p>
-          <div className="flex items-end justify-between">
-            <Button size="sm" variant="outline" onClick={onConfirmCancel}>
-              <FormattedMessage id="issues.modal.save-changes.cancel" />
-            </Button>
-            <Button size="sm" onClick={() => onOverrideTime(updatedTime)} autoFocus>
-              <FormattedMessage id="issues.modal.save-changes.save" />
-            </Button>
-          </div>
-        </Modal>
+        <AlertDialog open onOpenChange={onConfirmCancel}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{formatMessage({ id: "issues.modal.save-changes.title" })}</AlertDialogTitle>
+              <AlertDialogDescription>{formatMessage({ id: "issues.modal.save-changes.message" })}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{formatMessage({ id: "issues.modal.save-changes.cancel" })}</AlertDialogCancel>
+              <AlertDialogAction onClick={() => onOverrideTime(updatedTime)}>{formatMessage({ id: "issues.modal.save-changes.save" })}</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
     </>
   );

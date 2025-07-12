@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactNode } from "react";
 import { useIntl } from "react-intl";
 import { TimerController } from "../../hooks/useTimers";
-import ContextMenu from "../general/ContextMenu";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "../ui/context-menu";
 
 type PropTypes = {
   timer: TimerController;
@@ -15,32 +15,26 @@ const TimerContextMenu = ({ timer, children, onEdit }: PropTypes) => {
   const { formatMessage } = useIntl();
 
   return (
-    <ContextMenu
-      menu={[
-        {
-          name: formatMessage({ id: timer.isActive ? "timer.context-menu.pause" : "timer.context-menu.start" }),
-          icon: <FontAwesomeIcon icon={timer.isActive ? faPause : faPlay} />,
-          onClick: timer.isActive ? timer.pauseTimer : timer.startTimer,
-        },
-        {
-          name: formatMessage({ id: "timer.context-menu.edit" }),
-          icon: <FontAwesomeIcon icon={faPen} />,
-          onClick: onEdit,
-        },
-        {
-          name: formatMessage({ id: "timer.context-menu.reset" }),
-          icon: <FontAwesomeIcon icon={faStop} />,
-          onClick: timer.resetTimer,
-          disabled: timer.getElapsedTime() === 0,
-        },
-        {
-          name: formatMessage({ id: "timer.context-menu.delete" }),
-          icon: <FontAwesomeIcon icon={faTrash} />,
-          onClick: timer.deleteTimer,
-        },
-      ]}
-    >
-      {children}
+    <ContextMenu>
+      <ContextMenuTrigger>{children}</ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuItem onClick={timer.isActive ? timer.pauseTimer : timer.startTimer}>
+          <FontAwesomeIcon icon={timer.isActive ? faPause : faPlay} />
+          {formatMessage({ id: timer.isActive ? "timer.context-menu.pause" : "timer.context-menu.start" })}
+        </ContextMenuItem>
+        <ContextMenuItem onClick={onEdit}>
+          <FontAwesomeIcon icon={faPen} />
+          {formatMessage({ id: "timer.context-menu.edit" })}
+        </ContextMenuItem>
+        <ContextMenuItem onClick={timer.resetTimer} disabled={timer.getElapsedTime() === 0}>
+          <FontAwesomeIcon icon={faStop} />
+          {formatMessage({ id: "timer.context-menu.reset" })}
+        </ContextMenuItem>
+        <ContextMenuItem onClick={timer.deleteTimer}>
+          <FontAwesomeIcon icon={faTrash} />
+          {formatMessage({ id: "timer.context-menu.delete" })}
+        </ContextMenuItem>
+      </ContextMenuContent>
     </ContextMenu>
   );
 };

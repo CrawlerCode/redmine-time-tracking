@@ -1,15 +1,15 @@
+import { ComboboxField } from "@/components/form/ComboboxField";
 import { ComponentProps, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
 import useMyUser from "../../../../hooks/useMyUser";
 import useProjectUsers from "../../../../hooks/useProjectUsers";
 import { getGroupedUsers } from "../../../../utils/user";
-import { SelectField } from "../../../form/SelectField";
 
 type Props = {
   projectId: number;
 };
 
-const AssigneeField = ({ projectId, ...props }: ComponentProps<typeof SelectField> & Props) => {
+const AssigneeField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
   const { formatMessage } = useIntl();
 
   const [loadUsers, setLoadUsers] = useState(false);
@@ -21,12 +21,11 @@ const AssigneeField = ({ projectId, ...props }: ComponentProps<typeof SelectFiel
   const groupedUsers = useMemo(() => getGroupedUsers(users.data), [users.data]);
 
   return (
-    <SelectField
+    <ComboboxField
       {...props}
       title={formatMessage({ id: "issues.issue.field.assignee" })}
       placeholder={formatMessage({ id: "issues.issue.field.assignee" })}
-      noOptionsMessage={() => formatMessage({ id: "general.no-options" })}
-      onFocus={() => setLoadUsers(true)}
+      onOpen={() => setLoadUsers(true)}
       options={
         loadUsers
           ? groupedUsers.map(({ role, users }) => ({

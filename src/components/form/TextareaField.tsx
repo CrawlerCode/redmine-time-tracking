@@ -1,17 +1,23 @@
-import { ComponentProps } from "react";
+import { ComponentProps, useId } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
-import Textarea from "../general/TextareaInput";
+import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Textarea } from "../ui/textarea";
 
-export const TextareaField = (props: Omit<ComponentProps<typeof Textarea>, "value" | "onChange" | "onBlur">) => {
+type TextareaFieldProps = Omit<ComponentProps<typeof Textarea>, "id" | "value" | "onChange" | "onBlur">;
+
+export const TextareaField = ({ title, required, className, ...props }: TextareaFieldProps) => {
   const { state, handleChange, handleBlur } = useFieldContext<string>();
+  const id = useId();
 
   return (
-    <Textarea
-      {...props}
-      value={state.value}
-      onChange={(e) => handleChange(e.target.value)}
-      onBlur={handleBlur}
-      error={!state.meta.isValid && state.meta.isTouched ? state.meta.errors.map((error) => error.message).join(", ") : undefined}
-    />
+    <FormItem className={className}>
+      <FormLabel fieldState={state} htmlFor={id} required={required}>
+        {title}
+      </FormLabel>
+      <FormControl>
+        <Textarea {...props} id={id} value={state.value} onChange={(e) => handleChange(e.target.value)} onBlur={handleBlur} />
+      </FormControl>
+      <FormMessage fieldState={state} />
+    </FormItem>
   );
 };

@@ -1,8 +1,10 @@
 import { addDays, format, isFuture, isMonday, isWeekend, parseISO, previousMonday, startOfDay, subWeeks } from "date-fns";
+import { ClockIcon } from "lucide-react";
 import { useIntl } from "react-intl";
 import useFormatHours from "../../hooks/useFormatHours";
 import { TTimeEntry } from "../../types/redmine";
 import { roundHours } from "../../utils/date";
+import { Badge } from "../ui/badge";
 import TimeEntry from "./TimeEntry";
 
 type PropTypes = {
@@ -43,7 +45,7 @@ const TimeEntryList = ({ entries }: PropTypes) => {
   const monday = isMonday(today) ? today : previousMonday(today);
 
   return (
-    <>
+    <div className="flex flex-col gap-5">
       {Array(2)
         .fill(monday)
         .map((d, i) => subWeeks(d, i))
@@ -53,17 +55,15 @@ const TimeEntryList = ({ entries }: PropTypes) => {
             .map((d, i) => addDays(d, 6 - i));
           const summedHours = groupedEntries.filter((entries) => days.find((d) => d.getTime() === entries.date.getTime())).reduce((sum, entry) => sum + entry.hours, 0);
           return (
-            <div role="group" className="mb-5 flex flex-col gap-y-1" key={i}>
+            <div role="group" className="flex flex-col gap-y-1" key={i}>
               <div className="flex items-center gap-x-3">
                 <h1 className="text-lg">
                   {formatDate(monday)} - {formatDate(addDays(monday, 6))}
                 </h1>
-                <span className="border-primary bg-background-inner text-primary inline-flex items-center rounded-sm border px-2.5 py-0.5 text-xs font-medium">
-                  <svg aria-hidden="true" className="mr-1 size-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"></path>
-                  </svg>
+                <Badge variant="secondary">
+                  <ClockIcon />
                   {formatHours(roundHours(summedHours))}
-                </span>
+                </Badge>
               </div>
               {days.map((d, i) => {
                 if (isFuture(d)) return;
@@ -80,7 +80,7 @@ const TimeEntryList = ({ entries }: PropTypes) => {
                 return (
                   <div className="flex items-center gap-x-1" key={i}>
                     <h4 className="w-8 text-sm">{format(date, "EEE")}</h4>
-                    <h3 className="w-14 truncate text-end text-sm font-semibold">{formatHours(roundHours(hours))}</h3>
+                    <h3 className="w-17 truncate text-end text-sm font-semibold">{formatHours(roundHours(hours))}</h3>
                     <div className="grow">
                       <TimeEntry entries={groupEntries} maxHours={maxHours > 0 ? maxHours : undefined} withContextMenu />
                     </div>
@@ -90,7 +90,7 @@ const TimeEntryList = ({ entries }: PropTypes) => {
             </div>
           );
         })}
-    </>
+    </div>
   );
 };
 

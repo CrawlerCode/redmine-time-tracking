@@ -73,6 +73,7 @@
   "issues.modal.add-spent-time.title": "Add spent time",
   "issues.modal.add-spent-time.add-notes": "Add notes",
   "issues.modal.add-spent-time.submit": "Create",
+  "issues.modal.add-spent-time.success": "Spent time successfully added",
   "issues.modal.save-changes.title": "Save changes?",
   "issues.modal.save-changes.message": "Do you want to save your changes?",
   "issues.modal.save-changes.cancel": "No, cancel",
@@ -85,12 +86,14 @@
   "issues.modal.add-issue.tracker-with-no-enabled-fields.warning": "It seems that you are using a Redmine version < 5.0.0. It is possible that some fields are not applied",
   "issues.modal.add-issue.unknown-workflow-permissions.warning": "It is possible that some fields are not applied due to missing permissions in Redmine. There is currently no way to check these permissions",
   "issues.modal.add-issue.submit": "Create",
+  "issues.modal.add-issue.success": "Issue successfully created",
   "issues.modal.edit-issue.title": "Edit issue",
   "issues.modal.edit-issue.issue-with-no-allowed-statuses.warning": "It seems that you are using a Redmine version < 5.0.0. It is possible that some statuses changes are not applied",
   "issues.modal.edit-issue.submit": "Save",
+  "issues.modal.edit-issue.success": "Issue successfully updated",
   "issues.modal.add-issue-notes.title": "Add notes",
   "issues.modal.add-issue-notes.submit": "Save",
-  "issues.error.fail-to-load-issues": "Failed to load issues",
+  "issues.modal.add-issue-notes.success": "Notes successfully added",
 
   "time.time-entry.context-menu.open-in-redmine": "Open in Redmine",
   "time.time-entry.context-menu.edit": "Edit",
@@ -110,7 +113,7 @@
   "time.time-entry.field.activity.validation.required": "Activity is required",
   "time.modal.edit-time-entry.title": "Edit time entry",
   "time.modal.edit-time-entry.submit": "Save",
-  "time.error.fail-to-load-data": "Failed to load data",
+  "time.modal.edit-time-entry.success": "Time entry successfully updated",
 
   "settings.general": "General",
   "settings.general.language": "Language",
@@ -162,8 +165,14 @@
   "settings.settings-saved": "Settings saved!",
   "settings.info.report-an-issue": "Report an issue",
 
+  "dismissible-warning.title": "Warning",
   "dismissible-warning.dont-show-again": "Don't show again",
 
+  "general.search": "Search...",
   "general.no-options": "No options",
+  "general.retry": "Retry",
+  "general.error.fail-to-load-data": "Failed to load data",
+  "general.error.unknown-error-occurred": "An unknown error occurred",
+
   "format.hours": "{hours} h"
 }

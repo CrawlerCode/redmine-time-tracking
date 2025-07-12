@@ -1,3 +1,4 @@
+import { ComboboxField } from "@/components/form/ComboboxField";
 import { ComponentProps, useEffect } from "react";
 import { useIntl } from "react-intl";
 import useTimeEntryActivities from "../../../../hooks/useTimeEntryActivities";
@@ -8,7 +9,7 @@ type Props = {
   onDefaultActivityChange?: (activityId: number) => void;
 };
 
-const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: ComponentProps<typeof SelectField> & Props) => {
+const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: Omit<ComponentProps<typeof SelectField>, "options"> & Props) => {
   const { formatMessage } = useIntl();
 
   const timeEntryActivities = useTimeEntryActivities(projectId);
@@ -20,15 +21,16 @@ const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: Compone
   }, [timeEntryActivities.defaultActivity, onDefaultActivityChange]);
 
   return (
-    <SelectField
+    <ComboboxField
       {...props}
       title={formatMessage({ id: "time.time-entry.field.activity" })}
       placeholder={formatMessage({ id: "time.time-entry.field.activity" })}
-      noOptionsMessage={() => formatMessage({ id: "general.no-options" })}
-      options={timeEntryActivities.data?.map((activity) => ({
-        label: activity.name,
-        value: activity.id,
-      }))}
+      options={
+        timeEntryActivities.data?.map((activity) => ({
+          label: activity.name,
+          value: activity.id,
+        })) ?? []
+      }
       isLoading={timeEntryActivities.isLoading}
     />
   );

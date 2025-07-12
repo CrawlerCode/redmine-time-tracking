@@ -14,6 +14,7 @@ import useTimers from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
 import { TIssue, TReference } from "../../types/redmine";
 import { getGroupedIssues, getSortedIssues } from "../../utils/issue";
+import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";
 import Issue from "./Issue";
 import VersionTooltip from "./VersionTooltip";
@@ -58,7 +59,7 @@ const IssuesList = ({ issues: rawIssues, localIssues, issuePriorities, projectVe
             {project && (
               <div
                 className={clsx("flex justify-between gap-x-2", {
-                  "bg-background shadow-background sticky top-0 z-5 -mx-2 -my-1 px-2 py-1 shadow-sm": settings.style.stickyScroll,
+                  "bg-background shadow-background sticky top-0 z-5 -mx-2 -my-1 px-2 py-1 shadow": settings.style.stickyScroll,
                 })}
               >
                 <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="max-w-fit truncate text-xs hover:underline" rel="noreferrer">
@@ -82,23 +83,22 @@ const IssuesList = ({ issues: rawIssues, localIssues, issuePriorities, projectVe
             {groups.map(({ type, version, issues }) => (
               <Fragment key={`${type}-${version?.id}`}>
                 {settings.style.groupIssuesByVersion && versions.length > 0 && ["version", "no-version"].includes(type) && (
-                  <>
-                    {version && <VersionTooltip version={version} />}
-                    <div
-                      className={clsx({
-                        "shadow- bg-background shadow-background sticky top-6 z-5 -mx-2 -my-1 px-2 py-1 shadow-sm": settings.style.stickyScroll,
-                      })}
-                    >
-                      <span className="bg-background-inner w-fit truncate rounded-sm px-1.5 text-xs text-gray-950 dark:text-gray-300" data-tooltip-id={`tooltip-version-${version?.id}`}>
+                  <div
+                    className={clsx({
+                      "bg-background shadow-background sticky top-6 z-5 -mx-2 -my-1 px-2 py-1 shadow": settings.style.stickyScroll,
+                    })}
+                  >
+                    <VersionTooltip version={version}>
+                      <Badge variant="secondary" className="max-w-3/4 justify-start px-1 py-0">
                         {type === "version" && version && (
                           <a href={`${settings.redmineURL}/versions/${version.id}`} target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
                             {version.name}
                           </a>
                         )}
                         {type === "no-version" && <FormattedMessage id="issues.version.no-version" />}
-                      </span>
-                    </div>
-                  </>
+                      </Badge>
+                    </VersionTooltip>
+                  </div>
                 )}
 
                 {issues.map((issue) => (
