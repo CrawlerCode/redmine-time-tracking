@@ -1,13 +1,11 @@
 import { Alert, AlertTitle } from "@//components/ui/alert";
 import Navbar from "@/components/general/Navbar";
 import { clsxm } from "@/utils/clsxm";
-import { getPlatform } from "@/utils/platform";
 import { createPopOut, getWindowLocationType } from "@/utils/popout";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { faCalendarDays, faGear, faList, faStopwatch, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import clsx from "clsx";
 import { AlertCircleIcon } from "lucide-react";
 import { Suspense, lazy } from "react";
 import { useIntl } from "react-intl";
@@ -19,7 +17,6 @@ const IssuesPage = lazy(() => import("@/pages/IssuesPage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const TimePage = lazy(() => import("@/pages/TimePage"));
 
-// TODO: Fix browser options page
 function MainApp() {
   const { formatMessage } = useIntl();
 
@@ -27,8 +24,9 @@ function MainApp() {
 
   return (
     <div
-      className={clsx("mx-auto w-[320px]", {
-        "w-full min-w-[320px]": locationType === "popout" || locationType === "options",
+      className={clsxm("mx-auto flex h-screen w-[320px] flex-col overflow-hidden", {
+        "w-full min-w-[320px]": ["popout", "options"].includes(locationType),
+        "h-[550px]": ["popup", "options"].includes(locationType),
       })}
       // disable context menu
       onContextMenu={(e) => {
@@ -64,11 +62,7 @@ function MainApp() {
           <FontAwesomeIcon icon={faUpRightFromSquare} size="sm" className="bg-card absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full p-1.5" onClick={createPopOut} />
         )}
       </header>
-      <main
-        className={clsxm("h-[500px] overflow-y-scroll", {
-          "h-[calc(100vh-3rem)]": locationType === "popout" || (locationType === "options" && getPlatform() === "Edge"),
-        })}
-      >
+      <main className="flex-1 overflow-y-scroll">
         <div className="p-2">
           <Routes>
             <Route index element={<Navigate to="/issues" replace />} />
