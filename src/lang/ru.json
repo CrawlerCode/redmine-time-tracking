@@ -64,7 +64,6 @@
   "issues.issue.field.due-date": "Срок завершения",
   "issues.issue.field.due-date.validation.greater-than-start-date": "Due date must be greater than start date",
   "issues.issue.field.estimated-hours": "Оценка временных затрат",
-  "issues.issue.field.estimated-hours.validation.greater-than-zero": "Должно быть больше 0",
   "issues.issue.field.done-ratio": "Done ratio",
   "issues.issue.field.spent-time": "Трудозатраты",
   "issues.issue.field.notes": "Примечания",

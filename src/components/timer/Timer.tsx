@@ -69,7 +69,7 @@ const TimerWrapper = ({ variant = "inner", timer, issue, issuePriorityType }: Ti
               tabIndex={1}
               // On "Enter" or "Space" => toggle timer
               onKeyDown={(e) => {
-                if (e.key === "Enter" || e.code === "Space") {
+                if ((e.key === "Enter" || e.code === "Space") && e.currentTarget === document.activeElement) {
                   timer.toggleTimer();
                   e.preventDefault();
                   e.stopPropagation();

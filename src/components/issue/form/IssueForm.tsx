@@ -44,10 +44,7 @@ const createOrEditIssueFormSchema = ({ formatMessage }: { formatMessage: ReturnT
       fixed_version_id: z.int().nullish(),
       start_date: z.date().nullish(),
       due_date: z.date().nullish(),
-      estimated_hours: z
-        .number()
-        .min(0.01, formatMessage({ id: "issues.issue.field.estimated-hours.validation.greater-than-zero" }))
-        .nullish(),
+      estimated_hours: z.number().nullish(),
       done_ratio: z.int().min(0).max(100).nullish(),
     })
     .check((ctx) => {

@@ -109,6 +109,7 @@ const ClearButton = ({
 
   return (
     <button
+      type="button"
       tabIndex={-1}
       className="text-muted-foreground hover:text-destructive absolute -end-0 top-1/2 mx-2 -translate-y-1/2 p-1 outline-none"
       onClick={(e) => {

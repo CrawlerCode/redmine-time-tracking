@@ -64,7 +64,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
           tabIndex={1}
           // On "Enter" or "Space" => toggle timer
           onKeyDown={(e) => {
-            if (e.key === "Enter" || e.code === "Space") {
+            if ((e.key === "Enter" || e.code === "Space") && e.currentTarget === document.activeElement) {
               if (!canLogTime) return;
 
               primaryTimer.toggleTimer();

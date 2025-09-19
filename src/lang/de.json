@@ -64,7 +64,6 @@
   "issues.issue.field.due-date": "Abgabedatum",
   "issues.issue.field.due-date.validation.greater-than-start-date": "Abgabedatum muss größer als Beginn sein",
   "issues.issue.field.estimated-hours": "Geschätzter Aufwand",
-  "issues.issue.field.estimated-hours.validation.greater-than-zero": "Muss größer als 0 sein",
   "issues.issue.field.done-ratio": "Fortschritt",
   "issues.issue.field.spent-time": "Aufgewendete Zeit",
   "issues.issue.field.notes": "Notizen",

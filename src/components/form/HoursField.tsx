@@ -28,7 +28,14 @@ export const HoursField = ({ title, className, ...props }: Omit<ComponentProps<t
             className="appearance-none"
           />
         ) : (
-          <TimeInput {...props} id={id} value={formatHoursToHmm(state.value)} onChange={(e) => handleChange(parseHmmToHours(e.target.value))} onBlur={handleBlur} className="appearance-none" />
+          <TimeInput
+            {...props}
+            id={id}
+            value={state.value ? formatHoursToHmm(state.value) : ""}
+            onChange={(e) => handleChange(e.target.value ? parseHmmToHours(e.target.value) : null)}
+            onBlur={handleBlur}
+            className="appearance-none"
+          />
         )}
       </FormControl>
       <FormMessage fieldState={state} />
@@ -75,7 +82,7 @@ function formatHoursToHmm(hours: number | null): string {
 }
 
 // Helper to parse H:mm string to number of hours (float)
-function parseHmmToHours(value: string): number | null {
+function parseHmmToHours(value: string): number {
   const match = value?.match(/^(\d+):([0-5]?\d)$/);
   if (!match) return 0;
   const h = parseInt(match[1], 10);

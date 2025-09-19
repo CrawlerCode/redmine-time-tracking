@@ -64,7 +64,6 @@
   "issues.issue.field.due-date": "Due date",
   "issues.issue.field.due-date.validation.greater-than-start-date": "Due date must be greater than start date",
   "issues.issue.field.estimated-hours": "Estimated hours",
-  "issues.issue.field.estimated-hours.validation.greater-than-zero": "Must be greater than 0",
   "issues.issue.field.done-ratio": "Done ratio",
   "issues.issue.field.spent-time": "Spent time",
   "issues.issue.field.notes": "Notes",

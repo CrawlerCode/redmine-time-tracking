@@ -64,7 +64,6 @@
   "issues.issue.field.due-date": "Date d'échéance",
   "issues.issue.field.due-date.validation.greater-than-start-date": "La date d'échéance doit être postérieure à la date de début",
   "issues.issue.field.estimated-hours": "Heures estimées",
-  "issues.issue.field.estimated-hours.validation.greater-than-zero": "Doit être supérieur à 0",
   "issues.issue.field.done-ratio": "Pourcentage terminé",
   "issues.issue.field.spent-time": "Temps passé",
   "issues.issue.field.notes": "Notes",
