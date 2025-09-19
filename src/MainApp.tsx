@@ -62,7 +62,7 @@ function MainApp() {
           <FontAwesomeIcon icon={faUpRightFromSquare} size="sm" className="bg-card absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full p-1.5" onClick={createPopOut} />
         )}
       </header>
-      <main className="flex-1 overflow-y-scroll">
+      <main className="flex-1 overflow-y-auto">
         <div className="p-2">
           <Routes>
             <Route index element={<Navigate to="/issues" replace />} />
