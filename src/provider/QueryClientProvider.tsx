@@ -1,11 +1,10 @@
-import { TRedmineError } from "@/types/redmine";
+import { getErrorMessage } from "@/utils/error";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { AxiosError, isAxiosError } from "axios";
 import { lazy, ReactNode, Suspense, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
-import { toast, ToastT } from "sonner";
+import { toast } from "sonner";
 import useStorage from "../hooks/useStorage";
 
 declare module "@tanstack/react-query" {
@@ -44,28 +43,34 @@ const queryClient = new QueryClient({
     },
   },
   queryCache: new QueryCache({
-    onError: (error, query) => {
+    onError: (_, query) => {
       if (query.meta?.displayErrorToast === false) return;
 
-      const description = isAxiosError(error) ? (error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") || error.message : error instanceof Error ? error.message : String(error);
-      const previousToast = toast.getToasts().find((t) => t.id === "failed-to-load-data") as ToastT | undefined;
+      const failedQueries = queryClient
+        .getQueryCache()
+        .getAll()
+        .filter((q) => q.state.error && q.meta?.displayErrorToast !== false);
+
       toast.error(<FormattedMessage id="general.error.fail-to-load-data" />, {
         id: "failed-to-load-data",
-        description: (
-          <>
-            {previousToast?.description}
-            <p>{description}</p>
-          </>
-        ),
+        dismissible: false,
+        description: Object.entries(
+          failedQueries.reduce((errors: Record<string, number>, q) => {
+            const message = getErrorMessage(q.state.error);
+            if (message) errors[message] = (errors[message] ?? 0) + 1;
+            return errors;
+          }, {})
+        ).map(([msg, count]) => (
+          <p key={msg}>
+            {msg}
+            {count > 1 ? ` (${count}x)` : null}
+          </p>
+        )),
         action: {
           label: <FormattedMessage id="general.retry" />,
-          onClick: (e) => {
-            if (previousToast?.action && typeof previousToast.action === "object" && "onClick" in previousToast.action) {
-              previousToast.action.onClick(e);
-            }
-            queryClient.refetchQueries({
-              queryKey: query.queryKey,
-              exact: true,
+          onClick: () => {
+            failedQueries.forEach((q) => {
+              queryClient.refetchQueries({ queryKey: q.queryKey, exact: true });
             });
           },
         },
@@ -80,9 +85,8 @@ const queryClient = new QueryClient({
     },
     onError: (error, _variables, _context, mutation) => {
       const title = mutation.meta?.errorMessage || <FormattedMessage id="general.error.unknown-error-occurred" />;
-      const description = isAxiosError(error) ? (error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") || error.message : error instanceof Error ? error.message : String(error);
       toast.error(title, {
-        description,
+        description: getErrorMessage(error),
       });
     },
   }),
