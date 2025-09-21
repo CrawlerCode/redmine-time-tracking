@@ -16,7 +16,7 @@ export const ToggleGroupField = ({ title, className, required, options, type = "
 
   return (
     <FormItem className={clsxm("flex justify-between gap-2", className)}>
-      <span className="flex items-center gap-2">
+      <span className="flex items-center gap-2 truncate">
         <FormLabel fieldState={state} required={required}>
           {title}
         </FormLabel>

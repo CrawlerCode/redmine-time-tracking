@@ -17,7 +17,7 @@ const VersionTooltip = ({ version, children }: PropTypes) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent className="flex max-w-[270px] flex-col gap-y-3 truncate">
+      <TooltipContent className="flex max-w-[17rem] flex-col gap-y-3 truncate">
         <div>
           <p className="truncate text-sm font-semibold">
             {version.name} {version.due_date && <>({formatRelativeTime(differenceInDays(parseISO(version.due_date), startOfDay(new Date())), "days")})</>}

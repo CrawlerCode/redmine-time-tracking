@@ -24,6 +24,7 @@ const LANGUAGE_FLAGS: Record<(typeof LANGUAGES)[number], FlagComponent> = {
   fr: FR,
 };
 
+// TODO: Fix select field for popup and options view
 const SettingsPage = () => {
   const queryClient = useQueryClient();
   const { formatMessage, formatNumber } = useIntl();
@@ -157,7 +158,7 @@ const SettingsPage = () => {
                 </>
               )) || (
                 <div className="relative -mt-1.5 w-full">
-                  <h3 className="flex max-w-[285px] items-center gap-2 truncate text-base">
+                  <h3 className="flex items-center gap-2 truncate text-base">
                     <FontAwesomeIcon icon={faServer} className="text-gray-800 dark:text-gray-200" />
                     {settings.redmineURL}
                   </h3>

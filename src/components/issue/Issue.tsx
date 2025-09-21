@@ -93,7 +93,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
               <div>
                 <Timer timer={primaryTimer} issue={issue} />
                 {timers.length > 1 && (
-                  <div className="pl-3 text-[9px] text-gray-500" onClick={() => setAreTimersExpanded(true)}>
+                  <div className="pl-3 text-xs text-gray-500" onClick={() => setAreTimersExpanded(true)}>
                     <FormattedMessage id="issues.timers.more-timers" values={{ count: timers.length - 1 }} />
                   </div>
                 )}

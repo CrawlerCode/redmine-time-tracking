@@ -17,7 +17,7 @@ const IssueInfoTooltip = ({ issue, children }: PropTypes) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent className="flex max-w-[270px] flex-col gap-y-3 truncate">
+      <TooltipContent className="flex max-w-[17rem] flex-col gap-y-3 truncate">
         <div>
           <p className="text-sm font-semibold">
             {issue.tracker.name} #{issue.id}

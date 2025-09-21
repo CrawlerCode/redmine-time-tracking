@@ -68,7 +68,7 @@ function FormLabel({
   if (!children) return null;
 
   return (
-    <Label data-slot="form-label" data-error={!fieldState?.meta.isValid && fieldState?.meta.isTouched} className={cn("data-[error=true]:text-destructive", className)} {...props}>
+    <Label data-slot="form-label" data-error={!fieldState?.meta.isValid && fieldState?.meta.isTouched} className={cn("data-[error=true]:text-destructive truncate", className)} {...props}>
       {required ? (
         <span>
           {children}

@@ -23,7 +23,7 @@ const Navbar = ({ navigation }: PropTypes) => {
             <NavigationMenuLink asChild data-active={location.pathname === item.href} className="inline-flex flex-row items-center">
               <Link to={item.href}>
                 {item.icon}
-                {item.name}
+                <span className="truncate max-[21rem]:max-w-[3rem]">{item.name}</span>
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>

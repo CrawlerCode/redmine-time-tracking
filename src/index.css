@@ -77,10 +77,6 @@
     --sidebar-accent-foreground: oklch(0.8823 0.0571 254.1284);
     --sidebar-border: oklch(0.3715 0 0);
     --sidebar-ring: oklch(0.6231 0.188 259.8145);
-    --font-sans: Inter, sans-serif;
-    --font-serif: Source Serif 4, serif;
-    --font-mono: JetBrains Mono, monospace;
-    --radius: 0.6rem;
   }
 }
 

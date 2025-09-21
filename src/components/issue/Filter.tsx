@@ -61,7 +61,7 @@ const Filter = ({ children }: PropTypes) => {
             </Button>
           </PopoverTrigger>
         </div>
-        <PopoverContent className="bg-background w-[300px]">
+        <PopoverContent className="bg-background w-[18.5rem]">
           <Form onSubmit={form.handleSubmit}>
             <FormGrid className="gap-3">
               <form.AppField
