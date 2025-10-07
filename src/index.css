@@ -147,13 +147,15 @@
   }
 }
 
-::-webkit-scrollbar {
-  width: 5px;
-}
+#root {
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
 
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-primary);
-  border-radius: 3px;
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border-radius: 3px;
+  }
 }
 
 @layer base {
