@@ -1,23 +1,22 @@
 import { ComponentProps, useId } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
-import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Textarea } from "../ui/textarea";
 
 type TextareaFieldProps = Omit<ComponentProps<typeof Textarea>, "id" | "value" | "onChange" | "onBlur">;
 
 export const TextareaField = ({ title, required, className, ...props }: TextareaFieldProps) => {
   const { state, handleChange, handleBlur } = useFieldContext<string>();
+  const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
   return (
-    <FormItem className={className}>
-      <FormLabel fieldState={state} htmlFor={id} required={required}>
+    <Field data-invalid={isInvalid} className={className}>
+      <FieldLabel required={required} htmlFor={id}>
         {title}
-      </FormLabel>
-      <FormControl>
-        <Textarea {...props} id={id} value={state.value} onChange={(e) => handleChange(e.target.value)} onBlur={handleBlur} />
-      </FormControl>
-      <FormMessage fieldState={state} />
-    </FormItem>
+      </FieldLabel>
+      <Textarea {...props} id={id} value={state.value} onChange={(e) => handleChange(e.target.value)} onBlur={handleBlur} />
+      {isInvalid && <FieldError errors={state.meta.errors} />}
+    </Field>
   );
 };

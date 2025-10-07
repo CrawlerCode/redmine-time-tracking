@@ -7,7 +7,7 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
-import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type Option<Value> = { value: Value; label: string; icon?: ReactNode };
@@ -40,90 +40,89 @@ export const ComboboxField = <Value extends string | number>({
   isLoading,
   className,
 }: ComboboxFieldProps<Value>) => {
-  const { formatMessage } = useIntl();
-
   const { state, handleChange, handleBlur } = useFieldContext<null | Value | Value[]>();
+  const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
+
+  const { formatMessage } = useIntl();
   const [open, setOpen] = useState(false);
 
   return (
-    <FormItem className={className}>
-      <FormLabel fieldState={state} htmlFor={id} required={required}>
+    <Field data-invalid={isInvalid} className={className}>
+      <FieldLabel required={required} htmlFor={id}>
         {title}
-      </FormLabel>
-      <FormControl>
-        <Popover
-          open={open}
-          onOpenChange={(open) => {
-            setOpen(open);
-            if (open) onOpen?.();
-          }}
-        >
-          <PopoverTrigger asChild disabled={disabled} onBlur={handleBlur}>
-            <Button
-              id={id}
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className={clsx("hover:text-foreground relative w-full justify-between truncate text-base font-normal", {
-                "h-auto min-h-9 py-1.5": mode === "multiple",
-                "ps-2!": mode === "multiple" && Array.isArray(state.value) && state.value.length > 0,
-              })}
-            >
-              <SelectedValue mode={mode} value={state.value} options={options} placeholder={placeholder} className="truncate" handleChange={handleChange} />
-              {isLoading ? (
-                <Loader2Icon className="animate-spin" />
-              ) : !required && (mode === "single" ? state.value : Array.isArray(state.value) && state.value.length > 0) ? (
-                <>
-                  <ClearButton mode={mode} handleChange={handleChange} />
-                  <ChevronsUpDown className="opacity-0" />
-                </>
-              ) : (
-                <ChevronsUpDown className="opacity-50" />
+      </FieldLabel>
+      <Popover
+        open={open}
+        onOpenChange={(open) => {
+          setOpen(open);
+          if (open) onOpen?.();
+        }}
+      >
+        <PopoverTrigger asChild disabled={disabled} onBlur={handleBlur}>
+          <Button
+            id={id}
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className={clsx("hover:text-foreground relative w-full justify-between truncate text-base font-normal", {
+              "h-auto min-h-9 py-1.5": mode === "multiple",
+              "ps-2!": mode === "multiple" && Array.isArray(state.value) && state.value.length > 0,
+            })}
+          >
+            <SelectedValue mode={mode} value={state.value} options={options} placeholder={placeholder} className="truncate" handleChange={handleChange} />
+            {isLoading ? (
+              <Loader2Icon className="animate-spin" />
+            ) : !required && (mode === "single" ? state.value : Array.isArray(state.value) && state.value.length > 0) ? (
+              <>
+                <ClearButton mode={mode} handleChange={handleChange} />
+                <ChevronsUpDown className="opacity-0" />
+              </>
+            ) : (
+              <ChevronsUpDown className="opacity-50" />
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="p-0">
+          <Command>
+            <CommandInput placeholder={searchMessage ?? formatMessage({ id: "general.search" })} className="h-9" />
+            <CommandList>
+              <CommandEmpty>{noOptionsMessage ?? formatMessage({ id: "general.no-options" })}</CommandEmpty>
+              {options?.map((option) =>
+                typeof option === "object" && "options" in option ? (
+                  <CommandGroup key={option.label} heading={option.label}>
+                    {option.options.map((subOption) => (
+                      <RenderOption
+                        key={subOption.value}
+                        mode={mode}
+                        option={subOption}
+                        value={state.value}
+                        handleChange={(value) => {
+                          handleChange(value);
+                          if (mode === "single") setOpen(false);
+                        }}
+                      />
+                    ))}
+                  </CommandGroup>
+                ) : (
+                  <RenderOption
+                    key={option.value}
+                    mode={mode}
+                    option={option}
+                    value={state.value}
+                    handleChange={(value) => {
+                      handleChange(value);
+                      if (mode === "single") setOpen(false);
+                    }}
+                  />
+                )
               )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="p-0">
-            <Command>
-              <CommandInput placeholder={searchMessage ?? formatMessage({ id: "general.search" })} className="h-9" />
-              <CommandList>
-                <CommandEmpty>{noOptionsMessage ?? formatMessage({ id: "general.no-options" })}</CommandEmpty>
-                {options?.map((option) =>
-                  typeof option === "object" && "options" in option ? (
-                    <CommandGroup key={option.label} heading={option.label}>
-                      {option.options.map((subOption) => (
-                        <RenderOption
-                          key={subOption.value}
-                          mode={mode}
-                          option={subOption}
-                          value={state.value}
-                          handleChange={(value) => {
-                            handleChange(value);
-                            if (mode === "single") setOpen(false);
-                          }}
-                        />
-                      ))}
-                    </CommandGroup>
-                  ) : (
-                    <RenderOption
-                      key={option.value}
-                      mode={mode}
-                      option={option}
-                      value={state.value}
-                      handleChange={(value) => {
-                        handleChange(value);
-                        if (mode === "single") setOpen(false);
-                      }}
-                    />
-                  )
-                )}
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      </FormControl>
-      <FormMessage fieldState={state} />
-    </FormItem>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+      {isInvalid && <FieldError errors={state.meta.errors} />}
+    </Field>
   );
 };
 

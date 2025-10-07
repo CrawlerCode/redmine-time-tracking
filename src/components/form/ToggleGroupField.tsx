@@ -1,7 +1,7 @@
 import { clsxm } from "@/utils/clsxm";
 import { ComponentProps } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
-import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Field, FieldError, FieldLabel } from "../ui/field";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
 type ToggleGroupFieldProps = Omit<ComponentProps<typeof ToggleGroup>, "type" | "value" | "defaultValue" | "onValueChange"> & {
@@ -13,25 +13,22 @@ type ToggleGroupFieldProps = Omit<ComponentProps<typeof ToggleGroup>, "type" | "
 
 export const ToggleGroupField = ({ title, className, required, options, type = "single", variant = "outline", ...props }: ToggleGroupFieldProps) => {
   const { state, handleChange } = useFieldContext<string>();
+  const isInvalid = !state.meta.isValid && state.meta.isTouched;
 
   return (
-    <FormItem className={clsxm("flex justify-between gap-2", className)}>
+    <Field data-invalid={isInvalid} orientation="horizontal" className={clsxm("justify-between", className)}>
       <span className="flex items-center gap-2 truncate">
-        <FormLabel fieldState={state} required={required}>
-          {title}
-        </FormLabel>
-        <FormMessage variant="tooltip" fieldState={state} />
+        <FieldLabel required={required}>{title}</FieldLabel>
+        {isInvalid && <FieldError variant="tooltip" errors={state.meta.errors} />}
       </span>
-      <FormControl>
-        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-        <ToggleGroup size="sm" type={type} variant={variant} {...props} value={state.value as any} onValueChange={(value: any) => handleChange(value)}>
-          {options.map((option) => (
-            <ToggleGroupItem key={option.value} value={option.value} className="flex items-center justify-center" aria-label={option.name}>
-              {option.name}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
-      </FormControl>
-    </FormItem>
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      <ToggleGroup size="sm" type={type} variant={variant} {...props} value={state.value as any} onValueChange={(value: any) => handleChange(value)}>
+        {options.map((option) => (
+          <ToggleGroupItem key={option.value} value={option.value} className="flex items-center justify-center" aria-label={option.name}>
+            {option.name}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+    </Field>
   );
 };

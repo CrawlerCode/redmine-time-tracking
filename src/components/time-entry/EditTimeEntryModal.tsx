@@ -10,7 +10,8 @@ import { useSettings } from "../../provider/SettingsProvider";
 import { TTimeEntry, TUpdateTimeEntry } from "../../types/redmine";
 import ActivityField from "../issue/form/fields/ActivityField";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Form, FormControl, FormGrid, FormItem, FormLabel } from "../ui/form";
+import { Field, FieldLabel } from "../ui/field";
+import { Form, FormGrid } from "../ui/form";
 import { Input } from "../ui/input";
 
 type PropTypes = {
@@ -80,20 +81,16 @@ const EditTimeEntryModal = ({ entry, onClose, onSuccess }: PropTypes) => {
             <DialogTitle>{formatMessage({ id: "time.modal.edit-time-entry.title" })}</DialogTitle>
           </DialogHeader>
           <FormGrid cols={2}>
-            <FormItem>
-              <FormLabel required>{formatMessage({ id: "time.time-entry.field.project" })}</FormLabel>
-              <FormControl>
-                <Input name="project_id" placeholder={formatMessage({ id: "time.time-entry.field.project" })} value={entry.project.name} disabled />
-              </FormControl>
-            </FormItem>
+            <Field>
+              <FieldLabel required>{formatMessage({ id: "time.time-entry.field.project" })}</FieldLabel>
+              <Input name="project_id" placeholder={formatMessage({ id: "time.time-entry.field.project" })} value={entry.project.name} disabled />
+            </Field>
 
             {issue.data && (
-              <FormItem>
-                <FormLabel required>{formatMessage({ id: "time.time-entry.field.issue" })}</FormLabel>
-                <FormControl>
-                  <Input name="issue_id" placeholder={formatMessage({ id: "time.time-entry.field.issue" })} value={`${issue.data.tracker.name} #${issue.data.id}: ${issue.data.subject}`} disabled />
-                </FormControl>
-              </FormItem>
+              <Field>
+                <FieldLabel required>{formatMessage({ id: "time.time-entry.field.issue" })}</FieldLabel>
+                <Input name="issue_id" placeholder={formatMessage({ id: "time.time-entry.field.issue" })} value={`${issue.data.tracker.name} #${issue.data.id}: ${issue.data.subject}`} disabled />
+              </Field>
             )}
 
             <form.AppField

@@ -1,8 +1,7 @@
-import { clsxm } from "@/utils/clsxm";
 import { ComponentProps, useId } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { Checkbox } from "../ui/checkbox";
-import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Field, FieldContent, FieldDescription, FieldError, FieldLabel } from "../ui/field";
 
 type CheckboxFieldProps = Omit<ComponentProps<typeof Checkbox>, "checked" | "onCheckedChange" | "onBlur"> & {
   description?: string;
@@ -10,40 +9,21 @@ type CheckboxFieldProps = Omit<ComponentProps<typeof Checkbox>, "checked" | "onC
 
 export const CheckboxField = ({ title, description, className, ...props }: CheckboxFieldProps) => {
   const { state, handleChange, handleBlur } = useFieldContext<boolean>();
+  const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
   return (
-    <FormItem
-      className={clsxm(
-        "flex gap-2",
-        {
-          "items-start": !!description,
-          "items-center": !description,
-        },
-        className
-      )}
-    >
-      <FormControl>
-        <Checkbox {...props} id={id} checked={state.value} onCheckedChange={(checked) => handleChange(!!checked)} onBlur={handleBlur} />
-      </FormControl>
-      {description ? (
-        <div className="flex flex-col gap-2">
-          <span className="flex items-center gap-2">
-            <FormLabel fieldState={state} htmlFor={id} required={props.required}>
-              {title}
-            </FormLabel>
-            <FormMessage variant="tooltip" fieldState={state} />
-          </span>
-          <FormDescription>{description}</FormDescription>
-        </div>
-      ) : (
-        <>
-          <FormLabel fieldState={state} htmlFor={id} required={props.required}>
+    <Field data-invalid={isInvalid} orientation="horizontal" className={className}>
+      <Checkbox {...props} id={id} checked={state.value} onCheckedChange={(checked) => handleChange(!!checked)} onBlur={handleBlur} />
+      <FieldContent>
+        <span className="flex items-center gap-2">
+          <FieldLabel required={props.required} htmlFor={id}>
             {title}
-          </FormLabel>
-          <FormMessage variant="tooltip" fieldState={state} />
-        </>
-      )}
-    </FormItem>
+          </FieldLabel>
+          {isInvalid && <FieldError variant="tooltip" errors={state.meta.errors} />}
+        </span>
+        {description && <FieldDescription>{description}</FieldDescription>}
+      </FieldContent>
+    </Field>
   );
 };

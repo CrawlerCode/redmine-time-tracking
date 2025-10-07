@@ -1,45 +1,45 @@
 import { ComponentProps, useEffect, useId, useState } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { useSettings } from "../../provider/SettingsProvider";
-import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 
 export const HoursField = ({ title, className, ...props }: Omit<ComponentProps<typeof Input>, "value" | "onChange" | "onBlur">) => {
-  const { settings } = useSettings();
   const { state, handleChange, handleBlur } = useFieldContext<number | null>();
+  const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
+  const { settings } = useSettings();
+
   return (
-    <FormItem className={className}>
-      <FormLabel fieldState={state} htmlFor={id} required={props.required}>
+    <Field data-invalid={isInvalid} className={className}>
+      <FieldLabel required={props.required} htmlFor={id}>
         {title}
-      </FormLabel>
-      <FormControl>
-        {settings.style.timeFormat === "decimal" ? (
-          <Input
-            {...props}
-            id={id}
-            value={typeof state.value === "number" ? state.value : ""}
-            onChange={(e) => handleChange(isNaN(e.target.valueAsNumber) ? null : e.target.valueAsNumber)}
-            onBlur={handleBlur}
-            type="number"
-            min="0"
-            step="0.01"
-            className="appearance-none"
-          />
-        ) : (
-          <TimeInput
-            {...props}
-            id={id}
-            value={state.value ? formatHoursToHmm(state.value) : ""}
-            onChange={(e) => handleChange(e.target.value ? parseHmmToHours(e.target.value) : null)}
-            onBlur={handleBlur}
-            className="appearance-none"
-          />
-        )}
-      </FormControl>
-      <FormMessage fieldState={state} />
-    </FormItem>
+      </FieldLabel>
+      {settings.style.timeFormat === "decimal" ? (
+        <Input
+          {...props}
+          id={id}
+          value={typeof state.value === "number" ? state.value : ""}
+          onChange={(e) => handleChange(isNaN(e.target.valueAsNumber) ? null : e.target.valueAsNumber)}
+          onBlur={handleBlur}
+          type="number"
+          min="0"
+          step="0.01"
+          className="appearance-none"
+        />
+      ) : (
+        <TimeInput
+          {...props}
+          id={id}
+          value={state.value ? formatHoursToHmm(state.value) : ""}
+          onChange={(e) => handleChange(e.target.value ? parseHmmToHours(e.target.value) : null)}
+          onBlur={handleBlur}
+          className="appearance-none"
+        />
+      )}
+      {isInvalid && <FieldError errors={state.meta.errors} />}
+    </Field>
   );
 };
 

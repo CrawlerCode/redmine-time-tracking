@@ -6,7 +6,7 @@ import { useIntl } from "react-intl";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
-import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type DateFieldProps = Omit<ComponentProps<typeof Calendar>, "mode" | "selected" | "onSelect" | "onBlur" | "disabled"> & {
@@ -19,7 +19,9 @@ type DateFieldProps = Omit<ComponentProps<typeof Calendar>, "mode" | "selected" 
 
 export const DateField = ({ title, disabled, placeholder, mode = "single", className, disabledDates, ...props }: DateFieldProps) => {
   const { state, handleChange, handleBlur } = useFieldContext<null | Date | Date[] | DateRange>();
+  const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
+
   const [open, setOpen] = useState(false);
 
   const { locale } = useIntl();
@@ -31,45 +33,43 @@ export const DateField = ({ title, disabled, placeholder, mode = "single", class
   }, [locale]);
 
   return (
-    <FormItem className={className}>
-      <FormLabel fieldState={state} htmlFor={id} required={props.required}>
+    <Field data-invalid={isInvalid} className={className}>
+      <FieldLabel required={props.required} htmlFor={id}>
         {title}
-      </FormLabel>
-      <FormControl>
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              id={id}
-              variant="outline"
-              className={cn("hover:text-foreground relative w-full justify-start truncate text-left text-base font-normal", {
-                "text-muted-foreground": !state.value,
-              })}
-              disabled={disabled}
-              onBlur={handleBlur}
-            >
-              <DateValue mode={mode} value={state.value} placeholder={placeholder} />
-              {!props.required && <ClearButton mode={mode} value={state.value} handleChange={handleChange} />}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode={mode}
-              disabled={disabledDates}
-              {...props}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              selected={state.value as any}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              onSelect={(date: any) => {
-                handleChange(date);
-                if (mode === "single") setOpen(false);
-              }}
-              locale={calendarLocale}
-            />
-          </PopoverContent>
-        </Popover>
-      </FormControl>
-      <FormMessage fieldState={state} />
-    </FormItem>
+      </FieldLabel>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            id={id}
+            variant="outline"
+            className={cn("hover:text-foreground relative w-full justify-start truncate text-left text-base font-normal", {
+              "text-muted-foreground": !state.value,
+            })}
+            disabled={disabled}
+            onBlur={handleBlur}
+          >
+            <DateValue mode={mode} value={state.value} placeholder={placeholder} />
+            {!props.required && <ClearButton mode={mode} value={state.value} handleChange={handleChange} />}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+          <Calendar
+            mode={mode}
+            disabled={disabledDates}
+            {...props}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            selected={state.value as any}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onSelect={(date: any) => {
+              handleChange(date);
+              if (mode === "single") setOpen(false);
+            }}
+            locale={calendarLocale}
+          />
+        </PopoverContent>
+      </Popover>
+      {isInvalid && <FieldError errors={state.meta.errors} />}
+    </Field>
   );
 };
 
