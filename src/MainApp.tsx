@@ -2,15 +2,10 @@ import { Alert, AlertTitle } from "@//components/ui/alert";
 import Navbar from "@/components/general/Navbar";
 import { clsxm } from "@/utils/clsxm";
 import { createPopOut, getWindowLocationType } from "@/utils/popout";
-import { config } from "@fortawesome/fontawesome-svg-core";
-import "@fortawesome/fontawesome-svg-core/styles.css";
-import { faCalendarDays, faGear, faList, faStopwatch, faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { AlertCircleIcon } from "lucide-react";
+import { AlertCircleIcon, CalendarDaysIcon, ListIcon, SettingsIcon, SquareArrowOutUpRightIcon, TimerIcon } from "lucide-react";
 import { Suspense, lazy } from "react";
 import { useIntl } from "react-intl";
 import { Navigate, Route, Routes } from "react-router-dom";
-config.autoAddCss = false;
 
 const TimersPage = lazy(() => import("@/pages/TimersPage"));
 const IssuesPage = lazy(() => import("@/pages/IssuesPage"));
@@ -38,29 +33,27 @@ function MainApp() {
           navigation={[
             {
               href: "/timers",
-              icon: <FontAwesomeIcon icon={faStopwatch} />,
+              icon: <TimerIcon />,
               name: formatMessage({ id: "nav.tabs.timers" }),
             },
             {
               href: "/issues",
-              icon: <FontAwesomeIcon icon={faList} />,
+              icon: <ListIcon />,
               name: formatMessage({ id: "nav.tabs.issues" }),
             },
             {
               href: "/time",
-              icon: <FontAwesomeIcon icon={faCalendarDays} />,
+              icon: <CalendarDaysIcon />,
               name: formatMessage({ id: "nav.tabs.time" }),
             },
             {
               href: "/settings",
-              icon: <FontAwesomeIcon icon={faGear} />,
+              icon: <SettingsIcon />,
               name: formatMessage({ id: "nav.tabs.settings" }),
             },
           ]}
         />
-        {locationType === "popup" && (
-          <FontAwesomeIcon icon={faUpRightFromSquare} size="sm" className="bg-card absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full p-1.5" onClick={createPopOut} />
-        )}
+        {locationType === "popup" && <SquareArrowOutUpRightIcon className="bg-card absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full p-1.5" onClick={createPopOut} />}
       </header>
       <main className="flex-1 overflow-y-auto">
         <div className="p-2">

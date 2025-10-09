@@ -1,6 +1,17 @@
-import { faCopy } from "@fortawesome/free-regular-svg-icons";
-import { faAdd, faArrowUpRightFromSquare, faBan, faBookmark, faNoteSticky, faPause, faPen, faPlay, faStop, faThumbTack, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  BookmarkMinusIcon,
+  BookmarkPlusIcon,
+  CopyIcon,
+  NotebookPenIcon,
+  PencilIcon,
+  PinIcon,
+  PinOffIcon,
+  PlusIcon,
+  SquareArrowOutUpRightIcon,
+  TimerIcon,
+  TimerOffIcon,
+  TimerResetIcon,
+} from "lucide-react";
 import { ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 import { toast } from "sonner";
@@ -37,7 +48,7 @@ const IssueContextMenu = ({ issue, localIssue, primaryTimer, assignedToMe, canEd
         <ContextMenuTrigger>{children}</ContextMenuTrigger>
         <ContextMenuContent>
           <ContextMenuItem onClick={() => window.open(`${settings.redmineURL}/issues/${issue.id}`, "_blank")}>
-            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+            <SquareArrowOutUpRightIcon />
             {formatMessage({ id: "issues.context-menu.open-in-redmine" })}
           </ContextMenuItem>
           <ContextMenuItem
@@ -48,49 +59,49 @@ const IssueContextMenu = ({ issue, localIssue, primaryTimer, assignedToMe, canEd
               });
             }}
           >
-            <FontAwesomeIcon icon={faCopy} />
+            <CopyIcon />
             {formatMessage({ id: "issues.context-menu.copy-id-to-clipboard" })}
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem disabled={!canEdit} onClick={() => setEditIssue(true)}>
-            <FontAwesomeIcon icon={faPen} />
+            <PencilIcon />
             {formatMessage({ id: "issues.context-menu.edit" })}
           </ContextMenuItem>
           <ContextMenuItem disabled={!canAddNotes} onClick={() => setAddNotes(true)}>
-            <FontAwesomeIcon icon={faNoteSticky} />
+            <NotebookPenIcon />
             {formatMessage({ id: "issues.context-menu.add-notes" })}
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem onClick={primaryTimer.isActive ? primaryTimer.pauseTimer : primaryTimer.startTimer} disabled={!canLogTime}>
-            <FontAwesomeIcon icon={primaryTimer.isActive ? faPause : faPlay} />
+            {primaryTimer.isActive ? <TimerOffIcon /> : <TimerIcon />}
             {formatMessage({ id: primaryTimer.isActive ? "timer.context-menu.pause" : "timer.context-menu.start" })}
           </ContextMenuItem>
           <ContextMenuItem onClick={primaryTimer.resetTimer} disabled={primaryTimer.getElapsedTime() === 0 || !canLogTime}>
-            <FontAwesomeIcon icon={faStop} />
+            <TimerResetIcon />
             {formatMessage({ id: "timer.context-menu.reset" })}
           </ContextMenuItem>
           <ContextMenuItem onClick={onAddTimer} disabled={!canLogTime}>
-            <FontAwesomeIcon icon={faAdd} />
+            <PlusIcon />
             {formatMessage({ id: "timer.context-menu.add-timer" })}
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem disabled={localIssue.pinned} onClick={() => localIssue.setLocalIssue({ pinned: true, remembered: !assignedToMe ? true : undefined })}>
-            <FontAwesomeIcon icon={faThumbTack} className="rotate-30" />
+            <PinIcon className="rotate-30" />
             {formatMessage({ id: assignedToMe || localIssue.remembered ? "issues.context-menu.pin" : "issues.context-menu.pin-and-remember" })}
           </ContextMenuItem>
           <ContextMenuItem disabled={!localIssue.pinned} onClick={() => localIssue.setLocalIssue({ pinned: false })}>
-            <FontAwesomeIcon icon={faXmark} />
+            <PinOffIcon />
             {formatMessage({ id: "issues.context-menu.unpin" })}
           </ContextMenuItem>
           {!assignedToMe && (
             <>
               <ContextMenuSeparator />
               <ContextMenuItem disabled={localIssue.remembered} onClick={() => localIssue.setLocalIssue({ remembered: true })}>
-                <FontAwesomeIcon icon={faBookmark} />
+                <BookmarkPlusIcon />
                 {formatMessage({ id: "issues.context-menu.remember" })}
               </ContextMenuItem>
               <ContextMenuItem disabled={!localIssue.remembered} onClick={() => localIssue.setLocalIssue({ remembered: false })}>
-                <FontAwesomeIcon icon={faBan} />
+                <BookmarkMinusIcon />
                 {formatMessage({ id: "issues.context-menu.forgot" })}
               </ContextMenuItem>
             </>

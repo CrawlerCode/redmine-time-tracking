@@ -1,6 +1,5 @@
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
+import { PlusIcon, SearchIcon } from "lucide-react";
 import { Fragment, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import useActiveRedmineTab from "../../hooks/useActiveRedmineTab";
@@ -69,12 +68,12 @@ const IssuesList = ({ issues: rawIssues, localIssues, issuePriorities, projectVe
                 <div className="flex gap-x-2">
                   {projectRoles?.hasProjectPermission(project.id, "add_issues") && (
                     <button type="button" onClick={() => setCreateIssue(project.id)} tabIndex={-1}>
-                      <FontAwesomeIcon icon={faPlus} />
+                      <PlusIcon className="size-4" />
                     </button>
                   )}
                   {onSearchInProject && (
                     <button type="button" onClick={() => onSearchInProject(project)} tabIndex={-1}>
-                      <FontAwesomeIcon icon={faMagnifyingGlass} />
+                      <SearchIcon className="size-4" />
                     </button>
                   )}
                 </div>

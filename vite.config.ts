@@ -25,6 +25,7 @@ export default defineConfig((env) => ({
         assetFileNames: "[name].[ext]",
       },
     },
+    cssCodeSplit: false,
   },
   experimental: {
     renderBuiltUrl(file, { type, hostType }) {

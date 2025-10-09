@@ -147,17 +147,6 @@
   }
 }
 
-#root {
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--color-primary);
-    border-radius: 3px;
-  }
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -165,5 +154,13 @@
   body,
   :host {
     @apply text-foreground;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border-radius: 3px;
   }
 }

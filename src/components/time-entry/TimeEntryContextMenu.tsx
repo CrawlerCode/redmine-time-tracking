@@ -1,11 +1,10 @@
-import { faArrowUpRightFromSquare, faPen } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { PencilIcon, SquareArrowOutUpRightIcon } from "lucide-react";
 import { ComponentProps, useState } from "react";
 import { useIntl } from "react-intl";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import { useSettings } from "../../provider/SettingsProvider";
 import { TTimeEntry } from "../../types/redmine";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";
 import EditTimeEntryModal from "./EditTimeEntryModal";
 
 type PropTypes = {
@@ -30,12 +29,12 @@ function TimeEntryContextMenu({ entry, projectRoles, children, ...props }: PropT
               window.open(`${settings.redmineURL}/time_entries/${entry.id}/edit`, "_blank");
             }}
           >
-            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+            <SquareArrowOutUpRightIcon />
             {formatMessage({ id: "time.time-entry.context-menu.open-in-redmine" })}
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem onClick={() => setEdit(true)} disabled={!projectRoles.hasProjectPermission(entry.project.id, "edit_own_time_entries")}>
-            <FontAwesomeIcon icon={faPen} />
+            <PencilIcon />
             {formatMessage({ id: "time.time-entry.context-menu.edit" })}
           </ContextMenuItem>
         </ContextMenuContent>

@@ -1,7 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import { useAppForm } from "@/hooks/useAppForm";
-import { faSliders } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SlidersHorizontalIcon } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 import { z } from "zod/v4";
@@ -56,7 +55,7 @@ const Filter = ({ children }: PropTypes) => {
         <div className="flex justify-end">
           <PopoverTrigger asChild>
             <Button variant="ghost" size="sm" className="mb-1" tabIndex={-1}>
-              <FontAwesomeIcon icon={faSliders} />
+              <SlidersHorizontalIcon />
               {formatMessage({ id: "issues.filter" })}
             </Button>
           </PopoverTrigger>

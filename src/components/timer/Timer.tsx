@@ -1,7 +1,5 @@
-import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
-import { faPause, faPlay, faStop } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
+import { BadgeCheckIcon, TimerIcon, TimerOffIcon, TimerResetIcon } from "lucide-react";
 import { ComponentProps, Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { PriorityType } from "../../hooks/useIssuePriorities";
@@ -191,33 +189,23 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
 
         {!timer.isActive ? (
           <HelpTooltip message={formatMessage({ id: "issues.timer.action.start.tooltip" })}>
-            <FontAwesomeIcon role="button" data-type="start-timer" icon={faPlay} size="2x" className="cursor-pointer text-green-500 focus:outline-hidden" onClick={timer.startTimer} tabIndex={-1} />
+            <TimerIcon role="button" data-type="start-timer" className="size-6 cursor-pointer text-green-500 focus:outline-hidden" onClick={timer.startTimer} tabIndex={-1} />
           </HelpTooltip>
         ) : (
           <HelpTooltip message={formatMessage({ id: "issues.timer.action.pause.tooltip" })}>
-            <FontAwesomeIcon role="button" data-type="pause-timer" icon={faPause} size="2x" className="cursor-pointer text-red-500 focus:outline-hidden" onClick={timer.pauseTimer} tabIndex={-1} />
+            <TimerOffIcon role="button" data-type="pause-timer" className="size-6 cursor-pointer text-red-500 focus:outline-hidden" onClick={timer.pauseTimer} tabIndex={-1} />
           </HelpTooltip>
         )}
 
         <HelpTooltip message={formatMessage({ id: "issues.timer.action.reset.tooltip" })}>
-          <FontAwesomeIcon
-            role="button"
-            data-type="reset-timer"
-            icon={faStop}
-            size="2x"
-            className="cursor-pointer text-red-500 focus:outline-hidden"
-            onClick={() => setConfirmResetModal(true)}
-            tabIndex={-1}
-          />
+          <TimerResetIcon role="button" data-type="reset-timer" className="size-6 cursor-pointer text-red-500 focus:outline-hidden" onClick={() => setConfirmResetModal(true)} tabIndex={-1} />
         </HelpTooltip>
 
         <HelpTooltip message={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })}>
-          <FontAwesomeIcon
+          <BadgeCheckIcon
             role="button"
             data-type="done-timer"
-            icon={faCircleCheck}
-            size="2x"
-            className="cursor-pointer text-green-600 focus:outline-hidden"
+            className="size-6 cursor-pointer text-green-600 focus:outline-hidden"
             onClick={() => {
               const time = settings.features.roundToNearestInterval ? roundTimeNearestInterval(currenTime, settings.features.roundingInterval) : currenTime;
               const hours = Number((time / 1000 / 60 / 60).toFixed(2));

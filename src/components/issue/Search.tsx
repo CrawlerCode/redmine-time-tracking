@@ -1,6 +1,4 @@
-import { faChevronRight, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { XIcon } from "lucide-react";
+import { ChevronRightIcon, SearchIcon, XIcon } from "lucide-react";
 import { ReactNode, Ref, useImperativeHandle, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import useDebounce from "../../hooks/useDebounce";
@@ -80,7 +78,7 @@ const Search = ({ children, ref }: PropTypes) => {
       {isSearching && (
         <div className="mb-4 flex flex-col gap-2">
           <div className="relative flex w-full items-center gap-2">
-            <FontAwesomeIcon icon={faSearch} className="absolute left-2.5 size-4" />
+            <SearchIcon className="absolute left-2.5 size-4" />
             <Input
               ref={searchRef}
               type="search"
@@ -93,8 +91,8 @@ const Search = ({ children, ref }: PropTypes) => {
             />
           </div>
           {inProject && (
-            <div className="flex items-center gap-x-1.5 whitespace-nowrap">
-              <FontAwesomeIcon icon={faChevronRight} className="ps-2" />
+            <div className="flex items-center gap-x-1.5 px-1 whitespace-nowrap">
+              <ChevronRightIcon className="size-4 shrink-0" />
               <FormattedMessage
                 id="issues.search.search-in-project"
                 values={{
@@ -106,7 +104,7 @@ const Search = ({ children, ref }: PropTypes) => {
                   ),
                 }}
               />
-              <div className="mr-2 flex grow justify-end">
+              <div className="flex grow justify-end">
                 <XIcon className="size-4 cursor-pointer opacity-70 transition-opacity hover:opacity-100" onClick={() => setInProject(undefined)} />
               </div>
             </div>

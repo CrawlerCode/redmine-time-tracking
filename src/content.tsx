@@ -1,11 +1,8 @@
 import CurrentIssueTimerWrapper from "@/components/timer/CurrentIssueTimer.tsx";
 import Providers from "@/provider/Providers";
-import { config } from "@fortawesome/fontawesome-svg-core";
-import "@fortawesome/fontawesome-svg-core/styles.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-config.autoAddCss = false;
 
 (() => {
   if (document.querySelector<HTMLDivElement>("#redmine-time-tracking-host")) return;
@@ -28,11 +25,16 @@ config.autoAddCss = false;
   reactRoot.id = "root";
   shadowRoot.appendChild(reactRoot);
 
-  // Add the styles (content.css)
+  // Add the styles
   const style = document.createElement("link");
   style.rel = "stylesheet";
-  style.href = chrome.runtime.getURL("index.css");
+  style.href = chrome.runtime.getURL("style.css");
   shadowRoot.appendChild(style);
+
+  const twProperties = document.createElement("link");
+  twProperties.rel = "stylesheet";
+  twProperties.href = chrome.runtime.getURL("tw-properties.css");
+  document.head.appendChild(twProperties);
 
   // Render the react app
   ReactDOM.createRoot(reactRoot).render(

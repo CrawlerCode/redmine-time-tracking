@@ -1,6 +1,5 @@
-import { faCircleUser, faThumbTack } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
+import { PinIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { PriorityType } from "../../hooks/useIssuePriorities";
@@ -110,12 +109,12 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
           <div className="absolute top-2 right-2 flex items-start justify-end gap-x-2">
             {localIssue.pinned && (
               <HelpTooltip message={formatMessage({ id: "issues.issue.pinned" })}>
-                <FontAwesomeIcon icon={faThumbTack} className="rotate-30 text-gray-300 focus:outline-hidden dark:text-gray-600" tabIndex={-1} />
+                <PinIcon className="size-3.5 rotate-30 fill-current text-gray-300 focus:outline-hidden dark:text-gray-600" tabIndex={-1} />
               </HelpTooltip>
             )}
             {!assignedToMe && (
               <HelpTooltip message={formatMessage({ id: "issues.issue.not-assigned-to-me" })}>
-                <FontAwesomeIcon icon={faCircleUser} className="text-gray-300 focus:outline-hidden dark:text-gray-600" tabIndex={-1} />
+                <UserIcon className="size-3.5 fill-current text-gray-300 focus:outline-hidden dark:text-gray-600" tabIndex={-1} />
               </HelpTooltip>
             )}
           </div>

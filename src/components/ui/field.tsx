@@ -4,9 +4,7 @@ import { useMemo } from "react";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { faAsterisk } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InfoIcon } from "lucide-react";
+import { AsteriskIcon, InfoIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
@@ -69,9 +67,9 @@ function FieldLabel({ className, required, children, ...props }: React.Component
       {...props}
     >
       {required ? (
-        <span>
+        <span className="inline-flex gap-0.5">
           {children}
-          {required && <FontAwesomeIcon icon={faAsterisk} size="2xs" className="ml-1 text-red-600" />}
+          {required && <AsteriskIcon className="size-3.5 text-red-600" />}
         </span>
       ) : (
         children
@@ -148,7 +146,6 @@ function FieldError({
     return null;
   }
 
-  console.log(content, errors);
   if (variant === "tooltip") {
     return (
       <Tooltip delayDuration={0}>

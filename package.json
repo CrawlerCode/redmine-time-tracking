@@ -24,12 +24,7 @@
     "lang:verify": "formatjs verify --source-locale en --missing-keys src/lang/*.json"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.7.2",
-    "@fortawesome/free-brands-svg-icons": "^6.7.2",
-    "@fortawesome/free-regular-svg-icons": "^6.7.2",
-    "@fortawesome/free-solid-svg-icons": "^6.7.2",
-    "@fortawesome/react-fontawesome": "^0.2.2",
-    "@tailwindcss/vite": "^4.1.8",
+    "@tailwindcss/vite": "^4.1.14",
     "@tanstack/query-async-storage-persister": "^5.66.0",
     "@tanstack/react-form": "^1.12.0",
     "@tanstack/react-query": "^5.66.0",
