@@ -42,9 +42,9 @@ function SelectTrigger({
   );
 }
 
-function SelectContent({ className, children, position = "popper", ...props }: React.ComponentProps<typeof SelectPrimitive.Content>) {
+function SelectContent({ className, children, position = "popper", align = "center", ...props }: React.ComponentProps<typeof SelectPrimitive.Content>) {
   return (
-    <SelectPrimitive.Portal>
+    <SelectPrimitive.Portal container={document.getElementById("redmine-time-tracking-host")?.shadowRoot}>
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
@@ -53,6 +53,7 @@ function SelectContent({ className, children, position = "popper", ...props }: R
           className
         )}
         position={position}
+        align={align}
         {...props}
       >
         <SelectScrollUpButton />

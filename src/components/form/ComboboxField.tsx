@@ -53,6 +53,7 @@ export const ComboboxField = <Value extends string | number>({
         {title}
       </FieldLabel>
       <Popover
+        modal
         open={open}
         onOpenChange={(open) => {
           setOpen(open);
@@ -85,7 +86,7 @@ export const ComboboxField = <Value extends string | number>({
         </PopoverTrigger>
         <PopoverContent className="p-0">
           <Command>
-            <CommandInput placeholder={searchMessage ?? formatMessage({ id: "general.search" })} className="h-9" />
+            <CommandInput placeholder={searchMessage ?? formatMessage({ id: "general.search" })} />
             <CommandList>
               <CommandEmpty>{noOptionsMessage ?? formatMessage({ id: "general.no-options" })}</CommandEmpty>
               {options?.map((option) =>
@@ -139,7 +140,12 @@ const SelectedValue = <Value extends string | number>({
   if (mode === "single") {
     const selectedOption = flattenedOptions.find((option) => option.value === value);
     if (selectedOption) {
-      return <span className={className}>{selectedOption.label}</span>;
+      return (
+        <span className={clsx("flex items-center gap-2", className)}>
+          {selectedOption.icon}
+          {selectedOption.label}
+        </span>
+      );
     }
   } else if (mode === "multiple" && Array.isArray(value)) {
     const selectedOptions = flattenedOptions.filter((option) => value.includes(option.value));

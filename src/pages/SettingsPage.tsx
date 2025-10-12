@@ -22,7 +22,6 @@ const LANGUAGE_FLAGS: Record<(typeof LANGUAGES)[number], FlagComponent> = {
   fr: FR,
 };
 
-// TODO: Fix select field for popup and options view
 const SettingsPage = () => {
   const queryClient = useQueryClient();
   const { formatMessage, formatNumber } = useIntl();
@@ -85,7 +84,7 @@ const SettingsPage = () => {
               <form.AppField
                 name="language"
                 children={(field) => (
-                  <field.SelectField
+                  <field.ComboboxField
                     title={formatMessage({ id: "settings.general.language" })}
                     placeholder={formatMessage({ id: "settings.general.language" })}
                     required

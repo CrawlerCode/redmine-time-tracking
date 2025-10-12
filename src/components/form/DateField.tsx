@@ -37,7 +37,7 @@ export const DateField = ({ title, disabled, placeholder, mode = "single", class
       <FieldLabel required={props.required} htmlFor={id}>
         {title}
       </FieldLabel>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover modal open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             id={id}
