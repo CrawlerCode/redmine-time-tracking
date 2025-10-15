@@ -6,7 +6,7 @@ import useHotKey from "../../hooks/useHotkey";
 import { useSettings } from "../../provider/SettingsProvider";
 import { TReference } from "../../types/redmine";
 import { Badge } from "../ui/badge";
-import { Input } from "../ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group";
 
 export type SearchQuery = {
   searching: boolean;
@@ -77,19 +77,12 @@ const Search = ({ children, ref }: PropTypes) => {
     <>
       {isSearching && (
         <div className="mb-4 flex flex-col gap-2">
-          <div className="relative flex w-full items-center gap-2">
-            <SearchIcon className="absolute left-2.5 size-4" />
-            <Input
-              ref={searchRef}
-              type="search"
-              name="query"
-              placeholder={formatMessage({ id: "issues.search" })}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              autoFocus
-              className="pl-8"
-            />
-          </div>
+          <InputGroup>
+            <InputGroupInput ref={searchRef} type="search" name="query" placeholder={formatMessage({ id: "issues.search" })} value={query} onChange={(e) => setQuery(e.target.value)} autoFocus />
+            <InputGroupAddon>
+              <SearchIcon />
+            </InputGroupAddon>
+          </InputGroup>
           {inProject && (
             <div className="flex items-center gap-x-1.5 px-1 whitespace-nowrap">
               <ChevronRightIcon className="size-4 shrink-0" />
