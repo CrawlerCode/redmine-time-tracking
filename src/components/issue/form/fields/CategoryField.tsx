@@ -2,13 +2,12 @@ import { ComboboxField } from "@/components/form/ComboboxField";
 import { ComponentProps } from "react";
 import { useIntl } from "react-intl";
 import useProject from "../../../../hooks/useProject";
-import { SelectField } from "../../../form/SelectField";
 
 type Props = {
   projectId: number;
 };
 
-const CategoryField = ({ projectId, ...props }: Omit<ComponentProps<typeof SelectField>, "options"> & Props) => {
+const CategoryField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
   const { formatMessage } = useIntl();
 
   const project = useProject(projectId);

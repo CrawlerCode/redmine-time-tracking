@@ -2,9 +2,8 @@ import { ComboboxField } from "@/components/form/ComboboxField";
 import { ComponentProps } from "react";
 import { useIntl } from "react-intl";
 import useIssuePriorities from "../../../../hooks/useIssuePriorities";
-import { SelectField } from "../../../form/SelectField";
 
-const PriorityField = (props: Omit<ComponentProps<typeof SelectField>, "options">) => {
+const PriorityField = (props: Omit<ComponentProps<typeof ComboboxField>, "options">) => {
   const { formatMessage } = useIntl();
 
   const issuePriorities = useIssuePriorities();

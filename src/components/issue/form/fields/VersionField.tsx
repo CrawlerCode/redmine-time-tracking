@@ -2,13 +2,12 @@ import { ComboboxField } from "@/components/form/ComboboxField";
 import { ComponentProps } from "react";
 import { useIntl } from "react-intl";
 import useProjectVersions from "../../../../hooks/useProjectVersions";
-import { SelectField } from "../../../form/SelectField";
 
 type Props = {
   projectId: number;
 };
 
-const VersionField = ({ projectId, ...props }: Omit<ComponentProps<typeof SelectField>, "options"> & Props) => {
+const VersionField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
   const { formatMessage } = useIntl();
 
   const projectVersions = useProjectVersions([projectId]);

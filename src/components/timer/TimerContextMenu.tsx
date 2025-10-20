@@ -2,7 +2,7 @@ import { PencilIcon, TimerIcon, TimerOffIcon, TimerResetIcon, TrashIcon } from "
 import { ReactNode } from "react";
 import { useIntl } from "react-intl";
 import { TimerController } from "../../hooks/useTimers";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuItem, ContextMenuTrigger } from "../ui/context-menu";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "../ui/context-menu";
 
 type PropTypes = {
   timer: TimerController;

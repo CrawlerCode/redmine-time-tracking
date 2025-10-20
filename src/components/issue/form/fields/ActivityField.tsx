@@ -2,14 +2,13 @@ import { ComboboxField } from "@/components/form/ComboboxField";
 import { ComponentProps, useEffect } from "react";
 import { useIntl } from "react-intl";
 import useTimeEntryActivities from "../../../../hooks/useTimeEntryActivities";
-import { SelectField } from "../../../form/SelectField";
 
 type Props = {
   projectId: number;
   onDefaultActivityChange?: (activityId: number) => void;
 };
 
-const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: Omit<ComponentProps<typeof SelectField>, "options"> & Props) => {
+const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
   const { formatMessage } = useIntl();
 
   const timeEntryActivities = useTimeEntryActivities(projectId);
