@@ -1,13 +1,13 @@
+import { ComboboxField } from "@/components/form/ComboboxField";
 import { ComponentProps } from "react";
 import { useIntl } from "react-intl";
 import useProjectVersions from "../../../../hooks/useProjectVersions";
-import { SelectField } from "../../../form/SelectField";
 
 type Props = {
   projectId: number;
 };
 
-const VersionField = ({ projectId, ...props }: ComponentProps<typeof SelectField> & Props) => {
+const VersionField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
   const { formatMessage } = useIntl();
 
   const projectVersions = useProjectVersions([projectId]);
@@ -15,17 +15,18 @@ const VersionField = ({ projectId, ...props }: ComponentProps<typeof SelectField
   if (projectVersions.data[projectId]?.length === 0) return null;
 
   return (
-    <SelectField
+    <ComboboxField
       {...props}
       title={formatMessage({ id: "issues.issue.field.version" })}
       placeholder={formatMessage({ id: "issues.issue.field.version" })}
-      noOptionsMessage={() => formatMessage({ id: "general.no-options" })}
-      options={projectVersions.data[projectId]
-        ?.filter((version) => version.status === "open")
-        .map((version) => ({
-          label: version.name,
-          value: version.id,
-        }))}
+      options={
+        projectVersions.data[projectId]
+          ?.filter((version) => version.status === "open")
+          .map((version) => ({
+            label: version.name,
+            value: version.id,
+          })) ?? []
+      }
       isLoading={projectVersions.isLoading}
     />
   );

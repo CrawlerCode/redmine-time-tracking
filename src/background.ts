@@ -1,4 +1,4 @@
-import { getSettings } from "./provider/SettingsProvider";
+import { getSettings } from "@/provider/SettingsProvider";
 
 /**
  * Open options page on install and set uninstall URL

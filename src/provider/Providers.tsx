@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import { ReactNode } from "react";
 import { HashRouter } from "react-router-dom";
 import IntlProvider from "./IntlProvider";
@@ -11,7 +12,10 @@ const Providers = ({ children }: { children: ReactNode }) => {
       <SettingsProvider>
         <RedmineApiProvider>
           <QueryClientProvider>
-            <IntlProvider>{children}</IntlProvider>
+            <IntlProvider>
+              {children}
+              <Toaster />
+            </IntlProvider>
           </QueryClientProvider>
         </RedmineApiProvider>
       </SettingsProvider>

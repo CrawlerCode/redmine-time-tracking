@@ -1,12 +1,14 @@
-import { faSliders, faX } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { MouseEventHandler, ReactNode, useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
-import useHotKey from "../../hooks/useHotkey";
+/* eslint-disable react/no-children-prop */
+import { useAppForm } from "@/hooks/useAppForm";
+import { SlidersHorizontalIcon } from "lucide-react";
+import { ReactNode, useState } from "react";
+import { useIntl } from "react-intl";
+import { z } from "zod/v4";
 import useMyProjects from "../../hooks/useMyProjects";
 import useStorage from "../../hooks/useStorage";
-import CheckBox from "../general/CheckBox";
-import ReactSelect from "../general/ReactSelect";
+import { Button } from "../ui/button";
+import { Form, FormGrid } from "../ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 export type FilterQuery = {
   projects: number[];
@@ -24,66 +26,73 @@ const Filter = ({ children }: PropTypes) => {
 
   const [showFilter, setShowFilter] = useState(false);
 
-  // On "Escape" => close filter
-  useHotKey(() => setShowFilter(false), { key: "Escape" });
-
   const { data: projects, isLoading: isLoadingProjects } = useMyProjects({
     enabled: showFilter,
   });
 
   const { data: filter, setData: setFilter, isLoading } = useStorage<FilterQuery>("filter", defaultFilter);
 
+  const form = useAppForm({
+    defaultValues: filter,
+    validators: {
+      onChange: z.object({
+        projects: z.array(z.number()),
+        hideCompletedIssues: z.boolean(),
+      }),
+    },
+    listeners: {
+      onChange: ({ formApi }) => {
+        if (formApi.state.isValid) {
+          setFilter(formApi.state.values);
+        }
+      },
+    },
+  });
+
   return (
     <>
-      {(!showFilter && (
-        <div className="mb-1 flex justify-end">
-          <FilterButton onClick={() => setShowFilter((show) => !show)} />
+      <Popover open={showFilter} onOpenChange={setShowFilter}>
+        <div className="flex justify-end">
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="sm" className="mb-1" tabIndex={-1}>
+              <SlidersHorizontalIcon />
+              {formatMessage({ id: "issues.filter" })}
+            </Button>
+          </PopoverTrigger>
         </div>
-      )) || (
-        <fieldset className="mb-2 rounded-md border border-gray-200 p-1.5 dark:border-gray-700">
-          <legend className="cursor-pointer px-2 text-right" onClick={() => setShowFilter((show) => !show)}>
-            <FilterButton />
-            <FontAwesomeIcon icon={faX} className="ml-2" />
-          </legend>
-          <div className="-mt-2 flex flex-col gap-y-2">
-            <ReactSelect
-              title={formatMessage({ id: "issues.filter.projects" })}
-              placeholder={formatMessage({ id: "issues.filter.projects" })}
-              noOptionsMessage={() => formatMessage({ id: "issues.filter.projects.no-options" })}
-              options={projects.map((project) => ({ value: project.id, label: project.name }))}
-              isLoading={isLoadingProjects}
-              value={filter.projects.map((id) => ({ value: id, label: projects.find((p) => p.id === id)?.name ?? "..." }))}
-              onChange={(selected) => {
-                setFilter({
-                  ...filter,
-                  projects: selected.map((v) => v.value),
-                });
-              }}
-              isMulti
-              isClearable
-              closeMenuOnSelect={false}
-              menuPortalTarget={document.body}
-            />
-            <CheckBox
-              title={formatMessage({ id: "issues.filter.hide-completed-issues.title" })}
-              description={formatMessage({ id: "issues.filter.hide-completed-issues.description" })}
-              checked={filter.hideCompletedIssues}
-              onChange={(e) => setFilter({ ...filter, hideCompletedIssues: e.target.checked })}
-            />
-          </div>
-        </fieldset>
-      )}
+        <PopoverContent className="bg-background w-[18.5rem]">
+          <Form onSubmit={form.handleSubmit}>
+            <FormGrid className="gap-3">
+              <form.AppField
+                name="projects"
+                children={(field) => (
+                  <field.ComboboxField
+                    title={formatMessage({ id: "issues.filter.projects" })}
+                    placeholder={formatMessage({ id: "issues.filter.projects" })}
+                    noOptionsMessage={formatMessage({ id: "issues.filter.projects.no-options" })}
+                    options={projects.map((project) => ({ value: project.id, label: project.name }))}
+                    isLoading={isLoadingProjects}
+                    mode="multiple"
+                  />
+                )}
+              />
+
+              <form.AppField
+                name="hideCompletedIssues"
+                children={(field) => (
+                  <field.CheckboxField
+                    title={formatMessage({ id: "issues.filter.hide-completed-issues.title" })}
+                    description={formatMessage({ id: "issues.filter.hide-completed-issues.description" })}
+                    className="border-input dark:bg-input/30 rounded-lg border bg-transparent p-1.5"
+                  />
+                )}
+              />
+            </FormGrid>
+          </Form>
+        </PopoverContent>
+      </Popover>
       {children({ filter, isLoading })}
     </>
-  );
-};
-
-const FilterButton = ({ onClick }: { onClick?: MouseEventHandler<HTMLButtonElement> }) => {
-  return (
-    <button className="text-sm" tabIndex={-1} onClick={onClick}>
-      <FontAwesomeIcon icon={faSliders} className="mr-1" />
-      <FormattedMessage id="issues.filter" />
-    </button>
   );
 };
 

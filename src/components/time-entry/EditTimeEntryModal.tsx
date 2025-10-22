@@ -1,7 +1,5 @@
 /* eslint-disable react/no-children-prop */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, isAxiosError } from "axios";
-import clsx from "clsx";
 import { parseISO } from "date-fns";
 import { useIntl } from "react-intl";
 import { z } from "zod/v4";
@@ -9,12 +7,12 @@ import { useAppForm } from "../../hooks/useAppForm";
 import useIssue from "../../hooks/useIssue";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";
-import { TRedmineError, TTimeEntry, TUpdateTimeEntry } from "../../types/redmine";
-import { clsxm } from "../../utils/clsxm";
-import Modal from "../general/Modal";
-import TextInput from "../general/TextInput";
-import Toast from "../general/Toast";
+import { TTimeEntry, TUpdateTimeEntry } from "../../types/redmine";
 import ActivityField from "../issue/form/fields/ActivityField";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Field, FieldLabel } from "../ui/field";
+import { Form, FormGrid } from "../ui/form";
+import { Input } from "../ui/input";
 
 type PropTypes = {
   entry: TTimeEntry;
@@ -29,7 +27,7 @@ const editTimeEntryFormSchema = ({ formatMessage }: { formatMessage: ReturnType<
       .min(0.01, formatMessage({ id: "time.time-entry.field.hours.validation.greater-than-zero" }))
       .max(24, formatMessage({ id: "time.time-entry.field.hours.validation.less-than-24" })),
     spent_on: z.date(formatMessage({ id: "time.time-entry.field.spent-on.validation.required" })).max(new Date(), formatMessage({ id: "time.time-entry.field.spent-on.validation.in-future" })),
-    comments: z.string().optional(),
+    comments: z.string().nullish(),
     activity_id: z.int(formatMessage({ id: "time.time-entry.field.activity.validation.required" })),
   });
 
@@ -52,6 +50,9 @@ const EditTimeEntryModal = ({ entry, onClose, onSuccess }: PropTypes) => {
         queryKey: ["timeEntries"],
       });
     },
+    meta: {
+      successMessage: formatMessage({ id: "time.modal.edit-time-entry.success" }),
+    },
   });
 
   const form = useAppForm({
@@ -73,108 +74,71 @@ const EditTimeEntryModal = ({ entry, onClose, onSuccess }: PropTypes) => {
   });
 
   return (
-    <>
-      <Modal title={formatMessage({ id: "time.modal.edit-time-entry.title" })} onClose={onClose}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-          }}
-        >
-          <div className="flex flex-col gap-y-2">
-            <TextInput
-              name="project_id"
-              title={formatMessage({ id: "time.time-entry.field.project" })}
-              placeholder={formatMessage({ id: "time.time-entry.field.project" })}
-              required
-              disabled
-              size="sm"
-              value={entry.project.name}
-            />
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent>
+        <Form onSubmit={form.handleSubmit}>
+          <DialogHeader>
+            <DialogTitle>{formatMessage({ id: "time.modal.edit-time-entry.title" })}</DialogTitle>
+          </DialogHeader>
+          <FormGrid cols={2}>
+            <Field>
+              <FieldLabel required>{formatMessage({ id: "time.time-entry.field.project" })}</FieldLabel>
+              <Input name="project_id" placeholder={formatMessage({ id: "time.time-entry.field.project" })} value={entry.project.name} disabled />
+            </Field>
 
             {issue.data && (
-              <TextInput
-                name="issue_id"
-                title={formatMessage({ id: "time.time-entry.field.issue" })}
-                placeholder={formatMessage({ id: "time.time-entry.field.issue" })}
-                required
-                disabled
-                size="sm"
-                value={`${issue.data.tracker.name} #${issue.data.id}: ${issue.data.subject}`}
-              />
+              <Field>
+                <FieldLabel required>{formatMessage({ id: "time.time-entry.field.issue" })}</FieldLabel>
+                <Input name="issue_id" placeholder={formatMessage({ id: "time.time-entry.field.issue" })} value={`${issue.data.tracker.name} #${issue.data.id}: ${issue.data.subject}`} disabled />
+              </Field>
             )}
 
-            <div
-              className={clsxm("grid gap-x-2", {
-                "grid-cols-5": settings.style.timeFormat === "decimal",
-                "grid-cols-4": settings.style.timeFormat === "minutes",
-              })}
-            >
-              <form.AppField
-                name="hours"
-                children={(field) => (
-                  <field.HoursField
-                    title={formatMessage({ id: "time.time-entry.field.hours" })}
-                    placeholder={formatMessage({ id: "time.time-entry.field.hours" })}
-                    required
-                    size="sm"
-                    className={clsx({
-                      "col-span-3": settings.style.timeFormat === "decimal",
-                      "col-span-2": settings.style.timeFormat === "minutes",
-                    })}
-                    {...(settings.style.timeFormat === "decimal" && {
-                      max: "24",
-                    })}
-                    autoFocus={field.state.value === 0}
-                  />
-                )}
-              />
-
-              <form.AppField
-                name="spent_on"
-                children={(field) => (
-                  <field.DateField
-                    title={formatMessage({ id: "time.time-entry.field.spent-on" })}
-                    placeholder={formatMessage({ id: "time.time-entry.field.spent-on" })}
-                    required
-                    size="sm"
-                    options={{
-                      maxDate: new Date(),
-                    }}
-                    className="col-span-2"
-                  />
-                )}
-              />
-            </div>
-
             <form.AppField
-              name="comments"
+              name="hours"
               children={(field) => (
-                <field.TextField title={formatMessage({ id: "time.time-entry.field.comments" })} placeholder={formatMessage({ id: "time.time-entry.field.comments" })} size="sm" autoFocus />
+                <field.HoursField
+                  title={formatMessage({ id: "time.time-entry.field.hours" })}
+                  placeholder={formatMessage({ id: "time.time-entry.field.hours" })}
+                  required
+                  {...(settings.style.timeFormat === "decimal" && {
+                    max: "24",
+                  })}
+                  autoFocus={field.state.value === 0}
+                  className="col-span-1"
+                />
               )}
             />
 
-            <form.AppField name="activity_id" children={() => <ActivityField projectId={entry.project.id} required size="sm" />} />
+            <form.AppField
+              name="spent_on"
+              children={(field) => (
+                <field.DateField
+                  title={formatMessage({ id: "time.time-entry.field.spent-on" })}
+                  placeholder={formatMessage({ id: "time.time-entry.field.spent-on" })}
+                  required
+                  disabledDates={{
+                    after: new Date(),
+                  }}
+                  className="col-span-1"
+                />
+              )}
+            />
 
+            <form.AppField
+              name="comments"
+              children={(field) => <field.TextField title={formatMessage({ id: "time.time-entry.field.comments" })} placeholder={formatMessage({ id: "time.time-entry.field.comments" })} autoFocus />}
+            />
+
+            <form.AppField name="activity_id" children={() => <ActivityField projectId={entry.project.id} required />} />
+          </FormGrid>
+          <DialogFooter>
             <form.AppForm>
               <form.SubmitButton children={formatMessage({ id: "time.modal.edit-time-entry.submit" })} />
             </form.AppForm>
-          </div>
-        </form>
-      </Modal>
-      {updateTimeEntryMutation.isError && (
-        <Toast
-          type="error"
-          allowClose={false}
-          message={
-            isAxiosError(updateTimeEntryMutation.error)
-              ? ((updateTimeEntryMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateTimeEntryMutation.error as AxiosError).message)
-              : (updateTimeEntryMutation.error as Error).message
-          }
-        />
-      )}
-    </>
+          </DialogFooter>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

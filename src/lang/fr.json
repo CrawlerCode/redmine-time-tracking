@@ -64,7 +64,6 @@
   "issues.issue.field.due-date": "Date d'échéance",
   "issues.issue.field.due-date.validation.greater-than-start-date": "La date d'échéance doit être postérieure à la date de début",
   "issues.issue.field.estimated-hours": "Heures estimées",
-  "issues.issue.field.estimated-hours.validation.greater-than-zero": "Doit être supérieur à 0",
   "issues.issue.field.done-ratio": "Pourcentage terminé",
   "issues.issue.field.spent-time": "Temps passé",
   "issues.issue.field.notes": "Notes",
@@ -73,6 +72,7 @@
   "issues.modal.add-spent-time.title": "Ajouter du temps passé",
   "issues.modal.add-spent-time.add-notes": "Ajouter des notes",
   "issues.modal.add-spent-time.submit": "Créer",
+  "issues.modal.add-spent-time.success": "Spent time successfully added",
   "issues.modal.save-changes.title": "Enregistrer les modifications ?",
   "issues.modal.save-changes.message": "Souhaitez-vous enregistrer vos modifications ?",
   "issues.modal.save-changes.cancel": "Non, annuler",
@@ -85,12 +85,14 @@
   "issues.modal.add-issue.tracker-with-no-enabled-fields.warning": "Il semble que vous utilisez une version Redmine < 5.0.0. Certains champs peuvent ne pas être appliqués",
   "issues.modal.add-issue.unknown-workflow-permissions.warning": "Il est possible que certains champs ne soient pas appliqués en raison de permissions manquantes dans Redmine. Il n'existe actuellement aucun moyen de vérifier ces permissions",
   "issues.modal.add-issue.submit": "Créer",
+  "issues.modal.add-issue.success": "Issue successfully created",
   "issues.modal.edit-issue.title": "Modifier le ticket",
   "issues.modal.edit-issue.issue-with-no-allowed-statuses.warning": "Il semble que vous utilisez une version Redmine < 5.0.0. Certains changements de statut peuvent ne pas être appliqués",
   "issues.modal.edit-issue.submit": "Enregistrer",
+  "issues.modal.edit-issue.success": "Issue successfully updated",
   "issues.modal.add-issue-notes.title": "Add notes",
   "issues.modal.add-issue-notes.submit": "Save",
-  "issues.error.fail-to-load-issues": "Impossible de charger les tickets",
+  "issues.modal.add-issue-notes.success": "Notes successfully added",
 
   "time.time-entry.context-menu.open-in-redmine": "Ouvrir dans Redmine",
   "time.time-entry.context-menu.edit": "Modifier",
@@ -110,7 +112,7 @@
   "time.time-entry.field.activity.validation.required": "L'activité est requise",
   "time.modal.edit-time-entry.title": "Modifier une entrée de temps",
   "time.modal.edit-time-entry.submit": "Enregistrer",
-  "time.error.fail-to-load-data": "Impossible de charger les données",
+  "time.modal.edit-time-entry.success": "Time entry successfully updated",
 
   "settings.general": "Général",
   "settings.general.language": "Langue",
@@ -162,8 +164,14 @@
   "settings.settings-saved": "Paramètres enregistrés !",
   "settings.info.report-an-issue": "Signaler un problème",
 
+  "dismissible-warning.title": "Warning",
   "dismissible-warning.dont-show-again": "Ne plus afficher",
 
+  "general.search": "Rechercher...",
   "general.no-options": "Aucune option",
+  "general.retry": "Retry",
+  "general.error.fail-to-load-data": "Impossible de charger les données",
+  "general.error.unknown-error-occurred": "An unknown error occurred",
+
   "format.hours": "{hours} h"
 }

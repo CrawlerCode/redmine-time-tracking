@@ -1,15 +1,15 @@
+import { ComboboxField } from "@/components/form/ComboboxField";
 import { ComponentProps, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
 import useMyUser from "../../../../hooks/useMyUser";
 import useProjectUsers from "../../../../hooks/useProjectUsers";
 import { getGroupedUsers } from "../../../../utils/user";
-import { SelectField } from "../../../form/SelectField";
 
 type Props = {
   projectId: number;
 };
 
-const UserField = ({ projectId, ...props }: ComponentProps<typeof SelectField> & Props) => {
+const UserField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
   const { formatMessage } = useIntl();
 
   const [loadUsers, setLoadUsers] = useState(false);
@@ -21,12 +21,12 @@ const UserField = ({ projectId, ...props }: ComponentProps<typeof SelectField> &
   const groupedUsers = useMemo(() => getGroupedUsers(users.data), [users.data]);
 
   return (
-    <SelectField
+    <ComboboxField
       {...props}
       title={formatMessage({ id: "time.time-entry.field.user" })}
       placeholder={formatMessage({ id: "time.time-entry.field.user" })}
-      noOptionsMessage={() => formatMessage({ id: "time.time-entry.field.user.no-options" })}
-      onFocus={() => setLoadUsers(true)}
+      noOptionsMessage={formatMessage({ id: "time.time-entry.field.user.no-options" })}
+      onOpen={() => setLoadUsers(true)}
       options={
         loadUsers
           ? groupedUsers.map(({ role, users }) => ({

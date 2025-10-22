@@ -1,14 +1,13 @@
+import Providers from "@/provider/Providers.tsx";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "react-tooltip/dist/react-tooltip.css";
-import App from "./App.tsx";
 import "./index.css";
-import Providers from "./provider/Providers.tsx";
+import MainApp from "./MainApp";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Providers>
-      <App />
+      <MainApp />
     </Providers>
   </React.StrictMode>
 );

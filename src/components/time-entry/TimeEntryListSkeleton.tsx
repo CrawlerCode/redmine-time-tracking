@@ -1,29 +1,41 @@
+import { Skeleton } from "../ui/skeleton";
+
 const TimeEntryListSkeleton = () => {
   return (
-    <>
+    <div className="flex flex-col gap-5">
       {[...Array(2).keys()].map((i) => {
         return (
-          <div className="mb-5 flex animate-pulse flex-col gap-y-1" key={i}>
+          <div key={i} role="group" className="flex flex-col gap-y-1">
             <div className="flex items-center gap-x-3">
-              <h1 className="bg-background-inner h-4 w-40"></h1>
-              <span className="bg-background-inner h-5 w-12 rounded-sm"></span>
+              <Skeleton className="h-7 w-40" />
+              <Skeleton className="h-5.5 w-15" />
             </div>
             {[...Array(5).keys()].map((i) => {
+              const entries = [...Array(Math.floor(Math.random() * 4 + 1)).keys()].map(() => Math.floor(Math.random() * 2 + 1) / 8);
+              const sumHours = entries.reduce((sum, entry) => sum + entry, 0);
               return (
-                <div className="flex items-center gap-x-1" key={i}>
-                  <h4 className="bg-background-inner h-3 w-8"></h4>
-                  <h3 className="bg-background-inner h-3 w-14 justify-self-end"></h3>
+                <div key={i} className="flex items-center gap-x-1">
+                  <Skeleton className="h-5 w-8" />
+                  <Skeleton className="h-5 w-17 justify-self-end" />
                   <div className="grow">
-                    <div className="flex items-center gap-x-0.5">
-                      {[...Array(Math.floor(Math.random() * 4 + 1)).keys()].map((i) => (
-                        <div
-                          className="bg-background-inner h-4 rounded-sm"
-                          style={{
-                            width: `${(Math.floor(Math.random() * 2 + 1) / 8) * 100}%`,
-                          }}
+                    <div role="row" className="flex items-center gap-x-0.5">
+                      {entries.map((hours, i) => (
+                        <Skeleton
                           key={i}
+                          role="cell"
+                          data-type="time-entry"
+                          className="h-4"
+                          style={{
+                            width: `${hours * 100}%`,
+                          }}
                         />
                       ))}
+                      <Skeleton
+                        className="h-3"
+                        style={{
+                          width: `${((24 - sumHours) / 24) * 100}%`,
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -32,7 +44,7 @@ const TimeEntryListSkeleton = () => {
           </div>
         );
       })}
-    </>
+    </div>
   );
 };
 

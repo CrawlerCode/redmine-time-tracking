@@ -1,18 +1,36 @@
-import { ComponentProps } from "react";
+import { ComponentProps, useId } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
-import TextInput from "../general/TextInput";
+import { Field, FieldError, FieldLabel } from "../ui/field";
+import { Input } from "../ui/input";
 
-export const TextField = (props: Omit<ComponentProps<typeof TextInput>, "value" | "onChange" | "onBlur">) => {
+type TextFieldProps = Omit<ComponentProps<typeof Input>, "id" | "value" | "onChange" | "onBlur"> & {
+  classNames?: {
+    input?: string;
+  };
+  fieldErrorVariant?: ComponentProps<typeof FieldError>["variant"];
+};
+
+export const TextField = ({ title, required, className, classNames, fieldErrorVariant, ...props }: TextFieldProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { state, handleChange, handleBlur } = useFieldContext<any>();
+  const isInvalid = !state.meta.isValid && state.meta.isTouched;
+  const id = useId();
 
   return (
-    <TextInput
-      {...props}
-      value={state.value}
-      onChange={(e) => handleChange(props.type === "number" ? e.target.valueAsNumber : e.target.value)}
-      onBlur={handleBlur}
-      error={!state.meta.isValid && state.meta.isTouched ? state.meta.errors.map((error) => error.message).join(", ") : undefined}
-    />
+    <Field data-invalid={isInvalid} className={className}>
+      <FieldLabel required={required} htmlFor={id}>
+        {title}
+      </FieldLabel>
+      <Input
+        {...props}
+        id={id}
+        value={state.value}
+        onChange={(e) => handleChange(props.type === "number" ? e.target.valueAsNumber : e.target.value)}
+        onBlur={handleBlur}
+        aria-invalid={isInvalid}
+        className={classNames?.input}
+      />
+      {isInvalid && <FieldError variant={fieldErrorVariant} errors={state.meta.errors} />}
+    </Field>
   );
 };

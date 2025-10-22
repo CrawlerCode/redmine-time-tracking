@@ -1,12 +1,12 @@
-import { faChevronRight, faSearch, faX } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ChevronRightIcon, SearchIcon, XIcon } from "lucide-react";
 import { ReactNode, Ref, useImperativeHandle, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import useDebounce from "../../hooks/useDebounce";
 import useHotKey from "../../hooks/useHotkey";
 import { useSettings } from "../../provider/SettingsProvider";
 import { TReference } from "../../types/redmine";
-import TextInput from "../general/TextInput";
+import { Badge } from "../ui/badge";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group";
 
 export type SearchQuery = {
   searching: boolean;
@@ -76,29 +76,29 @@ const Search = ({ children, ref }: PropTypes) => {
   return (
     <>
       {isSearching && (
-        <div className="relative mb-3">
-          <TextInput
-            ref={searchRef}
-            icon={<FontAwesomeIcon icon={faSearch} />}
-            type="search"
-            name="query"
-            placeholder={formatMessage({ id: "issues.search" })}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            autoFocus
-          />
+        <div className="mb-4 flex flex-col gap-2">
+          <InputGroup>
+            <InputGroupInput ref={searchRef} type="search" name="query" placeholder={formatMessage({ id: "issues.search" })} value={query} onChange={(e) => setQuery(e.target.value)} autoFocus />
+            <InputGroupAddon>
+              <SearchIcon />
+            </InputGroupAddon>
+          </InputGroup>
           {inProject && (
-            <div className="mt-1.5 flex items-center gap-x-1.5 whitespace-nowrap">
-              <FontAwesomeIcon icon={faChevronRight} className="ps-2" />
+            <div className="flex items-center gap-x-1.5 px-1 whitespace-nowrap">
+              <ChevronRightIcon className="size-4 shrink-0" />
               <FormattedMessage
                 id="issues.search.search-in-project"
                 values={{
                   projectName: inProject.name,
-                  badge: (children) => <span className="bg-primary truncate rounded-full px-1.5 text-xs text-white">{children}</span>,
+                  badge: (children) => (
+                    <Badge variant="secondary" className="shrink justify-start">
+                      {children}
+                    </Badge>
+                  ),
                 }}
               />
-              <div className="mr-2 flex grow justify-end">
-                <FontAwesomeIcon icon={faX} className="cursor-pointer" onClick={() => setInProject(undefined)} />
+              <div className="flex grow justify-end">
+                <XIcon className="size-4 cursor-pointer opacity-70 transition-opacity hover:opacity-100" onClick={() => setInProject(undefined)} />
               </div>
             </div>
           )}

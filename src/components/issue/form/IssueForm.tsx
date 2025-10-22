@@ -1,4 +1,6 @@
 /* eslint-disable react/no-children-prop */
+import { DialogFooter } from "@/components/ui/dialog";
+import { Form, FormGrid } from "@/components/ui/form";
 import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
 import { z } from "zod/v4";
@@ -10,7 +12,6 @@ import useMyUser from "../../../hooks/useMyUser";
 import useProject from "../../../hooks/useProject";
 import { TIssue } from "../../../types/redmine";
 import DismissibleWarning from "../../general/DismissableWarning";
-import IssueTitle from "../IssueTitle";
 import AssigneeField from "./fields/AssigneeField";
 import CategoryField from "./fields/CategoryField";
 import DoneRatioField from "./fields/DoneRatioField";
@@ -43,10 +44,7 @@ const createOrEditIssueFormSchema = ({ formatMessage }: { formatMessage: ReturnT
       fixed_version_id: z.int().nullish(),
       start_date: z.date().nullish(),
       due_date: z.date().nullish(),
-      estimated_hours: z
-        .number()
-        .min(0.01, formatMessage({ id: "issues.issue.field.estimated-hours.validation.greater-than-zero" }))
-        .nullish(),
+      estimated_hours: z.number().nullish(),
       done_ratio: z.int().min(0).max(100).nullish(),
     })
     .check((ctx) => {
@@ -118,13 +116,7 @@ export const IssueForm = (props: PropTypes) => {
   });
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        form.handleSubmit();
-      }}
-    >
+    <Form onSubmit={form.handleSubmit}>
       <form.Subscribe
         selector={(state) => {
           const selectedTracker = issueTrackers.data?.find((tracker) => tracker.id === state.values.tracker_id);
@@ -135,24 +127,23 @@ export const IssueForm = (props: PropTypes) => {
           };
         }}
         children={({ selectedTracker, hasTrackerNoEnabledFields }) => (
-          <div className="flex flex-col gap-y-2">
-            {props.action === "edit" && <IssueTitle issue={props.issue} />}
-
-            <div className="grid grid-cols-2 gap-x-2">
+          <>
+            <FormGrid cols={2}>
               <form.AppField
                 name="tracker_id"
                 children={(field) => (
-                  <field.SelectField
+                  <field.ComboboxField
                     title={formatMessage({ id: "issues.issue.field.tracker" })}
                     placeholder={formatMessage({ id: "issues.issue.field.tracker" })}
-                    noOptionsMessage={() => formatMessage({ id: "general.no-options" })}
                     required
-                    size="sm"
-                    options={issueTrackers.data?.map((tracker) => ({
-                      label: tracker.name,
-                      value: tracker.id,
-                    }))}
+                    options={
+                      issueTrackers.data?.map((tracker) => ({
+                        label: tracker.name,
+                        value: tracker.id,
+                      })) ?? []
+                    }
                     isLoading={issueTrackers.isLoading}
+                    className="col-span-1"
                   />
                 )}
                 listeners={{
@@ -168,13 +159,11 @@ export const IssueForm = (props: PropTypes) => {
               <form.AppField
                 name="status_id"
                 children={(field) => (
-                  <field.SelectField
+                  <field.ComboboxField
                     title={formatMessage({ id: "issues.issue.field.status" })}
                     placeholder={formatMessage({ id: "issues.issue.field.status" })}
-                    noOptionsMessage={() => formatMessage({ id: "general.no-options" })}
                     required
-                    isDisabled={props.action === "edit" ? props.issue.allowed_statuses?.length === 0 : true}
-                    size="sm"
+                    disabled={props.action === "edit" ? props.issue.allowed_statuses?.length === 0 : true}
                     options={
                       props.action === "create"
                         ? selectedTracker?.default_status
@@ -185,49 +174,49 @@ export const IssueForm = (props: PropTypes) => {
                               },
                             ]
                           : []
-                        : issueStatuses.data?.map((status) => ({
+                        : (issueStatuses.data?.map((status) => ({
                             label: status.name,
                             value: status.id,
-                          }))
+                          })) ?? [])
                     }
+                    className="col-span-1"
                   />
                 )}
               />
-            </div>
 
-            <form.AppField
-              name="subject"
-              children={(field) => (
-                <field.TextField title={formatMessage({ id: "issues.issue.field.subject" })} placeholder={formatMessage({ id: "issues.issue.field.subject" })} required size="sm" autoFocus />
-              )}
-            />
-
-            {(hasTrackerNoEnabledFields || selectedTracker?.enabled_standard_fields?.includes("description")) && (
               <form.AppField
-                name="description"
+                name="subject"
                 children={(field) => (
-                  <field.TextareaField title={formatMessage({ id: "issues.issue.field.description" })} placeholder={formatMessage({ id: "issues.issue.field.description" })} size="sm" rows={1} />
+                  <field.TextField title={formatMessage({ id: "issues.issue.field.subject" })} placeholder={formatMessage({ id: "issues.issue.field.subject" })} required autoFocus />
                 )}
               />
-            )}
 
-            <div className="grid grid-cols-2 gap-x-2">
-              <div className="flex flex-col gap-y-2">
-                <form.AppField name="priority_id" children={() => <PriorityField required size="sm" />} />
+              {(hasTrackerNoEnabledFields || selectedTracker?.enabled_standard_fields?.includes("description")) && (
+                <form.AppField
+                  name="description"
+                  children={(field) => (
+                    <field.TextareaField title={formatMessage({ id: "issues.issue.field.description" })} placeholder={formatMessage({ id: "issues.issue.field.description" })} rows={1} />
+                  )}
+                />
+              )}
+
+              <FormGrid className="col-span-1">
+                <form.AppField name="priority_id" children={() => <PriorityField required />} />
 
                 {(hasTrackerNoEnabledFields || selectedTracker?.enabled_standard_fields?.includes("assigned_to_id")) && (
-                  <form.AppField name="assigned_to_id" children={() => <AssigneeField projectId={projectId} size="sm" />} />
+                  <form.AppField name="assigned_to_id" children={() => <AssigneeField projectId={projectId} />} />
                 )}
 
                 {(hasTrackerNoEnabledFields || selectedTracker?.enabled_standard_fields?.includes("category_id")) && (
-                  <form.AppField name="category_id" children={() => <CategoryField projectId={projectId} size="sm" />} />
+                  <form.AppField name="category_id" children={() => <CategoryField projectId={projectId} />} />
                 )}
 
                 {(hasTrackerNoEnabledFields || selectedTracker?.enabled_standard_fields?.includes("fixed_version_id")) && (
-                  <form.AppField name="fixed_version_id" children={() => <VersionField projectId={projectId} size="sm" />} />
+                  <form.AppField name="fixed_version_id" children={() => <VersionField projectId={projectId} />} />
                 )}
-              </div>
-              <div className="flex flex-col gap-y-2">
+              </FormGrid>
+
+              <FormGrid className="col-span-1">
                 {(hasTrackerNoEnabledFields || selectedTracker?.enabled_standard_fields?.includes("start_date")) && (
                   <form.Subscribe
                     selector={(state) => ({
@@ -240,10 +229,13 @@ export const IssueForm = (props: PropTypes) => {
                           <field.DateField
                             title={formatMessage({ id: "issues.issue.field.start-date" })}
                             placeholder={formatMessage({ id: "issues.issue.field.start-date" })}
-                            size="sm"
-                            options={{
-                              maxDate: due_date ?? undefined,
-                            }}
+                            disabledDates={
+                              due_date
+                                ? {
+                                    after: due_date,
+                                  }
+                                : undefined
+                            }
                           />
                         )}
                       />
@@ -263,10 +255,13 @@ export const IssueForm = (props: PropTypes) => {
                           <field.DateField
                             title={formatMessage({ id: "issues.issue.field.due-date" })}
                             placeholder={formatMessage({ id: "issues.issue.field.due-date" })}
-                            size="sm"
-                            options={{
-                              minDate: start_date ?? undefined,
-                            }}
+                            disabledDates={
+                              start_date
+                                ? {
+                                    before: start_date,
+                                  }
+                                : undefined
+                            }
                           />
                         )}
                       />
@@ -278,15 +273,14 @@ export const IssueForm = (props: PropTypes) => {
                   <form.AppField
                     name="estimated_hours"
                     children={(field) => (
-                      <field.HoursField title={formatMessage({ id: "issues.issue.field.estimated-hours" })} placeholder={formatMessage({ id: "issues.issue.field.estimated-hours" })} size="sm" />
+                      <field.HoursField title={formatMessage({ id: "issues.issue.field.estimated-hours" })} placeholder={formatMessage({ id: "issues.issue.field.estimated-hours" })} />
                     )}
                   />
                 )}
 
-                {hasTrackerNoEnabledFields ||
-                  (selectedTracker?.enabled_standard_fields?.includes("done_ratio") && <form.AppField name="done_ratio" children={() => <DoneRatioField required size="sm" />} />)}
-              </div>
-            </div>
+                {hasTrackerNoEnabledFields || (selectedTracker?.enabled_standard_fields?.includes("done_ratio") && <form.AppField name="done_ratio" children={() => <DoneRatioField required />} />)}
+              </FormGrid>
+            </FormGrid>
 
             {props.action === "create" && issueStatuses.hasIssueNoAllowedStatuses && (
               <DismissibleWarning name="issueNoAllowedStatuses">
@@ -303,13 +297,14 @@ export const IssueForm = (props: PropTypes) => {
             <DismissibleWarning name="unknownWorkflowPermissions">
               <FormattedMessage id="issues.modal.add-issue.unknown-workflow-permissions.warning" />
             </DismissibleWarning>
-
-            <form.AppForm>
-              <form.SubmitButton children={formatMessage({ id: props.action === "create" ? "issues.modal.add-issue.submit" : "issues.modal.edit-issue.submit" })} />
-            </form.AppForm>
-          </div>
+          </>
         )}
       />
-    </form>
+      <DialogFooter>
+        <form.AppForm>
+          <form.SubmitButton children={formatMessage({ id: props.action === "create" ? "issues.modal.add-issue.submit" : "issues.modal.edit-issue.submit" })} />
+        </form.AppForm>
+      </DialogFooter>
+    </Form>
   );
 };

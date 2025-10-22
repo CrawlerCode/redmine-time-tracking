@@ -1,16 +1,14 @@
 /* eslint-disable react/no-children-prop */
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import { faBug, faGlobe, faInfoCircle, faServer } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { DE, FlagComponent, FR, GB, RU } from "country-flag-icons/react/3x2";
+import { BugIcon, GlobeIcon, InfoIcon, ServerIcon } from "lucide-react";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { toast } from "sonner";
 import { z } from "zod/v4";
-import Button from "../components/general/Button";
-import Fieldset from "../components/general/Fieldset";
 import Indicator from "../components/general/Indicator";
-import Toast from "../components/general/Toast";
+import { Form, FormFieldset, FormGrid } from "../components/ui/form";
 import { useAppForm } from "../hooks/useAppForm";
 import useMyUser from "../hooks/useMyUser";
 import { LANGUAGES } from "../provider/IntlProvider";
@@ -68,39 +66,32 @@ const SettingsPage = () => {
       value.redmineURL = value.redmineURL.replace(/\/$/, "");
       setSettings(value);
       queryClient.clear();
-      setSaved(true);
       setEditRedmineInstance(false);
+      toast.success(formatMessage({ id: "settings.settings-saved" }));
     },
   });
 
   const [editRedmineInstance, setEditRedmineInstance] = useState(settings.redmineURL === "");
-  const [saved, setSaved] = useState(false);
 
-  const myUser = useMyUser({ staleTime: 0 });
+  const myUser = useMyUser({ staleTime: 0, displayErrorToast: false });
 
   return (
     <>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          form.handleSubmit();
-        }}
-      >
-        <div className="flex flex-col gap-y-1">
-          <Fieldset legend={<FormattedMessage id="settings.general" />}>
-            <div className="flex flex-col gap-y-2">
+      <Form onSubmit={form.handleSubmit}>
+        <div className="flex flex-col gap-2">
+          <FormFieldset legend={<FormattedMessage id="settings.general" />}>
+            <FormGrid>
               <form.AppField
                 name="language"
                 children={(field) => (
-                  <field.SelectField
+                  <field.ComboboxField
                     title={formatMessage({ id: "settings.general.language" })}
                     placeholder={formatMessage({ id: "settings.general.language" })}
                     required
                     options={[
                       {
                         label: "Auto (Browser)",
-                        icon: <FontAwesomeIcon icon={faGlobe} />,
+                        icon: <GlobeIcon />,
                         value: "browser",
                       },
                       ...LANGUAGES.map((lang) => {
@@ -119,11 +110,11 @@ const SettingsPage = () => {
               <a href="https://github.com/CrawlerCode/redmine-time-tracking#supported-languages" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
                 <FormattedMessage id="settings.general.language.missing-hint" />
               </a>
-            </div>
-          </Fieldset>
+            </FormGrid>
+          </FormFieldset>
 
-          <Fieldset legend={<FormattedMessage id="settings.redmine" />}>
-            <div className="flex flex-col gap-y-2">
+          <FormFieldset legend={<FormattedMessage id="settings.redmine" />}>
+            <FormGrid>
               {(editRedmineInstance && (
                 <>
                   <form.AppField
@@ -145,8 +136,8 @@ const SettingsPage = () => {
                     })}
                     children={({ redmineURL, displayHint }) =>
                       displayHint && (
-                        <p>
-                          <FontAwesomeIcon icon={faInfoCircle} className="mr-1 text-yellow-500 dark:text-yellow-400" />
+                        <p className="flex items-center gap-2">
+                          <InfoIcon className="size-4 text-yellow-500 dark:text-yellow-400" />
                           <FormattedMessage
                             id="settings.redmine.api-key.hint"
                             values={{
@@ -163,59 +154,55 @@ const SettingsPage = () => {
                   />
                 </>
               )) || (
-                <>
-                  <div className="flex items-center gap-x-2">
-                    <div className="relative w-full">
-                      <h3 className="max-w-[285px] truncate text-base">
-                        <FontAwesomeIcon icon={faServer} className="mr-1 text-gray-800 dark:text-gray-200" />
-                        {settings.redmineURL}
-                      </h3>
-                      <p className="flex items-center gap-x-1.5">
-                        {myUser.isLoading ? (
-                          <>
-                            <Indicator variant="loading" />
-                            <FormattedMessage id="settings.redmine.connecting" />
-                          </>
-                        ) : myUser.isError ? (
-                          <>
-                            <Indicator variant="danger" />
-                            <FormattedMessage id="settings.redmine.connection-failed" />
-                          </>
-                        ) : myUser.data ? (
-                          <>
-                            <Indicator variant="success" />
-                            <FormattedMessage id="settings.redmine.connection-successful" />
-                          </>
-                        ) : (
-                          "Unknown status"
-                        )}
-                      </p>
-                      {myUser.isError && myUser.error && <p className="text-red-500 dark:text-red-400">{myUser.error.message}</p>}
-                      {myUser.data && (
-                        <p>
-                          <FormattedMessage
-                            id="settings.redmine.hello-user"
-                            values={{
-                              firstName: myUser.data.firstname,
-                              lastName: myUser.data.lastname,
-                              accountName: myUser.data.login,
-                              strong: (children) => <strong>{children}</strong>,
-                            }}
-                          />
-                        </p>
-                      )}
-                      <Button className="absolute right-0 bottom-0" size="sm" onClick={() => setEditRedmineInstance(true)}>
-                        <FormattedMessage id="settings.redmine.edit" />
-                      </Button>
-                    </div>
-                  </div>
-                </>
+                <div className="relative -mt-1.5 w-full">
+                  <h3 className="flex items-center gap-2 truncate text-base">
+                    <ServerIcon className="size-4 text-gray-800 dark:text-gray-200" />
+                    {settings.redmineURL}
+                  </h3>
+                  <p className="flex items-center gap-x-1.5">
+                    {myUser.isLoading ? (
+                      <>
+                        <Indicator variant="loading" />
+                        <FormattedMessage id="settings.redmine.connecting" />
+                      </>
+                    ) : myUser.isError ? (
+                      <>
+                        <Indicator variant="danger" />
+                        <FormattedMessage id="settings.redmine.connection-failed" />
+                      </>
+                    ) : myUser.data ? (
+                      <>
+                        <Indicator variant="success" />
+                        <FormattedMessage id="settings.redmine.connection-successful" />
+                      </>
+                    ) : (
+                      "Unknown status"
+                    )}
+                  </p>
+                  {myUser.isError && myUser.error && <p className="text-red-500 dark:text-red-400">{myUser.error.message}</p>}
+                  {myUser.data && (
+                    <p>
+                      <FormattedMessage
+                        id="settings.redmine.hello-user"
+                        values={{
+                          firstName: myUser.data.firstname,
+                          lastName: myUser.data.lastname,
+                          accountName: myUser.data.login,
+                          strong: (children) => <strong>{children}</strong>,
+                        }}
+                      />
+                    </p>
+                  )}
+                  <Button className="absolute right-0 bottom-0" size="sm" onClick={() => setEditRedmineInstance(true)}>
+                    <FormattedMessage id="settings.redmine.edit" />
+                  </Button>
+                </div>
               )}
-            </div>
-          </Fieldset>
+            </FormGrid>
+          </FormFieldset>
 
-          <Fieldset legend={<FormattedMessage id="settings.features" />}>
-            <div className="flex flex-col gap-y-2">
+          <FormFieldset legend={<FormattedMessage id="settings.features" />}>
+            <FormGrid cols={6}>
               <form.AppField
                 name="features.autoPauseOnSwitch"
                 children={(field) => (
@@ -231,15 +218,14 @@ const SettingsPage = () => {
                   <field.CheckboxField title={formatMessage({ id: "settings.features.extended-search.title" })} description={formatMessage({ id: "settings.features.extended-search.description" })} />
                 )}
               />
-
-              <div className="flex items-center gap-x-1">
+              <>
                 <form.AppField
                   name="features.roundToNearestInterval"
                   children={(field) => (
                     <field.CheckboxField
                       title={formatMessage({ id: "settings.features.round-to-nearest-interval.title" })}
                       description={formatMessage({ id: "settings.features.round-to-nearest-interval.description" })}
-                      className="grow"
+                      className="col-span-5"
                     />
                   )}
                 />
@@ -256,15 +242,18 @@ const SettingsPage = () => {
                             max={60}
                             step={1}
                             placeholder={formatMessage({ id: "settings.features.rounding-interval.placeholder" })}
-                            className="w-12"
-                            inputClassName="appearance-none"
+                            className="col-span-1 w-12 self-center justify-self-end"
+                            classNames={{
+                              input: "appearance-none",
+                            }}
+                            fieldErrorVariant="tooltip"
                           />
                         )}
                       />
                     )
                   }
                 />
-              </div>
+              </>
               <form.AppField
                 name="features.addNotes"
                 children={(field) => (
@@ -286,11 +275,11 @@ const SettingsPage = () => {
                   />
                 )}
               />
-            </div>
-          </Fieldset>
+            </FormGrid>
+          </FormFieldset>
 
-          <Fieldset legend={<FormattedMessage id="settings.style" />}>
-            <div className="flex flex-col gap-y-2">
+          <FormFieldset legend={<FormattedMessage id="settings.style" />}>
+            <FormGrid>
               <form.AppField name="style.displaySearchAlways" children={(field) => <field.CheckboxField title={formatMessage({ id: "settings.style.display-search-always.title" })} />} />
               <form.AppField name="style.stickyScroll" children={(field) => <field.CheckboxField title={formatMessage({ id: "settings.style.sticky-scroll.title" })} />} />
               <form.AppField name="style.groupIssuesByVersion" children={(field) => <field.CheckboxField title={formatMessage({ id: "settings.style.group-issues-by-version.title" })} />} />
@@ -302,7 +291,7 @@ const SettingsPage = () => {
               <form.AppField
                 name="style.timeFormat"
                 children={(field) => (
-                  <field.SwitchField
+                  <field.ToggleGroupField
                     title={formatMessage({ id: "settings.style.time-format.title" })}
                     options={[
                       {
@@ -327,16 +316,15 @@ const SettingsPage = () => {
                   />
                 )}
               />
-            </div>
-          </Fieldset>
+            </FormGrid>
+          </FormFieldset>
 
           <form.AppForm>
-            <form.SubmitButton children={formatMessage({ id: "settings.save-settings" })} className="mt-2" />
+            <form.SubmitButton children={formatMessage({ id: "settings.save-settings" })} />
           </form.AppForm>
         </div>
-      </form>
+      </Form>
       <Info />
-      {saved && <Toast type="success" message={formatMessage({ id: "settings.settings-saved" })} onClose={() => setSaved(false)} />}
     </>
   );
 };
@@ -345,35 +333,35 @@ const Info = () => {
   const { name, version, version_name } = chrome.runtime.getManifest();
 
   return (
-    <>
-      <div className="mt-10">
-        <Fieldset
-          legend={
-            <>
-              <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
-                {name}
-              </a>
-              <span className="mx-1 text-xs">-</span>
-              <a href="https://github.com/CrawlerCode/redmine-time-tracking/releases" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
-                v{version_name || version}
-              </a>
-            </>
-          }
-        >
-          <div className="flex items-center justify-around p-3">
-            <a href="https://github.com/CrawlerCode/redmine-time-tracking" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
-              <FontAwesomeIcon icon={faGithub} className="mr-1" />
-              GitHub
-            </a>
+    <FormFieldset
+      className="mt-10"
+      legend={
+        <>
+          <a href="https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
+            {name}
+          </a>
+          <span className="mx-1 text-xs">-</span>
+          <a href="https://github.com/CrawlerCode/redmine-time-tracking/releases" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
+            v{version_name || version}
+          </a>
+        </>
+      }
+    >
+      <div className="flex items-center justify-around p-3">
+        <a href="https://github.com/CrawlerCode/redmine-time-tracking" target="_blank" tabIndex={-1} className="flex items-center gap-2 hover:underline" rel="noreferrer">
+          <svg className="col size-4" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <title>GitHub</title>
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+          </svg>{" "}
+          GitHub
+        </a>
 
-            <a href="https://github.com/CrawlerCode/redmine-time-tracking/issues" target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
-              <FontAwesomeIcon icon={faBug} className="mr-1" />
-              <FormattedMessage id="settings.info.report-an-issue" />
-            </a>
-          </div>
-        </Fieldset>
+        <a href="https://github.com/CrawlerCode/redmine-time-tracking/issues" target="_blank" tabIndex={-1} className="flex items-center gap-2 hover:underline" rel="noreferrer">
+          <BugIcon className="size-4" />
+          <FormattedMessage id="settings.info.report-an-issue" />
+        </a>
       </div>
-    </>
+    </FormFieldset>
   );
 };
 

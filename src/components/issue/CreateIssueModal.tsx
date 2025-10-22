@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, isAxiosError } from "axios";
 import { useIntl } from "react-intl";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
-import { TCreateIssue, TRedmineError } from "../../types/redmine";
-import Modal from "../general/Modal";
-import Toast from "../general/Toast";
+import { TCreateIssue } from "../../types/redmine";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { IssueForm } from "./form/IssueForm";
 
 type PropTypes = {
@@ -24,25 +22,20 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
       queryClient.invalidateQueries({ queryKey: ["issues"] });
       onSuccess();
     },
+    meta: {
+      successMessage: formatMessage({ id: "issues.modal.add-issue.success" }),
+    },
   });
 
   return (
-    <>
-      <Modal title={formatMessage({ id: "issues.modal.add-issue.title" })} onClose={onClose}>
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{formatMessage({ id: "issues.modal.add-issue.title" })}</DialogTitle>
+        </DialogHeader>
         <IssueForm action="create" projectId={projectId} onSubmit={(data) => createIssueMutation.mutateAsync(data)} />
-      </Modal>
-      {createIssueMutation.isError && (
-        <Toast
-          type="error"
-          allowClose={false}
-          message={
-            isAxiosError(createIssueMutation.error)
-              ? ((createIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (createIssueMutation.error as AxiosError).message)
-              : (createIssueMutation.error as Error).message
-          }
-        />
-      )}
-    </>
+      </DialogContent>
+    </Dialog>
   );
 };
 

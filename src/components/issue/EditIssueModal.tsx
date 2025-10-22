@@ -1,12 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, isAxiosError } from "axios";
 import { useIntl } from "react-intl";
 import useIssue from "../../hooks/useIssue";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
-import { TIssue, TRedmineError, TUpdateIssue } from "../../types/redmine";
-import Modal from "../general/Modal";
-import Toast from "../general/Toast";
+import { TIssue, TUpdateIssue } from "../../types/redmine";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { IssueForm } from "./form/IssueForm";
+import IssueTitle from "./IssueTitle";
 
 type PropTypes = {
   issue: TIssue;
@@ -29,24 +28,22 @@ const EditIssueModal = ({ issue: currentIssue, onClose, onSuccess }: PropTypes) 
       queryClient.invalidateQueries({ queryKey: ["issues"] });
       onSuccess();
     },
+    meta: {
+      successMessage: formatMessage({ id: "issues.modal.edit-issue.success" }),
+    },
   });
 
   return (
     <>
-      <Modal title={formatMessage({ id: "issues.modal.edit-issue.title" })} onClose={onClose}>
-        <IssueForm action="edit" issue={issue} onSubmit={(data) => updateIssueMutation.mutateAsync(data)} />
-      </Modal>
-      {updateIssueMutation.isError && (
-        <Toast
-          type="error"
-          allowClose={false}
-          message={
-            isAxiosError(updateIssueMutation.error)
-              ? ((updateIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateIssueMutation.error as AxiosError).message)
-              : (updateIssueMutation.error as Error).message
-          }
-        />
-      )}
+      <Dialog open onOpenChange={onClose}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{formatMessage({ id: "issues.modal.edit-issue.title" })}</DialogTitle>
+          </DialogHeader>
+          <IssueTitle issue={issue} />
+          <IssueForm action="edit" issue={issue} onSubmit={(data) => updateIssueMutation.mutateAsync(data)} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

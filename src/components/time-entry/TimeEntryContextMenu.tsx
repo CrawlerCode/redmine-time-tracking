@@ -1,17 +1,16 @@
-import { faArrowUpRightFromSquare, faPen } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { PencilIcon, SquareArrowOutUpRightIcon } from "lucide-react";
 import { ComponentProps, useState } from "react";
 import { useIntl } from "react-intl";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import { useSettings } from "../../provider/SettingsProvider";
 import { TTimeEntry } from "../../types/redmine";
-import ContextMenu from "../general/ContextMenu";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";
 import EditTimeEntryModal from "./EditTimeEntryModal";
 
 type PropTypes = {
   entry: TTimeEntry;
   projectRoles: ReturnType<typeof useMyProjectRoles>;
-} & Omit<ComponentProps<typeof ContextMenu>, "menu">;
+} & ComponentProps<typeof ContextMenuTrigger>;
 
 function TimeEntryContextMenu({ entry, projectRoles, children, ...props }: PropTypes) {
   const { formatMessage } = useIntl();
@@ -22,30 +21,25 @@ function TimeEntryContextMenu({ entry, projectRoles, children, ...props }: PropT
 
   return (
     <>
-      <ContextMenu
-        {...props}
-        menu={[
-          [
-            {
-              name: formatMessage({ id: "time.time-entry.context-menu.open-in-redmine" }),
-              icon: <FontAwesomeIcon icon={faArrowUpRightFromSquare} />,
-              onClick: () => {
-                window.open(`${settings.redmineURL}/time_entries/${entry.id}/edit`, "_blank");
-              },
-            },
-          ],
-          [
-            {
-              name: formatMessage({ id: "time.time-entry.context-menu.edit" }),
-              icon: <FontAwesomeIcon icon={faPen} />,
-              onClick: () => setEdit(true),
-              disabled: !projectRoles.hasProjectPermission(entry.project.id, "edit_own_time_entries"),
-            },
-          ],
-        ]}
-      >
-        {children}
+      <ContextMenu>
+        <ContextMenuTrigger {...props}>{children}</ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem
+            onClick={() => {
+              window.open(`${settings.redmineURL}/time_entries/${entry.id}/edit`, "_blank");
+            }}
+          >
+            <SquareArrowOutUpRightIcon />
+            {formatMessage({ id: "time.time-entry.context-menu.open-in-redmine" })}
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={() => setEdit(true)} disabled={!projectRoles.hasProjectPermission(entry.project.id, "edit_own_time_entries")}>
+            <PencilIcon />
+            {formatMessage({ id: "time.time-entry.context-menu.edit" })}
+          </ContextMenuItem>
+        </ContextMenuContent>
       </ContextMenu>
+
       {edit && <EditTimeEntryModal entry={entry} onClose={() => setEdit(false)} onSuccess={() => setEdit(false)} />}
     </>
   );

@@ -1,15 +1,10 @@
 import { setDefaultOptions } from "date-fns";
-import flatpickr from "flatpickr";
 import React, { ComponentProps, useEffect, useState } from "react";
 import { IntlProvider as ReactIntlProvider } from "react-intl";
 import { useSettings } from "./SettingsProvider";
 
 import messagesEN from "../lang/en.json";
 
-import { German as flatpickrDE } from "flatpickr/dist/l10n/de.js";
-import { english as flatpickrEN } from "flatpickr/dist/l10n/default";
-import { French as flatpickrFR } from "flatpickr/dist/l10n/fr.js";
-import { Russian as flatpickrRU } from "flatpickr/dist/l10n/ru.js";
 import z from "zod/v4";
 
 export const LANGUAGES = ["en", "de", "ru", "fr"] as const;
@@ -55,25 +50,6 @@ const IntlProvider = ({ children }: PropTypes) => {
     })();
 
     z.config(z.locales[locale]());
-
-    let flatpickrLocal;
-    switch (locale) {
-      case "en":
-        flatpickrLocal = flatpickrEN;
-        break;
-      case "de":
-        flatpickrLocal = flatpickrDE;
-        break;
-      case "ru":
-        flatpickrLocal = flatpickrRU;
-        break;
-      case "fr":
-        flatpickrLocal = flatpickrFR;
-        break;
-    }
-    flatpickr.setDefaults({
-      locale: flatpickrLocal,
-    });
   }, [locale]);
 
   return (

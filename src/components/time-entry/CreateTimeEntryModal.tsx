@@ -1,7 +1,5 @@
 /* eslint-disable react/no-children-prop */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError, isAxiosError } from "axios";
-import clsx from "clsx";
 import { startOfDay } from "date-fns";
 import { useIntl } from "react-intl";
 import z from "zod/v4";
@@ -12,14 +10,13 @@ import useMyUser from "../../hooks/useMyUser";
 import useProject from "../../hooks/useProject";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";
-import { TCreateTimeEntry, TIssue, TRedmineError, TUpdateIssue } from "../../types/redmine";
-import Fieldset from "../general/Fieldset";
-import Modal from "../general/Modal";
-import Toast from "../general/Toast";
+import { TCreateTimeEntry, TIssue, TUpdateIssue } from "../../types/redmine";
 import ActivityField from "../issue/form/fields/ActivityField";
 import { DoneSliderField } from "../issue/form/fields/DoneSliderField";
 import IssueTitle from "../issue/IssueTitle";
 import SpentVsEstimatedTime from "../issue/SpentVsEstimatedTime";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Form, FormFieldset, FormGrid } from "../ui/form";
 import UserField from "./form/fields/UserField";
 import TimeEntryPreview from "./TimeEntryPreview";
 
@@ -67,6 +64,9 @@ const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: Prop
           queryKey: ["timeEntries"],
         });
       }
+    },
+    meta: {
+      successMessage: formatMessage({ id: "issues.modal.add-spent-time.success" }),
     },
   });
 
@@ -138,9 +138,9 @@ const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: Prop
 
   return (
     <>
-      <Modal
-        title={formatMessage({ id: "issues.modal.add-spent-time.title" })}
-        onClose={() => {
+      <Dialog
+        open
+        onOpenChange={() => {
           // if comment exist => save/update comment
           const comment = form.state.values.comments;
           if (cachedComments.isEnabled && (comment || cachedComments.isCached)) {
@@ -150,140 +150,106 @@ const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: Prop
           onClose();
         }}
       >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-          }}
-        >
-          <div className="flex flex-col gap-y-2">
+        <DialogContent>
+          <Form onSubmit={form.handleSubmit}>
+            <DialogHeader>
+              <DialogTitle>{formatMessage({ id: "issues.modal.add-spent-time.title" })}</DialogTitle>
+            </DialogHeader>
             <IssueTitle issue={issue} />
+            <FormGrid cols={2}>
+              <form.AppField name="done_ratio" children={() => <DoneSliderField className="col-span-1 self-center" />} />
 
-            <div className="flex justify-between gap-x-3">
-              <form.AppField name="done_ratio" children={() => <DoneSliderField className="mb-1" />} />
+              <form.Subscribe selector={(state) => state.values.hours} children={(hours) => <SpentVsEstimatedTime issue={issue} previewHours={hours} className="col-span-1 justify-self-end" />} />
 
-              <form.Subscribe selector={(state) => state.values.hours} children={(hours) => <SpentVsEstimatedTime issue={issue} previewHours={hours} />} />
-            </div>
-
-            <form.Subscribe
-              selector={(state) => ({
-                hours: state.values.hours,
-                spent_on: state.values.spent_on,
-              })}
-              children={({ hours, spent_on }) => <TimeEntryPreview date={startOfDay(spent_on)} previewHours={hours} />}
-            />
-
-            <Fieldset className="flex flex-col gap-y-2">
-              <div
-                className={clsx("grid gap-x-2", {
-                  "grid-cols-5": settings.style.timeFormat === "decimal",
-                  "grid-cols-4": settings.style.timeFormat === "minutes",
-                })}
-              >
-                <form.AppField
-                  name="hours"
-                  children={(field) => (
-                    <field.HoursField
-                      title={formatMessage({ id: "time.time-entry.field.hours" })}
-                      placeholder={formatMessage({ id: "time.time-entry.field.hours" })}
-                      required
-                      size="sm"
-                      className={clsx({
-                        "col-span-3": settings.style.timeFormat === "decimal",
-                        "col-span-2": settings.style.timeFormat === "minutes",
-                      })}
-                      {...(settings.style.timeFormat === "decimal" && {
-                        max: "24",
-                      })}
-                      autoFocus={field.state.value === 0}
-                    />
-                  )}
-                />
-
-                <form.AppField
-                  name="spent_on"
-                  children={(field) => (
-                    <field.DateField
-                      title={formatMessage({ id: "time.time-entry.field.spent-on" })}
-                      placeholder={formatMessage({ id: "time.time-entry.field.spent-on" })}
-                      required
-                      size="sm"
-                      options={{
-                        maxDate: new Date(),
-                      }}
-                      className="col-span-2"
-                    />
-                  )}
-                />
-              </div>
-
-              {projectRoles.hasProjectPermission(issue.project.id, "log_time_for_other_users") && (
-                <form.AppField name="user_id" children={() => <UserField projectId={issue.project.id} size="sm" isMulti closeMenuOnSelect={false} />} />
-              )}
-
-              <form.AppField
-                name="comments"
-                children={(field) => (
-                  <field.TextField
-                    title={formatMessage({ id: "time.time-entry.field.comments" })}
-                    placeholder={formatMessage({ id: "time.time-entry.field.comments" })}
-                    size="sm"
-                    autoFocus={field.form.state.values.hours > 0}
-                  />
-                )}
-              />
-
-              <form.AppField
-                name="activity_id"
-                children={(field) => <ActivityField projectId={issue.project.id} onDefaultActivityChange={(activityId) => field.setValue(activityId)} required size="sm" />}
-              />
-            </Fieldset>
-
-            {settings.features.addNotes && projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes") && (
               <form.Subscribe
-                selector={(state) => state.values.add_notes}
-                children={(add_notes) =>
-                  !add_notes ? (
-                    <form.AppField name="add_notes" children={(field) => <field.ToggleField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
-                  ) : (
-                    <Fieldset legend={formatMessage({ id: "issues.issue.field.notes" })} className="flex flex-col gap-y-2">
-                      <form.AppField name="add_notes" children={(field) => <field.ToggleField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
-                      <form.AppField name="notes" children={(field) => <field.TextareaField placeholder={formatMessage({ id: "issues.issue.field.notes" })} size="sm" />} />
-                    </Fieldset>
-                  )
-                }
+                selector={(state) => ({
+                  hours: state.values.hours,
+                  spent_on: state.values.spent_on,
+                })}
+                children={({ hours, spent_on }) => <TimeEntryPreview date={startOfDay(spent_on)} previewHours={hours} />}
               />
-            )}
 
-            <form.AppForm>
-              <form.SubmitButton children={formatMessage({ id: "issues.modal.add-spent-time.submit" })} />
-            </form.AppForm>
-          </div>
-        </form>
-      </Modal>
-      {createTimeEntryMutation.isError && (
-        <Toast
-          type="error"
-          allowClose={false}
-          message={
-            isAxiosError(createTimeEntryMutation.error)
-              ? ((createTimeEntryMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (createTimeEntryMutation.error as AxiosError).message)
-              : (createTimeEntryMutation.error as Error).message
-          }
-        />
-      )}
-      {updateIssueMutation.isError && (
-        <Toast
-          type="error"
-          allowClose={false}
-          message={
-            isAxiosError(updateIssueMutation.error)
-              ? ((updateIssueMutation.error as AxiosError<TRedmineError>).response?.data?.errors?.join(", ") ?? (updateIssueMutation.error as AxiosError).message)
-              : (updateIssueMutation.error as Error).message
-          }
-        />
-      )}
+              <FormFieldset>
+                <FormGrid cols={2}>
+                  <form.AppField
+                    name="hours"
+                    children={(field) => (
+                      <field.HoursField
+                        title={formatMessage({ id: "time.time-entry.field.hours" })}
+                        placeholder={formatMessage({ id: "time.time-entry.field.hours" })}
+                        required
+                        {...(settings.style.timeFormat === "decimal" && {
+                          max: "24",
+                        })}
+                        autoFocus={field.state.value === 0}
+                        className="col-span-1"
+                      />
+                    )}
+                  />
+
+                  <form.AppField
+                    name="spent_on"
+                    children={(field) => (
+                      <field.DateField
+                        title={formatMessage({ id: "time.time-entry.field.spent-on" })}
+                        placeholder={formatMessage({ id: "time.time-entry.field.spent-on" })}
+                        required
+                        disabledDates={{
+                          after: new Date(),
+                        }}
+                        className="col-span-1"
+                      />
+                    )}
+                  />
+
+                  {projectRoles.hasProjectPermission(issue.project.id, "log_time_for_other_users") && (
+                    <form.AppField name="user_id" children={() => <UserField projectId={issue.project.id} mode="multiple" />} />
+                  )}
+
+                  <form.AppField
+                    name="comments"
+                    children={(field) => (
+                      <field.TextField
+                        title={formatMessage({ id: "time.time-entry.field.comments" })}
+                        placeholder={formatMessage({ id: "time.time-entry.field.comments" })}
+                        autoFocus={field.form.state.values.hours > 0}
+                      />
+                    )}
+                  />
+
+                  <form.AppField
+                    name="activity_id"
+                    children={(field) => <ActivityField projectId={issue.project.id} onDefaultActivityChange={(activityId) => field.setValue(activityId)} required />}
+                  />
+                </FormGrid>
+              </FormFieldset>
+
+              {settings.features.addNotes && projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes") && (
+                <form.Subscribe
+                  selector={(state) => state.values.add_notes}
+                  children={(add_notes) =>
+                    !add_notes ? (
+                      <form.AppField name="add_notes" children={(field) => <field.ToggleField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
+                    ) : (
+                      <FormFieldset legend={formatMessage({ id: "issues.issue.field.notes" })}>
+                        <FormGrid>
+                          <form.AppField name="add_notes" children={(field) => <field.ToggleField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
+                          <form.AppField name="notes" children={(field) => <field.TextareaField placeholder={formatMessage({ id: "issues.issue.field.notes" })} />} />
+                        </FormGrid>
+                      </FormFieldset>
+                    )
+                  }
+                />
+              )}
+            </FormGrid>
+            <DialogFooter>
+              <form.AppForm>
+                <form.SubmitButton children={formatMessage({ id: "issues.modal.add-spent-time.submit" })} />
+              </form.AppForm>
+            </DialogFooter>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

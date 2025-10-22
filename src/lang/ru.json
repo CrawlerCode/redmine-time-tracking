@@ -64,7 +64,6 @@
   "issues.issue.field.due-date": "Срок завершения",
   "issues.issue.field.due-date.validation.greater-than-start-date": "Due date must be greater than start date",
   "issues.issue.field.estimated-hours": "Оценка временных затрат",
-  "issues.issue.field.estimated-hours.validation.greater-than-zero": "Должно быть больше 0",
   "issues.issue.field.done-ratio": "Done ratio",
   "issues.issue.field.spent-time": "Трудозатраты",
   "issues.issue.field.notes": "Примечания",
@@ -73,6 +72,7 @@
   "issues.modal.add-spent-time.title": "Добавление затраченного времени",
   "issues.modal.add-spent-time.add-notes": "Добавление примечаний",
   "issues.modal.add-spent-time.submit": "Добавить",
+  "issues.modal.add-spent-time.success": "Spent time successfully added",
   "issues.modal.save-changes.title": "Сохранение изменений",
   "issues.modal.save-changes.message": "Вы хотите сохранить ваши изменения?",
   "issues.modal.save-changes.cancel": "Нет, отменить",
@@ -85,12 +85,14 @@
   "issues.modal.add-issue.tracker-with-no-enabled-fields.warning": "It seems that you are using a Redmine version < 5.0.0. It is possible that some fields are not applied",
   "issues.modal.add-issue.unknown-workflow-permissions.warning": "It is possible that some fields are not applied due to missing permissions in Redmine. There is currently no way to check these permissions",
   "issues.modal.add-issue.submit": "Create",
+  "issues.modal.add-issue.success": "Issue successfully created",
   "issues.modal.edit-issue.title": "Edit issue",
   "issues.modal.edit-issue.issue-with-no-allowed-statuses.warning": "It seems that you are using a Redmine version < 5.0.0. It is possible that some statuses changes are not applied",
   "issues.modal.edit-issue.submit": "Save",
+  "issues.modal.edit-issue.success": "Issue successfully updated",
   "issues.modal.add-issue-notes.title": "Add notes",
   "issues.modal.add-issue-notes.submit": "Save",
-  "issues.error.fail-to-load-issues": "Не удалось загрузить задачи",
+  "issues.modal.add-issue-notes.success": "Notes successfully added",
 
   "time.time-entry.context-menu.open-in-redmine": "Открыть в Redmine",
   "time.time-entry.context-menu.edit": "Edit",
@@ -110,7 +112,7 @@
   "time.time-entry.field.activity.validation.required": "Требуется хотя бы одно созданное действие в «Списки значений»",
   "time.modal.edit-time-entry.title": "Edit time entry",
   "time.modal.edit-time-entry.submit": "Save",
-  "time.error.fail-to-load-data": "Не удалось загрузить данные",
+  "time.modal.edit-time-entry.success": "Time entry successfully updated",
 
   "settings.general": "Основное",
   "settings.general.language": "Язык",
@@ -162,8 +164,14 @@
   "settings.settings-saved": "Настройки сохранены!",
   "settings.info.report-an-issue": "Сообщить о проблеме",
 
+  "dismissible-warning.title": "Warning",
   "dismissible-warning.dont-show-again": "Don't show again",
 
+  "general.search": "Поиск...",
   "general.no-options": "No options",
+  "general.retry": "Retry",
+  "general.error.fail-to-load-data": "Не удалось загрузить данные",
+  "general.error.unknown-error-occurred": "An unknown error occurred",
+
   "format.hours": "{hours} ч"
 }

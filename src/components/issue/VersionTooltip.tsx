@@ -1,23 +1,30 @@
 import { differenceInDays, parseISO, startOfDay } from "date-fns";
+import { ReactNode } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Tooltip } from "react-tooltip";
 import { TVersion } from "../../types/redmine";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type PropTypes = {
-  version: TVersion;
+  version?: TVersion;
+  children?: ReactNode;
 };
 
-const VersionTooltip = ({ version }: PropTypes) => {
+const VersionTooltip = ({ version, children }: PropTypes) => {
   const { formatDate, formatRelativeTime } = useIntl();
 
+  if (!version) return children;
+
   return (
-    <Tooltip id={`tooltip-version-${version.id}`} place="right" className="z-10 opacity-100">
-      <div className="relative max-w-[230px] truncate">
-        <p className="mb-3 text-sm font-semibold">
-          {version.name} {version.due_date && <>({formatRelativeTime(differenceInDays(parseISO(version.due_date), startOfDay(new Date())), "days")})</>}
-          {version.description && <p className="mt-1 truncate text-xs font-normal">{version.description}</p>}
-        </p>
-        <table className="-mx-1 border-separate border-spacing-x-1 text-left text-sm text-gray-300">
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent className="flex max-w-[17rem] flex-col gap-y-3 truncate">
+        <div>
+          <p className="truncate text-sm font-semibold">
+            {version.name} {version.due_date && <>({formatRelativeTime(differenceInDays(parseISO(version.due_date), startOfDay(new Date())), "days")})</>}
+          </p>
+          {version.description && <p className="truncate text-xs font-normal">{version.description}</p>}
+        </div>
+        <table className="-mx-1 border-separate border-spacing-x-1 text-left text-sm">
           <tbody>
             <tr>
               <th className="text-xs font-medium">
@@ -35,10 +42,10 @@ const VersionTooltip = ({ version }: PropTypes) => {
             )}
           </tbody>
         </table>
-      </div>
-      <p className="mt-5 italic">
-        <FormattedMessage id="issues.version-tooltip.open-in-redmine" />
-      </p>
+        <p className="italic">
+          <FormattedMessage id="issues.version-tooltip.open-in-redmine" />
+        </p>
+      </TooltipContent>
     </Tooltip>
   );
 };
