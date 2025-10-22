@@ -246,6 +246,7 @@ const SettingsPage = () => {
                             classNames={{
                               input: "appearance-none",
                             }}
+                            fieldErrorVariant="tooltip"
                           />
                         )}
                       />

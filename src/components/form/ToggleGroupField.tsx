@@ -12,7 +12,7 @@ type ToggleGroupFieldProps = Omit<ComponentProps<typeof ToggleGroup>, "type" | "
 };
 
 export const ToggleGroupField = ({ title, className, required, options, type = "single", variant = "outline", ...props }: ToggleGroupFieldProps) => {
-  const { state, handleChange } = useFieldContext<string>();
+  const { state, handleChange } = useFieldContext<string | string[]>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
 
   return (

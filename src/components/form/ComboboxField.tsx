@@ -60,12 +60,15 @@ export const ComboboxField = <Value extends string | number>({
           if (open) onOpen?.();
         }}
       >
-        <PopoverTrigger asChild disabled={disabled} onBlur={handleBlur}>
+        <PopoverTrigger asChild>
           <Button
             id={id}
             variant="outline"
             role="combobox"
             aria-expanded={open}
+            disabled={disabled}
+            onBlur={handleBlur}
+            aria-invalid={isInvalid}
             className={clsx("hover:text-foreground relative w-full justify-between truncate text-base font-normal", {
               "h-auto min-h-9 py-1.5": mode === "multiple",
               "ps-2!": mode === "multiple" && Array.isArray(state.value) && state.value.length > 0,
@@ -98,6 +101,7 @@ export const ComboboxField = <Value extends string | number>({
                         mode={mode}
                         option={subOption}
                         value={state.value}
+                        required={required}
                         handleChange={(value) => {
                           handleChange(value);
                           if (mode === "single") setOpen(false);
@@ -111,6 +115,7 @@ export const ComboboxField = <Value extends string | number>({
                     mode={mode}
                     option={option}
                     value={state.value}
+                    required={required}
                     handleChange={(value) => {
                       handleChange(value);
                       if (mode === "single") setOpen(false);
@@ -194,11 +199,13 @@ const RenderOption = <Value extends string | number>({
   mode,
   option,
   value,
+  required,
   handleChange,
 }: {
   mode: NonNullable<ComboboxFieldProps<Value>["mode"]>;
   option: Option<Value>;
   value: null | Value | Value[];
+  required?: boolean;
   handleChange: (value: null | Value | Value[]) => void;
 }) => {
   const isSelected = Array.isArray(value) ? value.includes(option.value) : value === option.value;
@@ -208,7 +215,7 @@ const RenderOption = <Value extends string | number>({
       value={option.label}
       onSelect={() => {
         if (mode === "single") {
-          handleChange(isSelected ? null : option.value);
+          handleChange(isSelected && !required ? null : option.value);
         } else {
           const currentValue = Array.isArray(value) ? value : [];
           if (isSelected) {

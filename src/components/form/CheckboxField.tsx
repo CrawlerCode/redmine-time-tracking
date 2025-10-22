@@ -14,7 +14,7 @@ export const CheckboxField = ({ title, description, className, ...props }: Check
 
   return (
     <Field data-invalid={isInvalid} orientation="horizontal" className={className}>
-      <Checkbox {...props} id={id} checked={state.value} onCheckedChange={(checked) => handleChange(!!checked)} onBlur={handleBlur} />
+      <Checkbox {...props} id={id} checked={state.value} onCheckedChange={(checked) => handleChange(!!checked)} onBlur={handleBlur} aria-invalid={isInvalid} />
       <FieldContent>
         <span className="flex items-center gap-2">
           <FieldLabel required={props.required} htmlFor={id}>

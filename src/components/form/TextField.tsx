@@ -7,9 +7,10 @@ type TextFieldProps = Omit<ComponentProps<typeof Input>, "id" | "value" | "onCha
   classNames?: {
     input?: string;
   };
+  fieldErrorVariant?: ComponentProps<typeof FieldError>["variant"];
 };
 
-export const TextField = ({ title, required, className, classNames, ...props }: TextFieldProps) => {
+export const TextField = ({ title, required, className, classNames, fieldErrorVariant, ...props }: TextFieldProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { state, handleChange, handleBlur } = useFieldContext<any>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
@@ -26,9 +27,10 @@ export const TextField = ({ title, required, className, classNames, ...props }: 
         value={state.value}
         onChange={(e) => handleChange(props.type === "number" ? e.target.valueAsNumber : e.target.value)}
         onBlur={handleBlur}
+        aria-invalid={isInvalid}
         className={classNames?.input}
       />
-      {isInvalid && <FieldError errors={state.meta.errors} />}
+      {isInvalid && <FieldError variant={fieldErrorVariant} errors={state.meta.errors} />}
     </Field>
   );
 };

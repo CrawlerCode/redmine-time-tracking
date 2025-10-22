@@ -42,11 +42,12 @@ export const DateField = ({ title, disabled, placeholder, mode = "single", class
           <Button
             id={id}
             variant="outline"
+            disabled={disabled}
+            onBlur={handleBlur}
+            aria-invalid={isInvalid}
             className={cn("hover:text-foreground relative w-full justify-start truncate text-left text-base font-normal", {
               "text-muted-foreground": !state.value,
             })}
-            disabled={disabled}
-            onBlur={handleBlur}
           >
             <DateValue mode={mode} value={state.value} placeholder={placeholder} />
             {!props.required && <ClearButton mode={mode} value={state.value} handleChange={handleChange} />}

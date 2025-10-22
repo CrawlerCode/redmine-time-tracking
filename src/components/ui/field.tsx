@@ -139,7 +139,7 @@ function FieldError({
       return errors[0].message;
     }
 
-    return <ul className="flex flex-col gap-1">{errors.map((error, index) => error?.message && <li key={index}>{error.message}</li>)}</ul>;
+    return <ul className="flex flex-col gap-1 text-sm">{errors.map((error, index) => error?.message && <li key={index}>{error.message}</li>)}</ul>;
   }, [children, errors]);
 
   if (!content) {

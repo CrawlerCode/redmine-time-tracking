@@ -15,7 +15,7 @@ export const TextareaField = ({ title, required, className, ...props }: Textarea
       <FieldLabel required={required} htmlFor={id}>
         {title}
       </FieldLabel>
-      <Textarea {...props} id={id} value={state.value} onChange={(e) => handleChange(e.target.value)} onBlur={handleBlur} />
+      <Textarea {...props} id={id} value={state.value} onChange={(e) => handleChange(e.target.value)} onBlur={handleBlur} aria-invalid={isInvalid} />
       {isInvalid && <FieldError errors={state.meta.errors} />}
     </Field>
   );

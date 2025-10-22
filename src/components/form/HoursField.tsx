@@ -23,6 +23,7 @@ export const HoursField = ({ title, required, className, ...props }: Omit<Compon
           value={typeof state.value === "number" ? state.value : ""}
           onChange={(e) => handleChange(isNaN(e.target.valueAsNumber) ? null : e.target.valueAsNumber)}
           onBlur={handleBlur}
+          aria-invalid={isInvalid}
           type="number"
           min="0"
           step="0.01"
@@ -35,6 +36,7 @@ export const HoursField = ({ title, required, className, ...props }: Omit<Compon
           value={state.value ? formatHoursToHmm(state.value) : ""}
           onChange={(e) => handleChange(e.target.value ? parseHmmToHours(e.target.value) : null)}
           onBlur={handleBlur}
+          aria-invalid={isInvalid}
           className="appearance-none"
         />
       )}
@@ -53,7 +55,7 @@ const TimeInput = ({ value, onChange, onBlur, ...props }: ComponentProps<typeof 
   return (
     <Input
       {...props}
-      type="string"
+      type="text"
       value={raw}
       onChange={(e) => setRaw(e.target.value)}
       onBlur={(e) => {

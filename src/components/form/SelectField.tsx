@@ -25,8 +25,8 @@ export const SelectField = <Value extends string | number>({ title, placeholder,
       <FieldLabel required={required} htmlFor={id}>
         {title}
       </FieldLabel>
-      <Select required={required} disabled={disabled} defaultValue={JSON.stringify(state.value)} onValueChange={(value) => handleChange(JSON.parse(value) as Value)}>
-        <SelectTrigger id={id} className="w-full truncate" onBlur={handleBlur}>
+      <Select required={required} disabled={disabled} value={JSON.stringify(state.value)} onValueChange={(value) => handleChange(JSON.parse(value) as Value)}>
+        <SelectTrigger id={id} className="w-full truncate" onBlur={handleBlur} aria-invalid={isInvalid}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
