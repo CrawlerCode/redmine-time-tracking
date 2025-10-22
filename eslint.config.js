@@ -38,5 +38,22 @@ export default [
   // Prettier
   prettierConfig,
   // Tailwind CSS
-  //...tailwind.configs["flat/recommended"], // TODO: Wait until working with Tailwind CSS v4
+  //...tailwind.configs["flat/recommended"], // TODO: Wait until working with Tailwind CSS v4,
+  // Customizations
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          args: "all",
+          argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
 ];

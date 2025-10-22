@@ -110,7 +110,11 @@ const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: Prop
       if (value.user_id && Array.isArray(value.user_id) && value.user_id.length > 0) {
         // create for multiple users
         for (const userId of value.user_id) {
-          await createTimeEntryMutation.mutateAsync({ ...value, user_id: userId });
+          try {
+            await createTimeEntryMutation.mutateAsync({ ...value, user_id: userId });
+          } catch (_) {
+            continue; // continue on other users
+          }
         }
       } else {
         // create for me

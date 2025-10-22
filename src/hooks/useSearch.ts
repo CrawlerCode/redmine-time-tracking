@@ -12,7 +12,6 @@ const useSearch = (search: SearchQuery, filter: FilterQuery, excludeIssues: TIss
   const { settings } = useSettings();
   const redmineApi = useRedmineApi();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, _issueIdSearch] = search.query.match(/^#(\d+)$/) ?? []; // search for #<issueId>
   const issueIdSearch = _issueIdSearch ? Number(_issueIdSearch) : undefined;
   const isSearching = search.searching && settings.features.extendedSearch && ((search.debouncedQuery?.length ?? 0) >= 3 || !!issueIdSearch);

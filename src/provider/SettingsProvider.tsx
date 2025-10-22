@@ -62,7 +62,6 @@ export const getSettings = async () => {
 
 const SettingsContext = createContext({
   settings: defaultSettings,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setSettings: (_data: Settings) => undefined,
 });
 

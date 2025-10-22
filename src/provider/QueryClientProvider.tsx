@@ -87,6 +87,7 @@ const queryClient = new QueryClient({
       const title = mutation.meta?.errorMessage || <FormattedMessage id="general.error.unknown-error-occurred" />;
       toast.error(title, {
         description: getErrorMessage(error),
+        duration: 1000 * 60 * 5, // 5 minutes
       });
     },
   }),
