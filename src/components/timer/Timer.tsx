@@ -101,7 +101,7 @@ const TimerWrapper = ({ variant = "inner", timer, issue, issuePriorityType }: Ti
                 }
               }}
             >
-              {issue ? <IssueTitle issue={issue} priorityType={issuePriorityType} /> : <h1 className="truncate">#{timer.issueId}</h1>}
+              {issue ? <IssueTitle issue={issue} priorityType={issuePriorityType} /> : <h1 className="truncate text-gray-500 line-through">#{timer.issueId}</h1>}
               <Timer timer={timer} ref={timerRef} displayNameField onTimerDone={(hours) => setCreateTimeEntryHours(hours)} />
             </div>
           </TimerContextMenu>
