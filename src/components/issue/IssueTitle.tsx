@@ -20,8 +20,8 @@ const IssueTitle = ({ issue, priorityType, className, ...props }: PropTypes) => 
         "truncate",
         settings.style.showIssuesPriority && {
           "text-[#559] dark:text-[#9393ed]": priorityType === "lowest",
-          "text-[#900] dark:text-[#fa7070]": priorityType === "high" || priorityType === "higher",
-          "font-bold text-[#900] dark:text-[#fa7070]": priorityType === "highest",
+          "text-[#900] dark:text-[#fa7070]": priorityType === "medium-high",
+          "font-bold text-[#900] dark:text-[#fa7070]": priorityType === "high" || priorityType === "highest",
         },
         className
       )}

@@ -52,13 +52,12 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
           className={clsxm(
             "bg-card relative flex w-full flex-col gap-1 rounded-lg p-1",
             "focus-visible:border-ring focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
-            settings.style.showIssuesPriority && priorityType !== "normal"
-              ? {
-                  "border-2 border-[#add7f3] dark:border-[#4973f3]/40": priorityType === "lowest",
-                  "border-2 border-[#fcc] dark:border-[#ff6868]/40": priorityType === "high",
-                  "border-2 border-[#ffb4b4] dark:border-[#ff5050]/40": priorityType === "higher" || priorityType === "highest",
-                }
-              : "border border-gray-200 dark:border-gray-700"
+            "border border-gray-200 dark:border-gray-700",
+            settings.style.showIssuesPriority && {
+              "border-2 border-[#add7f3] dark:border-[#4973f3]/40": priorityType === "lowest",
+              "border-2 border-[#fcc] dark:border-[#fc6f6f]/40": priorityType === "medium-high",
+              "border-2 border-[#ffb4b4] dark:border-[#ff5050]/40": priorityType === "high" || priorityType === "highest",
+            }
           )}
           tabIndex={1}
           // On "Enter" or "Space" => toggle timer
