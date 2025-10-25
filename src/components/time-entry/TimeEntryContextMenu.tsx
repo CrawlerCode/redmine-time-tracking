@@ -4,7 +4,7 @@ import { useIntl } from "react-intl";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import { useSettings } from "../../provider/SettingsProvider";
 import { TTimeEntry } from "../../types/redmine";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";
 import EditTimeEntryModal from "./EditTimeEntryModal";
 
 type PropTypes = {

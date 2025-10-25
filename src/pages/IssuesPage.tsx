@@ -32,52 +32,50 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
     <>
       <TimersBadge activeTimerCount={timers.getActiveTimerCount()} />
 
-      <div className="flex flex-col gap-y-2">
-        {isLoading ? (
-          <IssuesListSkeleton />
-        ) : (
+      {isLoading ? (
+        <IssuesListSkeleton />
+      ) : (
+        <IssuesList
+          issues={myIssuesQuery.data}
+          localIssues={localIssues}
+          issuePriorities={issuePriorities}
+          projectVersions={projectVersions}
+          timers={timers}
+          onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
+        />
+      )}
+
+      {searchIssues.isSearching && (
+        <>
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center" aria-hidden="true">
+              <div className="w-full border-t text-slate-500 dark:text-slate-300"></div>
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-background px-2 text-sm text-slate-500 dark:text-slate-300">
+                <FormattedMessage id="issues.extended-search" />
+              </span>
+            </div>
+          </div>
+
           <IssuesList
-            issues={myIssuesQuery.data}
+            issues={searchIssues.data}
             localIssues={localIssues}
             issuePriorities={issuePriorities}
             projectVersions={projectVersions}
             timers={timers}
             onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
           />
-        )}
 
-        {searchIssues.isSearching && (
-          <>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className="w-full border-t text-slate-500 dark:text-slate-300"></div>
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-background px-2 text-sm text-slate-500 dark:text-slate-300">
-                  <FormattedMessage id="issues.extended-search" />
-                </span>
-              </div>
+          {searchIssues.hasNextPage && (
+            <div className="mt-4 flex justify-center">
+              <Button variant="outline" onClick={() => searchIssues.fetchNextPage()}>
+                {formatMessage({ id: "issues.list.load-more" })}
+              </Button>
             </div>
-
-            <IssuesList
-              issues={searchIssues.data}
-              localIssues={localIssues}
-              issuePriorities={issuePriorities}
-              projectVersions={projectVersions}
-              timers={timers}
-              onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
-            />
-
-            {searchIssues.hasNextPage && (
-              <div className="flex justify-center">
-                <Button variant="outline" onClick={() => searchIssues.fetchNextPage()}>
-                  {formatMessage({ id: "issues.list.load-more" })}
-                </Button>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+          )}
+        </>
+      )}
     </>
   );
 };

@@ -5,14 +5,12 @@ import { TVersion } from "../../types/redmine";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type PropTypes = {
-  version?: TVersion;
+  version: TVersion;
   children?: ReactNode;
 };
 
 const VersionTooltip = ({ version, children }: PropTypes) => {
   const { formatDate, formatRelativeTime } = useIntl();
-
-  if (!version) return children;
 
   return (
     <Tooltip>
