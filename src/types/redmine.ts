@@ -37,6 +37,7 @@ export type TIssue = {
   updated_on: string;
   closed_on?: string;
   allowed_statuses?: TIssueStatus[]; // available since Redmine 5.0.0
+  custom_fields?: TCustomFieldValue[];
 };
 
 export type TCreateIssue = {
@@ -67,6 +68,7 @@ export type TIssuePriority = {
   name: string;
   is_default: boolean;
   active: boolean; // available since Redmine 4.1.0
+  custom_fields?: TCustomFieldValue[];
 };
 
 export type TIssueTracker = {
@@ -101,6 +103,7 @@ export type TProject = {
   time_entry_activities?: TReference[]; // available since Redmine 3.4.0
   created_on: string;
   updated_on: string;
+  custom_fields?: TCustomFieldValue[];
 };
 
 export type TMembership = {
@@ -126,6 +129,7 @@ export type TVersion = {
   wiki_page_title: string;
   created_on: string;
   updated_on: string;
+  custom_fields?: TCustomFieldValue[];
 };
 
 /* export type TIssueCategory = {
@@ -149,6 +153,7 @@ export type TTimeEntry = {
   spent_on: string;
   created_on: string;
   updated_on: string;
+  custom_fields?: TCustomFieldValue[];
 };
 
 export type TTimeEntryActivity = {
@@ -156,6 +161,7 @@ export type TTimeEntryActivity = {
   name: string;
   is_default: boolean;
   active?: boolean; // available since Redmine 4.1.0
+  custom_fields?: TCustomFieldValue[];
 };
 
 export type TCreateTimeEntry = {
@@ -269,6 +275,14 @@ export type TUser = {
   last_login_on: string;
   passwd_changed_on: string;
   memberships?: TMembership[];
+};
+
+// Customer fields
+export type TCustomFieldValue = {
+  id: number;
+  name: string;
+  multiple?: boolean;
+  value: null | string | string[];
 };
 
 // Other

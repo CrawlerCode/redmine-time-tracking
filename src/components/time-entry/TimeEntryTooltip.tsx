@@ -46,6 +46,18 @@ const TimeEntryTooltip = ({ entry, children }: PropTypes) => {
               </th>
               <td>{formatHours(entry.hours)}</td>
             </tr>
+            {entry.custom_fields?.map((field) => {
+              if (!field.value) return null;
+              if (Array.isArray(field.value) && field.value.length === 0) return null;
+
+              const value = Array.isArray(field.value) ? field.value.join(", ") : String(field.value);
+              return (
+                <tr key={field.id}>
+                  <th className="text-xs font-medium">{field.name}:</th>
+                  <td>{value}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </TooltipContent>

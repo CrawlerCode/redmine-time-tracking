@@ -94,6 +94,18 @@ const IssueInfoTooltip = ({ issue, children }: PropTypes) => {
                 <td>{formatHours(issue.spent_hours)}</td>
               </tr>
             )}
+            {issue.custom_fields?.map((field) => {
+              if (!field.value) return null;
+              if (Array.isArray(field.value) && field.value.length === 0) return null;
+
+              const value = Array.isArray(field.value) ? field.value.join(", ") : String(field.value);
+              return (
+                <tr key={field.id}>
+                  <th className="text-xs font-medium">{field.name}:</th>
+                  <td>{value}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <p className="italic">
