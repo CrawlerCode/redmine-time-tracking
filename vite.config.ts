@@ -17,6 +17,7 @@ export default defineConfig((env) => ({
     },
   },
   build: {
+    minify: env.mode === "development" ? false : undefined,
     emptyOutDir: true,
     rollupOptions: {
       input: ["index.html", "src/background.ts", "src/content.tsx", "src/inject-content-module.ts"],
@@ -37,7 +38,11 @@ export default defineConfig((env) => ({
     },
   },
   plugins: [
-    react(),
+    react({
+      babel: {
+        plugins: ["babel-plugin-react-compiler"],
+      },
+    }),
     tailwindcss(),
     viteStaticCopy({
       targets: [

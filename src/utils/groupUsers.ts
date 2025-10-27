@@ -6,9 +6,12 @@ type GroupedUsers = {
   users: TUser[];
 };
 
-export const getGroupedUsers = (users: TUser[]) => {
-  return Object.values(
-    users.reduce((result: Record<number, GroupedUsers>, user) => {
+/**
+ * Group users by their highest role
+ */
+export const groupUsers = (users: TUser[]) =>
+  Object.values(
+    users.reduce<Record<string, GroupedUsers>>((result, user) => {
       if (!user.highestRole) return result; // should never happen
       if (!(user.highestRole.id in result)) {
         result[user.highestRole.id] = {
@@ -20,4 +23,3 @@ export const getGroupedUsers = (users: TUser[]) => {
       return result;
     }, {})
   );
-};

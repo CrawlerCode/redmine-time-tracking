@@ -1,7 +1,6 @@
 import { PencilIcon, SquareArrowOutUpRightIcon } from "lucide-react";
 import { ComponentProps, useState } from "react";
 import { useIntl } from "react-intl";
-import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import { useSettings } from "../../provider/SettingsProvider";
 import { TTimeEntry } from "../../types/redmine";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";
@@ -9,10 +8,10 @@ import EditTimeEntryModal from "./EditTimeEntryModal";
 
 type PropTypes = {
   entry: TTimeEntry;
-  projectRoles: ReturnType<typeof useMyProjectRoles>;
+  canEdit: boolean;
 } & ComponentProps<typeof ContextMenuTrigger>;
 
-function TimeEntryContextMenu({ entry, projectRoles, children, ...props }: PropTypes) {
+function TimeEntryContextMenu({ entry, canEdit, children, ...props }: PropTypes) {
   const { formatMessage } = useIntl();
 
   const { settings } = useSettings();
@@ -33,7 +32,7 @@ function TimeEntryContextMenu({ entry, projectRoles, children, ...props }: PropT
             {formatMessage({ id: "time.time-entry.context-menu.open-in-redmine" })}
           </ContextMenuItem>
           <ContextMenuSeparator />
-          <ContextMenuItem onClick={() => setEdit(true)} disabled={!projectRoles.hasProjectPermission(entry.project.id, "edit_own_time_entries")}>
+          <ContextMenuItem onClick={() => setEdit(true)} disabled={!canEdit}>
             <PencilIcon />
             {formatMessage({ id: "time.time-entry.context-menu.edit" })}
           </ContextMenuItem>

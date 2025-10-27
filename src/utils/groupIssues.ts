@@ -66,7 +66,7 @@ export const groupIssues = (
     localIssues: LocalIssueData[];
     timers: TimerController[];
     issuePriorities: TIssuePriority[];
-    projectVersions: Record<number, TVersion[]>;
+    projectVersions: Record<string, TVersion[]>;
     activeTabIssueId?: number;
     settings: Settings;
   }
@@ -296,7 +296,7 @@ const buildPinnedIssuesSet = (localIssues: LocalIssueData[]) => {
 /**
  * Build version sorting lookup map for maintaining version order
  */
-const buildVersionSortMap = (projectVersions: Record<number, TVersion[]>) => {
+const buildVersionSortMap = (projectVersions: Record<string, TVersion[]>) => {
   const versionSortMap = new Map<number, Map<number, number>>();
   Object.entries(projectVersions).forEach(([projectIdStr, versions]) => {
     const projectId = parseInt(projectIdStr, 10);

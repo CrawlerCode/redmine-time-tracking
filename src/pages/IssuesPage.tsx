@@ -35,14 +35,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
       {isLoading ? (
         <IssuesListSkeleton />
       ) : (
-        <IssuesList
-          issues={myIssuesQuery.data}
-          localIssues={localIssues}
-          issuePriorities={issuePriorities}
-          projectVersions={projectVersions}
-          timers={timers}
-          onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
-        />
+        <IssuesList issues={myIssuesQuery.data} localIssues={localIssues} issuePriorities={issuePriorities} projectVersions={projectVersions} timers={timers} searchRef={searchRef} />
       )}
 
       {searchIssues.isSearching && (
@@ -58,14 +51,7 @@ const IssuesPage = ({ search, filter, searchRef, isLoading: isPageLoading }: { s
             </div>
           </div>
 
-          <IssuesList
-            issues={searchIssues.data}
-            localIssues={localIssues}
-            issuePriorities={issuePriorities}
-            projectVersions={projectVersions}
-            timers={timers}
-            onSearchInProject={(project) => searchRef.current?.searchInProject(project)}
-          />
+          <IssuesList issues={searchIssues.data} localIssues={localIssues} issuePriorities={issuePriorities} projectVersions={projectVersions} timers={timers} searchRef={searchRef} />
 
           {searchIssues.hasNextPage && (
             <div className="mt-4 flex justify-center">

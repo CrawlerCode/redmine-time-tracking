@@ -28,7 +28,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
             {withContextMenu ? (
               <TimeEntryContextMenu
                 entry={entry}
-                projectRoles={projectRoles}
+                canEdit={projectRoles.hasProjectPermission(entry.project.id, "edit_own_time_entries")}
                 role="cell"
                 data-type="time-entry"
                 className="bg-primary h-4 rounded-sm"

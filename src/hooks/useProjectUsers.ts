@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
-import { TMembership } from "../types/redmine";
+import { TMembership, TReference } from "../types/redmine";
 import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 type Options = {
@@ -30,38 +29,39 @@ const useProjectUsers = (projectId: number, { enabled = true }: Options = {}) =>
     enabled: enabled,
   });
 
-  // filter memberships => only users
-  const users: TUser[] = useMemo(() => {
-    const rolesIdx =
-      rolesQuery.data?.reduce((result: Record<number, number>, role, i) => {
-        result[role.id] = i;
-        return result;
-      }, {}) ?? {};
+  const rolesSortMap = buildRolesSortMap(rolesQuery.data ?? []);
 
-    return (
-      membershipsQuery.data
-        ?.filter((m) => m.user)
-        .map(
-          (m) =>
-            ({
-              ...m.user!,
-              roles: m.roles,
-              highestRole: m.roles.reduce((result: TMembership["roles"][0] | undefined, role) => {
-                if (!result || rolesIdx[role.id] < rolesIdx[result.id]) {
-                  result = role;
-                }
-                return result;
-              }, undefined),
-            }) satisfies TUser
-        ) ?? []
-    );
-  }, [membershipsQuery.data, rolesQuery.data]);
+  const users: TUser[] =
+    membershipsQuery.data
+      ?.filter((m) => m.user)
+      .map((m) => ({
+        ...m.user!,
+        roles: m.roles,
+        highestRole: getHighestRole(m.roles, rolesSortMap),
+      })) ?? [];
 
   return {
     data: users,
     isLoading: membershipsQuery.isLoading || rolesQuery.isLoading,
     isError: membershipsQuery.isError || rolesQuery.isError,
   };
+};
+
+const buildRolesSortMap = (roles: TReference[]) => {
+  const sortMap = new Map<number, number>();
+  roles.forEach((role, index) => {
+    sortMap.set(role.id, index);
+  });
+  return sortMap;
+};
+
+const getHighestRole = (roles: TReference[], rolesSortMap: Map<number, number>) => {
+  return roles.reduce<TUser["highestRole"]>((highestRole, role) => {
+    if (!highestRole || (rolesSortMap.get(role.id) ?? 0) < (rolesSortMap.get(highestRole.id) ?? 0)) {
+      highestRole = role;
+    }
+    return highestRole;
+  }, undefined);
 };
 
 export default useProjectUsers;

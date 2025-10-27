@@ -10,7 +10,7 @@ type Options = {
 };
 
 const useCachedComments = ({ identifier, enabled = true, onLoad }: Options) => {
-  const cachedComments = useStorage<Record<number, string | undefined>>("cachedComments", _defaultCachedComments);
+  const cachedComments = useStorage<Record<string, string | undefined>>("cachedComments", _defaultCachedComments);
 
   useEffect(() => {
     if (!enabled) return;

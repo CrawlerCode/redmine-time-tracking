@@ -1,9 +1,9 @@
 import { ComboboxField } from "@/components/form/ComboboxField";
+import { groupUsers } from "@/utils/groupUsers";
 import { ComponentProps, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
 import useMyUser from "../../../../hooks/useMyUser";
 import useProjectUsers from "../../../../hooks/useProjectUsers";
-import { getGroupedUsers } from "../../../../utils/user";
 
 type Props = {
   projectId: number;
@@ -18,7 +18,7 @@ const AssigneeField = ({ projectId, ...props }: Omit<ComponentProps<typeof Combo
   const users = useProjectUsers(projectId, {
     enabled: loadUsers,
   });
-  const groupedUsers = useMemo(() => getGroupedUsers(users.data), [users.data]);
+  const groupedUsers = useMemo(() => groupUsers(users.data), [users.data]);
 
   return (
     <ComboboxField

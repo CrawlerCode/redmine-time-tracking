@@ -1,7 +1,7 @@
 import { groupIssues, ProjectGroup } from "@/utils/groupIssues";
 import clsx from "clsx";
 import { PinIcon, PlusIcon, SearchIcon, SquareChartGanttIcon, SquareMousePointerIcon, TimerIcon } from "lucide-react";
-import { Fragment, ReactNode, useState } from "react";
+import { Fragment, ReactNode, RefObject, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import useActiveRedmineTab from "../../hooks/useActiveRedmineTab";
 import useIssuePriorities from "../../hooks/useIssuePriorities";
@@ -16,6 +16,7 @@ import { TIssue, TReference, TVersion } from "../../types/redmine";
 import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";
 import Issue from "./Issue";
+import { SearchRef } from "./Search";
 import VersionTooltip from "./VersionTooltip";
 
 type PropTypes = {
@@ -24,26 +25,31 @@ type PropTypes = {
   issuePriorities: ReturnType<typeof useIssuePriorities>;
   projectVersions?: ReturnType<typeof useProjectVersions>;
   timers: ReturnType<typeof useTimers>;
-  onSearchInProject?: (project: TReference) => void;
+  searchRef: RefObject<SearchRef | null>;
 };
 
-const IssuesList = ({ issues: rawIssues, localIssues, issuePriorities, projectVersions, timers, onSearchInProject }: PropTypes) => {
+const IssuesList = ({ issues: unsortedIssues, localIssues, issuePriorities, projectVersions, timers, searchRef }: PropTypes) => {
   const { settings } = useSettings();
 
   const activeTab = useActiveRedmineTab();
 
   const myUser = useMyUser();
   const projects = useMyProjects();
-  const projectRoles = useMyProjectRoles([...new Set(rawIssues.map((i) => i.project.id))], projects.data);
+  const projectIds = useMemo(() => [...new Set(unsortedIssues.map((i) => i.project.id))], [unsortedIssues]);
+  const projectRoles = useMyProjectRoles(projectIds, projects.data);
 
-  const groupedIssues = groupIssues(rawIssues, {
-    localIssues: localIssues.localIssues,
-    timers: timers.getAllTimers(),
-    issuePriorities: issuePriorities.data,
-    projectVersions: projectVersions?.data ?? {},
-    activeTabIssueId: activeTab?.data?.type === "issue" ? activeTab?.data?.id : undefined,
-    settings,
-  });
+  const groupedIssues = useMemo(
+    () =>
+      groupIssues(unsortedIssues, {
+        localIssues: localIssues.localIssues,
+        timers: timers.getAllTimers(),
+        issuePriorities: issuePriorities.data,
+        projectVersions: projectVersions?.data ?? {},
+        activeTabIssueId: activeTab?.data?.type === "issue" ? activeTab?.data?.id : undefined,
+        settings,
+      }),
+    [unsortedIssues, localIssues.localIssues, timers, issuePriorities.data, projectVersions?.data, activeTab, settings]
+  );
 
   const [createIssue, setCreateIssue] = useState<number | undefined>(undefined);
 
@@ -57,12 +63,12 @@ const IssuesList = ({ issues: rawIssues, localIssues, issuePriorities, projectVe
             actions={
               <>
                 {projectRoles?.hasProjectPermission(projectGroup.project.id, "add_issues") && (
-                  <button type="button" onClick={() => setCreateIssue(projectGroup.project!.id)} tabIndex={-1}>
+                  <button type="button" onClick={() => setCreateIssue(projectGroup.project.id)} tabIndex={-1}>
                     <PlusIcon className="size-4" />
                   </button>
                 )}
-                {onSearchInProject && (
-                  <button type="button" onClick={() => onSearchInProject(projectGroup.project!)} tabIndex={-1}>
+                {searchRef.current && (
+                  <button type="button" onClick={() => searchRef.current?.searchInProject(projectGroup.project)} tabIndex={-1}>
                     <SearchIcon className="size-4" />
                   </button>
                 )}

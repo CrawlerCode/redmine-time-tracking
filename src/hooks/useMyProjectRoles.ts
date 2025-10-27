@@ -1,25 +1,19 @@
-import { useQueries } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { TProject, TReference, TRole } from "../types/redmine";
 import useMyUser from "./useMyUser";
+import useRoles from "./useRoles";
 
 const useMyProjectRoles = (projectIds: number[], projects?: TProject[]) => {
-  const redmineApi = useRedmineApi();
-
   const myUser = useMyUser();
 
   const projectMembershipRoles = useMemo(
     () =>
       myUser.data?.memberships
         ?.filter((m) => projectIds.includes(m.project.id))
-        .reduce(
-          (acc, m) => {
-            acc[m.project.id] = m.roles;
-            return acc;
-          },
-          {} as Record<number, TReference[]>
-        ) ?? {},
+        .reduce<Record<string, TReference[]>>((acc, m) => {
+          acc[m.project.id] = m.roles;
+          return acc;
+        }, {}) ?? {},
     [myUser.data, projectIds]
   );
 
@@ -31,39 +25,26 @@ const useMyProjectRoles = (projectIds: number[], projects?: TProject[]) => {
         .map((r) => r.id)
     ),
   ];
-  const rolesQueries = useQueries({
-    queries: myRolesIds.map((id) => ({
-      queryKey: ["role", id],
-      queryFn: () => redmineApi.getRole(id),
-    })),
-    combine: (results) => ({
-      isLoading: results.some((r) => r.isLoading),
-      isError: results.some((r) => r.isError),
-      data: results.map((r) => r.data).filter((r) => r !== undefined),
-    }),
-  });
+  const rolesQueries = useRoles(myRolesIds);
 
-  const projectRoles = useMemo(
+  const myProjectRoles = useMemo(
     () =>
-      Object.entries(projectMembershipRoles).reduce(
-        (acc, [projectId, roles]) => {
-          acc[projectId as unknown as number] = rolesQueries.data.filter((r) => roles.some((role) => role.id === r.id));
-          return acc;
-        },
-        {} as Record<number, TRole[]>
-      ),
+      Object.entries(projectMembershipRoles).reduce<Record<string, TRole[]>>((acc, [projectId, myRoles]) => {
+        acc[projectId] = rolesQueries.data.filter((r) => myRoles.some((role) => role.id === r.id));
+        return acc;
+      }, {}),
     [projectMembershipRoles, rolesQueries.data]
   );
   const nonMemberRole = rolesQueries.data.find((r) => r.id === 1);
 
   return {
-    data: projectRoles,
+    data: myProjectRoles,
     isLoading: myUser.isLoading || rolesQueries.isLoading,
     isError: myUser.isError || rolesQueries.isError,
     hasProjectPermission: (projectId: number, permission: TRole["permissions"][number]) =>
       // First check if user is admin, then check if user has the permission in the project roles or if the project is public and the non member role has the permission
       myUser.data?.admin ||
-      (projectRoles[projectId] ?? (projects?.find((p) => p.id === projectId)?.is_public && nonMemberRole ? [nonMemberRole] : undefined))?.some((r) => r.permissions.includes(permission)),
+      (myProjectRoles[projectId] ?? (projects?.find((p) => p.id === projectId)?.is_public && nonMemberRole ? [nonMemberRole] : undefined))?.some((r) => r.permissions.includes(permission)),
   };
 };
 

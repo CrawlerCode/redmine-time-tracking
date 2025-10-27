@@ -80,6 +80,7 @@ const buildPriorityTypeMap = (priorities: TIssuePriority[]): Map<number, Priorit
       }
     }
   });
+
   return priorityTypeMap;
 };
 
