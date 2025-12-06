@@ -52,7 +52,7 @@ At least Redmine version `3.0` or higher required. Recommended version `5.0` or 
 | Select the **default fixed version** when _creating new issues_                   | `< 4.1.1`                   |
 | Check permissions for admin users who are not members of a project                | `< 4.0.0`                   |
 | Display project-available time entry activities when _adding spent time entries_  | `< 3.4.0`                   |
-| Extended search                                                                   | `< 3.3.0`                   |
+| Remote Redmine search                                                             | `< 3.3.0`                   |
 
 _Tested with Google Chrome Version 130 and Firefox 132_
 

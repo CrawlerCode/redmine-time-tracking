@@ -1,14 +1,13 @@
-import { useRef } from "react";
+import TimerSearch, { useTimerSearch } from "@/components/timer/TimerSearch";
 import { FormattedMessage } from "react-intl";
 import IssuesListSkeleton from "../components/issue/IssuesListSkeleton";
-import Search, { SearchQuery, SearchRef } from "../components/issue/Search";
 import Timer from "../components/timer/Timer";
 import TimersBadge from "../components/timer/TimersBadge";
 import useIssuePriorities from "../hooks/useIssuePriorities";
 import useTimers from "../hooks/useTimers";
 import { useSettings } from "../provider/SettingsProvider";
 
-const TimersPage = ({ search }: { search: SearchQuery }) => {
+const TimersPage = () => {
   const { settings } = useSettings();
 
   const timers = useTimers({
@@ -16,6 +15,7 @@ const TimersPage = ({ search }: { search: SearchQuery }) => {
   });
   const issuePriorities = useIssuePriorities({ enabled: settings.style.showIssuesPriority });
 
+  const search = useTimerSearch();
   const matchedTimers = timers.searchTimers(search);
 
   const isLoading = timers.isLoading || issuePriorities.isLoading;
@@ -47,9 +47,11 @@ const TimersPage = ({ search }: { search: SearchQuery }) => {
 };
 
 const SearchWrapper = () => {
-  const searchRef = useRef<SearchRef>(null);
-
-  return <Search ref={searchRef}>{({ search }) => <TimersPage search={search} />}</Search>;
+  return (
+    <TimerSearch>
+      <TimersPage />
+    </TimerSearch>
+  );
 };
 
 export default SearchWrapper;

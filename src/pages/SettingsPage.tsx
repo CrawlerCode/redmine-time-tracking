@@ -39,7 +39,6 @@ const SettingsPage = () => {
         redmineApiKey: z.string().nonempty(formatMessage({ id: "settings.redmine.api-key.validation.required" })),
         features: z.object({
           autoPauseOnSwitch: z.boolean(),
-          extendedSearch: z.boolean(),
           roundToNearestInterval: z.boolean(),
           roundingInterval: z
             .int(formatMessage({ id: "settings.features.rounding-interval.validation.required" }))
@@ -210,12 +209,6 @@ const SettingsPage = () => {
                     title={formatMessage({ id: "settings.features.auto-pause-on-switch.title" })}
                     description={formatMessage({ id: "settings.features.auto-pause-on-switch.description" })}
                   />
-                )}
-              />
-              <form.AppField
-                name="features.extendedSearch"
-                children={(field) => (
-                  <field.CheckboxField title={formatMessage({ id: "settings.features.extended-search.title" })} description={formatMessage({ id: "settings.features.extended-search.description" })} />
                 )}
               />
               <>

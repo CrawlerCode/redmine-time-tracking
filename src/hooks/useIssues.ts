@@ -10,7 +10,7 @@ type Options = {
   keepPreviousData?: boolean;
 };
 
-const useIssues = (ids: number[], search?: string, { enabled = true, keepPreviousData = false }: Options = {}) => {
+const useIssues = (ids: number[], { enabled = true, keepPreviousData = false }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
   const issuesQuery = useRedminePaginatedInfiniteQuery({
@@ -31,12 +31,7 @@ const useIssues = (ids: number[], search?: string, { enabled = true, keepPreviou
     autoFetchPages: true,
   });
 
-  let issues = issuesQuery.data ?? [];
-
-  // filter by search
-  if (search) {
-    issues = issues.filter((issue) => new RegExp(search, "i").test(`#${issue.id} ${issue.subject}`));
-  }
+  const issues = issuesQuery.data ?? [];
 
   return {
     data: issues,

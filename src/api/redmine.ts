@@ -70,8 +70,17 @@ export class RedmineApi {
       .then((res) => res.data);
   }
 
-  async searchOpenIssues(
+  async searchIssues(
     query: string,
+    {
+      scope,
+      titlesOnly,
+      openIssuesOnly,
+    }: {
+      scope?: "all" | "my_projects" | "bookmarks"; // "bookmarks" available since Redmine 5.1.0
+      titlesOnly?: boolean;
+      openIssuesOnly?: boolean;
+    },
     { offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }
   ): Promise<
     TPaginatedResponse<{
@@ -81,11 +90,44 @@ export class RedmineApi {
     return this.instance
       .get(
         `/search.json?${qs.stringify({
-          q: query,
-          scope: "my_project",
-          titles_only: 1,
           issues: 1,
-          open_issues: 1,
+          q: query,
+          scope,
+          ...(titlesOnly ? { titles_only: 1 } : {}),
+          ...(openIssuesOnly ? { open_issues: 1 } : {}),
+          offset,
+          limit,
+        })}`
+      )
+      .then((res) => res.data); // available since Redmine 3.3.0
+  }
+
+  async searchIssuesInProject(
+    projectId: number,
+    query: string,
+    {
+      titlesOnly,
+      openIssuesOnly,
+      scope,
+    }: {
+      scope?: "subprojects";
+      titlesOnly?: boolean;
+      openIssuesOnly?: boolean;
+    },
+    { offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }
+  ): Promise<
+    TPaginatedResponse<{
+      results: TSearchResult[];
+    }>
+  > {
+    return this.instance
+      .get(
+        `/projects/${projectId}/search.json?${qs.stringify({
+          issues: 1,
+          q: query,
+          scope,
+          ...(titlesOnly ? { titles_only: 1 } : {}),
+          ...(openIssuesOnly ? { open_issues: 1 } : {}),
           offset,
           limit,
         })}`

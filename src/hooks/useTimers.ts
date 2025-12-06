@@ -1,5 +1,5 @@
+import { TimerSearchContext } from "@/components/timer/TimerSearch";
 import { useMemo } from "react";
-import { SearchQuery } from "../components/issue/Search";
 import { useSettings } from "../provider/SettingsProvider";
 import { TIssue } from "../types/redmine";
 import useIssues from "./useIssues";
@@ -42,7 +42,7 @@ const useTimers = ({ loadIssues = false }: Options = {}) => {
   const timerInfosArray = useMemo(() => Object.values(timerInfos), [timerInfos]);
 
   const issuesIds = Array.from(new Set(timerInfosArray.map((timerInfo) => timerInfo.issueId)));
-  const issues = useIssues(issuesIds, undefined, { enabled: loadIssues, keepPreviousData: true });
+  const issues = useIssues(issuesIds, { enabled: loadIssues, keepPreviousData: true });
 
   return useMemo(() => {
     /**
@@ -178,11 +178,11 @@ const useTimers = ({ loadIssues = false }: Options = {}) => {
       /**
        * Search timers by name
        */
-      searchTimers: (search: SearchQuery) => {
+      searchTimers: (search: TimerSearchContext) => {
         let timers = timerInfosArray;
 
         // local search
-        if (search?.searching && search.query) {
+        if (search.isSearching && search.query) {
           timers = timers.filter((timer) => {
             // Match by timer name
             if (timer.name && new RegExp(search.query, "i").test(timer.name)) {

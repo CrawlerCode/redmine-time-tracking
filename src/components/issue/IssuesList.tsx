@@ -1,7 +1,7 @@
 import { groupIssues, ProjectGroup } from "@/utils/groupIssues";
 import clsx from "clsx";
 import { PinIcon, PlusIcon, SearchIcon, SquareChartGanttIcon, SquareMousePointerIcon, TimerIcon } from "lucide-react";
-import { Fragment, ReactNode, RefObject, useMemo, useState } from "react";
+import { Fragment, ReactNode, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import useActiveRedmineTab from "../../hooks/useActiveRedmineTab";
 import useIssuePriorities from "../../hooks/useIssuePriorities";
@@ -16,7 +16,7 @@ import { TIssue, TReference, TVersion } from "../../types/redmine";
 import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";
 import Issue from "./Issue";
-import { SearchRef } from "./Search";
+import { useIssueSearch } from "./IssueSearch";
 import VersionTooltip from "./VersionTooltip";
 
 type PropTypes = {
@@ -25,11 +25,11 @@ type PropTypes = {
   issuePriorities: ReturnType<typeof useIssuePriorities>;
   projectVersions?: ReturnType<typeof useProjectVersions>;
   timers: ReturnType<typeof useTimers>;
-  searchRef: RefObject<SearchRef | null>;
 };
 
-const IssuesList = ({ issues: unsortedIssues, localIssues, issuePriorities, projectVersions, timers, searchRef }: PropTypes) => {
+const IssuesList = ({ issues: unsortedIssues, localIssues, issuePriorities, projectVersions, timers }: PropTypes) => {
   const { settings } = useSettings();
+  const { searchInProject } = useIssueSearch();
 
   const activeTab = useActiveRedmineTab();
 
@@ -67,11 +67,9 @@ const IssuesList = ({ issues: unsortedIssues, localIssues, issuePriorities, proj
                     <PlusIcon className="size-4" />
                   </button>
                 )}
-                {searchRef.current && (
-                  <button type="button" onClick={() => searchRef.current?.searchInProject(projectGroup.project)} tabIndex={-1}>
-                    <SearchIcon className="size-4" />
-                  </button>
-                )}
+                <button type="button" onClick={() => searchInProject(projectGroup.project)} tabIndex={-1}>
+                  <SearchIcon className="size-4" />
+                </button>
               </>
             }
           />

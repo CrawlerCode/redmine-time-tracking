@@ -21,10 +21,8 @@ const EditTimer = ({ initTime, onOverrideTime, onCancel: onConfirmCancel }: Prop
 
   const [confirmCancelModal, setConfirmCancelModal] = useState(false);
   const onCancel = () => setConfirmCancelModal(true);
-  /**
-   * On "Escape" => cancel
-   */
-  useHotKey(onConfirmCancel, { key: "Escape" });
+
+  useHotKey({ key: "Escape" }, onConfirmCancel);
 
   return (
     <>
