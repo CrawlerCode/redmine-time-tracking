@@ -1,13 +1,11 @@
 import { keepPreviousData } from "@tanstack/react-query";
-import { FilterQuery } from "../components/issue/Filter";
-import { SearchQuery } from "../components/issue/Search";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 15;
 const STALE_DATA_TIME = 1000 * 60;
 
-const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter: FilterQuery) => {
+const useMyIssues = (additionalIssuesIds: number[]) => {
   const redmineApi = useRedmineApi();
 
   const issuesQuery = useRedminePaginatedInfiniteQuery({
@@ -26,11 +24,11 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     autoFetchPages: true,
   });
   const additionalIssuesQuery = useRedminePaginatedInfiniteQuery({
-    queryKey: ["issues", "open", additionalIssuesIds],
+    queryKey: ["issues", additionalIssuesIds],
     queryFn: ({ pageParam }) =>
       redmineApi.getIssues(
         {
-          statusId: "open",
+          statusId: "*",
           issueIds: additionalIssuesIds,
         },
         pageParam
@@ -43,28 +41,8 @@ const useMyIssues = (additionalIssuesIds: number[], search: SearchQuery, filter:
     autoFetchPages: true,
   });
 
-  let issues = issuesQuery.data ?? [];
+  const issues = issuesQuery.data ?? [];
   issues.push(...(additionalIssuesQuery.data?.filter((issue) => !issues.find((iss) => iss.id === issue.id)) ?? []));
-
-  // filter by project (search in project)
-  if (search.searching && search.inProject) {
-    issues = issues.filter((issue) => issue.project.id === search.inProject?.id);
-  }
-
-  // local search
-  if (search.searching && search.query) {
-    issues = issues.filter((issue) => new RegExp(search.query, "i").test(`#${issue.id} ${issue.subject}`));
-  }
-
-  // filter: projects
-  if (filter.projects.length > 0) {
-    issues = issues.filter((issue) => filter.projects.includes(issue.project.id));
-  }
-
-  // filter: hide completed issues (done_ratio = 100%)
-  if (filter.hideCompletedIssues) {
-    issues = issues.filter((issue) => issue.done_ratio !== 100);
-  }
 
   return {
     data: issues,

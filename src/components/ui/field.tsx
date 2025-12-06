@@ -168,4 +168,15 @@ function FieldError({
   );
 }
 
-export { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet, FieldTitle };
+function FieldInfo({ className, children, ...props }: React.ComponentProps<typeof InfoIcon>) {
+  return (
+    <Tooltip delayDuration={0}>
+      <TooltipTrigger asChild>
+        <InfoIcon className={cn("text-muted-foreground size-3.5", className)} {...props} />
+      </TooltipTrigger>
+      <TooltipContent className="max-w-64 text-wrap">{children}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+export { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldInfo, FieldLabel, FieldLegend, FieldSeparator, FieldSet, FieldTitle };

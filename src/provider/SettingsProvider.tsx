@@ -8,7 +8,6 @@ export type Settings = {
   redmineApiKey: string;
   features: {
     autoPauseOnSwitch: boolean;
-    extendedSearch: boolean;
     roundTimeNearestQuarterHour?: boolean;
     roundToNearestInterval: boolean;
     roundingInterval: number;
@@ -35,7 +34,6 @@ const defaultSettings: Settings = {
   redmineApiKey: "",
   features: {
     autoPauseOnSwitch: true,
-    extendedSearch: true,
     roundToNearestInterval: false,
     roundingInterval: 15,
     cacheComments: true,
