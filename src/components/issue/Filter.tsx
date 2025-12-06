@@ -20,13 +20,13 @@ type FilterSettings = z.infer<typeof filterSettingsSchema>;
 
 const defaultSettings: FilterSettings = { projects: [], hideCompletedIssues: false };
 
-type FilterContext = {
+type FilterContextType = {
   isLoading: boolean;
   settings: FilterSettings;
   setSettings: (settings: FilterSettings) => void;
 };
 
-const FilterContext = createContext<FilterContext | undefined>(undefined);
+const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 const FilterProvider = ({ children }: PropsWithChildren) => {
   const { isLoading, data: settings, setData: setSettings } = useStorage<FilterSettings>("filter", defaultSettings);
