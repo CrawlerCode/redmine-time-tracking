@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { AsteriskIcon, BadgeQuestionMarkIcon, InfoIcon } from "lucide-react";
+import { AsteriskIcon, InfoIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
@@ -168,7 +168,7 @@ function FieldError({
   );
 }
 
-function FieldInfo({ className, children, ...props }: React.ComponentProps<typeof BadgeQuestionMarkIcon>) {
+function FieldInfo({ className, children, ...props }: React.ComponentProps<typeof InfoIcon>) {
   return (
     <Tooltip delayDuration={0}>
       <TooltipTrigger asChild>

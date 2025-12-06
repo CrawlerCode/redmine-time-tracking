@@ -3,7 +3,7 @@ import { IssueSearchContext } from "../components/issue/IssueSearch";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
-const STALE_DATA_TIME = 1; /* 1000 * 60 */
+const STALE_DATA_TIME = 1000 * 60; // 1 minute
 
 const useRedmineSearch = (search: IssueSearchContext) => {
   const redmineApi = useRedmineApi();

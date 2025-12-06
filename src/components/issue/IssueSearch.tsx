@@ -211,7 +211,7 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
       )}
       <SearchContext
         value={{
-          isSearching: isSearchOpen && (searchSettings.mode === "local" && query.length > 0 ? true : searchSettings.mode === "remote" && debouncedQuery.length >= 3),
+          isSearching: isSearchOpen && (searchSettings.mode === "local" ? query.length > 0 : debouncedQuery.length >= 3),
           query: searchSettings.mode === "local" ? query : debouncedQuery,
           inProject,
           settings: searchSettings,
