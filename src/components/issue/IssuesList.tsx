@@ -1,18 +1,16 @@
-import { groupIssues, ProjectGroup } from "@/utils/groupIssues";
+import { useIssuePriorities } from "@/hooks/useIssuePriorities";
+import { ProjectGroup } from "@/utils/groupIssues";
 import clsx from "clsx";
 import { PinIcon, PlusIcon, SearchIcon, SquareChartGanttIcon, SquareMousePointerIcon, TimerIcon } from "lucide-react";
 import { Fragment, ReactNode, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
-import useActiveRedmineTab from "../../hooks/useActiveRedmineTab";
-import useIssuePriorities from "../../hooks/useIssuePriorities";
 import useLocalIssues from "../../hooks/useLocalIssues";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useMyProjects from "../../hooks/useMyProjects";
 import useMyUser from "../../hooks/useMyUser";
-import useProjectVersions from "../../hooks/useProjectVersions";
 import useTimers from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
-import { TIssue, TReference, TVersion } from "../../types/redmine";
+import { TReference, TVersion } from "../../types/redmine";
 import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";
 import Issue from "./Issue";
@@ -20,36 +18,21 @@ import { useIssueSearch } from "./IssueSearch";
 import VersionTooltip from "./VersionTooltip";
 
 type PropTypes = {
-  issues: TIssue[];
+  groupedIssues: ProjectGroup[];
   localIssues: ReturnType<typeof useLocalIssues>;
-  issuePriorities: ReturnType<typeof useIssuePriorities>;
-  projectVersions?: ReturnType<typeof useProjectVersions>;
   timers: ReturnType<typeof useTimers>;
 };
 
-const IssuesList = ({ issues: unsortedIssues, localIssues, issuePriorities, projectVersions, timers }: PropTypes) => {
+const IssuesList = ({ groupedIssues, localIssues, timers }: PropTypes) => {
   const { settings } = useSettings();
   const { searchInProject } = useIssueSearch();
 
-  const activeTab = useActiveRedmineTab();
-
   const myUser = useMyUser();
-  const projects = useMyProjects();
-  const projectIds = useMemo(() => [...new Set(unsortedIssues.map((i) => i.project.id))], [unsortedIssues]);
-  const projectRoles = useMyProjectRoles(projectIds, projects.data);
+  const issuePriorities = useIssuePriorities({ enabled: settings.style.showIssuesPriority });
 
-  const groupedIssues = useMemo(
-    () =>
-      groupIssues(unsortedIssues, {
-        localIssues: localIssues.localIssues,
-        timers: timers.getAllTimers(),
-        issuePriorities: issuePriorities.data,
-        projectVersions: projectVersions?.data ?? {},
-        activeTabIssueId: activeTab?.data?.type === "issue" ? activeTab?.data?.id : undefined,
-        settings,
-      }),
-    [unsortedIssues, localIssues.localIssues, timers, issuePriorities.data, projectVersions?.data, activeTab, settings]
-  );
+  const projects = useMyProjects();
+  const projectIds = useMemo(() => [...new Set(groupedIssues.map((g) => g.project.id))], [groupedIssues]);
+  const projectRoles = useMyProjectRoles(projectIds, projects.data);
 
   const [createIssue, setCreateIssue] = useState<number | undefined>(undefined);
 

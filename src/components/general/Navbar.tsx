@@ -1,5 +1,5 @@
+import { Link, useLocation } from "@tanstack/react-router";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "../ui/navigation-menu";
 
 type NavItem = {

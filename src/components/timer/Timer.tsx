@@ -61,7 +61,7 @@ const TimerWrapper = ({ variant = "inner", timer, issue, issuePriorityType }: Ti
               ref={timerRef}
               displayNameField={variant === "expanded"}
               className={clsx(
-                "bg-card rounded-lg border border-gray-200 p-0.5 px-1.5 dark:border-gray-700",
+                "bg-card rounded-lg border border-gray-200 p-1 px-1.5 dark:border-gray-700",
                 "focus-visible:border-ring focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]"
               )}
               tabIndex={1}
@@ -181,7 +181,7 @@ const Timer = ({ timer, onTimerDone, ref, displayNameField, ...props }: TimerPro
           />
         )) || (
           <HelpTooltip message={formatMessage({ id: "issues.timer.action.edit.tooltip" })}>
-            <span className={clsx("text-lg", currenTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", timer.isActive && "font-bold")} onDoubleClick={() => setEditMode(true)}>
+            <span className={clsx("-my-1 text-lg", currenTime > 0 ? "text-yellow-500" : "text-gray-700 dark:text-gray-500", timer.isActive && "font-bold")} onDoubleClick={() => setEditMode(true)}>
               {formatTimer(currenTime)}
             </span>
           </HelpTooltip>

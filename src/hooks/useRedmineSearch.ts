@@ -70,6 +70,7 @@ const useRedmineSearch = (search: IssueSearchContext) => {
       ),
     select: (data) => data?.pages.map((page) => page.issues).flat(),
     enabled: issueIds.length > 0 && !searchResultQuery.isFetching,
+    placeholderData: keepPreviousData,
     staleTime: STALE_DATA_TIME,
     autoFetchPages: 10, // Auto fetch (max 10 pages)
   });

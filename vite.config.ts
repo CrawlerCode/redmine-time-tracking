@@ -1,11 +1,13 @@
 import tailwindcss from "@tailwindcss/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
-import "dotenv/config";
 import path from "path";
 import { defineConfig } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import zipPack from "vite-plugin-zip-pack";
 import packageJson from "./package.json";
+
+import "dotenv/config";
 
 const platform = process.env.PLATFORM ?? "chrome";
 
@@ -44,6 +46,11 @@ export default defineConfig((env) => ({
       },
     }),
     tailwindcss(),
+    tanstackRouter({
+      target: "react",
+      autoCodeSplitting: true,
+      quoteStyle: "double",
+    }),
     viteStaticCopy({
       targets: [
         {

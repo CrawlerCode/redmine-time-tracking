@@ -1,6 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import { useAppForm } from "@/hooks/useAppForm";
-import useStorage from "@/hooks/useStorage";
+import { useSuspenseStorage } from "@/hooks/useStorage";
 import { ChevronRightIcon, CloudIcon, ListTreeIcon, MoreHorizontalIcon, SearchIcon, XIcon } from "lucide-react";
 import { createContext, PropsWithChildren, use, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -57,7 +57,7 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
   const debouncedQuery = useDebounce(query, 300);
   const [inProject, setInProject] = useState<TReference | undefined>(undefined);
 
-  const { data: searchSettings, setData: setSearchSettings } = useStorage<SearchSettingsSchema>("search", defaultSearchSettings);
+  const { data: searchSettings, setData: setSearchSettings } = useSuspenseStorage<SearchSettingsSchema>("search", defaultSearchSettings);
 
   const settingsForm = useAppForm({
     defaultValues: searchSettings,

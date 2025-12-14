@@ -1,6 +1,6 @@
+import { useStorage } from "@/hooks/useStorage";
 import { TriangleAlertIcon } from "lucide-react";
 import { FormattedMessage } from "react-intl";
-import useStorage from "../../hooks/useStorage";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Button } from "../ui/button";
 

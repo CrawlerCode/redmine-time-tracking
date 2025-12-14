@@ -1,40 +1,70 @@
-import { useQuery } from "@tanstack/react-query";
+import { RedmineApi } from "@/api/redmine";
+import { queryOptions, useQuery, useSuspenseQueries, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { TIssue, TIssuePriority } from "../types/redmine";
-
-export type PriorityType = "highest" | "high" | "medium-high" | "medium" | "default" | "low" | "lowest" | "unknown";
 
 type Options = {
   enabled?: boolean;
 };
 
-const useIssuePriorities = ({ enabled = true }: Options = {}) => {
+/**
+ * Query options for issue priorities
+ */
+export const issuePrioritiesQueryOptions = (redmineApi: RedmineApi) =>
+  queryOptions({
+    queryKey: ["issuePriorities"],
+    queryFn: () => redmineApi.getIssuePriorities(),
+    select: (data) => data.filter((priority) => priority.active !== false),
+  });
+
+/**
+ * Hook to get issue priorities
+ */
+export const useIssuePriorities = ({ enabled = true }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
   const issuePrioritiesQuery = useQuery({
-    queryKey: ["issuePriorities"],
-    queryFn: () => redmineApi.getIssuePriorities(),
-    enabled: enabled,
-    select: (data) => data?.filter((priority) => priority.active !== false),
+    ...issuePrioritiesQueryOptions(redmineApi),
+    enabled,
   });
 
   const priorities = issuePrioritiesQuery.data ?? [];
-
   const priorityTypeMap = buildPriorityTypeMap(priorities);
 
-  const getPriorityType = (issue: TIssue): PriorityType => {
-    return priorityTypeMap.get(issue.priority.id) ?? "unknown";
-  };
-
   return {
-    data: priorities,
     isLoading: issuePrioritiesQuery.isLoading,
-    isError: issuePrioritiesQuery.isError,
-    defaultPriority: priorities.find((p) => p.is_default),
-    priorityTypeMap,
-    getPriorityType,
+    priorities,
+    defaultPriority: getDefaultPriority(priorities),
+    getPriorityType: (issue: TIssue) => getPriorityType(issue, priorityTypeMap),
   };
 };
+
+/**
+ * Hook to get issue priorities with suspense
+ */
+export const useSuspenseIssuePriorities = ({ enabled = true }: Options = {}) => {
+  const redmineApi = useRedmineApi();
+
+  const issuePrioritiesQuery = useSuspenseQueries({
+    queries: enabled ? [issuePrioritiesQueryOptions(redmineApi)] : ([] as ReturnType<typeof issuePrioritiesQueryOptions>[]),
+    combine: combineSuspenseQueries,
+  });
+
+  return {
+    priorities: issuePrioritiesQuery.data,
+  };
+};
+
+const combineSuspenseQueries = (results: UseSuspenseQueryResult<TIssuePriority[], Error>[]) => ({
+  data: results.reduce<TIssuePriority[]>((result, query) => {
+    if (query.data) {
+      result.push(...query.data);
+    }
+    return result;
+  }, []),
+});
+
+export type PriorityType = "highest" | "high" | "medium-high" | "medium" | "default" | "low" | "lowest" | "unknown";
 
 /**
  * Build priority type map
@@ -84,4 +114,16 @@ const buildPriorityTypeMap = (priorities: TIssuePriority[]): Map<number, Priorit
   return priorityTypeMap;
 };
 
-export default useIssuePriorities;
+/**
+ * Get priority type for issue
+ */
+const getPriorityType = (issue: TIssue, priorityTypeMap: ReturnType<typeof buildPriorityTypeMap>) => {
+  return priorityTypeMap.get(issue.priority.id) ?? "unknown";
+};
+
+/**
+ * Get default priority
+ */
+const getDefaultPriority = (priorities: TIssuePriority[]) => {
+  return priorities.find((p) => p.is_default);
+};

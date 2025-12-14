@@ -1,11 +1,12 @@
 import { getErrorMessage } from "@/utils/error";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { lazy, ReactNode, Suspense, useEffect } from "react";
+import { PersistQueryClientOptions, PersistQueryClientProvider, persistQueryClientRestore } from "@tanstack/react-query-persist-client";
+import { isAxiosError } from "axios";
+import { lazy, PropsWithChildren, Suspense, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import { toast } from "sonner";
-import useStorage from "../hooks/useStorage";
+import { useStorage } from "../hooks/useStorage";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -22,19 +23,13 @@ declare module "@tanstack/react-query" {
        * Should display a success toast when the mutation succeeds
        */
       successMessage?: string;
-      /**
-       * Error message to display in the toast when the mutation fails
-       *
-       * @default "An unknown error occurred"
-       */
-      errorMessage?: string;
     };
   }
 }
 
 const CACHE_TIME = 1000 * 60 * 60 * 24; // 24 hours
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: CACHE_TIME,
@@ -43,16 +38,32 @@ const queryClient = new QueryClient({
     },
   },
   queryCache: new QueryCache({
-    onError: (_, query) => {
+    onError: (error, query) => {
       if (query.meta?.displayErrorToast === false) return;
+
+      if (!isAxiosError(error)) {
+        toast.error(
+          <FormattedMessage
+            id="general.error.unknown-error"
+            values={{
+              name: error.name,
+            }}
+          />,
+          {
+            description: getErrorMessage(error),
+            duration: 1000 * 60, // 1 minute
+          }
+        );
+        return;
+      }
 
       const failedQueries = queryClient
         .getQueryCache()
         .getAll()
-        .filter((q) => q.state.error && q.meta?.displayErrorToast !== false);
+        .filter((q) => q.state.error && isAxiosError(q.state.error) && q.meta?.displayErrorToast !== false);
 
-      toast.error(<FormattedMessage id="general.error.fail-to-load-data" />, {
-        id: "failed-to-load-data",
+      toast.error(<FormattedMessage id="general.error.api-error" />, {
+        id: "api-error",
         dismissible: false,
         description: Object.entries(
           failedQueries.reduce((errors: Record<string, number>, q) => {
@@ -74,6 +85,7 @@ const queryClient = new QueryClient({
             });
           },
         },
+        duration: 1000 * 60, // 1 minute
       });
     },
   }),
@@ -83,8 +95,17 @@ const queryClient = new QueryClient({
         toast.success(mutation.meta.successMessage);
       }
     },
-    onError: (error, _variables, _context, mutation) => {
-      const title = mutation.meta?.errorMessage || <FormattedMessage id="general.error.unknown-error-occurred" />;
+    onError: (error) => {
+      const title = isAxiosError(error) ? (
+        <FormattedMessage id="general.error.api-error" />
+      ) : (
+        <FormattedMessage
+          id="general.error.unknown-error"
+          values={{
+            name: error.name,
+          }}
+        />
+      );
       toast.error(title, {
         description: getErrorMessage(error),
         duration: 1000 * 60 * 5, // 5 minutes
@@ -102,17 +123,34 @@ const persister = createAsyncStoragePersister({
   throttleTime: 1000,
 });
 
+const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
+  buster: chrome.runtime.getManifest().version,
+  persister,
+  maxAge: CACHE_TIME,
+};
+
+export const restoreQueryClient = async () =>
+  persistQueryClientRestore({
+    queryClient,
+    ...persistOptions,
+  });
+
+const QueryClientProvider = ({ children }: PropsWithChildren) => {
+  return (
+    <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
+      {children}
+      <QueryClientDevtools />
+    </PersistQueryClientProvider>
+  );
+};
+
 const ReactQueryDevtoolsProduction = lazy(() =>
   import("@tanstack/react-query-devtools/build/modern/production.js").then((d) => ({
     default: d.ReactQueryDevtools,
   }))
 );
 
-type PropTypes = {
-  children: ReactNode;
-};
-
-const QueryClientProvider = ({ children }: PropTypes) => {
+const QueryClientDevtools = () => {
   const { data: showDevtools, setData: setShowDevtools } = useStorage("tanstackQueryDevtools", false);
 
   useEffect(() => {
@@ -121,22 +159,12 @@ const QueryClientProvider = ({ children }: PropTypes) => {
     window.toggleDevtools = () => setShowDevtools(!showDevtools);
   }, [showDevtools, setShowDevtools]);
 
+  if (!showDevtools) return null;
+
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{
-        buster: chrome.runtime.getManifest().version,
-        persister: persister,
-        maxAge: CACHE_TIME,
-      }}
-    >
-      {children}
-      {showDevtools && (
-        <Suspense fallback={null}>
-          <ReactQueryDevtoolsProduction />
-        </Suspense>
-      )}
-    </PersistQueryClientProvider>
+    <Suspense fallback={null}>
+      <ReactQueryDevtoolsProduction />
+    </Suspense>
   );
 };
 

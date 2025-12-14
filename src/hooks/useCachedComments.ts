@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import useStorage from "./useStorage";
+import { useStorage } from "./useStorage";
 
 const _defaultCachedComments = {};
 

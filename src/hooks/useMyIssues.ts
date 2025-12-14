@@ -1,14 +1,13 @@
-import { keepPreviousData } from "@tanstack/react-query";
+import { RedmineApi } from "@/api/redmine";
+import { useDeferredValue } from "react";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
-import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
+import { redminePaginatedInfiniteQueryOptions, useSuspenseRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 15;
 const STALE_DATA_TIME = 1000 * 60;
 
-const useMyIssues = (additionalIssuesIds: number[]) => {
-  const redmineApi = useRedmineApi();
-
-  const issuesQuery = useRedminePaginatedInfiniteQuery({
+export const myOpenIssuesQueryOptions = (redmineApi: RedmineApi) =>
+  redminePaginatedInfiniteQueryOptions({
     queryKey: ["issues", "open", "me"],
     queryFn: ({ pageParam }) =>
       redmineApi.getIssues(
@@ -21,21 +20,30 @@ const useMyIssues = (additionalIssuesIds: number[]) => {
     select: (data) => data?.pages.map((page) => page.issues).flat(),
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
+  });
+
+export const useSuspenseMyIssues = (additionalIssuesIds: number[]) => {
+  const redmineApi = useRedmineApi();
+
+  const issuesQuery = useSuspenseRedminePaginatedInfiniteQuery({
+    ...myOpenIssuesQueryOptions(redmineApi),
     autoFetchPages: true,
   });
-  const additionalIssuesQuery = useRedminePaginatedInfiniteQuery({
-    queryKey: ["issues", additionalIssuesIds],
+  const fetchIssuesIds = Array.from(new Set(additionalIssuesIds).difference(new Set(issuesQuery.data?.map((issue) => issue.id) ?? [])));
+  const deferredFetchIssuesIds = useDeferredValue(fetchIssuesIds);
+  const additionalIssuesQuery = useSuspenseRedminePaginatedInfiniteQuery({
+    queryKey: ["issues", deferredFetchIssuesIds, "*"],
     queryFn: ({ pageParam }) =>
-      redmineApi.getIssues(
-        {
-          statusId: "*",
-          issueIds: additionalIssuesIds,
-        },
-        pageParam
-      ),
+      deferredFetchIssuesIds.length > 0
+        ? redmineApi.getIssues(
+            {
+              statusId: "*",
+              issueIds: deferredFetchIssuesIds,
+            },
+            pageParam
+          )
+        : { total_count: 0, ...pageParam, issues: [] },
     select: (data) => data?.pages.map((page) => page.issues).flat(),
-    enabled: additionalIssuesIds.length > 0,
-    placeholderData: keepPreviousData,
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
     autoFetchPages: true,
@@ -46,9 +54,5 @@ const useMyIssues = (additionalIssuesIds: number[]) => {
 
   return {
     data: issues,
-    isLoading: issuesQuery.isLoading || additionalIssuesQuery.isLoading,
-    isError: issuesQuery.isError || additionalIssuesQuery.isError,
   };
 };
-
-export default useMyIssues;

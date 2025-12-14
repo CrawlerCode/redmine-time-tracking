@@ -1,43 +1,38 @@
-import { keepPreviousData as keepPreviousDataAsPlaceholderData } from "@tanstack/react-query";
+import { useDeferredValue } from "react";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
-import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
+import { useSuspenseRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 15;
 const STALE_DATA_TIME = 1000 * 60;
 
 type Options = {
   enabled?: boolean;
-  keepPreviousData?: boolean;
 };
 
-const useIssues = (ids: number[], { enabled = true, keepPreviousData = false }: Options = {}) => {
+export const useSuspenseIssues = (ids: number[], { enabled = true }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
-  const issuesQuery = useRedminePaginatedInfiniteQuery({
-    queryKey: ["issues", ids],
+  const issuesIds = enabled ? ids : [];
+  const deferredIssuesIds = useDeferredValue(issuesIds);
+  const issuesQuery = useSuspenseRedminePaginatedInfiniteQuery({
+    queryKey: ["issues", deferredIssuesIds],
     queryFn: ({ pageParam }) =>
-      redmineApi.getIssues(
-        {
-          issueIds: ids,
-          statusId: "*",
-        },
-        pageParam
-      ),
+      deferredIssuesIds.length > 0
+        ? redmineApi.getIssues(
+            {
+              issueIds: deferredIssuesIds,
+              statusId: "*",
+            },
+            pageParam
+          )
+        : { total_count: 0, ...pageParam, issues: [] },
     select: (data) => data?.pages.map((page) => page.issues).flat(),
-    enabled: enabled && ids.length > 0,
-    ...(keepPreviousData ? { placeholderData: keepPreviousDataAsPlaceholderData } : {}),
     staleTime: STALE_DATA_TIME,
     refetchInterval: AUTO_REFRESH_DATA_INTERVAL,
     autoFetchPages: true,
   });
 
-  const issues = issuesQuery.data ?? [];
-
   return {
-    data: issues,
-    isLoading: issuesQuery.isLoading,
-    isError: issuesQuery.isError,
+    data: issuesQuery.data ?? [],
   };
 };
-
-export default useIssues;

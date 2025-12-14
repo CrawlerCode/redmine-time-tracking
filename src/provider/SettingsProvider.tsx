@@ -1,6 +1,6 @@
 import deepmerge from "deepmerge";
 import { ReactNode, createContext, use } from "react";
-import useStorage, { getStorage } from "../hooks/useStorage";
+import { getStorage, useSuspenseStorage } from "../hooks/useStorage";
 
 export type Settings = {
   language: string;
@@ -64,7 +64,7 @@ const SettingsContext = createContext({
 });
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-  const { data, setData } = useStorage<Partial<Settings>>("settings", defaultSettings);
+  const { data, setData } = useSuspenseStorage<Partial<Settings>>("settings", defaultSettings);
 
   // Migrate old settings TODO: Remove in future
   if (data?.features?.roundTimeNearestQuarterHour === true) {

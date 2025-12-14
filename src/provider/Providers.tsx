@@ -1,26 +1,33 @@
 import { Toaster } from "@/components/ui/sonner";
-import { ReactNode } from "react";
-import { HashRouter } from "react-router-dom";
+import { PropsWithChildren, Suspense } from "react";
 import IntlProvider from "./IntlProvider";
 import QueryClientProvider from "./QueryClientProvider";
 import RedmineApiProvider from "./RedmineApiProvider";
 import SettingsProvider from "./SettingsProvider";
 
-const Providers = ({ children }: { children: ReactNode }) => {
-  return (
-    <HashRouter>
+interface ProvidersProps extends PropsWithChildren {
+  suspense?: boolean;
+}
+
+const Providers = ({ suspense, children }: ProvidersProps) => {
+  const providers = (
+    <QueryClientProvider>
       <SettingsProvider>
         <RedmineApiProvider>
-          <QueryClientProvider>
-            <IntlProvider>
-              {children}
-              <Toaster />
-            </IntlProvider>
-          </QueryClientProvider>
+          <IntlProvider>
+            {children}
+            <Toaster />
+          </IntlProvider>
         </RedmineApiProvider>
       </SettingsProvider>
-    </HashRouter>
+    </QueryClientProvider>
   );
+
+  if (suspense) {
+    return <Suspense>{providers}</Suspense>;
+  }
+
+  return providers;
 };
 
 export default Providers;

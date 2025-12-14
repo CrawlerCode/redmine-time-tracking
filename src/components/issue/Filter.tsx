@@ -6,7 +6,7 @@ import { createContext, PropsWithChildren, use, useState } from "react";
 import { useIntl } from "react-intl";
 import { z } from "zod/v4";
 import useMyProjects from "../../hooks/useMyProjects";
-import useStorage from "../../hooks/useStorage";
+import { useSuspenseStorage } from "../../hooks/useStorage";
 import { Button } from "../ui/button";
 import { Form, FormGrid } from "../ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -21,7 +21,6 @@ type FilterSettings = z.infer<typeof filterSettingsSchema>;
 const defaultSettings: FilterSettings = { projects: [], hideCompletedIssues: false };
 
 type FilterContextType = {
-  isLoading: boolean;
   settings: FilterSettings;
   setSettings: (settings: FilterSettings) => void;
 };
@@ -29,12 +28,11 @@ type FilterContextType = {
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 const FilterProvider = ({ children }: PropsWithChildren) => {
-  const { isLoading, data: settings, setData: setSettings } = useStorage<FilterSettings>("filter", defaultSettings);
+  const { data: settings, setData: setSettings } = useSuspenseStorage<FilterSettings>("filter", defaultSettings);
 
   return (
     <FilterContext
       value={{
-        isLoading,
         settings,
         setSettings,
       }}
