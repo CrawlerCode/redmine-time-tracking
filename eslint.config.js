@@ -1,4 +1,6 @@
 import js from "@eslint/js";
+import tanstackQuery from "@tanstack/eslint-plugin-query";
+import tanstackRouter from "@tanstack/eslint-plugin-router";
 import prettierConfig from "eslint-config-prettier";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -39,6 +41,9 @@ export default [
   prettierConfig,
   // Tailwind CSS
   //...tailwind.configs["flat/recommended"], // TODO: Wait until working with Tailwind CSS v4,
+  // Tanstack
+  ...tanstackRouter.configs["flat/recommended"],
+  ...tanstackQuery.configs["flat/recommended"],
   // Customizations
   {
     rules: {

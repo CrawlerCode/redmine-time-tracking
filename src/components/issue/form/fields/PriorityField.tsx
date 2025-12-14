@@ -1,7 +1,7 @@
 import { ComboboxField } from "@/components/form/ComboboxField";
+import { useIssuePriorities } from "@/hooks/useIssuePriorities";
 import { ComponentProps } from "react";
 import { useIntl } from "react-intl";
-import useIssuePriorities from "../../../../hooks/useIssuePriorities";
 
 const PriorityField = (props: Omit<ComponentProps<typeof ComboboxField>, "options">) => {
   const { formatMessage } = useIntl();
@@ -13,12 +13,10 @@ const PriorityField = (props: Omit<ComponentProps<typeof ComboboxField>, "option
       {...props}
       title={formatMessage({ id: "issues.issue.field.priority" })}
       placeholder={formatMessage({ id: "issues.issue.field.priority" })}
-      options={
-        issuePriorities.data?.map((priority) => ({
-          label: priority.name,
-          value: priority.id,
-        })) ?? []
-      }
+      options={issuePriorities.priorities.map((priority) => ({
+        label: priority.name,
+        value: priority.id,
+      }))}
       isLoading={issuePriorities.isLoading}
     />
   );

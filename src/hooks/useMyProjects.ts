@@ -1,18 +1,24 @@
+import { RedmineApi } from "@/api/redmine";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
-import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
+import { redminePaginatedInfiniteQueryOptions, useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 type Options = {
   enabled?: boolean;
 };
 
+const myProjectsQueryOptions = (redmineApi: RedmineApi) =>
+  redminePaginatedInfiniteQueryOptions({
+    queryKey: ["projects"],
+    queryFn: ({ pageParam }) => redmineApi.getAllMyProjects(pageParam),
+    select: (data) => data?.pages.map((page) => page.projects).flat(),
+  });
+
 const useMyProjects = ({ enabled = true }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
   const projectsQuery = useRedminePaginatedInfiniteQuery({
-    queryKey: ["projects"],
-    queryFn: ({ pageParam }) => redmineApi.getAllMyProjects(pageParam),
-    select: (data) => data?.pages.map((page) => page.projects).flat(),
-    enabled: enabled,
+    ...myProjectsQueryOptions(redmineApi),
+    enabled,
     autoFetchPages: true,
   });
 

@@ -3,7 +3,6 @@
   "nav.tabs.issues": "Tickets",
   "nav.tabs.time": "Zeit",
   "nav.tabs.settings": "Einstellungen",
-  "nav.error.page-not-found": "Seite nicht gefunden!",
 
   "timers.list.no-options": "Keine Timer",
   "timer.context-menu.start": "Timer starten",
@@ -174,8 +173,9 @@
   "general.search": "Suche...",
   "general.no-options": "Keine Optionen",
   "general.retry": "Wiederholen",
-  "general.error.fail-to-load-data": "Fehler beim Laden der Daten",
-  "general.error.unknown-error-occurred": "Ein unbekannter Fehler ist aufgetreten",
+  "general.error.api-error": "API-Fehler",
+  "general.error.unknown-error": "Unbekannter Fehler: {name}",
+  "general.error.page-not-found": "Seite nicht gefunden",
 
   "format.hours": "{hours} Std."
 }

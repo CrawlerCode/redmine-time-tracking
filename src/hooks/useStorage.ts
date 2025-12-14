@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { queryClient } from "@/provider/QueryClientProvider";
+import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useEffect, useEffectEvent } from "react";
 
 const Storage = {
   getItem: async (key: string) => (await chrome.storage.local.get(key))[key],
@@ -14,37 +16,69 @@ export const getStorage = async <T>(name: string, defaultValue: T): Promise<T> =
   return Storage.deserialize(data);
 };
 
-export const setStorage = <T>(name: string, data: T) => {
+const setStorage = <T>(name: string, data: T) => {
   Storage.setItem(name, Storage.serialize(data));
 };
 
-const useStorage = <T>(name: string, defaultValue: T) => {
-  const [localData, setLocalData] = useState(defaultValue);
-  const [isLoading, setIsLoading] = useState(true);
+const storageOptions = <T>(name: string, defaultValue: T) =>
+  queryOptions({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ["storage", name],
+    queryFn: () => getStorage(name, defaultValue),
+    staleTime: 0, // Always refetch the latest data
+  });
 
-  // set data to storage
-  const setData = (data: T) => setStorage(name, data);
+/**
+ * A hook to manage persistent storage using Chrome's local storage.
+ * The data is cached using React Query to benefit from queryClient persister to improve performance.
+ * It subscribes to changes to keep the data in sync across different instances (e.g., different tabs or windows).
+ */
+export const useStorage = <T>(name: string, defaultValue: T) => {
+  const query = useQuery(storageOptions(name, defaultValue));
 
-  // Init load data
-  useEffect(() => {
-    getStorage(name, defaultValue).then((data) => {
-      setLocalData(data);
-      setIsLoading(false);
-    });
-  }, [name, defaultValue]);
+  const updateQueryDataEvent = useEffectEvent((data: T) => {
+    queryClient.setQueryData(["storage", name], data, { updatedAt: Date.now() });
+  });
 
-  // On chrome storage change => load data
   useEffect(() => {
     const onChange: Parameters<typeof chrome.storage.local.onChanged.addListener>[0] = (changes) => {
       if (!changes[name]) return; // other changed
-      setLocalData(Storage.deserialize(changes[name].newValue));
+      updateQueryDataEvent(Storage.deserialize(changes[name].newValue));
     };
 
     chrome.storage.local.onChanged.addListener(onChange);
     return () => chrome.storage.local.onChanged.removeListener(onChange);
   }, [name]);
 
-  return { data: localData, setData, isLoading };
+  return {
+    isLoading: query.isLoading,
+    data: query.data ?? defaultValue,
+    setData: (data: T) => setStorage(name, data),
+  };
 };
 
-export default useStorage;
+/**
+ * The suspense version of useStorage hook.
+ */
+export const useSuspenseStorage = <T>(name: string, defaultValue: T) => {
+  const query = useSuspenseQuery(storageOptions(name, defaultValue));
+
+  const updateQueryDataEvent = useEffectEvent((data: T) => {
+    queryClient.setQueryData(["storage", name], data, { updatedAt: Date.now() });
+  });
+
+  useEffect(() => {
+    const onChange: Parameters<typeof chrome.storage.local.onChanged.addListener>[0] = (changes) => {
+      if (!changes[name]) return; // other changed
+      updateQueryDataEvent(Storage.deserialize(changes[name].newValue));
+    };
+
+    chrome.storage.local.onChanged.addListener(onChange);
+    return () => chrome.storage.local.onChanged.removeListener(onChange);
+  }, [name]);
+
+  return {
+    data: query.data,
+    setData: (data: T) => setStorage(name, data),
+  };
+};

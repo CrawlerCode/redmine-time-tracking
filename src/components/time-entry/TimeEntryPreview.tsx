@@ -1,6 +1,6 @@
+import { useMyTimeEntries } from "@/hooks/useMyTimeEntries";
 import clsx from "clsx";
 import useFormatHours from "../../hooks/useFormatHours";
-import useMyTimeEntries from "../../hooks/useMyTimeEntries";
 import { roundHours } from "../../utils/date";
 import TimeEntry from "./TimeEntry";
 

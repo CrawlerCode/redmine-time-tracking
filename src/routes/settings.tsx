@@ -1,6 +1,7 @@
 /* eslint-disable react/no-children-prop */
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
 import { DE, FlagComponent, FR, GB, RU } from "country-flag-icons/react/3x2";
 import { BugIcon, GlobeIcon, InfoIcon, ServerIcon } from "lucide-react";
 import { useState } from "react";
@@ -15,6 +16,10 @@ import { LANGUAGES } from "../provider/IntlProvider";
 import { useSettings } from "../provider/SettingsProvider";
 import { formatHoursUsually } from "../utils/date";
 
+export const Route = createFileRoute("/settings")({
+  component: PageComponent,
+});
+
 const LANGUAGE_FLAGS: Record<(typeof LANGUAGES)[number], FlagComponent> = {
   en: GB,
   de: DE,
@@ -22,7 +27,7 @@ const LANGUAGE_FLAGS: Record<(typeof LANGUAGES)[number], FlagComponent> = {
   fr: FR,
 };
 
-const SettingsPage = () => {
+function PageComponent() {
   const queryClient = useQueryClient();
   const { formatMessage, formatNumber } = useIntl();
   const { settings, setSettings } = useSettings();
@@ -64,7 +69,7 @@ const SettingsPage = () => {
     onSubmit: ({ value }) => {
       value.redmineURL = value.redmineURL.replace(/\/$/, "");
       setSettings(value);
-      queryClient.clear();
+      queryClient.resetQueries();
       setEditRedmineInstance(false);
       toast.success(formatMessage({ id: "settings.settings-saved" }));
     },
@@ -320,7 +325,7 @@ const SettingsPage = () => {
       <Info />
     </>
   );
-};
+}
 
 const Info = () => {
   const { name, version, version_name } = chrome.runtime.getManifest();
@@ -357,5 +362,3 @@ const Info = () => {
     </FormFieldset>
   );
 };
-
-export default SettingsPage;

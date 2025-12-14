@@ -1,9 +1,8 @@
 import { TimerSearchContext } from "@/components/timer/TimerSearch";
+import { TIssue } from "@/types/redmine";
 import { useMemo } from "react";
 import { useSettings } from "../provider/SettingsProvider";
-import { TIssue } from "../types/redmine";
-import useIssues from "./useIssues";
-import useStorage from "./useStorage";
+import { useSuspenseStorage } from "./useStorage";
 
 type TimerInfo = {
   id: string;
@@ -15,7 +14,6 @@ type TimerInfo = {
 };
 
 export type TimerController = TimerInfo & {
-  getIssue: () => TIssue | undefined;
   getElapsedTime: () => number;
   startTimer: () => void;
   pauseTimer: () => void;
@@ -28,21 +26,14 @@ export type TimerController = TimerInfo & {
 
 const _defaultTimers: Record<string, TimerInfo> = {};
 
-type Options = {
-  loadIssues?: boolean;
-};
-
 /**
  * Hook for managing timers
  */
-const useTimers = ({ loadIssues = false }: Options = {}) => {
+const useTimers = () => {
   const { settings } = useSettings();
 
-  const { data: timerInfos, setData: saveTimerInfos, isLoading } = useStorage<Record<string, TimerInfo>>("timers", _defaultTimers);
+  const { data: timerInfos, setData: saveTimerInfos } = useSuspenseStorage<Record<string, TimerInfo>>("timers", _defaultTimers);
   const timerInfosArray = useMemo(() => Object.values(timerInfos), [timerInfos]);
-
-  const issuesIds = Array.from(new Set(timerInfosArray.map((timerInfo) => timerInfo.issueId)));
-  const issues = useIssues(issuesIds, { enabled: loadIssues, keepPreviousData: true });
 
   return useMemo(() => {
     /**
@@ -60,10 +51,6 @@ const useTimers = ({ loadIssues = false }: Options = {}) => {
 
       return {
         ...timerInfo,
-        /**
-         * Get the issue associated with the timer
-         */
-        getIssue: () => issues.data.find((issue) => issue.id === timerInfo.issueId),
         /**
          * Get the elapsed time for the timer
          */
@@ -148,10 +135,6 @@ const useTimers = ({ loadIssues = false }: Options = {}) => {
 
     return {
       /**
-       * Is loading
-       */
-      isLoading: isLoading || issues.isLoading,
-      /**
        * Get all timer issue ids
        */
       getIssuesIds: () => Array.from(new Set(timerInfosArray.map((timerInfo) => timerInfo.issueId))),
@@ -178,7 +161,7 @@ const useTimers = ({ loadIssues = false }: Options = {}) => {
       /**
        * Search timers by name
        */
-      searchTimers: (search: TimerSearchContext) => {
+      searchTimers: (search: TimerSearchContext, issues?: TIssue[]) => {
         let timers = timerInfosArray;
 
         // local search
@@ -190,7 +173,7 @@ const useTimers = ({ loadIssues = false }: Options = {}) => {
             }
 
             // Match by issue
-            const issue = issues.data.find((issue) => issue.id === timer.issueId);
+            const issue = issues?.find((issue) => issue.id === timer.issueId);
             if (issue ? new RegExp(search.query, "i").test(`#${issue.id} ${issue.subject}`) : new RegExp(search.query, "i").test(`#${timer.issueId}`)) {
               return true;
             }
@@ -228,7 +211,7 @@ const useTimers = ({ loadIssues = false }: Options = {}) => {
         saveTimerInfos({ ...timerInfos, ...newTimers });
       },
     };
-  }, [isLoading, issues, timerInfos, saveTimerInfos, timerInfosArray, settings.features.autoPauseOnSwitch]);
+  }, [timerInfos, saveTimerInfos, timerInfosArray, settings.features.autoPauseOnSwitch]);
 };
 
 const calculateElapsedTime = (timerInfo: TimerInfo) => {

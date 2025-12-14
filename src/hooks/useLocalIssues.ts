@@ -1,4 +1,4 @@
-import useStorage from "./useStorage";
+import { useSuspenseStorage } from "./useStorage";
 
 export type LocalIssueData = {
   id: number;
@@ -18,10 +18,9 @@ const defaultLocalIssueData: Omit<LocalIssueData, "id"> = {
 };
 
 const useLocalIssues = () => {
-  const { data: localIssues, setData: setLocalIssues, isLoading } = useStorage<LocalIssueData[]>("localIssues", _defaultLocalIssues);
+  const { data: localIssues, setData: setLocalIssues } = useSuspenseStorage<LocalIssueData[]>("localIssues", _defaultLocalIssues);
 
   return {
-    isLoading,
     localIssues,
     getIssuesIds: () => localIssues.map((issue) => issue.id),
     getLocalIssue: (id: number): LocalIssue => {

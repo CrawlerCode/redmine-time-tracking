@@ -5,7 +5,7 @@ import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
 import { z } from "zod/v4";
 import { useAppForm } from "../../../hooks/useAppForm";
-import useIssuePriorities from "../../../hooks/useIssuePriorities";
+import { useIssuePriorities } from "../../../hooks/useIssuePriorities";
 import useIssueStatuses from "../../../hooks/useIssueStatuses";
 import useIssueTrackers from "../../../hooks/useIssueTrackers";
 import useMyUser from "../../../hooks/useMyUser";

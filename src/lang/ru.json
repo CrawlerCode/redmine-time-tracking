@@ -3,7 +3,6 @@
   "nav.tabs.issues": "Задачи",
   "nav.tabs.time": "Время",
   "nav.tabs.settings": "Настройки",
-  "nav.error.page-not-found": "Страница не найдена!",
 
   "timers.list.no-options": "No timers",
   "timer.context-menu.start": "Запустить таймер",
@@ -174,8 +173,9 @@
   "general.search": "Поиск...",
   "general.no-options": "No options",
   "general.retry": "Retry",
-  "general.error.fail-to-load-data": "Не удалось загрузить данные",
-  "general.error.unknown-error-occurred": "An unknown error occurred",
+  "general.error.api-error": "API-Error",
+  "general.error.unknown-error": "Unknown error: {name}",
+  "general.error.page-not-found": "Страница не найдена",
 
   "format.hours": "{hours} ч"
 }
