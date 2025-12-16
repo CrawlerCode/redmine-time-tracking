@@ -44,7 +44,7 @@ function SelectTrigger({
 
 function SelectContent({ className, children, position = "popper", align = "center", ...props }: React.ComponentProps<typeof SelectPrimitive.Content>) {
   return (
-    <SelectPrimitive.Portal container={document.getElementById("redmine-time-tracking-host")?.shadowRoot}>
+    <SelectPrimitive.Portal container={document.getElementById("redmine-time-tracking-shadow-host")?.shadowRoot}>
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(

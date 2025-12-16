@@ -1,19 +1,22 @@
+import { RedmineApi } from "@/api/redmine";
+import { ErrorComponent } from "@/components/error/ErrorComponent";
+import { Layout } from "@/components/general/Layout";
 import Providers from "@/provider/Providers.tsx";
+import { queryClient } from "@/provider/QueryClientProvider";
+import { useRedmineApi } from "@/provider/RedmineApiProvider";
+import { Settings, useSettings } from "@/provider/SettingsProvider";
+import { routeTree } from "@/routeTree.gen";
+import { Entrypoint, getEntrypoint } from "@/utils/entrypoint";
 import { QueryClient } from "@tanstack/react-query";
 import { createHashHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RedmineApi } from "./api/redmine";
-import { ErrorComponent } from "./components/error/ErrorComponent";
-import { Layout } from "./components/general/Layout";
 import "./index.css";
-import { queryClient } from "./provider/QueryClientProvider";
-import { useRedmineApi } from "./provider/RedmineApiProvider";
-import { Settings, useSettings } from "./provider/SettingsProvider";
-import { routeTree } from "./routeTree.gen";
-import { getWindowLocationType } from "./utils/popout";
+
+const entrypoint = getEntrypoint();
 
 export interface RouteContext {
+  entrypoint: Entrypoint;
   settings: Settings;
   queryClient: QueryClient;
   redmineApi: RedmineApi;
@@ -24,6 +27,7 @@ const router = createRouter({
   routeTree,
   history: hashHistory,
   context: {
+    entrypoint,
     settings: undefined!,
     queryClient,
     redmineApi: undefined!,
@@ -54,12 +58,10 @@ const App = () => {
   );
 };
 
-const locationType = getWindowLocationType();
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Layout locationType={locationType}>
-      <Providers suspense={locationType === "options"}>
+    <Layout entrypoint={entrypoint}>
+      <Providers suspense={entrypoint === "options"}>
         <App />
       </Providers>
     </Layout>

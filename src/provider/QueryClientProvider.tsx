@@ -6,6 +6,7 @@ import { isAxiosError } from "axios";
 import { lazy, PropsWithChildren, Suspense, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import { toast } from "sonner";
+import { browser } from "wxt/browser";
 import { useStorage } from "../hooks/useStorage";
 
 declare module "@tanstack/react-query" {
@@ -116,15 +117,15 @@ export const queryClient = new QueryClient({
 
 const persister = createAsyncStoragePersister({
   storage: {
-    getItem: async (key) => (await chrome.storage.local.get(key))[key],
-    setItem: (key, value) => chrome.storage.local.set({ [key]: value }),
-    removeItem: (key) => chrome.storage.local.remove(key),
+    getItem: async (key) => (await browser.storage.local.get(key))[key],
+    setItem: (key, value) => browser.storage.local.set({ [key]: value }),
+    removeItem: (key) => browser.storage.local.remove(key),
   },
   throttleTime: 1000,
 });
 
 const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
-  buster: chrome.runtime.getManifest().version,
+  buster: browser.runtime.getManifest().version,
   persister,
   maxAge: CACHE_TIME,
 };

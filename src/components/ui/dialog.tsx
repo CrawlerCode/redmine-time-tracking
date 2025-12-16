@@ -42,7 +42,7 @@ function DialogContent({
   showCloseButton?: boolean;
 }) {
   return (
-    <DialogPortal data-slot="dialog-portal" container={document.getElementById("redmine-time-tracking-host")?.shadowRoot}>
+    <DialogPortal data-slot="dialog-portal" container={document.getElementById("redmine-time-tracking-shadow-host")?.shadowRoot}>
       <DialogOverlay />
       <DialogPrimitive.Content
         data-slot="dialog-content"

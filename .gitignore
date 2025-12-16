@@ -1,5 +1,8 @@
 node_modules
+
 dist
+.output
+.wxt
 
 .env
 

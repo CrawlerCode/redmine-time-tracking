@@ -7,6 +7,7 @@ import { BugIcon, GlobeIcon, InfoIcon, ServerIcon } from "lucide-react";
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { toast } from "sonner";
+import { browser } from "wxt/browser";
 import { z } from "zod/v4";
 import Indicator from "../components/general/Indicator";
 import { Form, FormFieldset, FormGrid } from "../components/ui/form";
@@ -328,7 +329,7 @@ function PageComponent() {
 }
 
 const Info = () => {
-  const { name, version, version_name } = chrome.runtime.getManifest();
+  const { name, version, version_name } = browser.runtime.getManifest();
 
   return (
     <FormFieldset
