@@ -117,7 +117,7 @@ export const queryClient = new QueryClient({
 
 const persister = createAsyncStoragePersister({
   storage: {
-    getItem: async (key) => (await browser.storage.local.get(key))[key],
+    getItem: async (key) => (await browser.storage.local.get<Record<string, string>>(key))[key],
     setItem: (key, value) => browser.storage.local.set({ [key]: value }),
     removeItem: (key) => browser.storage.local.remove(key),
   },

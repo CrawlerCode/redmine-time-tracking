@@ -4,7 +4,7 @@ import { useEffect, useEffectEvent } from "react";
 import { browser } from "wxt/browser";
 
 const Storage = {
-  getItem: async (key: string) => (await browser.storage.local.get(key))[key],
+  getItem: async (key: string) => (await browser.storage.local.get<Record<string, string | undefined>>(key))[key],
   setItem: (key: string, value: string) => browser.storage.local.set({ [key]: value }),
   removeItem: (key: string) => browser.storage.local.remove(key),
   serialize: JSON.stringify,
@@ -44,7 +44,7 @@ export const useStorage = <T>(name: string, defaultValue: T) => {
   useEffect(() => {
     const onChange: Parameters<typeof browser.storage.local.onChanged.addListener>[0] = (changes) => {
       if (!changes[name]) return; // other changed
-      updateQueryDataEvent(Storage.deserialize(changes[name].newValue));
+      updateQueryDataEvent(Storage.deserialize(changes[name].newValue as string));
     };
 
     browser.storage.local.onChanged.addListener(onChange);
@@ -71,7 +71,7 @@ export const useSuspenseStorage = <T>(name: string, defaultValue: T) => {
   useEffect(() => {
     const onChange: Parameters<typeof browser.storage.local.onChanged.addListener>[0] = (changes) => {
       if (!changes[name]) return; // other changed
-      updateQueryDataEvent(Storage.deserialize(changes[name].newValue));
+      updateQueryDataEvent(Storage.deserialize(changes[name].newValue as string));
     };
 
     browser.storage.local.onChanged.addListener(onChange);
