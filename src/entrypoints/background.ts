@@ -40,12 +40,8 @@ export default defineBackground({
           js: ["content-scripts/content.js"],
           matches:
             import.meta.env.BROWSER === "firefox"
-              ? [
-                  url.port !== ""
-                    ? // Firefox does not support ports in match patterns
-                      `${url.protocol}//${url.hostname}${url.pathname}${url.pathname.endsWith("/") ? "" : "/"}*`
-                    : `${url.toString()}${url.pathname.endsWith("/") ? "" : "/"}*`,
-                ]
+              ? // Firefox does not support ports in match patterns
+                [`${url.protocol}//${url.hostname}${url.pathname}${url.pathname.endsWith("/") ? "" : "/"}*`]
               : [`${url.toString()}${url.pathname.endsWith("/") ? "" : "/"}*`],
         },
       ]);

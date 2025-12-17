@@ -25,7 +25,7 @@ jobs:
 
       - run: pnpm run zip:chrome --mode canary
 
-      - run: pnpm wxt submit --chrome-zip $(ls .output/*-chrome.zip) --chrome-skip-submit-review
+      - run: pnpm wxt submit --chrome-zip .output/*-chrome.zip --chrome-skip-submit-review
         env:
           CHROME_EXTENSION_ID: adgcdimdkkaddeopcabokepmaihfhklb
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
