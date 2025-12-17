@@ -36,9 +36,9 @@ export default defineConfig({
     homepage_url: "https://github.com/CrawlerCode/redmine-time-tracking",
     permissions: ["storage", "tabs", "activeTab", "scripting"],
     host_permissions: ["http://*/*", "https://*/*"],
-    ...(browser === "chrome" && {
+    /* ...(browser === "chrome" && {
       key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAk2PbuYr+evWm0U+t8XCn94jO0x0yydbdSqotCB9tC2NaYcnYhuOIrkDrAJg8DwUSvRbx2FXbacmf/CyI5fPivYmLDDL6D1VqabEhpVwNjTbj6V8lOy52C8Kl9ZA8WEvBZIsgU1bi54j2eg7B9lFZ3FIbavJB4Ezkny4eW+TdpUqcmoMxVybVeJ4q4jhzUFmEaHEmEyfzWLiUwYjEUzJkkzQYCTzZ0ZO1jWNnjfm5Y9IRSGPbzlChvigEhSuEs+DA2uZnr//mfr6xD97ryZY/i2HGeuxB3zZoIFR+FoFlp18ETJmEDO5ZEjEhl0Zb09yHlPah0IHDx6QjNcbxG3u31QIDAQAB",
-    }),
+    }), */
     ...(browser === "firefox" && {
       browser_specific_settings: {
         gecko: {
