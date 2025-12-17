@@ -22,7 +22,7 @@ export default defineConfig({
     ],
   }),
   manifest: ({ browser, mode }) => ({
-    name: "__MSG_extName__",
+    name: "Redmine Time Tracking",
     description: "__MSG_extDesc__",
     default_locale: "en",
     icons: {
