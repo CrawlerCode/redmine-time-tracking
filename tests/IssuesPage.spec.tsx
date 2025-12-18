@@ -1,75 +1,54 @@
 import { test } from "../fixtures/chromeExtension";
 import { createScreenshot } from "../screenshots/screenshot";
 
-test("Start timer", async ({ issuesPage: page, locale, colorScheme }) => {
-  // Wait for the first issue to be rendered
-  await page.waitForSelector("[role=listitem][data-type='issue']");
+test("Start timer", async ({ issuesPage, locale, colorScheme }) => {
+  await issuesPage.waitForIssuesToLoad();
 
   // Start one of the first 3 timers
-  const issues = await page.$$("[role=listitem][data-type='issue']");
-  const issue = issues[Math.min(Math.floor(Math.random() * 3), issues.length - 1)];
-  await (await issue.$("[data-type='start-timer']"))?.click();
+  const idx = Math.min(Math.floor(Math.random() * 3), (await issuesPage.getIssuesCount()) - 1);
+  await issuesPage.startTimer(idx);
 
   // Wait random time
-  await page.waitForTimeout(Math.floor(Math.random() * 1000 * 5));
+  await issuesPage.page.waitForTimeout(Math.floor(Math.random() * 1000 * 5));
 
   // Take a screenshot
-  createScreenshot("issues", page, locale!, colorScheme!);
+  createScreenshot("issues", issuesPage.page, locale!, colorScheme!);
 });
 
-test("Search by text", async ({ issuesPage: page, locale, colorScheme }) => {
-  // Wait for the first issue to be rendered
-  await page.waitForSelector("[role=listitem][data-type='issue']");
-
-  // Activate search
-  await page.keyboard.down("Control");
-  await page.keyboard.press("KeyF");
-  await page.keyboard.up("Control");
+test("Search by text", async ({ issuesPage, locale, colorScheme }) => {
+  await issuesPage.waitForIssuesToLoad();
 
   // Search for "dynamic"
-  await page.fill("input[type=search]", "dynamic");
-
-  // Wait for the first issue to be rendered
-  await page.waitForSelector("[role=listitem][data-type='issue']");
+  await issuesPage.openSearch();
+  await issuesPage.searchByText("dynamic");
 
   // Take a screenshot
-  createScreenshot("issues-search", page, locale!, colorScheme!);
+  createScreenshot("issues-search", issuesPage.page, locale!, colorScheme!);
 });
 
-test("Add spent time", async ({ issuesPage: page, locale, colorScheme }) => {
-  // Click on the first issue done-timer button to add spent time
-  await page.click('[role="button"][data-type="done-timer"]');
+test("Add spent time", async ({ issuesPage, locale, colorScheme }) => {
+  await issuesPage.waitForIssuesToLoad();
 
-  // Wait for modal
-  await page.waitForSelector("role=dialog");
-
-  // Fill form
-  await page.fill('input[name="hours"]', (1 + Math.random() * 3).toFixed(2));
-  await page.fill('input[name="comments"]', "Added new feature");
-
-  // Focus on submit button
-  await page.focus('button[type="submit"]');
+  await issuesPage.openSpentTimeForm();
+  await issuesPage.fillSpentTimeForm();
 
   // Take a screenshot
-  createScreenshot("issues-add-spent-time", page, locale!, colorScheme!);
+  createScreenshot("issues-add-spent-time", issuesPage.page, locale!, colorScheme!);
 
-  // Submit form
-  await page.click('button[type="submit"]');
-
-  // Wait for modal to close
-  await page.waitForSelector("role=dialog", { state: "detached" });
+  await issuesPage.submitSpentTimeForm();
 });
 
-test("Open issue context menu", async ({ issuesPage: page, locale, colorScheme }) => {
+test("Open issue context menu", async ({ issuesPage, locale, colorScheme }) => {
   // Open context menu on the first issue
-  await page.click("[role=listitem][data-type='issue']", {
+  await issuesPage.page.click("[role=listitem][data-type='issue']", {
     button: "right",
-    position: { x: 80, y: 15 },
+    position: { x: 70, y: 15 },
   });
 
   // Wait for context menu
-  await page.waitForSelector("role=menu");
+  await issuesPage.page.waitForSelector("[data-slot=context-menu-content]");
+  await issuesPage.page.waitForTimeout(500);
 
   // Take a screenshot
-  createScreenshot("issues-context-menu", page, locale!, colorScheme!);
+  createScreenshot("issues-context-menu", issuesPage.page, locale!, colorScheme!);
 });

@@ -1,18 +1,23 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { test as base, chromium, type BrowserContext, type Page } from "@playwright/test";
+import { test as base, chromium, type BrowserContext } from "@playwright/test";
 import "dotenv/config";
 import path from "path";
+import { IssuesPage } from "./pages/issues";
+import { SettingsPage } from "./pages/settings";
+import { TimePage } from "./pages/time";
+import { TimersPage } from "./pages/timers";
 
 export const test = base.extend<{
   context: BrowserContext;
   extensionId: string;
-  issuesPage: Page;
-  timePage: Page;
-  settingsPage: Page;
+  timersPages: TimersPage;
+  issuesPage: IssuesPage;
+  timePage: TimePage;
+  settingsPage: SettingsPage;
 }>({
   // eslint-disable-next-line no-empty-pattern
   context: async ({}, use) => {
-    const pathToExtension = path.join(process.cwd(), "dist");
+    const pathToExtension = path.join(process.cwd(), ".output/chrome-mv3");
     const context = await chromium.launchPersistentContext("", {
       headless: false,
       args: [process.env.CI ? `--headless=new` : "", `--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
@@ -30,45 +35,31 @@ export const test = base.extend<{
     await use(extensionId);
   },
   page: async ({ extensionId, page }, use) => {
-    // To to settings page
-    await page.goto(`chrome-extension://${extensionId}/index.html#/settings`);
-
-    // Wait for redmine url and api key inputs
-    await page.waitForSelector('[name="redmineURL"]');
-    await page.waitForTimeout(100);
-
-    // Insert redmine url and api key
-    await page.fill('[name="redmineURL"]', process.env.REDMINE_URL!);
-    await page.fill('[name="redmineApiKey"]', process.env.REDMINE_API_KEY!);
-
-    // Save settings
-    await page.click('[type="submit"]');
-
-    // Wait for alert (settings saved)
-    await page.waitForSelector('[role="alert"]');
+    // Setup redmine settings
+    const settingsPage = await new SettingsPage(page, extensionId).goToPage(SettingsPage);
+    await settingsPage.fillAndSaveRedmineSettings();
 
     // Go to default page
     await page.goto(`chrome-extension://${extensionId}/index.html`);
 
     await use(page);
   },
+  timersPages: async ({ extensionId, page }, use) => {
+    const timersPage = await new TimersPage(page, extensionId).goToPage(TimersPage);
+    await use(timersPage);
+  },
   issuesPage: async ({ extensionId, page }, use) => {
-    // Go to issues page
-    await page.goto(`chrome-extension://${extensionId}/index.html?location=popup#/issues`);
-
-    await use(page);
+    const issuesPage = await new IssuesPage(page, extensionId).goToPage(IssuesPage);
+    await use(issuesPage);
   },
   timePage: async ({ extensionId, page }, use) => {
-    // Go to time page
-    await page.goto(`chrome-extension://${extensionId}/index.html?location=popup#/time`);
-
-    await use(page);
+    const timePage = await new TimePage(page, extensionId).goToPage(TimePage);
+    await use(timePage);
   },
   settingsPage: async ({ extensionId, page }, use) => {
-    // Go to settings page
-    await page.goto(`chrome-extension://${extensionId}/index.html?location=popup#/settings`);
-
-    await use(page);
+    const settingsPage = await new SettingsPage(page, extensionId).goToPage(SettingsPage);
+    await use(settingsPage);
   },
 });
+
 export const expect = test.expect;

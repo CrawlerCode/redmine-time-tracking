@@ -12,7 +12,7 @@ type TextFieldProps = Omit<ComponentProps<typeof Input>, "id" | "value" | "onCha
 
 export const TextField = ({ title, required, className, classNames, fieldErrorVariant, ...props }: TextFieldProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { state, handleChange, handleBlur } = useFieldContext<any>();
+  const { name, state, handleChange, handleBlur } = useFieldContext<any>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
@@ -24,6 +24,7 @@ export const TextField = ({ title, required, className, classNames, fieldErrorVa
       <Input
         {...props}
         id={id}
+        name={name}
         value={state.value}
         onChange={(e) => handleChange(props.type === "number" ? e.target.valueAsNumber : e.target.value)}
         onBlur={handleBlur}

@@ -18,7 +18,7 @@ type DateFieldProps = Omit<ComponentProps<typeof Calendar>, "mode" | "selected" 
 };
 
 export const DateField = ({ title, disabled, placeholder, mode = "single", className, disabledDates, ...props }: DateFieldProps) => {
-  const { state, handleChange, handleBlur } = useFieldContext<null | Date | Date[] | DateRange>();
+  const { name, state, handleChange, handleBlur } = useFieldContext<null | Date | Date[] | DateRange>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
@@ -41,6 +41,7 @@ export const DateField = ({ title, disabled, placeholder, mode = "single", class
         <PopoverTrigger asChild>
           <Button
             id={id}
+            name={name}
             variant="outline"
             disabled={disabled}
             onBlur={handleBlur}

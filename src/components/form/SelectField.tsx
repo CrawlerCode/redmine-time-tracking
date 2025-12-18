@@ -16,7 +16,7 @@ type SelectFieldProps<Value> = {
 };
 
 export const SelectField = <Value extends string | number>({ title, placeholder, required, disabled, options, className }: SelectFieldProps<Value>) => {
-  const { state, handleChange, handleBlur } = useFieldContext<Value>();
+  const { name, state, handleChange, handleBlur } = useFieldContext<Value>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
@@ -25,7 +25,7 @@ export const SelectField = <Value extends string | number>({ title, placeholder,
       <FieldLabel required={required} htmlFor={id}>
         {title}
       </FieldLabel>
-      <Select required={required} disabled={disabled} value={JSON.stringify(state.value)} onValueChange={(value) => handleChange(JSON.parse(value) as Value)}>
+      <Select name={name} required={required} disabled={disabled} value={JSON.stringify(state.value)} onValueChange={(value) => handleChange(JSON.parse(value) as Value)}>
         <SelectTrigger id={id} className="w-full truncate" onBlur={handleBlur} aria-invalid={isInvalid}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

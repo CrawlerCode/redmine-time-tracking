@@ -40,7 +40,7 @@ export const ComboboxField = <Value extends string | number>({
   isLoading,
   className,
 }: ComboboxFieldProps<Value>) => {
-  const { state, handleChange, handleBlur } = useFieldContext<null | Value | Value[]>();
+  const { name, state, handleChange, handleBlur } = useFieldContext<null | Value | Value[]>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
@@ -63,6 +63,7 @@ export const ComboboxField = <Value extends string | number>({
         <PopoverTrigger asChild>
           <Button
             id={id}
+            name={name}
             variant="outline"
             role="combobox"
             aria-expanded={open}

@@ -5,7 +5,7 @@ import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 
 export const HoursField = ({ title, required, className, ...props }: Omit<ComponentProps<typeof Input>, "value" | "onChange" | "onBlur">) => {
-  const { state, handleChange, handleBlur } = useFieldContext<number | null>();
+  const { name, state, handleChange, handleBlur } = useFieldContext<number | null>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
@@ -20,6 +20,7 @@ export const HoursField = ({ title, required, className, ...props }: Omit<Compon
         <Input
           {...props}
           id={id}
+          name={name}
           value={typeof state.value === "number" ? state.value : ""}
           onChange={(e) => handleChange(isNaN(e.target.valueAsNumber) ? null : e.target.valueAsNumber)}
           onBlur={handleBlur}

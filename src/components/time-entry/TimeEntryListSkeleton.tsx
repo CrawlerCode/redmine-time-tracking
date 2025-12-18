@@ -23,7 +23,7 @@ const TimeEntryListSkeleton = () => {
                         <Skeleton
                           key={i}
                           role="cell"
-                          data-type="time-entry"
+                          data-type="time-entry-skeleton"
                           className="h-4"
                           style={{
                             width: `${hours * 100}%`,

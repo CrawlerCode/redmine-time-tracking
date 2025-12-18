@@ -55,7 +55,7 @@
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@formatjs/cli": "^6.7.1",
-    "@playwright/test": "^1.50.1",
+    "@playwright/test": "^1.57.0",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/eslint-plugin-query": "^5.91.2",
     "@tanstack/eslint-plugin-router": "^1.141.0",

@@ -9,13 +9,13 @@ type ToggleFieldProps = Omit<ComponentProps<typeof Switch>, "id" | "checked" | "
 };
 
 export const ToggleField = ({ title, description, info, className, ...props }: ToggleFieldProps) => {
-  const { state, handleChange, handleBlur } = useFieldContext<boolean>();
+  const { name, state, handleChange, handleBlur } = useFieldContext<boolean>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
   return (
     <Field data-invalid={isInvalid} orientation="horizontal" className={className}>
-      <Switch {...props} id={id} checked={state.value} onCheckedChange={(checked) => handleChange(checked)} onBlur={handleBlur} />
+      <Switch {...props} id={id} name={name} checked={state.value} onCheckedChange={(checked) => handleChange(checked)} onBlur={handleBlur} />
       <FieldContent>
         <span className="flex items-center gap-2">
           <FieldLabel required={props.required} htmlFor={id}>
