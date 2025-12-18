@@ -1,8 +1,8 @@
 import { parseISO } from "date-fns";
 import { ReactNode } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { TIssue } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
-import { TIssue } from "../../types/redmine";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type PropTypes = {

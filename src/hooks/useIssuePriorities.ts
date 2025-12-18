@@ -1,7 +1,7 @@
-import { RedmineApi } from "@/api/redmine";
+import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { queryOptions, useQuery, useSuspenseQueries, UseSuspenseQueryResult } from "@tanstack/react-query";
+import { TIssue, TIssuePriority } from "../api/redmine/types";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
-import { TIssue, TIssuePriority } from "../types/redmine";
 
 type Options = {
   enabled?: boolean;
@@ -10,7 +10,7 @@ type Options = {
 /**
  * Query options for issue priorities
  */
-export const issuePrioritiesQueryOptions = (redmineApi: RedmineApi) =>
+export const issuePrioritiesQueryOptions = (redmineApi: RedmineApiClient) =>
   queryOptions({
     queryKey: ["issuePriorities"],
     queryFn: () => redmineApi.getIssuePriorities(),

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useIntl } from "react-intl";
+import { TCreateIssue } from "../../api/redmine/types";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
-import { TCreateIssue } from "../../types/redmine";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { IssueForm } from "./form/IssueForm";
 

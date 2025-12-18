@@ -1,4 +1,4 @@
-import { RedmineApi } from "@/api/redmine";
+import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { redminePaginatedInfiniteQueryOptions, useRedminePaginatedInfiniteQuery, useSuspenseRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
@@ -8,7 +8,7 @@ const STALE_DATA_TIME = 1000 * 60;
 /**
  * Query options for my time entries
  */
-const myTimeEntriesQueryOptions = (redmineApi: RedmineApi, from: Date, to: Date) =>
+const myTimeEntriesQueryOptions = (redmineApi: RedmineApiClient, from: Date, to: Date) =>
   redminePaginatedInfiniteQueryOptions({
     queryKey: ["timeEntries", from, to],
     queryFn: ({ pageParam }) => redmineApi.getAllMyTimeEntries(from, to, pageParam),

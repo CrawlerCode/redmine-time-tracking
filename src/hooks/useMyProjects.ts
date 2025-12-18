@@ -1,4 +1,4 @@
-import { RedmineApi } from "@/api/redmine";
+import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { redminePaginatedInfiniteQueryOptions, useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
@@ -6,7 +6,7 @@ type Options = {
   enabled?: boolean;
 };
 
-const myProjectsQueryOptions = (redmineApi: RedmineApi) =>
+const myProjectsQueryOptions = (redmineApi: RedmineApiClient) =>
   redminePaginatedInfiniteQueryOptions({
     queryKey: ["projects"],
     queryFn: ({ pageParam }) => redmineApi.getAllMyProjects(pageParam),

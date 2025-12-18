@@ -1,6 +1,6 @@
 /* eslint-disable react/no-children-prop */
+import { TIssue } from "@/api/redmine/types";
 import { useAppForm } from "@/hooks/useAppForm";
-import { TIssue } from "@/types/redmine";
 import { SlidersHorizontalIcon } from "lucide-react";
 import { createContext, PropsWithChildren, use, useState } from "react";
 import { useIntl } from "react-intl";

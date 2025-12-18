@@ -1,7 +1,7 @@
 import { ComponentProps } from "react";
+import { TIssue } from "../../api/redmine/types";
 import { PriorityType } from "../../hooks/useIssuePriorities";
 import { useSettings } from "../../provider/SettingsProvider";
-import { TIssue } from "../../types/redmine";
 import { clsxm } from "../../utils/clsxm";
 import IssueInfoTooltip from "./IssueInfoTooltip";
 

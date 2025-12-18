@@ -1,8 +1,8 @@
 import { addDays, format, isFuture, isMonday, isWeekend, parseISO, previousMonday, startOfDay, subWeeks } from "date-fns";
 import { ClockIcon } from "lucide-react";
 import { useIntl } from "react-intl";
+import { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
-import { TTimeEntry } from "../../types/redmine";
 import { roundHours } from "../../utils/date";
 import { Badge } from "../ui/badge";
 import TimeEntry from "./TimeEntry";

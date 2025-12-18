@@ -1,7 +1,7 @@
 import { Fragment } from "react";
+import { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
-import { TTimeEntry } from "../../types/redmine";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import TimeEntryContextMenu from "./TimeEntryContextMenu";
 import TimeEntryTooltip from "./TimeEntryTooltip";

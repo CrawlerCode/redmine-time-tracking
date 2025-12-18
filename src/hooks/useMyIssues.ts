@@ -1,4 +1,4 @@
-import { RedmineApi } from "@/api/redmine";
+import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { useDeferredValue } from "react";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
 import { redminePaginatedInfiniteQueryOptions, useSuspenseRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
@@ -6,7 +6,7 @@ import { redminePaginatedInfiniteQueryOptions, useSuspenseRedminePaginatedInfini
 const AUTO_REFRESH_DATA_INTERVAL = 1000 * 60 * 15;
 const STALE_DATA_TIME = 1000 * 60;
 
-export const myOpenIssuesQueryOptions = (redmineApi: RedmineApi) =>
+export const myOpenIssuesQueryOptions = (redmineApi: RedmineApiClient) =>
   redminePaginatedInfiniteQueryOptions({
     queryKey: ["issues", "open", "me"],
     queryFn: ({ pageParam }) =>

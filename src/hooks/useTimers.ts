@@ -1,5 +1,5 @@
+import { TIssue } from "@/api/redmine/types";
 import { TimerSearchContext } from "@/components/timer/TimerSearch";
-import { TIssue } from "@/types/redmine";
 import { useMemo } from "react";
 import { useSettings } from "../provider/SettingsProvider";
 import { useSuspenseStorage } from "./useStorage";

@@ -1,8 +1,8 @@
 import { PencilIcon, SquareArrowOutUpRightIcon } from "lucide-react";
 import { ComponentProps, useState } from "react";
 import { useIntl } from "react-intl";
+import { TTimeEntry } from "../../api/redmine/types";
 import { useSettings } from "../../provider/SettingsProvider";
-import { TTimeEntry } from "../../types/redmine";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";
 import EditTimeEntryModal from "./EditTimeEntryModal";
 

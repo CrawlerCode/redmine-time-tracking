@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { TMembership, TReference } from "../api/redmine/types";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
-import { TMembership, TReference } from "../types/redmine";
 import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 type Options = {

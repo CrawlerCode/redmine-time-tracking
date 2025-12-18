@@ -1,3 +1,4 @@
+import { MissingRedmineConfigError } from "@/api/redmine/MissingRedmineConfigError";
 import { getErrorMessage } from "@/utils/error";
 import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorComponentProps } from "@tanstack/react-router";
@@ -16,6 +17,8 @@ export function ErrorComponent({ error, reset: resetPage }: ErrorComponentProps)
       <AlertTitle>
         {isAxiosError(error) ? (
           <FormattedMessage id="general.error.api-error" />
+        ) : error instanceof MissingRedmineConfigError ? (
+          <FormattedMessage id="general.error.missing-redmine-configuration" />
         ) : (
           <FormattedMessage
             id="general.error.unknown-error"
@@ -25,21 +28,23 @@ export function ErrorComponent({ error, reset: resetPage }: ErrorComponentProps)
           />
         )}
       </AlertTitle>
-      <AlertDescription>
-        {getErrorMessage(error)}
-        <div className="flex w-full justify-end">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => {
-              resetQueries();
-              resetPage();
-            }}
-          >
-            <FormattedMessage id="general.retry" />
-          </Button>
-        </div>
-      </AlertDescription>
+      {!(error instanceof MissingRedmineConfigError) && (
+        <AlertDescription>
+          {getErrorMessage(error)}
+          <div className="flex w-full justify-end">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                resetQueries();
+                resetPage();
+              }}
+            >
+              <FormattedMessage id="general.retry" />
+            </Button>
+          </div>
+        </AlertDescription>
+      )}
     </Alert>
   );
 }

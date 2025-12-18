@@ -1,6 +1,7 @@
-import { AxiosInstance } from "axios";
+import axios, { AxiosInstance } from "axios";
 import { formatISO } from "date-fns";
 import qs from "qs";
+import { MissingRedmineConfigError } from "./MissingRedmineConfigError";
 import {
   TCreateIssue,
   TCreateTimeEntry,
@@ -20,12 +21,26 @@ import {
   TUpdateTimeEntry,
   TUser,
   TVersion,
-} from "../types/redmine";
+} from "./types";
 
-export class RedmineApi {
+export class RedmineApiClient {
   private instance: AxiosInstance;
-  constructor(instance: AxiosInstance) {
-    this.instance = instance;
+
+  constructor(redmineURL: string, redmineApiKey: string) {
+    this.instance = axios.create({
+      baseURL: redmineURL,
+      headers: {
+        "X-Redmine-API-Key": redmineApiKey,
+        "Cache-Control": "no-cache, no-store, max-age=0",
+        Expires: "0",
+      },
+    });
+    this.instance.interceptors.request.use((config) => {
+      if (!config.baseURL) {
+        throw new MissingRedmineConfigError();
+      }
+      return config;
+    });
     this.instance.interceptors.response.use(
       (response) => {
         const contentType = response.headers["content-type"];

@@ -2,9 +2,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useIntl } from "react-intl";
 import { z } from "zod/v4";
+import { TIssue, TUpdateIssue } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
-import { TIssue, TUpdateIssue } from "../../types/redmine";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Form, FormGrid } from "../ui/form";
 import IssueTitle from "./IssueTitle";

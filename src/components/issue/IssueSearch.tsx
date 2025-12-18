@@ -5,10 +5,10 @@ import { ChevronRightIcon, CloudIcon, ListTreeIcon, MoreHorizontalIcon, SearchIc
 import { createContext, PropsWithChildren, use, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { z } from "zod/v4";
+import { TIssue, TReference } from "../../api/redmine/types";
 import useDebounce from "../../hooks/useDebounce";
 import useHotKey from "../../hooks/useHotkey";
 import { useSettings } from "../../provider/SettingsProvider";
-import { TIssue, TReference } from "../../types/redmine";
 import { Badge } from "../ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { FieldGroup, FieldLabel, FieldSet } from "../ui/field";

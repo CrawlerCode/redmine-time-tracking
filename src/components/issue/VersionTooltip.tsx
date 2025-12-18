@@ -1,7 +1,7 @@
 import { differenceInDays, parseISO, startOfDay } from "date-fns";
 import { ReactNode } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { TVersion } from "../../types/redmine";
+import { TVersion } from "../../api/redmine/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type PropTypes = {

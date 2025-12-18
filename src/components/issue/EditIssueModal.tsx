@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useIntl } from "react-intl";
+import { TIssue, TUpdateIssue } from "../../api/redmine/types";
 import useIssue from "../../hooks/useIssue";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
-import { TIssue, TUpdateIssue } from "../../types/redmine";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { IssueForm } from "./form/IssueForm";
 import IssueTitle from "./IssueTitle";

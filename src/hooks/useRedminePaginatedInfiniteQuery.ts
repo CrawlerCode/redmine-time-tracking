@@ -11,7 +11,7 @@ import {
   UseSuspenseInfiniteQueryOptions,
 } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { TPaginatedResponse } from "../types/redmine";
+import { TPaginatedResponse } from "../api/redmine/types";
 
 const defaultInitialPageParam = {
   offset: 0,

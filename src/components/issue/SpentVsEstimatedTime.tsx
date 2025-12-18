@@ -1,6 +1,6 @@
 import clsx from "clsx";
+import { TIssue } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
-import { TIssue } from "../../types/redmine";
 import { roundHours } from "../../utils/date";
 
 interface PropTypes extends React.ComponentProps<"span"> {

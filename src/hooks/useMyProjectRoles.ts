@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { TProject, TReference, TRole } from "../types/redmine";
+import { TProject, TReference, TRole } from "../api/redmine/types";
 import useMyUser from "./useMyUser";
 import useRoles from "./useRoles";
 

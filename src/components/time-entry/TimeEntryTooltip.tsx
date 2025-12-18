@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
+import { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
-import { TTimeEntry } from "../../types/redmine";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type PropTypes = {

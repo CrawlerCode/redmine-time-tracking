@@ -15,10 +15,10 @@ import {
 import { ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 import { toast } from "sonner";
+import { TIssue } from "../../api/redmine/types";
 import { LocalIssue } from "../../hooks/useLocalIssues";
 import { TimerController } from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
-import { TIssue } from "../../types/redmine";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";
 import AddIssueNotesModal from "./AddIssueNotesModal";
 import EditIssueModal from "./EditIssueModal";

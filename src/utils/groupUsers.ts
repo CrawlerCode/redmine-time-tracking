@@ -1,5 +1,5 @@
+import { TReference } from "../api/redmine/types";
 import { TUser } from "../hooks/useProjectUsers";
-import { TReference } from "../types/redmine";
 
 type GroupedUsers = {
   role: TReference;

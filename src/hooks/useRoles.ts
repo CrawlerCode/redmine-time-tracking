@@ -1,5 +1,5 @@
+import { TRole } from "@/api/redmine/types";
 import { useRedmineApi } from "@/provider/RedmineApiProvider";
-import { TRole } from "@/types/redmine";
 import { useQueries, UseQueryResult } from "@tanstack/react-query";
 
 const useRoles = (roleIds: number[]) => {

@@ -1,8 +1,8 @@
-import { RedmineApi } from "@/api/redmine";
+import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { queryOptions, useQuery, useSuspenseQueries, UseSuspenseQueryResult } from "@tanstack/react-query";
 import { useDeferredValue } from "react";
+import { TVersion } from "../api/redmine/types";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
-import { TVersion } from "../types/redmine";
 
 type Options = {
   enabled?: boolean;
@@ -11,7 +11,7 @@ type Options = {
 /**
  * Query options for project versions
  */
-const projectVersionsQueryOptions = (redmineApi: RedmineApi, projectId: number) =>
+const projectVersionsQueryOptions = (redmineApi: RedmineApiClient, projectId: number) =>
   queryOptions({
     queryKey: ["projectVersions", projectId],
     queryFn: () => redmineApi.getProjectVersions(projectId),
