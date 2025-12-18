@@ -67,7 +67,7 @@ function ContextMenuSubContent({ className, ...props }: React.ComponentProps<typ
 
 function ContextMenuContent({ className, collisionPadding = 5, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Content>) {
   return (
-    <ContextMenuPrimitive.Portal container={document.getElementById("redmine-time-tracking-host")?.shadowRoot}>
+    <ContextMenuPrimitive.Portal container={document.getElementById("redmine-time-tracking-shadow-host")?.shadowRoot}>
       <ContextMenuPrimitive.Content
         data-slot="context-menu-content"
         collisionPadding={collisionPadding}

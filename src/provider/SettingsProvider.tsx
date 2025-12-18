@@ -1,5 +1,6 @@
 import deepmerge from "deepmerge";
 import { ReactNode, createContext, use } from "react";
+import { browser } from "wxt/browser";
 import { getStorage, useSuspenseStorage } from "../hooks/useStorage";
 
 export type Settings = {
@@ -81,10 +82,10 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         setSettings: (newData: Settings) => {
           setData(newData);
           if (newData.redmineURL !== data.redmineURL) {
-            chrome.runtime.sendMessage("settings-changed:redmineURL");
+            browser.runtime.sendMessage("settings-changed:redmineURL");
           }
           if (newData.features.showCurrentIssueTimer !== data.features?.showCurrentIssueTimer) {
-            chrome.runtime.sendMessage("settings-changed:showCurrentIssueTimer");
+            browser.runtime.sendMessage("settings-changed:showCurrentIssueTimer");
           }
         },
       }}

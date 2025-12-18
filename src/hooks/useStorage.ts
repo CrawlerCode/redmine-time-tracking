@@ -1,11 +1,12 @@
 import { queryClient } from "@/provider/QueryClientProvider";
 import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useEffectEvent } from "react";
+import { browser } from "wxt/browser";
 
 const Storage = {
-  getItem: async (key: string) => (await chrome.storage.local.get(key))[key],
-  setItem: (key: string, value: string) => chrome.storage.local.set({ [key]: value }),
-  removeItem: (key: string) => chrome.storage.local.remove(key),
+  getItem: async (key: string) => (await browser.storage.local.get<Record<string, string | undefined>>(key))[key],
+  setItem: (key: string, value: string) => browser.storage.local.set({ [key]: value }),
+  removeItem: (key: string) => browser.storage.local.remove(key),
   serialize: JSON.stringify,
   deserialize: JSON.parse,
 };
@@ -41,13 +42,13 @@ export const useStorage = <T>(name: string, defaultValue: T) => {
   });
 
   useEffect(() => {
-    const onChange: Parameters<typeof chrome.storage.local.onChanged.addListener>[0] = (changes) => {
+    const onChange: Parameters<typeof browser.storage.local.onChanged.addListener>[0] = (changes) => {
       if (!changes[name]) return; // other changed
-      updateQueryDataEvent(Storage.deserialize(changes[name].newValue));
+      updateQueryDataEvent(Storage.deserialize(changes[name].newValue as string));
     };
 
-    chrome.storage.local.onChanged.addListener(onChange);
-    return () => chrome.storage.local.onChanged.removeListener(onChange);
+    browser.storage.local.onChanged.addListener(onChange);
+    return () => browser.storage.local.onChanged.removeListener(onChange);
   }, [name]);
 
   return {
@@ -68,13 +69,13 @@ export const useSuspenseStorage = <T>(name: string, defaultValue: T) => {
   });
 
   useEffect(() => {
-    const onChange: Parameters<typeof chrome.storage.local.onChanged.addListener>[0] = (changes) => {
+    const onChange: Parameters<typeof browser.storage.local.onChanged.addListener>[0] = (changes) => {
       if (!changes[name]) return; // other changed
-      updateQueryDataEvent(Storage.deserialize(changes[name].newValue));
+      updateQueryDataEvent(Storage.deserialize(changes[name].newValue as string));
     };
 
-    chrome.storage.local.onChanged.addListener(onChange);
-    return () => chrome.storage.local.onChanged.removeListener(onChange);
+    browser.storage.local.onChanged.addListener(onChange);
+    return () => browser.storage.local.onChanged.removeListener(onChange);
   }, [name]);
 
   return {

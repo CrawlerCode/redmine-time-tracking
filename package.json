@@ -1,7 +1,7 @@
 {
   "name": "redmine-time-tracking",
   "description": "Redmine Time Tracking",
-  "version": "1.21.2",
+  "version": "2.0.0",
   "author": {
     "name": "CrawlerCode",
     "email": "crawlercode@outlook.de"
@@ -12,14 +12,17 @@
   },
   "type": "module",
   "scripts": {
-    "dev:chrome": "tsc && cross-env PLATFORM=chrome vite build --watch --mode development",
-    "dev:firefox": "tsc && cross-env PLATFORM=firefox vite build --watch --mode development",
-    "build": "pnpm run build:chrome && pnpm run build:firefox",
-    "build:chrome": "tsc && cross-env PLATFORM=chrome vite build",
-    "build:firefox": "tsc && cross-env PLATFORM=firefox vite build",
+    "postinstall": "wxt prepare",
+    "dev:chrome": "wxt -b chrome",
+    "dev:firefox": "wxt -b firefox --mv2",
+    "build:chrome": "wxt build -b chrome",
+    "build:firefox": "wxt build -b firefox --mv3",
+    "zip:chrome": "wxt zip -b chrome",
+    "zip:firefox": "wxt zip -b firefox --mv3",
     "release": "gh release create v%npm_package_version% --notes-file release_notes.md --generate-notes",
     "lint": "eslint --fix src tests fixtures",
     "format": "prettier --write src tests public fixtures",
+    "compile": "tsc --noEmit",
     "test": "playwright test",
     "lang:verify": "formatjs verify --source-locale en --missing-keys src/lang/*.json"
   },
@@ -53,7 +56,7 @@
     "@eslint/js": "^9.19.0",
     "@formatjs/cli": "^6.7.1",
     "@playwright/test": "^1.50.1",
-    "@tailwindcss/vite": "^4.1.14",
+    "@tailwindcss/vite": "^4.1.18",
     "@tanstack/eslint-plugin-query": "^5.91.2",
     "@tanstack/eslint-plugin-router": "^1.141.0",
     "@tanstack/router-plugin": "^1.141.2",
@@ -64,7 +67,7 @@
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.23.0",
     "@typescript-eslint/parser": "^8.23.0",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^5.1.2",
     "babel-plugin-react-compiler": "1.0.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
@@ -81,9 +84,8 @@
     "tw-animate-css": "^1.3.3",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.23.0",
-    "vite": "^6.1.0",
-    "vite-plugin-static-copy": "^2.2.0",
-    "vite-plugin-zip-pack": "^1.2.4"
+    "vite": "^7.3.0",
+    "wxt": "^0.20.12"
   },
   "packageManager": "pnpm@10.11.0",
   "pnpm": {

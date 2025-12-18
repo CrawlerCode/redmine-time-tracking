@@ -1,5 +1,8 @@
 node_modules
+
 dist
+.output
+.wxt
 
 .env
 
@@ -11,5 +14,4 @@ dist
 /blob-report/
 /playwright/.cache/
 
-releases
 release_notes.md

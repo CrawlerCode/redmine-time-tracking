@@ -31,7 +31,7 @@ function AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof
 
 function AlertDialogContent({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
   return (
-    <AlertDialogPortal container={document.getElementById("redmine-time-tracking-host")?.shadowRoot}>
+    <AlertDialogPortal container={document.getElementById("redmine-time-tracking-shadow-host")?.shadowRoot}>
       <AlertDialogOverlay />
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"

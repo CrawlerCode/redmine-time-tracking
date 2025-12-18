@@ -1,0 +1,31 @@
+name: Publish Canary
+
+on:
+  push:
+    branches:
+      - main
+      - v2
+jobs:
+  publish-chrome-canary:
+    name: Publish to Chrome Web Store
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run zip:chrome --mode canary
+
+      - run: pnpm wxt submit --chrome-zip .output/*-chrome.zip --chrome-skip-submit-review
+        env:
+          CHROME_EXTENSION_ID: adgcdimdkkaddeopcabokepmaihfhklb
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}

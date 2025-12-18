@@ -13,7 +13,7 @@ function PopoverTrigger({ ...props }: React.ComponentProps<typeof PopoverPrimiti
 
 function PopoverContent({ className, align = "center", sideOffset = 4, collisionPadding = 5, ...props }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
   return (
-    <PopoverPrimitive.Portal container={document.getElementById("redmine-time-tracking-host")?.shadowRoot}>
+    <PopoverPrimitive.Portal container={document.getElementById("redmine-time-tracking-shadow-host")?.shadowRoot}>
       <PopoverPrimitive.Content
         data-slot="popover-content"
         align={align}
