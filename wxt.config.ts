@@ -30,9 +30,6 @@ export default defineConfig({
       "48": "/icon/48.png",
       "128": "/icon/128.png",
     },
-    author: {
-      email: "crawlercode@outlook.de",
-    },
     homepage_url: "https://github.com/CrawlerCode/redmine-time-tracking",
     permissions: ["storage", "tabs", "activeTab", "scripting"],
     host_permissions: ["http://*/*", "https://*/*"],
@@ -46,7 +43,10 @@ export default defineConfig({
       browser_specific_settings: {
         gecko: {
           id: "{ea2ad5bc-e458-414d-8565-5cfe9f7cf0c2}",
-          strict_min_version: "109.0",
+          strict_min_version: "112.0",
+          data_collection_permissions: {
+            required: ["none"],
+          },
         },
       },
     }),
