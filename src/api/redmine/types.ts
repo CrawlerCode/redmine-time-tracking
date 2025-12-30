@@ -91,8 +91,9 @@ export type TSearchResult = {
 export type TProject = {
   id: number;
   name: string;
-  description: string;
   identifier: string;
+  description: string;
+  homepage?: string;
   inherit_members: boolean; // available since Redmine 4.1.0
   is_public: boolean;
   status: number;

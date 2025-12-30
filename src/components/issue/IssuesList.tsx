@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { PinIcon, PlusIcon, SearchIcon, SquareChartGanttIcon, SquareMousePointerIcon, TimerIcon } from "lucide-react";
 import { Fragment, ReactNode, useMemo, useState } from "react";
 import { FormattedMessage } from "react-intl";
-import { TReference, TVersion } from "../../api/redmine/types";
+import { TProject, TReference, TVersion } from "../../api/redmine/types";
 import useLocalIssues from "../../hooks/useLocalIssues";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useMyProjects from "../../hooks/useMyProjects";
@@ -15,6 +15,7 @@ import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";
 import Issue from "./Issue";
 import { useIssueSearch } from "./IssueSearch";
+import ProjectTooltip from "./ProjectTooltip";
 import VersionTooltip from "./VersionTooltip";
 
 type PropTypes = {
@@ -42,7 +43,8 @@ const IssuesList = ({ groupedIssues, localIssues, timers }: PropTypes) => {
         <div key={projectGroup.key} className="flex flex-col gap-y-2">
           <IssueProject
             type={projectGroup.type}
-            project={projectGroup.project}
+            projectRef={projectGroup.project}
+            project={projects.data?.find((p) => p.id === projectGroup.project.id)}
             actions={
               <>
                 {projectRoles?.hasProjectPermission(projectGroup.project.id, "add_issues") && (
@@ -92,7 +94,7 @@ const IssuesList = ({ groupedIssues, localIssues, timers }: PropTypes) => {
   );
 };
 
-const IssueProject = ({ project, type, actions }: { project: TReference; type: ProjectGroup["type"]; actions: ReactNode }) => {
+const IssueProject = ({ projectRef, project, type, actions }: { projectRef: TReference; project?: TProject; type: ProjectGroup["type"]; actions: ReactNode }) => {
   const { settings } = useSettings();
 
   return (
@@ -105,9 +107,17 @@ const IssueProject = ({ project, type, actions }: { project: TReference; type: P
       {type === "tracked-issues" && <TimerIcon className="size-3.5 shrink-0" />}
       {type === "pinned-issues" && <PinIcon className="size-3.5 shrink-0 rotate-30" />}
       {type === "project" && <SquareChartGanttIcon className="size-3.5 shrink-0" />}
-      <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="truncate text-sm hover:underline" rel="noreferrer">
-        {project.name}
-      </a>
+      {project ? (
+        <ProjectTooltip project={project}>
+          <a href={`${settings.redmineURL}/projects/${projectRef.id}`} target="_blank" tabIndex={-1} className="truncate text-sm hover:underline" rel="noreferrer">
+            {projectRef.name}
+          </a>
+        </ProjectTooltip>
+      ) : (
+        <a href={`${settings.redmineURL}/projects/${projectRef.id}`} target="_blank" tabIndex={-1} className="truncate text-sm hover:underline" rel="noreferrer">
+          {projectRef.name}
+        </a>
+      )}
       <span className="grow" />
       <div className="flex gap-x-2">{actions}</div>
     </div>
