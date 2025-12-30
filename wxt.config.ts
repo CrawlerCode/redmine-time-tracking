@@ -38,12 +38,13 @@ export default defineConfig({
         mode === "production"
           ? "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAk2PbuYr+evWm0U+t8XCn94jO0x0yydbdSqotCB9tC2NaYcnYhuOIrkDrAJg8DwUSvRbx2FXbacmf/CyI5fPivYmLDDL6D1VqabEhpVwNjTbj6V8lOy52C8Kl9ZA8WEvBZIsgU1bi54j2eg7B9lFZ3FIbavJB4Ezkny4eW+TdpUqcmoMxVybVeJ4q4jhzUFmEaHEmEyfzWLiUwYjEUzJkkzQYCTzZ0ZO1jWNnjfm5Y9IRSGPbzlChvigEhSuEs+DA2uZnr//mfr6xD97ryZY/i2HGeuxB3zZoIFR+FoFlp18ETJmEDO5ZEjEhl0Zb09yHlPah0IHDx6QjNcbxG3u31QIDAQAB"
           : "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlm4d4x15I7iewgVp3cR51dCrwYINnvmmG/NjzK9Fg/LyzFLvRBqNftIqP4+fJas56CN2fNiFQNfdk8ACQJMKk8yd6fDeDs1/l/AseSWXM7GdbGDacj9lkZnL6jFHUrIxuwiHesE0W/I5o3Ep5ZXHnifjd7D9KEXswnvSWzmZXAtVNQu8DQXdNZO94N8i5ESLNdi78fmoeNIYaqieu5y0tlyMcvnOKiR3BHRAAN9bA0E/XvoazaL4KELcQbkh0T3nFhjSFDNHJAWlMkCvDGLC01RVLrkQW2ar9R5sAeyPmSx7HfgpzeBStwhDuOJ8s7Ed6WGCBaTll0WLQBxPYfV7qwIDAQAB",
+      minimum_chrome_version: "122",
     }),
     ...(browser === "firefox" && {
       browser_specific_settings: {
         gecko: {
           id: "{ea2ad5bc-e458-414d-8565-5cfe9f7cf0c2}",
-          strict_min_version: "112.0",
+          strict_min_version: "127.0",
           data_collection_permissions: {
             required: ["none"],
           },

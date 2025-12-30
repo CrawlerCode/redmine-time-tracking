@@ -40,7 +40,14 @@
 
 # Requirements
 
-At least Redmine version `3.0` or higher required. Recommended version `5.0` or higher.
+Supported browsers:
+
+- **Chrome 122** or higher
+- **Firefox 127** or higher
+
+Supported Redmine versions:
+
+At least **Redmine version `3.0` or higher** required. Recommended version `5.0` or higher.
 
 ### Unsupported features by Redmine versions
 
@@ -53,8 +60,6 @@ At least Redmine version `3.0` or higher required. Recommended version `5.0` or 
 | Check permissions for admin users who are not members of a project                | `< 4.0.0`                   |
 | Display project-available time entry activities when _adding spent time entries_  | `< 3.4.0`                   |
 | Remote Redmine search                                                             | `< 3.3.0`                   |
-
-_Tested with Google Chrome Version 130 and Firefox 132_
 
 # Supported languages
 
