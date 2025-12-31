@@ -59,7 +59,11 @@ export default defineConfig({
         manifest.version_name = `${manifest.version}-dev`;
       } else if (wxt.config.mode === "canary") {
         manifest.name += " (CANARY)";
-        manifest.version_name = `${manifest.version}-canary.${process.env.GITHUB_SHA?.slice(0, 7) ?? new Date().getTime()}`;
+        const baseVersion = manifest.version;
+        const buildNr = Number(process.env.GITHUB_RUN_NUMBER ?? 0);
+        const commitHash = process.env.GITHUB_SHA?.slice(0, 7);
+        manifest.version = `${baseVersion}.${buildNr}`;
+        manifest.version_name = `${baseVersion}-canary${commitHash ? `.${commitHash}` : ""}${buildNr ? `+${buildNr}` : ""}`;
       }
     },
   },
