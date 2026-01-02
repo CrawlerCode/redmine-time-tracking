@@ -1,6 +1,8 @@
 /* eslint-disable react/no-children-prop */
 import { TIssue } from "@/api/redmine/types";
 import { useAppForm } from "@/hooks/useAppForm";
+import { useStatuses } from "@/hooks/useIssueStatuses";
+import deepmerge from "deepmerge";
 import { SlidersHorizontalIcon } from "lucide-react";
 import { createContext, PropsWithChildren, use, useState } from "react";
 import { useIntl } from "react-intl";
@@ -13,12 +15,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const filterSettingsSchema = z.object({
   projects: z.array(z.number()),
+  statuses: z.array(z.number()),
   hideCompletedIssues: z.boolean(),
 });
 
 type FilterSettings = z.infer<typeof filterSettingsSchema>;
 
-const defaultSettings: FilterSettings = { projects: [], hideCompletedIssues: false };
+const defaultSettings: FilterSettings = { projects: [], statuses: [], hideCompletedIssues: false };
 
 type FilterContextType = {
   settings: FilterSettings;
@@ -33,7 +36,7 @@ const FilterProvider = ({ children }: PropsWithChildren) => {
   return (
     <FilterContext
       value={{
-        settings,
+        settings: deepmerge(defaultSettings, settings),
         setSettings,
       }}
     >
@@ -57,6 +60,9 @@ const FilterButton = () => {
   const [showFilter, setShowFilter] = useState(false);
 
   const { data: projects, isLoading: isLoadingProjects } = useMyProjects({
+    enabled: showFilter,
+  });
+  const { data: statuses, isLoading: isLoadingStatuses } = useStatuses({
     enabled: showFilter,
   });
 
@@ -103,6 +109,25 @@ const FilterButton = () => {
             />
 
             <form.AppField
+              name="statuses"
+              children={(field) => (
+                <field.ComboboxField
+                  title={formatMessage({ id: "issues.filter.statuses" })}
+                  placeholder={formatMessage({ id: "issues.filter.statuses" })}
+                  options={
+                    statuses?.map((status) => ({
+                      label: status.name,
+                      value: status.id,
+                      disabled: status.is_closed,
+                    })) ?? []
+                  }
+                  isLoading={isLoadingStatuses}
+                  mode="multiple"
+                />
+              )}
+            />
+
+            <form.AppField
               name="hideCompletedIssues"
               children={(field) => (
                 <field.CheckboxField
@@ -123,6 +148,11 @@ export const filterIssues = (issues: TIssue[], settings: FilterSettings) => {
   // projects
   if (settings.projects.length > 0) {
     issues = issues.filter((issue) => settings.projects.includes(issue.project.id));
+  }
+
+  // statuses
+  if (settings.statuses && settings.statuses.length > 0) {
+    issues = issues.filter((issue) => settings.statuses.includes(issue.status.id));
   }
 
   // hide completed issues (done_ratio = 100%)

@@ -25,6 +25,7 @@
   "issues.filter": "Filter",
   "issues.filter.projects": "Projekte",
   "issues.filter.projects.no-options": "Keine Projekte",
+  "issues.filter.statuses": "Status",
   "issues.filter.hide-completed-issues.title": "Verstecke fertige Tickets",
   "issues.filter.hide-completed-issues.description": "100% erledigt, aber weiterhin offen",
   "issues.list.no-options": "Keine Tickets",

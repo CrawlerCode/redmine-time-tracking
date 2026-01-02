@@ -25,6 +25,7 @@
   "issues.filter": "Фильтр",
   "issues.filter.projects": "Проекты",
   "issues.filter.projects.no-options": "Нет проектов",
+  "issues.filter.statuses": "Statuses",
   "issues.filter.hide-completed-issues.title": "Скрыть выполненные задачи",
   "issues.filter.hide-completed-issues.description": "Готовность 100%, но еще открыты",
   "issues.list.no-options": "Нет задач",

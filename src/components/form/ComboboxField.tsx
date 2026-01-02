@@ -10,7 +10,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-type Option<Value> = { value: Value; label: string; icon?: ReactNode };
+type Option<Value> = { value: Value; label: string; icon?: ReactNode; disabled?: boolean };
 type Group<Value> = { label: string; options: Option<Value>[] };
 
 type ComboboxFieldProps<Value> = {
@@ -103,6 +103,7 @@ export const ComboboxField = <Value extends string | number>({
                         option={subOption}
                         value={state.value}
                         required={required}
+                        disabled={subOption.disabled}
                         handleChange={(value) => {
                           handleChange(value);
                           if (mode === "single") setOpen(false);
@@ -117,6 +118,7 @@ export const ComboboxField = <Value extends string | number>({
                     option={option}
                     value={state.value}
                     required={required}
+                    disabled={option.disabled}
                     handleChange={(value) => {
                       handleChange(value);
                       if (mode === "single") setOpen(false);
@@ -201,12 +203,14 @@ const RenderOption = <Value extends string | number>({
   option,
   value,
   required,
+  disabled,
   handleChange,
 }: {
   mode: NonNullable<ComboboxFieldProps<Value>["mode"]>;
   option: Option<Value>;
   value: null | Value | Value[];
   required?: boolean;
+  disabled?: boolean;
   handleChange: (value: null | Value | Value[]) => void;
 }) => {
   const isSelected = Array.isArray(value) ? value.includes(option.value) : value === option.value;
@@ -226,6 +230,7 @@ const RenderOption = <Value extends string | number>({
           }
         }
       }}
+      disabled={disabled}
       className="flex items-center gap-2"
     >
       {mode === "multiple" && <Checkbox checked={isSelected} className="data-[state=checked]:[&_svg]:text-primary-foreground!" />}

@@ -1,13 +1,13 @@
 /* eslint-disable react/no-children-prop */
 import { DialogFooter } from "@/components/ui/dialog";
 import { Form, FormGrid } from "@/components/ui/form";
+import { useIssueStatuses } from "@/hooks/useIssueStatuses";
 import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
 import { z } from "zod/v4";
 import { TIssue } from "../../../api/redmine/types";
 import { useAppForm } from "../../../hooks/useAppForm";
 import { useIssuePriorities } from "../../../hooks/useIssuePriorities";
-import useIssueStatuses from "../../../hooks/useIssueStatuses";
 import useIssueTrackers from "../../../hooks/useIssueTrackers";
 import useMyUser from "../../../hooks/useMyUser";
 import useProject from "../../../hooks/useProject";

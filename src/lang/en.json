@@ -25,6 +25,7 @@
   "issues.filter": "Filter",
   "issues.filter.projects": "Projects",
   "issues.filter.projects.no-options": "No projects",
+  "issues.filter.statuses": "Statuses",
   "issues.filter.hide-completed-issues.title": "Hide completed issues",
   "issues.filter.hide-completed-issues.description": "100% done, but still open",
   "issues.list.no-options": "No issues",

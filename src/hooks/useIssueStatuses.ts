@@ -1,13 +1,39 @@
-import { useQuery } from "@tanstack/react-query";
+import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { useRedmineApi } from "../provider/RedmineApiProvider";
 import useIssue from "./useIssue";
+
+const statusesQueryOptions = (redmineApi: RedmineApiClient) =>
+  queryOptions({
+    queryKey: ["issueStatuses"],
+    queryFn: () => redmineApi.getIssueStatuses(),
+  });
+
+export const useStatuses = ({
+  enabled = true,
+}: {
+  enabled?: boolean;
+} = {}) => {
+  const redmineApi = useRedmineApi();
+
+  const issueStatusesQuery = useQuery({
+    ...statusesQueryOptions(redmineApi),
+    enabled,
+  });
+
+  return {
+    data: issueStatusesQuery.data,
+    isLoading: issueStatusesQuery.isLoading,
+    isError: issueStatusesQuery.isError,
+  };
+};
 
 type Options = {
   enabled?: boolean;
   issueStaleTime?: number;
 };
 
-const useIssueStatuses = (issueId: number, { enabled = true, issueStaleTime }: Options = {}) => {
+export const useIssueStatuses = (issueId: number, { enabled = true, issueStaleTime }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
   const issueQuery = useIssue(issueId, { enabled, staleTime: issueStaleTime });
@@ -15,8 +41,7 @@ const useIssueStatuses = (issueId: number, { enabled = true, issueStaleTime }: O
   const hasIssueNoAllowedStatuses = !!issueQuery.data && issueQuery.data.allowed_statuses === undefined;
 
   const issueStatusesQuery = useQuery({
-    queryKey: ["issueStatuses"],
-    queryFn: () => redmineApi.getIssueStatuses(),
+    ...statusesQueryOptions(redmineApi),
     enabled: enabled && hasIssueNoAllowedStatuses,
   });
 
@@ -34,4 +59,3 @@ const useIssueStatuses = (issueId: number, { enabled = true, issueStaleTime }: O
     hasIssueNoAllowedStatuses,
   };
 };
-export default useIssueStatuses;
