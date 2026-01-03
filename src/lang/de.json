@@ -5,6 +5,7 @@
   "nav.tabs.settings": "Einstellungen",
 
   "timers.list.no-options": "Keine Timer",
+  "timers.list.unknown-project-group": "(unbekanntes Projekt)",
   "timer.context-menu.start": "Timer starten",
   "timer.context-menu.pause": "Timer pausieren",
   "timer.context-menu.edit": "Timer bearbeiten",

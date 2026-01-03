@@ -5,6 +5,7 @@
   "nav.tabs.settings": "Настройки",
 
   "timers.list.no-options": "No timers",
+  "timers.list.unknown-project-group": "(unknown project)",
   "timer.context-menu.start": "Запустить таймер",
   "timer.context-menu.pause": "Остановить таймер",
   "timer.context-menu.edit": "Изменить таймер",
