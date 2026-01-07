@@ -8,7 +8,6 @@ import { useAppForm } from "../../hooks/useAppForm";
 import useCachedComments from "../../hooks/useCachedComments";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useMyUser from "../../hooks/useMyUser";
-import useProject from "../../hooks/useProject";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";
 import ActivityField from "../issue/form/fields/ActivityField";
@@ -52,8 +51,7 @@ const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: Prop
   const queryClient = useQueryClient();
 
   const myUser = useMyUser();
-  const project = useProject(issue.project.id);
-  const projectRoles = useMyProjectRoles([issue.project.id], project.data ? [project.data] : undefined);
+  const projectRoles = useMyProjectRoles([issue.project.id]);
 
   const createTimeEntryMutation = useMutation({
     mutationFn: (entry: TCreateTimeEntry) => redmineApi.createTimeEntry(entry),

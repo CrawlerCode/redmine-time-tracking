@@ -1,10 +1,12 @@
 import { useMemo } from "react";
-import { TProject, TReference, TRole } from "../api/redmine/types";
+import { TReference, TRole } from "../api/redmine/types";
+import useMyProjects from "./useMyProjects";
 import useMyUser from "./useMyUser";
 import useRoles from "./useRoles";
 
-const useMyProjectRoles = (projectIds: number[], projects?: TProject[]) => {
+const useMyProjectRoles = (projectIds: number[]) => {
   const myUser = useMyUser();
+  const projects = useMyProjects();
 
   const projectMembershipRoles = useMemo(
     () =>
@@ -44,7 +46,8 @@ const useMyProjectRoles = (projectIds: number[], projects?: TProject[]) => {
     hasProjectPermission: (projectId: number, permission: TRole["permissions"][number]) =>
       // First check if user is admin, then check if user has the permission in the project roles or if the project is public and the non member role has the permission
       myUser.data?.admin ||
-      (myProjectRoles[projectId] ?? (projects?.find((p) => p.id === projectId)?.is_public && nonMemberRole ? [nonMemberRole] : undefined))?.some((r) => r.permissions.includes(permission)),
+      (myProjectRoles[projectId] ?? (projects.data?.find((p) => p.id === projectId)?.is_public && nonMemberRole ? [nonMemberRole] : undefined))?.some((r) => r.permissions.includes(permission)) ||
+      false,
   };
 };
 

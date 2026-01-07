@@ -1,8 +1,11 @@
 import { TReference } from "@/api/redmine/types";
-import Timer from "@/components/timer/Timer";
+import { ToggleableCard } from "@/components/general/ToggleableCard";
+import IssueTitle from "@/components/issue/IssueTitle";
+import Timer from "@/components/timer/timer";
 import TimerSearch, { useTimerSearch } from "@/components/timer/TimerSearch";
 import { useIssuePriorities } from "@/hooks/useIssuePriorities";
 import { useSuspenseIssues } from "@/hooks/useIssues";
+import useMyProjectRoles from "@/hooks/useMyProjectRoles";
 import { groupTimers, TimersGroup } from "@/utils/groupTimers";
 import { createFileRoute } from "@tanstack/react-router";
 import clsx from "clsx";
@@ -34,6 +37,9 @@ const TimersPage = () => {
   const issues = useSuspenseIssues(timers.getIssuesIds());
   const issuePriorities = useIssuePriorities({ enabled: settings.style.showIssuesPriority });
 
+  const projectIds = useMemo(() => [...new Set(issues.data.map((i) => i.project.id))], [issues.data]);
+  const projectRoles = useMyProjectRoles(projectIds);
+
   const search = useTimerSearch();
   const matchedTimers = timers.searchTimers(search, issues.data);
 
@@ -49,7 +55,20 @@ const TimersPage = () => {
             <TimerProject type={type} project={project} />
 
             {items.map(({ timer, issue }) => (
-              <Timer key={timer.id} timer={timer} issue={issue} issuePriorityType={issue ? issuePriorities.getPriorityType(issue) : undefined} variant="full" />
+              <Timer.Root key={timer.id} timer={timer} issue={issue}>
+                <Timer.ContextMenu>
+                  <ToggleableCard role="listitem" data-type="timer" className="flex flex-col gap-1" onToggle={() => timer.toggleTimer()}>
+                    {issue ? <IssueTitle issue={issue} priorityType={issuePriorities.getPriorityType(issue)} /> : <h1 className="truncate text-gray-500 line-through">#{timer.issueId}</h1>}
+                    <Timer.Wrapper>
+                      <Timer.NameField />
+                      <Timer.Counter />
+                      <Timer.ToggleButton />
+                      <Timer.ResetButton />
+                      <Timer.DoneButton canLogTime={issue ? projectRoles.hasProjectPermission(issue.project.id, "log_time") : false} />
+                    </Timer.Wrapper>
+                  </ToggleableCard>
+                </Timer.ContextMenu>
+              </Timer.Root>
             ))}
           </Fragment>
         ))}

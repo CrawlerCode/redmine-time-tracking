@@ -1,5 +1,5 @@
 import { createShadowRootUi, defineContentScript } from "#imports";
-import CurrentIssueTimerWrapper from "@/components/timer/CurrentIssueTimer";
+import { CurrentIssueTimer } from "@/components/timer/CurrentIssueTimer";
 import Providers from "@/provider/Providers";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -29,7 +29,7 @@ export default defineContentScript({
         root.render(
           <React.StrictMode>
             <Providers>
-              <CurrentIssueTimerWrapper />
+              <CurrentIssueTimer />
             </Providers>
           </React.StrictMode>
         );

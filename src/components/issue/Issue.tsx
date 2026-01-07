@@ -9,7 +9,8 @@ import { TimerController } from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
 import { clsxm } from "../../utils/clsxm";
 import HelpTooltip from "../general/HelpTooltip";
-import Timer from "../timer/Timer";
+import { ToggleableCard } from "../general/ToggleableCard";
+import Timer from "../timer/timer";
 import IssueContextMenu from "./IssueContextMenu";
 import IssueTitle from "./IssueTitle";
 
@@ -46,30 +47,18 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
         canAddNotes={canAddNotes}
         onAddTimer={onAddTimer}
       >
-        <div
+        <ToggleableCard
           role="listitem"
           data-type="issue"
           className={clsxm(
-            "bg-card relative flex w-full flex-col gap-1 rounded-lg p-1",
-            "focus-visible:border-ring focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
-            "border border-gray-200 dark:border-gray-700",
+            "relative flex flex-col gap-1",
             settings.style.showIssuesPriority && {
               "border-2 border-[#add7f3] dark:border-[#4973f3]/40": priorityType === "lowest",
               "border-2 border-[#fcc] dark:border-[#fc6f6f]/40": priorityType === "medium-high",
               "border-2 border-[#ffb4b4] dark:border-[#ff5050]/40": priorityType === "high" || priorityType === "highest",
             }
           )}
-          tabIndex={1}
-          // On "Enter" or "Space" => toggle timer
-          onKeyDown={(e) => {
-            if ((e.key === "Enter" || e.code === "Space") && e.currentTarget === document.activeElement) {
-              if (!canLogTime) return;
-
-              primaryTimer.toggleTimer();
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }}
+          {...(canLogTime && { onToggle: () => primaryTimer.toggleTimer() })}
         >
           <IssueTitle
             issue={issue}
@@ -89,7 +78,14 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
             </div>
             {canLogTime && !areTimersExpanded && (
               <div>
-                <Timer timer={primaryTimer} issue={issue} />
+                <Timer.Root timer={primaryTimer} issue={issue}>
+                  <Timer.Wrapper>
+                    <Timer.Counter />
+                    <Timer.ToggleButton />
+                    <Timer.ResetButton />
+                    <Timer.DoneButton canLogTime={canLogTime} />
+                  </Timer.Wrapper>
+                </Timer.Root>
                 {timers.length > 1 && (
                   <div className="pl-3 text-xs text-gray-500" onClick={() => setAreTimersExpanded(true)}>
                     <FormattedMessage id="issues.timers.more-timers" values={{ count: timers.length - 1 }} />
@@ -101,7 +97,17 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
           {canLogTime && areTimersExpanded && (
             <div className="mt-2 flex flex-col gap-y-1">
               {timers.map((timer) => (
-                <Timer key={timer.id} timer={timer} issue={issue} variant="expanded" />
+                <Timer.Root key={timer.id} timer={timer} issue={issue}>
+                  <Timer.ContextMenu>
+                    <Timer.WrapperCard>
+                      <Timer.NameField />
+                      <Timer.Counter />
+                      <Timer.ToggleButton />
+                      <Timer.ResetButton />
+                      <Timer.DoneButton canLogTime={canLogTime} />
+                    </Timer.WrapperCard>
+                  </Timer.ContextMenu>
+                </Timer.Root>
               ))}
             </div>
           )}
@@ -117,7 +123,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
               </HelpTooltip>
             )}
           </div>
-        </div>
+        </ToggleableCard>
       </IssueContextMenu>
     </>
   );

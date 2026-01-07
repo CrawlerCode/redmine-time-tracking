@@ -33,7 +33,7 @@ const IssuesList = ({ groupedIssues, localIssues, timers }: PropTypes) => {
 
   const projects = useMyProjects();
   const projectIds = useMemo(() => [...new Set(groupedIssues.map((g) => g.project.id))], [groupedIssues]);
-  const projectRoles = useMyProjectRoles(projectIds, projects.data);
+  const projectRoles = useMyProjectRoles(projectIds);
 
   const [createIssue, setCreateIssue] = useState<number | undefined>(undefined);
 
