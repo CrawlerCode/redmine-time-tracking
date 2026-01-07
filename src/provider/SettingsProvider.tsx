@@ -69,10 +69,15 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
   // Migrate old settings TODO: Remove in future
   if (data?.features?.roundTimeNearestQuarterHour === true) {
-    data.features.roundTimeNearestQuarterHour = undefined;
-    data.features.roundToNearestInterval = true;
-    data.features.roundingInterval = 15;
-    setData(data);
+    setData({
+      ...data,
+      features: {
+        ...data.features,
+        roundTimeNearestQuarterHour: undefined,
+        roundToNearestInterval: true,
+        roundingInterval: 15,
+      },
+    });
   }
 
   return (

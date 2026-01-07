@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useSettings } from "../provider/SettingsProvider";
 
 function useRedmineUrl() {
   const { settings } = useSettings();
-  const [currentUrl, setCurrentUrl] = useState<
+
+  const currentUrl = useMemo<
     | {
         url: string;
         data?: {
@@ -12,16 +13,13 @@ function useRedmineUrl() {
         };
       }
     | undefined
-  >();
-
-  useEffect(() => {
+  >(() => {
     const [_, issueId] = window.location.href.match(new RegExp(`^${settings.redmineURL}/issues/(\\d+)(\\?.*)?(#.*)?$`)) || [];
 
     if (issueId) {
-      setCurrentUrl({ url: window.location.href, data: { type: "issue", id: Number(issueId) } });
-    } else {
-      setCurrentUrl(undefined);
+      return { url: window.location.href, data: { type: "issue", id: Number(issueId) } };
     }
+    return undefined;
   }, [settings.redmineURL]);
 
   return currentUrl;

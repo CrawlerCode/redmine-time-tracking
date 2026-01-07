@@ -1,4 +1,4 @@
-import { ComponentProps, useEffect, useId, useState } from "react";
+import { ComponentProps, useEffect, useEffectEvent, useId, useState } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { useSettings } from "../../provider/SettingsProvider";
 import { Field, FieldError, FieldLabel } from "../ui/field";
@@ -49,9 +49,8 @@ export const HoursField = ({ title, required, className, ...props }: Omit<Compon
 const TimeInput = ({ value, onChange, onBlur, ...props }: ComponentProps<typeof Input>) => {
   const [raw, setRaw] = useState("");
 
-  useEffect(() => {
-    setRaw(typeof value === "string" ? value : "");
-  }, [value]);
+  const updateRaw = useEffectEvent(setRaw);
+  useEffect(() => updateRaw(typeof value === "string" ? value : ""), [value]);
 
   return (
     <Input

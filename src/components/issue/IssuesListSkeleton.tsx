@@ -5,8 +5,10 @@ import { Skeleton } from "../ui/skeleton";
 const IssuesListSkeleton = () => {
   const groups = useMemo(
     () =>
+      // eslint-disable-next-line react-hooks/purity
       [...Array(Math.floor(Math.random() * 2 + 2)).keys()].map((i) => ({
         key: i,
+        // eslint-disable-next-line react-hooks/purity
         groups: [...Array(Math.floor(Math.random() * 5 + 1)).keys()],
       })),
     []
