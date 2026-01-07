@@ -1,5 +1,5 @@
 import { ComboboxField } from "@/components/form/ComboboxField";
-import { ComponentProps, useEffect } from "react";
+import { ComponentProps, useEffect, useEffectEvent } from "react";
 import { useIntl } from "react-intl";
 import useTimeEntryActivities from "../../../../hooks/useTimeEntryActivities";
 
@@ -13,11 +13,11 @@ const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: Omit<Co
 
   const timeEntryActivities = useTimeEntryActivities(projectId);
 
+  const handleDefaultActivityChange = useEffectEvent((activityId: number) => onDefaultActivityChange?.(activityId));
   useEffect(() => {
-    if (!timeEntryActivities.defaultActivity) return;
-
-    onDefaultActivityChange?.(timeEntryActivities.defaultActivity.id);
-  }, [timeEntryActivities.defaultActivity, onDefaultActivityChange]);
+    if (!timeEntryActivities.defaultActivity?.id) return;
+    handleDefaultActivityChange(timeEntryActivities.defaultActivity.id);
+  }, [timeEntryActivities.defaultActivity]);
 
   return (
     <ComboboxField
