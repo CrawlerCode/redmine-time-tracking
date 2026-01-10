@@ -1,11 +1,12 @@
 /* eslint-disable react/no-children-prop */
+import { usePersistentComments } from "@/hooks/usePersistentComments";
+import { TimerController } from "@/hooks/useTimers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { startOfDay } from "date-fns";
 import { useIntl } from "react-intl";
 import z from "zod/v4";
 import { TCreateTimeEntry, TIssue, TUpdateIssue } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
-import useCachedComments from "../../hooks/useCachedComments";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useMyUser from "../../hooks/useMyUser";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
@@ -20,8 +21,9 @@ import UserField from "./form/fields/UserField";
 import TimeEntryPreview from "./TimeEntryPreview";
 
 type PropTypes = {
+  timer: TimerController;
   issue: TIssue;
-  initialValues?: Partial<TCreateTimeEntryForm>;
+  initialValues: Partial<TCreateTimeEntryForm>;
   onClose: () => void;
   onSuccess: () => void;
 };
@@ -44,7 +46,7 @@ const createTimeEntryFormSchema = ({ formatMessage }: { formatMessage: ReturnTyp
 
 type TCreateTimeEntryForm = z.infer<ReturnType<typeof createTimeEntryFormSchema>>;
 
-const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: PropTypes) => {
+const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess }: PropTypes) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
   const redmineApi = useRedmineApi();
@@ -120,9 +122,8 @@ const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: Prop
       }
 
       if (!createTimeEntryMutation.isError) {
-        // if has cached comment => remove it
-        if (cachedComments.isEnabled && cachedComments.isCached) {
-          cachedComments.removeComment();
+        if (persistentComments.isEnabled && persistentComments.isPersisted) {
+          persistentComments.removeComment();
         }
 
         onSuccess();
@@ -130,9 +131,9 @@ const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: Prop
     },
   });
 
-  const cachedComments = useCachedComments({
-    identifier: issue.id,
-    enabled: settings.features.cacheComments,
+  const persistentComments = usePersistentComments({
+    identifier: timer.id,
+    enabled: settings.features.persistentComments,
     onLoad: (comment) => {
       form.setFieldValue("comments", comment);
     },
@@ -143,10 +144,9 @@ const CreateTimeEntryModal = ({ issue, initialValues, onClose, onSuccess }: Prop
       <Dialog
         open
         onOpenChange={() => {
-          // if comment exist => save/update comment
           const comment = form.state.values.comments;
-          if (cachedComments.isEnabled && (comment || cachedComments.isCached)) {
-            cachedComments.saveComment(comment);
+          if (persistentComments.isEnabled && ((comment && comment != initialValues.comments) || persistentComments.isPersisted)) {
+            persistentComments.saveComment(comment);
           }
 
           onClose();

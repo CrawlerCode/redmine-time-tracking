@@ -36,6 +36,7 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
 
       {createTimeEntryHours !== undefined && issue && (
         <CreateTimeEntryModal
+          timer={timer}
           issue={issue}
           initialValues={{
             done_ratio: issue.done_ratio,

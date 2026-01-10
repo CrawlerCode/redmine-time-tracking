@@ -12,7 +12,8 @@ export type Settings = {
     roundTimeNearestQuarterHour?: boolean;
     roundToNearestInterval: boolean;
     roundingInterval: number;
-    cacheComments: boolean;
+    cacheComments?: boolean;
+    persistentComments: boolean;
     addNotes: boolean;
     showCurrentIssueTimer: boolean;
   };
@@ -37,7 +38,7 @@ const defaultSettings: Settings = {
     autoPauseOnSwitch: true,
     roundToNearestInterval: false,
     roundingInterval: 15,
-    cacheComments: true,
+    persistentComments: true,
     addNotes: false,
     showCurrentIssueTimer: true,
   },
@@ -76,6 +77,17 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         roundTimeNearestQuarterHour: undefined,
         roundToNearestInterval: true,
         roundingInterval: 15,
+      },
+    });
+  }
+
+  if (data.features?.cacheComments) {
+    setData({
+      ...data,
+      features: {
+        ...data.features,
+        cacheComments: undefined,
+        persistentComments: true,
       },
     });
   }

@@ -51,7 +51,7 @@ function PageComponent() {
             .min(1, formatMessage({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
             .max(60, formatMessage({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
           addNotes: z.boolean(),
-          cacheComments: z.boolean(),
+          persistentComments: z.boolean(),
           showCurrentIssueTimer: z.boolean(),
         }),
         style: z.object({
@@ -260,9 +260,12 @@ function PageComponent() {
                 )}
               />
               <form.AppField
-                name="features.cacheComments"
+                name="features.persistentComments"
                 children={(field) => (
-                  <field.CheckboxField title={formatMessage({ id: "settings.features.cache-comments.title" })} description={formatMessage({ id: "settings.features.cache-comments.description" })} />
+                  <field.CheckboxField
+                    title={formatMessage({ id: "settings.features.persistent-comments.title" })}
+                    description={formatMessage({ id: "settings.features.persistent-comments.description" })}
+                  />
                 )}
               />
               <form.AppField
