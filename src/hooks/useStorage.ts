@@ -17,7 +17,7 @@ export const getStorage = async <T>(name: string, defaultValue: T): Promise<T> =
   return Storage.deserialize(data);
 };
 
-const setStorage = <T>(name: string, data: T) => {
+export const setStorage = <T>(name: string, data: T) => {
   Storage.setItem(name, Storage.serialize(data));
 };
 

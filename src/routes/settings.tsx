@@ -8,13 +8,12 @@ import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { toast } from "sonner";
 import { browser } from "wxt/browser";
-import { z } from "zod/v4";
 import Indicator from "../components/general/Indicator";
 import { Form, FormFieldset, FormGrid } from "../components/ui/form";
 import { useAppForm } from "../hooks/useAppForm";
 import useMyUser from "../hooks/useMyUser";
 import { LANGUAGES } from "../provider/IntlProvider";
-import { useSettings } from "../provider/SettingsProvider";
+import { settingsSchema, useSettings } from "../provider/SettingsProvider";
 import { formatHoursUsually } from "../utils/date";
 
 export const Route = createFileRoute("/settings")({
@@ -36,36 +35,7 @@ function PageComponent() {
   const form = useAppForm({
     defaultValues: settings,
     validators: {
-      onChange: z.object({
-        language: z.enum(["browser", ...LANGUAGES]),
-        redmineURL: z
-          .string(formatMessage({ id: "settings.redmine.url.validation.required" }))
-          .nonempty(formatMessage({ id: "settings.redmine.url.validation.required" }))
-          .regex(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?[\w\-/]*\/?$/, formatMessage({ id: "settings.redmine.url.validation.valid-url" })),
-        redmineApiKey: z.string().nonempty(formatMessage({ id: "settings.redmine.api-key.validation.required" })),
-        features: z.object({
-          autoPauseOnSwitch: z.boolean(),
-          roundToNearestInterval: z.boolean(),
-          roundingInterval: z
-            .int(formatMessage({ id: "settings.features.rounding-interval.validation.required" }))
-            .min(1, formatMessage({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
-            .max(60, formatMessage({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
-          addNotes: z.boolean(),
-          persistentComments: z.boolean(),
-          showCurrentIssueTimer: z.boolean(),
-        }),
-        style: z.object({
-          displaySearchAlways: z.boolean(),
-          stickyScroll: z.boolean(),
-          groupIssuesByVersion: z.boolean(),
-          showIssuesPriority: z.boolean(),
-          sortIssuesByPriority: z.boolean(),
-          pinTrackedIssues: z.boolean(),
-          pinActiveTabIssue: z.boolean(),
-          showTooltips: z.boolean(),
-          timeFormat: z.enum(["decimal", "minutes"]),
-        }),
-      }),
+      onChange: settingsSchema({ formatMessage }),
     },
     onSubmit: ({ value }) => {
       value.redmineURL = value.redmineURL.replace(/\/$/, "");

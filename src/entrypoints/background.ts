@@ -1,16 +1,21 @@
 import { browser, defineBackground } from "#imports";
-import { getSettings } from "@/provider/SettingsProvider";
+import { getSettings, runSettingsMigration } from "@/provider/SettingsProvider";
 
 export default defineBackground({
   type: "module",
   main: () => {
-    /**
-     * Open options page on install and set uninstall URL
-     */
     browser.runtime.onInstalled.addListener(({ reason }) => {
       if (reason === browser.runtime.OnInstalledReason.INSTALL) {
+        // Open options page on install
         browser.runtime.openOptionsPage();
+
+        // Open discussion page on uninstall to collect feedback
         browser.runtime.setUninstallURL("https://github.com/CrawlerCode/redmine-time-tracking/discussions/1");
+      }
+
+      // Run settings migration on update
+      if (reason === browser.runtime.OnInstalledReason.UPDATE) {
+        runSettingsMigration();
       }
     });
 
