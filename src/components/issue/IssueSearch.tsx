@@ -122,16 +122,14 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
                   name="mode"
                   children={(field) => (
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <InputGroupButton variant="ghost">
-                          {field.state.value === "local"
-                            ? formatMessage({ id: "issues.search.mode.local" })
-                            : field.state.value === "remote"
-                              ? formatMessage({ id: "issues.search.mode.remote" })
-                              : "unknown"}
-                        </InputGroupButton>
+                      <DropdownMenuTrigger render={<InputGroupButton variant="secondary" />}>
+                        {field.state.value === "local"
+                          ? formatMessage({ id: "issues.search.mode.local" })
+                          : field.state.value === "remote"
+                            ? formatMessage({ id: "issues.search.mode.remote" })
+                            : "unknown"}
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent sideOffset={10} align="center" className="min-w-[2rem]">
+                      <DropdownMenuContent sideOffset={10} align="center" className="w-auto">
                         <DropdownMenuItem onClick={() => field.handleChange("local")}>
                           <ListTreeIcon />
                           {formatMessage({ id: "issues.search.mode.local" })}
@@ -144,17 +142,16 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
                     </DropdownMenu>
                   )}
                 />
-                <Separator orientation="vertical" className="!h-4" />
+                <Separator orientation="vertical" className="my-auto h-4" />
                 <settingsForm.Subscribe
                   selector={(state) => ({
                     mode: state.values.mode,
                   })}
                   children={({ mode }) => (
                     <Popover>
-                      <PopoverTrigger asChild>
-                        <InputGroupButton variant="ghost" size="icon-xs" disabled={mode !== "remote"}>
-                          <MoreHorizontalIcon />
-                        </InputGroupButton>
+                      {/** TODO: Fix disabled state */}
+                      <PopoverTrigger render={<InputGroupButton variant="ghost" size="icon-xs" />} disabled={mode !== "remote"}>
+                        <MoreHorizontalIcon />
                       </PopoverTrigger>
                       <PopoverContent sideOffset={10} collisionPadding={10} className="bg-background w-[14rem]">
                         <FormGrid className="gap-3">

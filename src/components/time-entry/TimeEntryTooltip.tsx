@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 import { FormattedMessage } from "react-intl";
 import { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type PropTypes = {
   entry: TTimeEntry;
-  children?: ReactNode;
+  children: ReactElement;
 };
 
 const TimeEntryTooltip = ({ entry, children }: PropTypes) => {
@@ -14,7 +14,7 @@ const TimeEntryTooltip = ({ entry, children }: PropTypes) => {
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipTrigger render={children} />
       <TooltipContent className="flex max-w-[17rem] flex-col gap-y-3 truncate">
         <p className="text-sm font-semibold">{formatHours(entry.hours)}</p>
         {entry.comments && <p className="truncate text-xs font-normal">{entry.comments}</p>}

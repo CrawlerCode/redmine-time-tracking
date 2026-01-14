@@ -7,6 +7,7 @@ import { useFieldContext } from "../../hooks/useAppForm";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Field, FieldError, FieldLabel } from "../ui/field";
+import { InputGroupButton } from "../ui/input-group";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type DateFieldProps = Omit<ComponentProps<typeof Calendar>, "mode" | "selected" | "onSelect" | "onBlur" | "disabled"> & {
@@ -38,21 +39,23 @@ export const DateField = ({ title, disabled, placeholder, mode = "single", class
         {title}
       </FieldLabel>
       <Popover modal open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            id={id}
-            name={name}
-            variant="outline"
-            disabled={disabled}
-            onBlur={handleBlur}
-            aria-invalid={isInvalid}
-            className={cn("hover:text-foreground relative w-full justify-start truncate text-left text-base font-normal", {
-              "text-muted-foreground": !state.value,
-            })}
-          >
-            <DateValue mode={mode} value={state.value} placeholder={placeholder} />
-            {!props.required && <ClearButton mode={mode} value={state.value} handleChange={handleChange} />}
-          </Button>
+        <PopoverTrigger
+          render={
+            <Button
+              id={id}
+              name={name}
+              variant="outline"
+              disabled={disabled}
+              onBlur={handleBlur}
+              aria-invalid={isInvalid}
+              className={cn("hover:text-foreground relative w-full justify-start truncate text-left text-base font-normal", {
+                "text-muted-foreground": !state.value,
+              })}
+            />
+          }
+        >
+          <DateValue mode={mode} value={state.value} placeholder={placeholder} />
+          {!props.required && <ClearButton mode={mode} value={state.value} handleChange={handleChange} />}
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
           <Calendar
@@ -110,16 +113,18 @@ const ClearButton = ({
   }
 
   return (
-    <button
-      type="button"
+    <InputGroupButton
+      variant="ghost"
+      size="icon-xs"
       tabIndex={-1}
-      className="text-muted-foreground hover:text-destructive absolute -end-0 top-1/2 mx-2 -translate-y-1/2 p-1 outline-none"
+      className="absolute end-0"
       onClick={(e) => {
         e.preventDefault();
+        e.stopPropagation();
         handleChange(mode === "multiple" ? [] : null);
       }}
     >
-      <XIcon />
-    </button>
+      <XIcon className="pointer-events-none" />
+    </InputGroupButton>
   );
 };

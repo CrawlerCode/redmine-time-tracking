@@ -1,10 +1,10 @@
 import { useSettings } from "@/provider/SettingsProvider";
-import { ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type PropTypes = {
   message: ReactNode;
-  children: ReactNode;
+  children: ReactElement;
 };
 
 const HelpTooltip = ({ message, children }: PropTypes) => {
@@ -13,8 +13,8 @@ const HelpTooltip = ({ message, children }: PropTypes) => {
   if (!settings.style.showTooltips) return children;
 
   return (
-    <Tooltip delayDuration={700}>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+    <Tooltip delay={700}>
+      <TooltipTrigger render={children} />
       <TooltipContent className="italic">{message}</TooltipContent>
     </Tooltip>
   );

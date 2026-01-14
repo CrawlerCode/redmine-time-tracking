@@ -59,7 +59,7 @@ function PageComponent() {
               <form.AppField
                 name="language"
                 children={(field) => (
-                  <field.ComboboxField
+                  <field.SelectField
                     title={formatMessage({ id: "settings.general.language" })}
                     placeholder={formatMessage({ id: "settings.general.language" })}
                     required
@@ -265,6 +265,7 @@ function PageComponent() {
                 children={(field) => (
                   <field.ToggleGroupField
                     title={formatMessage({ id: "settings.style.time-format.title" })}
+                    required
                     options={[
                       {
                         value: "decimal",
@@ -292,7 +293,7 @@ function PageComponent() {
           </FormFieldset>
 
           <form.AppForm>
-            <form.SubmitButton children={formatMessage({ id: "settings.save-settings" })} />
+            <form.SubmitButton size="lg" children={formatMessage({ id: "settings.save-settings" })} />
           </form.AppForm>
         </div>
       </Form>

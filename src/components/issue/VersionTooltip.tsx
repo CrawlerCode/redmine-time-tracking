@@ -1,12 +1,12 @@
 import { differenceInDays, parseISO, startOfDay } from "date-fns";
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { TVersion } from "../../api/redmine/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type PropTypes = {
   version: TVersion;
-  children?: ReactNode;
+  children: ReactElement;
 };
 
 const VersionTooltip = ({ version, children }: PropTypes) => {
@@ -14,7 +14,7 @@ const VersionTooltip = ({ version, children }: PropTypes) => {
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipTrigger render={children} />
       <TooltipContent className="flex max-w-[17rem] flex-col gap-y-3 truncate">
         <div>
           <p className="truncate text-sm font-semibold">

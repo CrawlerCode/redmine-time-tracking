@@ -51,16 +51,18 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
       ))}
       {(previewHours && (
         <Tooltip>
-          <TooltipTrigger asChild>
-            <div
-              className="bg-primary h-4 rounded-sm opacity-50"
-              style={{
-                width: `${(previewHours / maxHours) * 100}%`,
-                backgroundSize: "1rem 1rem",
-                backgroundImage: "linear-gradient(45deg,rgba(255,255,255,.1) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.1) 75%,transparent 75%,transparent)",
-              }}
-            />
-          </TooltipTrigger>
+          <TooltipTrigger
+            render={
+              <div
+                className="bg-primary h-4 rounded-sm opacity-50"
+                style={{
+                  width: `${(previewHours / maxHours) * 100}%`,
+                  backgroundSize: "1rem 1rem",
+                  backgroundImage: "linear-gradient(45deg,rgba(255,255,255,.1) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.1) 75%,transparent 75%,transparent)",
+                }}
+              />
+            }
+          />
           <TooltipContent>
             <p className="text-sm font-semibold">{formatHours(previewHours)}</p>
           </TooltipContent>

@@ -1,17 +1,17 @@
-import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { TProject } from "../../api/redmine/types";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { ReactElement } from "react";
 
 type PropTypes = {
   project: TProject;
-  children?: ReactNode;
+  children: ReactElement;
 };
 
 const ProjectTooltip = ({ project, children }: PropTypes) => {
   return (
     <Tooltip>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipTrigger render={children} />
       <TooltipContent className="flex max-w-[17rem] flex-col gap-y-3 truncate">
         <div>
           <p className="truncate text-sm font-semibold">{project.name}</p>

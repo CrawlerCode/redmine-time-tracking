@@ -1,242 +1,160 @@
-import clsx from "clsx";
-import { CheckIcon, ChevronsUpDown, Loader2Icon, XIcon } from "lucide-react";
-import { ReactNode, useId, useState } from "react";
+import { Group, Loader2Icon } from "lucide-react";
+import { ReactNode, useId } from "react";
 import { useIntl } from "react-intl";
 import { useFieldContext } from "../../hooks/useAppForm";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
+import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxClear,
+  ComboboxCollection,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxGroup,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxLabel,
+  ComboboxList,
+  ComboboxValue,
+  useComboboxAnchor,
+} from "../ui/combobox";
 import { Field, FieldError, FieldLabel } from "../ui/field";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type Option<Value> = { value: Value; label: string; icon?: ReactNode; disabled?: boolean };
-type Group<Value> = { label: string; options: Option<Value>[] };
+type Group<Value> = { label: string; items: Option<Value>[] };
 
-type ComboboxFieldProps<Value> = {
-  mode?: "single" | "multiple";
+type ComboboxFieldProps<Value extends string | number = string | number, Mode extends "single" | "multiple" = "single"> = {
+  mode?: Mode;
   title?: string;
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
   options: Option<Value>[] | Group<Value>[];
   onOpen?: () => void;
-  searchMessage?: string;
   noOptionsMessage?: string;
   isLoading?: boolean;
   className?: string;
 };
 
-export const ComboboxField = <Value extends string | number>({
+export const ComboboxField = <Value extends string | number, Mode extends "single" | "multiple" = "single">({
   title,
   placeholder,
   required,
   disabled,
-  mode = "single",
+  mode = "single" as Mode,
   options,
   onOpen,
-  searchMessage,
   noOptionsMessage,
   isLoading,
   className,
-}: ComboboxFieldProps<Value>) => {
+}: ComboboxFieldProps<Value, Mode>) => {
   const { name, state, handleChange, handleBlur } = useFieldContext<null | Value | Value[]>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
   const { formatMessage } = useIntl();
-  const [open, setOpen] = useState(false);
+
+  const anchor = useComboboxAnchor();
 
   return (
     <Field data-invalid={isInvalid} className={className}>
       <FieldLabel required={required} htmlFor={id}>
         {title}
       </FieldLabel>
-      <Popover
-        modal
-        open={open}
+      <Combobox
+        id={id}
+        name={name}
+        required={required}
+        disabled={disabled}
+        items={options}
+        multiple={mode === "multiple"}
+        value={mode === "single" ? findSelectedOption(state.value, options) : findSelectedOptions(state.value, options)}
+        onValueChange={(value) => handleChange(Array.isArray(value) ? (value.map((v) => v.value) as Value[]) : value ? (value.value as Value) : null)}
         onOpenChange={(open) => {
-          setOpen(open);
           if (open) onOpen?.();
         }}
       >
-        <PopoverTrigger asChild>
-          <Button
-            id={id}
-            name={name}
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            disabled={disabled}
-            onBlur={handleBlur}
-            aria-invalid={isInvalid}
-            className={clsx("hover:text-foreground relative w-full justify-between truncate text-base font-normal", {
-              "h-auto min-h-9 py-1.5": mode === "multiple",
-              "ps-2!": mode === "multiple" && Array.isArray(state.value) && state.value.length > 0,
-            })}
-          >
-            <SelectedValue mode={mode} value={state.value} options={options} placeholder={placeholder} className="truncate" handleChange={handleChange} />
-            {isLoading ? (
-              <Loader2Icon className="animate-spin" />
-            ) : !required && (mode === "single" ? state.value : Array.isArray(state.value) && state.value.length > 0) ? (
-              <>
-                <ClearButton mode={mode} handleChange={handleChange} />
-                <ChevronsUpDown className="opacity-0" />
-              </>
-            ) : (
-              <ChevronsUpDown className="opacity-50" />
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-0">
-          <Command>
-            <CommandInput placeholder={searchMessage ?? formatMessage({ id: "general.search" })} />
-            <CommandList>
-              <CommandEmpty>{noOptionsMessage ?? formatMessage({ id: "general.no-options" })}</CommandEmpty>
-              {options?.map((option) =>
-                typeof option === "object" && "options" in option ? (
-                  <CommandGroup key={option.label} heading={option.label}>
-                    {option.options.map((subOption) => (
-                      <RenderOption
-                        key={subOption.value}
-                        mode={mode}
-                        option={subOption}
-                        value={state.value}
-                        required={required}
-                        disabled={subOption.disabled}
-                        handleChange={(value) => {
-                          handleChange(value);
-                          if (mode === "single") setOpen(false);
-                        }}
-                      />
-                    ))}
-                  </CommandGroup>
-                ) : (
-                  <RenderOption
-                    key={option.value}
-                    mode={mode}
-                    option={option}
-                    value={state.value}
-                    required={required}
-                    disabled={option.disabled}
-                    handleChange={(value) => {
-                      handleChange(value);
-                      if (mode === "single") setOpen(false);
-                    }}
-                  />
-                )
+        {mode === "single" && (
+          <ComboboxInput disabled={disabled} aria-invalid={isInvalid} placeholder={placeholder} showClear={!required} onBlur={handleBlur}>
+            {isLoading && <Loader2Icon className="size-4 animate-spin" />}
+          </ComboboxInput>
+        )}
+        {mode === "multiple" && (
+          <ComboboxChips ref={anchor}>
+            <ComboboxValue>
+              {(selected: Option<Value>[]) => (
+                <>
+                  {selected.map((option) => (
+                    <ComboboxChip key={option.value} className="justify-start truncate">
+                      {option.label}
+                    </ComboboxChip>
+                  ))}
+                  <ComboboxChipsInput disabled={disabled} placeholder={selected.length === 0 ? placeholder : undefined} onBlur={handleBlur} />
+                </>
               )}
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+            </ComboboxValue>
+            {isLoading && <Loader2Icon className="size-4 animate-spin" />}
+            {!required && <ComboboxClear />}
+          </ComboboxChips>
+        )}
+        <ComboboxContent anchor={mode === "multiple" ? anchor : undefined}>
+          <ComboboxEmpty>{noOptionsMessage ?? formatMessage({ id: "general.no-options" })}</ComboboxEmpty>
+          <ComboboxList>
+            {(option: Option<Value> | Group<Value>) =>
+              typeof option === "object" && "items" in option ? (
+                <ComboboxGroup key={option.label} items={option.items}>
+                  <ComboboxLabel>{option.label}</ComboboxLabel>
+                  <ComboboxCollection>
+                    {(subOption: Option<Value>) => (
+                      <ComboboxItem key={subOption.value} value={subOption} disabled={subOption.disabled}>
+                        {subOption.icon}
+                        {subOption.label}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxCollection>
+                </ComboboxGroup>
+              ) : (
+                <ComboboxItem key={option.value} value={option}>
+                  {option.icon}
+                  {option.label}
+                </ComboboxItem>
+              )
+            }
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
       {isInvalid && <FieldError errors={state.meta.errors} />}
     </Field>
   );
 };
 
-const SelectedValue = <Value extends string | number>({
-  mode = "single",
-  value,
-  options,
-  placeholder = "Select option",
-  handleChange,
-  className,
-}: Pick<ComboboxFieldProps<Value>, "mode" | "options" | "placeholder"> & { value: null | Value | Value[]; className?: string; handleChange: (value: null | Value | Value[]) => void }) => {
-  const flattenedOptions = options.flatMap((option) => (typeof option === "object" && "options" in option ? option.options : option));
-
-  if (mode === "single") {
-    const selectedOption = flattenedOptions.find((option) => option.value === value);
-    if (selectedOption) {
-      return (
-        <span className={clsx("flex items-center gap-2", className)}>
-          {selectedOption.icon}
-          {selectedOption.label}
-        </span>
-      );
-    }
-  } else if (mode === "multiple" && Array.isArray(value)) {
-    const selectedOptions = flattenedOptions.filter((option) => value.includes(option.value));
-    if (selectedOptions.length > 0) {
-      return (
-        <div className={clsx("flex flex-wrap gap-1", className)}>
-          {selectedOptions.map((option) => (
-            <Badge
-              key={option.value}
-              variant="outline"
-              className="group flex items-center gap-1"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleChange(value.filter((v) => v !== option.value));
-              }}
-            >
-              {option.label}
-              <XIcon className="text-muted-foreground group-hover:text-destructive size-2" />
-            </Badge>
-          ))}
-        </div>
-      );
+const findSelectedOption = <Value extends string | number>(value: null | Value | Value[], options: ComboboxFieldProps<Value>["options"]): null | Option<Value> => {
+  for (const option of options) {
+    if (typeof option === "object" && "items" in option) {
+      const found = findSelectedOption(value, option.items);
+      if (found) {
+        return found;
+      }
+    } else if (option.value === value) {
+      return option;
     }
   }
-
-  return <span className={clsx("text-muted-foreground", className)}>{placeholder}</span>;
+  return null;
 };
 
-const ClearButton = <Value extends string | number>({ mode, handleChange }: { mode: NonNullable<ComboboxFieldProps<Value>["mode"]>; handleChange: (value: null | Value | Value[]) => void }) => {
-  return (
-    <button
-      type="button"
-      tabIndex={-1}
-      className="text-muted-foreground hover:text-destructive absolute -end-0 top-1/2 mx-2 -translate-y-1/2 p-1 outline-none"
-      onClick={(e) => {
-        e.preventDefault();
-        handleChange(mode === "single" ? null : []);
-      }}
-    >
-      <XIcon />
-    </button>
-  );
-};
+const findSelectedOptions = <Value extends string | number>(value: null | Value | Value[], options: ComboboxFieldProps<Value>["options"]): Option<Value>[] => {
+  if (!Array.isArray(value)) {
+    return [];
+  }
 
-const RenderOption = <Value extends string | number>({
-  mode,
-  option,
-  value,
-  required,
-  disabled,
-  handleChange,
-}: {
-  mode: NonNullable<ComboboxFieldProps<Value>["mode"]>;
-  option: Option<Value>;
-  value: null | Value | Value[];
-  required?: boolean;
-  disabled?: boolean;
-  handleChange: (value: null | Value | Value[]) => void;
-}) => {
-  const isSelected = Array.isArray(value) ? value.includes(option.value) : value === option.value;
-
-  return (
-    <CommandItem
-      value={option.label}
-      onSelect={() => {
-        if (mode === "single") {
-          handleChange(isSelected && !required ? null : option.value);
-        } else {
-          const currentValue = Array.isArray(value) ? value : [];
-          if (isSelected) {
-            handleChange(currentValue.filter((v) => v !== option.value));
-          } else {
-            handleChange([...currentValue, option.value]);
-          }
-        }
-      }}
-      disabled={disabled}
-      className="flex items-center gap-2"
-    >
-      {mode === "multiple" && <Checkbox checked={isSelected} className="data-[state=checked]:[&_svg]:text-primary-foreground!" />}
-      {option.icon}
-      {option.label}
-      {mode === "single" && <CheckIcon className={clsx("ml-auto", isSelected ? "opacity-100" : "opacity-0")} />}
-    </CommandItem>
-  );
+  const selected = [];
+  for (const option of options) {
+    if (typeof option === "object" && "items" in option) {
+      selected.push(...findSelectedOptions(value, option.items));
+    } else if (value.includes(option.value)) {
+      selected.push(option);
+    }
+  }
+  return selected;
 };

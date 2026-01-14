@@ -135,14 +135,14 @@ const ProjectVersion = ({ version }: { version?: TVersion }) => {
     >
       {version ? (
         <VersionTooltip version={version}>
-          <Badge variant="secondary" className="max-w-3/4 justify-start px-1 py-0">
+          <Badge variant="secondary" className="max-w-3/4 justify-start">
             <a href={`${settings.redmineURL}/versions/${version.id}`} target="_blank" tabIndex={-1} className="hover:underline" rel="noreferrer">
               {version.name}
             </a>
           </Badge>
         </VersionTooltip>
       ) : (
-        <Badge variant="secondary" className="max-w-3/4 justify-start px-1 py-0">
+        <Badge variant="secondary" className="max-w-3/4 justify-start">
           <FormattedMessage id="issues.version.no-version" />
         </Badge>
       )}

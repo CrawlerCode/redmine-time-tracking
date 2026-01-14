@@ -30,7 +30,7 @@ const AssigneeField = ({ projectId, ...props }: Omit<ComponentProps<typeof Combo
         loadUsers
           ? groupedUsers.map(({ role, users }) => ({
               label: role.name,
-              options: users.map((user) => ({
+              items: users.map((user) => ({
                 value: user.id,
                 label: user.id === myUser.data?.id ? `${user.name} <<${formatMessage({ id: "issues.issue.field.assignee.me" })}>>` : user.name,
               })),

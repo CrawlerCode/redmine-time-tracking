@@ -85,11 +85,9 @@ const FilterButton = () => {
 
   return (
     <Popover open={showFilter} onOpenChange={setShowFilter}>
-      <PopoverTrigger asChild>
-        <Button variant="ghost" size="sm" tabIndex={-1}>
-          <SlidersHorizontalIcon />
-          {formatMessage({ id: "issues.filter" })}
-        </Button>
+      <PopoverTrigger render={<Button variant="secondary" size="sm" tabIndex={-1} />}>
+        <SlidersHorizontalIcon />
+        {formatMessage({ id: "issues.filter" })}
       </PopoverTrigger>
       <PopoverContent collisionPadding={10} className="bg-background w-[18.5rem]">
         <Form onSubmit={form.handleSubmit}>
