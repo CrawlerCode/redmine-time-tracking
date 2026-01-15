@@ -149,7 +149,6 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
                   })}
                   children={({ mode }) => (
                     <Popover>
-                      {/** TODO: Fix disabled state */}
                       <PopoverTrigger render={<InputGroupButton variant="ghost" size="icon-xs" />} disabled={mode !== "remote"}>
                         <MoreHorizontalIcon />
                       </PopoverTrigger>

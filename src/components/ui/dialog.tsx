@@ -44,7 +44,12 @@ function DialogContent({
 }) {
   return (
     <DialogPortal>
-      <DialogOverlay />
+      <DialogOverlay
+        onContextMenu={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+      />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
@@ -52,6 +57,10 @@ function DialogContent({
           "max-h-[calc(100%-1rem)] min-w-[18.5rem] overflow-y-auto",
           className
         )}
+        onContextMenu={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
         {...props}
       >
         {children}
