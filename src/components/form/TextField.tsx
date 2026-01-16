@@ -3,7 +3,8 @@ import { useFieldContext } from "../../hooks/useAppForm";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 
-type TextFieldProps = Omit<ComponentProps<typeof Input>, "id" | "value" | "onChange" | "onBlur"> & {
+type TextFieldProps = Omit<ComponentProps<typeof Input>, "id" | "value" | "onChange" | "onBlur" | "className"> & {
+  className?: string;
   classNames?: {
     input?: string;
   };

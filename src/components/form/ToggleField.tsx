@@ -3,9 +3,10 @@ import { useFieldContext } from "../../hooks/useAppForm";
 import { Field, FieldContent, FieldDescription, FieldError, FieldInfo, FieldLabel } from "../ui/field";
 import { Switch } from "../ui/switch";
 
-type ToggleFieldProps = Omit<ComponentProps<typeof Switch>, "id" | "checked" | "onCheckedChange" | "onBlur"> & {
+type ToggleFieldProps = Omit<ComponentProps<typeof Switch>, "id" | "checked" | "onCheckedChange" | "onBlur" | "className"> & {
   description?: string;
   info?: string;
+  className?: string;
 };
 
 export const ToggleField = ({ title, description, info, className, ...props }: ToggleFieldProps) => {

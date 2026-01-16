@@ -4,11 +4,12 @@ import { useFieldContext } from "../../hooks/useAppForm";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
-type ToggleGroupFieldProps = Omit<ComponentProps<typeof ToggleGroup>, "value" | "defaultValue" | "onValueChange"> & {
+type ToggleGroupFieldProps = Omit<ComponentProps<typeof ToggleGroup>, "value" | "defaultValue" | "onValueChange" | "className"> & {
   mode?: "single" | "multiple";
   title?: string;
   required?: boolean;
   options: { value: string; name: string }[];
+  className?: string;
 };
 
 export const ToggleGroupField = ({ title, className, required, options, mode = "single", variant = "outline", ...props }: ToggleGroupFieldProps) => {

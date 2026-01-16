@@ -4,7 +4,14 @@ import { useSettings } from "../../provider/SettingsProvider";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 
-export const HoursField = ({ title, required, className, ...props }: Omit<ComponentProps<typeof Input>, "value" | "onChange" | "onBlur">) => {
+export const HoursField = ({
+  title,
+  required,
+  className,
+  ...props
+}: Omit<ComponentProps<typeof Input>, "value" | "onChange" | "onBlur" | "className"> & {
+  className?: string;
+}) => {
   const { name, state, handleChange, handleBlur } = useFieldContext<number | null>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
