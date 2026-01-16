@@ -60,7 +60,7 @@ function Calendar({
           props.showWeekNumber ? "[&:nth-child(2)[data-selected=true]_button]:rounded-l-(--cell-radius)" : "[&:first-child[data-selected=true]_button]:rounded-l-(--cell-radius)",
           defaultClassNames.day
         ),
-        range_start: cn("rounded-l-(--cell-radius) bg-muted elative after:bg-muted after:absolute after:inset-y-0 after:w-4 after:right-0 -z-0 isolate", defaultClassNames.range_start),
+        range_start: cn("rounded-l-(--cell-radius) bg-muted relative g-muted after:absolute after:inset-y-0 after:w-4 after:right-0 -z-0 isolate", defaultClassNames.range_start),
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
         range_end: cn("rounded-r-(--cell-radius) bg-muted relative after:bg-muted after:absolute after:inset-y-0 after:w-4 after:left-0 -z-0 isolate", defaultClassNames.range_end),
         today: cn("bg-muted text-foreground rounded-(--cell-radius) data-[selected=true]:rounded-none", defaultClassNames.today),

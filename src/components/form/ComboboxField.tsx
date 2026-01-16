@@ -1,4 +1,4 @@
-import { Group, Loader2Icon } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import { ReactNode, useId } from "react";
 import { useIntl } from "react-intl";
 import { useFieldContext } from "../../hooks/useAppForm";
