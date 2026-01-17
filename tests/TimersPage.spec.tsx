@@ -1,5 +1,5 @@
-import { TimersPage } from "@@/fixtures/pages/timers";
 import { test } from "../fixtures/chromeExtension";
+import { TimersPage } from "../fixtures/pages/timers";
 import { createScreenshot } from "../screenshots/screenshot";
 
 test("Render page", async ({ issuesPage, locale, colorScheme }) => {

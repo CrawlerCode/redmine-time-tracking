@@ -16,15 +16,13 @@ const Navbar = ({ navigation }: PropTypes) => {
   const location = useLocation();
 
   return (
-    <NavigationMenu className="border-primary max-w-screen border-b" viewport={false}>
-      <NavigationMenuList>
+    <NavigationMenu className="border-primary max-w-screen border-b p-1.5">
+      <NavigationMenuList className="justify-start">
         {navigation.map((item) => (
           <NavigationMenuItem key={item.href}>
-            <NavigationMenuLink asChild data-active={location.pathname === item.href} className="inline-flex flex-row items-center">
-              <Link to={item.href}>
-                {item.icon}
-                <span className="truncate max-[21rem]:max-w-[3rem]">{item.name}</span>
-              </Link>
+            <NavigationMenuLink render={<Link to={item.href} />} data-active={location.pathname === item.href}>
+              {item.icon}
+              <span className="truncate max-[21rem]:max-w-[3rem]">{item.name}</span>
             </NavigationMenuLink>
           </NavigationMenuItem>
         ))}

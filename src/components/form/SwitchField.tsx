@@ -3,19 +3,21 @@ import { useFieldContext } from "../../hooks/useAppForm";
 import { Field, FieldContent, FieldDescription, FieldError, FieldInfo, FieldLabel } from "../ui/field";
 import { Switch } from "../ui/switch";
 
-type ToggleFieldProps = Omit<ComponentProps<typeof Switch>, "id" | "checked" | "onCheckedChange" | "onBlur"> & {
+type SwitchFieldProps = Omit<ComponentProps<typeof Switch>, "id" | "checked" | "onCheckedChange" | "onBlur" | "className"> & {
+  position?: "start" | "end";
   description?: string;
   info?: string;
+  className?: string;
 };
 
-export const ToggleField = ({ title, description, info, className, ...props }: ToggleFieldProps) => {
+export const SwitchField = ({ title, description, info, position = "start", className, ...props }: SwitchFieldProps) => {
   const { name, state, handleChange, handleBlur } = useFieldContext<boolean>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
   return (
     <Field data-invalid={isInvalid} orientation="horizontal" className={className}>
-      <Switch {...props} id={id} name={name} checked={state.value} onCheckedChange={(checked) => handleChange(checked)} onBlur={handleBlur} />
+      {position === "start" && <Switch {...props} id={id} name={name} checked={state.value} onCheckedChange={(checked) => handleChange(checked)} onBlur={handleBlur} />}
       <FieldContent>
         <span className="flex items-center gap-2">
           <FieldLabel required={props.required} htmlFor={id}>
@@ -26,6 +28,7 @@ export const ToggleField = ({ title, description, info, className, ...props }: T
         </span>
         {description && <FieldDescription>{description}</FieldDescription>}
       </FieldContent>
+      {position === "end" && <Switch {...props} id={id} name={name} checked={state.value} onCheckedChange={(checked) => handleChange(checked)} onBlur={handleBlur} />}
     </Field>
   );
 };

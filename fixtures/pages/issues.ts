@@ -49,9 +49,9 @@ export class IssuesPage extends BasePage {
     // Fill form
     await this.page.fill('input[name="hours"]', hours);
     await this.page.fill('input[name="comments"]', comments);
-    await this.page.click('button[role="combobox"][name="activity_id"]');
-    await this.page.click('[cmdk-item][role="option"]:first-child');
-    await this.page.waitForSelector('[data-slot="command"]', { state: "detached" });
+    await this.page.click('[data-slot="input-group"]:has(+ input[name="activity_id"])>input[role="combobox"]');
+    await this.page.click('[data-slot="combobox-item"][role="option"]');
+    await this.page.waitForSelector('[data-slot="combobox-list"]', { state: "detached" });
 
     await this.page.focus('button[type="submit"]');
   }

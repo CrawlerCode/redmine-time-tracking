@@ -7,7 +7,7 @@ type Props = {
   projectId: number;
 };
 
-const VersionField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
+const VersionField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "items" | "isLoading"> & Props) => {
   const { formatMessage } = useIntl();
 
   const projectVersions = useProjectVersions(projectId);
@@ -19,7 +19,7 @@ const VersionField = ({ projectId, ...props }: Omit<ComponentProps<typeof Combob
       {...props}
       title={formatMessage({ id: "issues.issue.field.version" })}
       placeholder={formatMessage({ id: "issues.issue.field.version" })}
-      options={projectVersions.projectVersions
+      items={projectVersions.projectVersions
         .filter((version) => version.status === "open")
         .map((version) => ({
           label: version.name,

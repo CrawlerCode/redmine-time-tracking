@@ -4,14 +4,15 @@ import { useFieldContext } from "../../hooks/useAppForm";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
-type ToggleGroupFieldProps = Omit<ComponentProps<typeof ToggleGroup>, "type" | "value" | "defaultValue" | "onValueChange"> & {
-  type?: ComponentProps<typeof ToggleGroup>["type"];
+type ToggleGroupFieldProps = Omit<ComponentProps<typeof ToggleGroup>, "multiple" | "value" | "defaultValue" | "onValueChange" | "className"> & {
+  mode?: "single" | "multiple";
   title?: string;
   required?: boolean;
-  options: { value: string; name: string }[];
+  items: { value: string; name: string }[];
+  className?: string;
 };
 
-export const ToggleGroupField = ({ title, className, required, options, type = "single", variant = "outline", ...props }: ToggleGroupFieldProps) => {
+export const ToggleGroupField = ({ title, className, required, items, mode = "single", variant = "outline", ...props }: ToggleGroupFieldProps) => {
   const { state, handleChange } = useFieldContext<string | string[]>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
 
@@ -21,11 +22,24 @@ export const ToggleGroupField = ({ title, className, required, options, type = "
         <FieldLabel required={required}>{title}</FieldLabel>
         {isInvalid && <FieldError variant="tooltip" errors={state.meta.errors} />}
       </span>
-      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-      <ToggleGroup size="sm" type={type} variant={variant} {...props} value={state.value as any} onValueChange={(value: any) => handleChange(value)}>
-        {options.map((option) => (
-          <ToggleGroupItem key={option.value} value={option.value} className="flex items-center justify-center" aria-label={option.name}>
-            {option.name}
+      <ToggleGroup
+        size="sm"
+        {...props}
+        multiple={mode === "multiple"}
+        variant={variant}
+        value={Array.isArray(state.value) ? state.value : [state.value]}
+        onValueChange={(value) => {
+          if (mode === "single") {
+            if (value.length === 0 && required) return;
+            handleChange(value[0] ?? null);
+          } else {
+            handleChange(value);
+          }
+        }}
+      >
+        {items.map((item) => (
+          <ToggleGroupItem key={item.value} value={item.value} aria-label={item.name}>
+            {item.name}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>

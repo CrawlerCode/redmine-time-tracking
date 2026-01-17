@@ -9,7 +9,7 @@ type Props = {
   projectId: number;
 };
 
-const AssigneeField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
+const AssigneeField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "items" | "isLoading"> & Props) => {
   const { formatMessage } = useIntl();
 
   const [loadUsers, setLoadUsers] = useState(false);
@@ -25,12 +25,12 @@ const AssigneeField = ({ projectId, ...props }: Omit<ComponentProps<typeof Combo
       {...props}
       title={formatMessage({ id: "issues.issue.field.assignee" })}
       placeholder={formatMessage({ id: "issues.issue.field.assignee" })}
-      onOpen={() => setLoadUsers(true)}
-      options={
+      onOpenChange={(open) => open && setLoadUsers(true)}
+      items={
         loadUsers
           ? groupedUsers.map(({ role, users }) => ({
               label: role.name,
-              options: users.map((user) => ({
+              items: users.map((user) => ({
                 value: user.id,
                 label: user.id === myUser.data?.id ? `${user.name} <<${formatMessage({ id: "issues.issue.field.assignee.me" })}>>` : user.name,
               })),

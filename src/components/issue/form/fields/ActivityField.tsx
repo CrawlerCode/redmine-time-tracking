@@ -8,7 +8,7 @@ type Props = {
   onDefaultActivityChange?: (activityId: number) => void;
 };
 
-const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
+const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: Omit<ComponentProps<typeof ComboboxField>, "items" | "isLoading"> & Props) => {
   const { formatMessage } = useIntl();
 
   const timeEntryActivities = useTimeEntryActivities(projectId);
@@ -24,7 +24,7 @@ const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: Omit<Co
       {...props}
       title={formatMessage({ id: "time.time-entry.field.activity" })}
       placeholder={formatMessage({ id: "time.time-entry.field.activity" })}
-      options={
+      items={
         timeEntryActivities.data?.map((activity) => ({
           label: activity.name,
           value: activity.id,

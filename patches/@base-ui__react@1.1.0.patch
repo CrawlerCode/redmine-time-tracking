@@ -1,0 +1,78 @@
+diff --git a/esm/navigation-menu/icon/NavigationMenuIcon.d.ts b/esm/navigation-menu/icon/NavigationMenuIcon.d.ts
+index 460b8451b5ffcea4f8ed77ffff6454d3545cc1a6..8db92ab49b9bb24a9251c02d9c45e90cae4afb90 100644
+--- a/esm/navigation-menu/icon/NavigationMenuIcon.d.ts
++++ b/esm/navigation-menu/icon/NavigationMenuIcon.d.ts
+@@ -5,7 +5,7 @@ import type { BaseUIComponentProps } from "../../utils/types.js";
+  *
+  * Documentation: [Base UI Navigation Menu](https://base-ui.com/react/components/navigation-menu)
+  */
+-export declare const NavigationMenuIcon: React.ForwardRefExoticComponent<Omit<NavigationMenuIconProps, "ref"> & React.RefAttributes<HTMLDivElement>>;
++export declare const NavigationMenuIcon: React.ForwardRefExoticComponent<Omit<NavigationMenuIconProps, "ref"> & React.RefAttributes<HTMLSpanElement>>;
+ export interface NavigationMenuIconState {
+   /**
+    * Whether the navigation menu is open and the item is active.
+diff --git a/esm/navigation-menu/item/NavigationMenuItem.d.ts b/esm/navigation-menu/item/NavigationMenuItem.d.ts
+index 78f6173af2f991fc6d5564a440316a14f2c571cb..355d2988411858c6c5a0d9e2af6570112f01b18f 100644
+--- a/esm/navigation-menu/item/NavigationMenuItem.d.ts
++++ b/esm/navigation-menu/item/NavigationMenuItem.d.ts
+@@ -6,7 +6,7 @@ import type { BaseUIComponentProps } from "../../utils/types.js";
+  *
+  * Documentation: [Base UI Navigation Menu](https://base-ui.com/react/components/navigation-menu)
+  */
+-export declare const NavigationMenuItem: React.ForwardRefExoticComponent<Omit<NavigationMenuItemProps, "ref"> & React.RefAttributes<HTMLDivElement>>;
++export declare const NavigationMenuItem: React.ForwardRefExoticComponent<Omit<NavigationMenuItemProps, "ref"> & React.RefAttributes<HTMLLIElement>>;
+ export interface NavigationMenuItemState {}
+ export interface NavigationMenuItemProps extends BaseUIComponentProps<'li', NavigationMenuItem.State> {
+   /**
+diff --git a/esm/navigation-menu/list/NavigationMenuList.d.ts b/esm/navigation-menu/list/NavigationMenuList.d.ts
+index 0536826b5149ad53941967af933478ea995708d7..8ee7dc027c52004739005022bf130f6ac9bbaa31 100644
+--- a/esm/navigation-menu/list/NavigationMenuList.d.ts
++++ b/esm/navigation-menu/list/NavigationMenuList.d.ts
+@@ -6,7 +6,7 @@ import type { BaseUIComponentProps } from "../../utils/types.js";
+  *
+  * Documentation: [Base UI Navigation Menu](https://base-ui.com/react/components/navigation-menu)
+  */
+-export declare const NavigationMenuList: React.ForwardRefExoticComponent<Omit<NavigationMenuListProps, "ref"> & React.RefAttributes<HTMLDivElement>>;
++export declare const NavigationMenuList: React.ForwardRefExoticComponent<Omit<NavigationMenuListProps, "ref"> & React.RefAttributes<HTMLUListElement>>;
+ export interface NavigationMenuListState {
+   /**
+    * If `true`, the popup is open.
+diff --git a/navigation-menu/icon/NavigationMenuIcon.d.ts b/navigation-menu/icon/NavigationMenuIcon.d.ts
+index 460b8451b5ffcea4f8ed77ffff6454d3545cc1a6..8db92ab49b9bb24a9251c02d9c45e90cae4afb90 100644
+--- a/navigation-menu/icon/NavigationMenuIcon.d.ts
++++ b/navigation-menu/icon/NavigationMenuIcon.d.ts
+@@ -5,7 +5,7 @@ import type { BaseUIComponentProps } from "../../utils/types.js";
+  *
+  * Documentation: [Base UI Navigation Menu](https://base-ui.com/react/components/navigation-menu)
+  */
+-export declare const NavigationMenuIcon: React.ForwardRefExoticComponent<Omit<NavigationMenuIconProps, "ref"> & React.RefAttributes<HTMLDivElement>>;
++export declare const NavigationMenuIcon: React.ForwardRefExoticComponent<Omit<NavigationMenuIconProps, "ref"> & React.RefAttributes<HTMLSpanElement>>;
+ export interface NavigationMenuIconState {
+   /**
+    * Whether the navigation menu is open and the item is active.
+diff --git a/navigation-menu/item/NavigationMenuItem.d.ts b/navigation-menu/item/NavigationMenuItem.d.ts
+index 78f6173af2f991fc6d5564a440316a14f2c571cb..355d2988411858c6c5a0d9e2af6570112f01b18f 100644
+--- a/navigation-menu/item/NavigationMenuItem.d.ts
++++ b/navigation-menu/item/NavigationMenuItem.d.ts
+@@ -6,7 +6,7 @@ import type { BaseUIComponentProps } from "../../utils/types.js";
+  *
+  * Documentation: [Base UI Navigation Menu](https://base-ui.com/react/components/navigation-menu)
+  */
+-export declare const NavigationMenuItem: React.ForwardRefExoticComponent<Omit<NavigationMenuItemProps, "ref"> & React.RefAttributes<HTMLDivElement>>;
++export declare const NavigationMenuItem: React.ForwardRefExoticComponent<Omit<NavigationMenuItemProps, "ref"> & React.RefAttributes<HTMLLIElement>>;
+ export interface NavigationMenuItemState {}
+ export interface NavigationMenuItemProps extends BaseUIComponentProps<'li', NavigationMenuItem.State> {
+   /**
+diff --git a/navigation-menu/list/NavigationMenuList.d.ts b/navigation-menu/list/NavigationMenuList.d.ts
+index 0536826b5149ad53941967af933478ea995708d7..8ee7dc027c52004739005022bf130f6ac9bbaa31 100644
+--- a/navigation-menu/list/NavigationMenuList.d.ts
++++ b/navigation-menu/list/NavigationMenuList.d.ts
+@@ -6,7 +6,7 @@ import type { BaseUIComponentProps } from "../../utils/types.js";
+  *
+  * Documentation: [Base UI Navigation Menu](https://base-ui.com/react/components/navigation-menu)
+  */
+-export declare const NavigationMenuList: React.ForwardRefExoticComponent<Omit<NavigationMenuListProps, "ref"> & React.RefAttributes<HTMLDivElement>>;
++export declare const NavigationMenuList: React.ForwardRefExoticComponent<Omit<NavigationMenuListProps, "ref"> & React.RefAttributes<HTMLUListElement>>;
+ export interface NavigationMenuListState {
+   /**
+    * If `true`, the popup is open.

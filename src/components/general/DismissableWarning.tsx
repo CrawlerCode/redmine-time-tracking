@@ -21,7 +21,7 @@ function DismissibleWarning({ name, children }: PropTypes) {
         <FormattedMessage id="dismissible-warning.title" />
       </AlertTitle>
       <AlertDescription>{children}</AlertDescription>
-      <Button type="button" variant="ghost" size="sm" onClick={() => setData(true)} className="absolute top-1 right-1">
+      <Button type="button" variant="outline" size="sm" onClick={() => setData(true)} className="absolute top-1 right-1">
         <FormattedMessage id="dismissible-warning.dont-show-again" />
       </Button>
     </Alert>

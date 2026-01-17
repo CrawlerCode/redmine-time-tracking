@@ -59,11 +59,11 @@ function PageComponent() {
               <form.AppField
                 name="language"
                 children={(field) => (
-                  <field.ComboboxField
+                  <field.SelectField
                     title={formatMessage({ id: "settings.general.language" })}
                     placeholder={formatMessage({ id: "settings.general.language" })}
                     required
-                    options={[
+                    items={[
                       {
                         label: "Auto (Browser)",
                         icon: <GlobeIcon />,
@@ -73,7 +73,7 @@ function PageComponent() {
                         const FlagComponent = LANGUAGE_FLAGS[lang];
                         return {
                           label: formatMessage({ id: `settings.general.language.${lang}` }),
-                          icon: <FlagComponent className="box-content inline-block h-3 align-[-0.125em]" />,
+                          icon: <FlagComponent className="h-3" />,
                           value: lang,
                         };
                       }),
@@ -265,7 +265,8 @@ function PageComponent() {
                 children={(field) => (
                   <field.ToggleGroupField
                     title={formatMessage({ id: "settings.style.time-format.title" })}
-                    options={[
+                    required
+                    items={[
                       {
                         value: "decimal",
                         name: formatMessage(
@@ -292,7 +293,7 @@ function PageComponent() {
           </FormFieldset>
 
           <form.AppForm>
-            <form.SubmitButton children={formatMessage({ id: "settings.save-settings" })} />
+            <form.SubmitButton size="lg" children={formatMessage({ id: "settings.save-settings" })} />
           </form.AppForm>
         </div>
       </Form>

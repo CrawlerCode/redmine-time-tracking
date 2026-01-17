@@ -122,16 +122,14 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
                   name="mode"
                   children={(field) => (
                     <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <InputGroupButton variant="ghost">
-                          {field.state.value === "local"
-                            ? formatMessage({ id: "issues.search.mode.local" })
-                            : field.state.value === "remote"
-                              ? formatMessage({ id: "issues.search.mode.remote" })
-                              : "unknown"}
-                        </InputGroupButton>
+                      <DropdownMenuTrigger render={<InputGroupButton variant="secondary" />}>
+                        {field.state.value === "local"
+                          ? formatMessage({ id: "issues.search.mode.local" })
+                          : field.state.value === "remote"
+                            ? formatMessage({ id: "issues.search.mode.remote" })
+                            : "unknown"}
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent sideOffset={10} align="center" className="min-w-[2rem]">
+                      <DropdownMenuContent sideOffset={10} align="center" className="w-auto">
                         <DropdownMenuItem onClick={() => field.handleChange("local")}>
                           <ListTreeIcon />
                           {formatMessage({ id: "issues.search.mode.local" })}
@@ -144,17 +142,15 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
                     </DropdownMenu>
                   )}
                 />
-                <Separator orientation="vertical" className="!h-4" />
+                <Separator orientation="vertical" className="my-auto h-4" />
                 <settingsForm.Subscribe
                   selector={(state) => ({
                     mode: state.values.mode,
                   })}
                   children={({ mode }) => (
                     <Popover>
-                      <PopoverTrigger asChild>
-                        <InputGroupButton variant="ghost" size="icon-xs" disabled={mode !== "remote"}>
-                          <MoreHorizontalIcon />
-                        </InputGroupButton>
+                      <PopoverTrigger render={<InputGroupButton variant="ghost" size="icon-xs" />} disabled={mode !== "remote"}>
+                        <MoreHorizontalIcon />
                       </PopoverTrigger>
                       <PopoverContent sideOffset={10} collisionPadding={10} className="bg-background w-[14rem]">
                         <FormGrid className="gap-3">
@@ -164,7 +160,7 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
                               <settingsForm.AppField
                                 name="remoteSearchOptions.titlesOnly"
                                 children={(field) => (
-                                  <field.ToggleField
+                                  <field.SwitchField
                                     title={formatMessage({ id: "issues.search.remote-search-options.titles-only.title" })}
                                     info={formatMessage({ id: "issues.search.remote-search-options.titles-only.description" })}
                                   />
@@ -172,11 +168,11 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
                               />
                               <settingsForm.AppField
                                 name="remoteSearchOptions.openIssuesOnly"
-                                children={(field) => <field.ToggleField title={formatMessage({ id: "issues.search.remote-search-options.open-issues-only.title" })} />}
+                                children={(field) => <field.SwitchField title={formatMessage({ id: "issues.search.remote-search-options.open-issues-only.title" })} />}
                               />
                               <settingsForm.AppField
                                 name="remoteSearchOptions.assignedToMe"
-                                children={(field) => <field.ToggleField title={formatMessage({ id: "issues.search.remote-search-options.assigned-to-me.title" })} />}
+                                children={(field) => <field.SwitchField title={formatMessage({ id: "issues.search.remote-search-options.assigned-to-me.title" })} />}
                               />
                             </FieldGroup>
                           </FieldSet>

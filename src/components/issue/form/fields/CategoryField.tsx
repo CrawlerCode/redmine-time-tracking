@@ -7,7 +7,7 @@ type Props = {
   projectId: number;
 };
 
-const CategoryField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
+const CategoryField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "items" | "isLoading"> & Props) => {
   const { formatMessage } = useIntl();
 
   const project = useProject(projectId);
@@ -19,7 +19,7 @@ const CategoryField = ({ projectId, ...props }: Omit<ComponentProps<typeof Combo
       {...props}
       title={formatMessage({ id: "issues.issue.field.category" })}
       placeholder={formatMessage({ id: "issues.issue.field.category" })}
-      options={
+      items={
         project.data?.issue_categories?.map((category) => ({
           label: category.name,
           value: category.id,

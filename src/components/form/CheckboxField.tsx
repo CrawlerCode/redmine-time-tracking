@@ -3,8 +3,9 @@ import { useFieldContext } from "../../hooks/useAppForm";
 import { Checkbox } from "../ui/checkbox";
 import { Field, FieldContent, FieldDescription, FieldError, FieldLabel } from "../ui/field";
 
-type CheckboxFieldProps = Omit<ComponentProps<typeof Checkbox>, "checked" | "onCheckedChange" | "onBlur"> & {
+type CheckboxFieldProps = Omit<ComponentProps<typeof Checkbox>, "checked" | "onCheckedChange" | "onBlur" | "className"> & {
   description?: string;
+  className?: string;
 };
 
 export const CheckboxField = ({ title, description, className, ...props }: CheckboxFieldProps) => {

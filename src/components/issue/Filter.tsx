@@ -10,7 +10,8 @@ import { z } from "zod/v4";
 import useMyProjects from "../../hooks/useMyProjects";
 import { useSuspenseStorage } from "../../hooks/useStorage";
 import { Button } from "../ui/button";
-import { Form, FormGrid } from "../ui/form";
+import { FieldGroup, FieldSet } from "../ui/field";
+import { Form } from "../ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const filterSettingsSchema = z.object({
@@ -85,59 +86,56 @@ const FilterButton = () => {
 
   return (
     <Popover open={showFilter} onOpenChange={setShowFilter}>
-      <PopoverTrigger asChild>
-        <Button variant="ghost" size="sm" tabIndex={-1}>
-          <SlidersHorizontalIcon />
-          {formatMessage({ id: "issues.filter" })}
-        </Button>
+      <PopoverTrigger render={<Button variant="secondary" size="sm" tabIndex={-1} />}>
+        <SlidersHorizontalIcon />
+        {formatMessage({ id: "issues.filter" })}
       </PopoverTrigger>
       <PopoverContent collisionPadding={10} className="bg-background w-[18.5rem]">
         <Form onSubmit={form.handleSubmit}>
-          <FormGrid className="gap-3">
-            <form.AppField
-              name="projects"
-              children={(field) => (
-                <field.ComboboxField
-                  title={formatMessage({ id: "issues.filter.projects" })}
-                  placeholder={formatMessage({ id: "issues.filter.projects" })}
-                  noOptionsMessage={formatMessage({ id: "issues.filter.projects.no-options" })}
-                  options={projects.map((project) => ({ value: project.id, label: project.name }))}
-                  isLoading={isLoadingProjects}
-                  mode="multiple"
-                />
-              )}
-            />
-
-            <form.AppField
-              name="statuses"
-              children={(field) => (
-                <field.ComboboxField
-                  title={formatMessage({ id: "issues.filter.statuses" })}
-                  placeholder={formatMessage({ id: "issues.filter.statuses" })}
-                  options={
-                    statuses?.map((status) => ({
-                      label: status.name,
-                      value: status.id,
-                      disabled: status.is_closed,
-                    })) ?? []
-                  }
-                  isLoading={isLoadingStatuses}
-                  mode="multiple"
-                />
-              )}
-            />
-
-            <form.AppField
-              name="hideCompletedIssues"
-              children={(field) => (
-                <field.CheckboxField
-                  title={formatMessage({ id: "issues.filter.hide-completed-issues.title" })}
-                  description={formatMessage({ id: "issues.filter.hide-completed-issues.description" })}
-                  className="border-input dark:bg-input/30 rounded-lg border bg-transparent p-1.5"
-                />
-              )}
-            />
-          </FormGrid>
+          <FieldSet className="gap-3">
+            <FieldGroup>
+              <form.AppField
+                name="projects"
+                children={(field) => (
+                  <field.ComboboxField
+                    title={formatMessage({ id: "issues.filter.projects" })}
+                    placeholder={formatMessage({ id: "issues.filter.projects" })}
+                    noOptionsMessage={formatMessage({ id: "issues.filter.projects.no-options" })}
+                    items={projects.map((project) => ({ value: project.id, label: project.name }))}
+                    isLoading={isLoadingProjects}
+                    mode="multiple"
+                  />
+                )}
+              />
+              <form.AppField
+                name="statuses"
+                children={(field) => (
+                  <field.ComboboxField
+                    title={formatMessage({ id: "issues.filter.statuses" })}
+                    placeholder={formatMessage({ id: "issues.filter.statuses" })}
+                    items={
+                      statuses?.map((status) => ({
+                        label: status.name,
+                        value: status.id,
+                        disabled: status.is_closed,
+                      })) ?? []
+                    }
+                    isLoading={isLoadingStatuses}
+                    mode="multiple"
+                  />
+                )}
+              />
+              <form.AppField
+                name="hideCompletedIssues"
+                children={(field) => (
+                  <field.CheckboxField
+                    title={formatMessage({ id: "issues.filter.hide-completed-issues.title" })}
+                    description={formatMessage({ id: "issues.filter.hide-completed-issues.description" })}
+                  />
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
         </Form>
       </PopoverContent>
     </Popover>
