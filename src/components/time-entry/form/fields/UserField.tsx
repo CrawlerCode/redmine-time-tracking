@@ -9,7 +9,7 @@ type Props = {
   projectId: number;
 };
 
-const UserField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "options"> & Props) => {
+const UserField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "items" | "isLoading"> & Props) => {
   const { formatMessage } = useIntl();
 
   const [loadUsers, setLoadUsers] = useState(false);
@@ -26,8 +26,8 @@ const UserField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxF
       title={formatMessage({ id: "time.time-entry.field.user" })}
       placeholder={formatMessage({ id: "time.time-entry.field.user" })}
       noOptionsMessage={formatMessage({ id: "time.time-entry.field.user.no-options" })}
-      onOpen={() => setLoadUsers(true)}
-      options={
+      onOpenChange={(open) => open && setLoadUsers(true)}
+      items={
         loadUsers
           ? groupedUsers.map(({ role, users }) => ({
               label: role.name,

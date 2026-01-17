@@ -63,7 +63,7 @@ function PageComponent() {
                     title={formatMessage({ id: "settings.general.language" })}
                     placeholder={formatMessage({ id: "settings.general.language" })}
                     required
-                    options={[
+                    items={[
                       {
                         label: "Auto (Browser)",
                         icon: <GlobeIcon />,
@@ -73,7 +73,7 @@ function PageComponent() {
                         const FlagComponent = LANGUAGE_FLAGS[lang];
                         return {
                           label: formatMessage({ id: `settings.general.language.${lang}` }),
-                          icon: <FlagComponent className="box-content inline-block h-3 align-[-0.125em]" />,
+                          icon: <FlagComponent className="h-3" />,
                           value: lang,
                         };
                       }),
@@ -266,7 +266,7 @@ function PageComponent() {
                   <field.ToggleGroupField
                     title={formatMessage({ id: "settings.style.time-format.title" })}
                     required
-                    options={[
+                    items={[
                       {
                         value: "decimal",
                         name: formatMessage(

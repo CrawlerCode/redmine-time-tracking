@@ -1,14 +1,14 @@
+import { CheckboxField } from "@//components/form/CheckboxField";
+import { DateField } from "@//components/form/DateField";
 import { ComboboxField } from "@/components/form/ComboboxField";
+import { HoursField } from "@/components/form/HoursField";
+import { SelectField } from "@/components/form/SelectField";
+import { SubmitButton } from "@/components/form/SubmitButton";
+import { SwitchField } from "@/components/form/SwitchField";
+import { TextField } from "@/components/form/TextField";
+import { TextareaField } from "@/components/form/TextareaField";
+import { ToggleGroupField } from "@/components/form/ToggleGroupField";
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
-import { CheckboxField } from "../components/form/CheckboxField";
-import { DateField } from "../components/form/DateField";
-import { HoursField } from "../components/form/HoursField";
-import { SelectField } from "../components/form/SelectField";
-import { SubmitButton } from "../components/form/SubmitButton";
-import { TextField } from "../components/form/TextField";
-import { TextareaField } from "../components/form/TextareaField";
-import { ToggleField } from "../components/form/ToggleField";
-import { ToggleGroupField } from "../components/form/ToggleGroupField";
 
 const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts();
 
@@ -20,7 +20,7 @@ export const { useAppForm, withForm } = createFormHook({
     TextareaField,
     SelectField,
     CheckboxField,
-    ToggleField,
+    SwitchField,
     DateField,
     ComboboxField,
     ToggleGroupField,

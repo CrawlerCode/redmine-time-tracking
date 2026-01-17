@@ -231,11 +231,11 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
                   selector={(state) => state.values.add_notes}
                   children={(add_notes) =>
                     !add_notes ? (
-                      <form.AppField name="add_notes" children={(field) => <field.ToggleField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
+                      <form.AppField name="add_notes" children={(field) => <field.SwitchField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
                     ) : (
                       <FormFieldset legend={formatMessage({ id: "issues.issue.field.notes" })}>
                         <FormGrid>
-                          <form.AppField name="add_notes" children={(field) => <field.ToggleField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
+                          <form.AppField name="add_notes" children={(field) => <field.SwitchField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
                           <form.AppField name="notes" children={(field) => <field.TextareaField placeholder={formatMessage({ id: "issues.issue.field.notes" })} />} />
                         </FormGrid>
                       </FormFieldset>

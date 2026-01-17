@@ -1,5 +1,5 @@
 import { Loader2Icon } from "lucide-react";
-import { ReactNode, useId } from "react";
+import { ComponentProps, ReactNode, useId } from "react";
 import { useIntl } from "react-intl";
 import { useFieldContext } from "../../hooks/useAppForm";
 import {
@@ -21,33 +21,33 @@ import {
 } from "../ui/combobox";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 
-type Option<Value> = { value: Value; label: string; icon?: ReactNode; disabled?: boolean };
-type Group<Value> = { label: string; items: Option<Value>[] };
+type Item<Value> = { value: Value; label: string; icon?: ReactNode; disabled?: boolean };
+type Group<Value> = { label: string; items: Item<Value>[] };
 
-type ComboboxFieldProps<Value extends string | number = string | number, Mode extends "single" | "multiple" = "single"> = {
+type ComboboxFieldProps<Value extends string | number = string | number, Mode extends "single" | "multiple" = "single"> = Omit<
+  ComponentProps<typeof Combobox<Item<Value>, Mode extends "multiple" ? true : false>>,
+  "multiple" | "value" | "defaultValue" | "onValueChange" | "items"
+> & {
   mode?: Mode;
   title?: string;
   placeholder?: string;
-  required?: boolean;
-  disabled?: boolean;
-  options: Option<Value>[] | Group<Value>[];
-  onOpen?: () => void;
+  items: Item<Value>[] | Group<Value>[];
   noOptionsMessage?: string;
   isLoading?: boolean;
   className?: string;
 };
 
 export const ComboboxField = <Value extends string | number, Mode extends "single" | "multiple" = "single">({
+  mode = "single" as Mode,
+  items,
   title,
   placeholder,
   required,
   disabled,
-  mode = "single" as Mode,
-  options,
-  onOpen,
   noOptionsMessage,
   isLoading,
   className,
+  ...props
 }: ComboboxFieldProps<Value, Mode>) => {
   const { name, state, handleChange, handleBlur } = useFieldContext<null | Value | Value[]>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
@@ -63,17 +63,16 @@ export const ComboboxField = <Value extends string | number, Mode extends "singl
         {title}
       </FieldLabel>
       <Combobox
+        autoHighlight
+        {...props}
         id={id}
         name={name}
         required={required}
         disabled={disabled}
-        items={options}
+        items={items}
         multiple={mode === "multiple"}
-        value={mode === "single" ? findSelectedOption(state.value, options) : findSelectedOptions(state.value, options)}
+        value={mode === "single" ? findSelectedItem(state.value, items) : findSelectedItems(state.value, items)}
         onValueChange={(value) => handleChange(Array.isArray(value) ? (value.map((v) => v.value) as Value[]) : value ? (value.value as Value) : null)}
-        onOpenChange={(open) => {
-          if (open) onOpen?.();
-        }}
       >
         {mode === "single" && (
           <ComboboxInput disabled={disabled} aria-invalid={isInvalid} placeholder={placeholder} showClear={!required} onBlur={handleBlur}>
@@ -83,11 +82,11 @@ export const ComboboxField = <Value extends string | number, Mode extends "singl
         {mode === "multiple" && (
           <ComboboxChips ref={anchor}>
             <ComboboxValue>
-              {(selected: Option<Value>[]) => (
+              {(selected: Item<Value>[]) => (
                 <>
-                  {selected.map((option) => (
-                    <ComboboxChip key={option.value} className="justify-start truncate">
-                      {option.label}
+                  {selected.map((item) => (
+                    <ComboboxChip key={item.value} className="justify-start truncate">
+                      {item.label}
                     </ComboboxChip>
                   ))}
                   <ComboboxChipsInput disabled={disabled} placeholder={selected.length === 0 ? placeholder : undefined} onBlur={handleBlur} />
@@ -101,23 +100,23 @@ export const ComboboxField = <Value extends string | number, Mode extends "singl
         <ComboboxContent anchor={mode === "multiple" ? anchor : undefined}>
           <ComboboxEmpty>{noOptionsMessage ?? formatMessage({ id: "general.no-options" })}</ComboboxEmpty>
           <ComboboxList>
-            {(option: Option<Value> | Group<Value>) =>
-              typeof option === "object" && "items" in option ? (
-                <ComboboxGroup key={option.label} items={option.items}>
-                  <ComboboxLabel>{option.label}</ComboboxLabel>
+            {(item: Item<Value> | Group<Value>) =>
+              typeof item === "object" && "items" in item ? (
+                <ComboboxGroup key={item.label} items={item.items}>
+                  <ComboboxLabel>{item.label}</ComboboxLabel>
                   <ComboboxCollection>
-                    {(subOption: Option<Value>) => (
-                      <ComboboxItem key={subOption.value} value={subOption} disabled={subOption.disabled}>
-                        {subOption.icon}
-                        {subOption.label}
+                    {(childItem: Item<Value>) => (
+                      <ComboboxItem key={childItem.value} value={childItem} disabled={childItem.disabled}>
+                        {childItem.icon}
+                        {childItem.label}
                       </ComboboxItem>
                     )}
                   </ComboboxCollection>
                 </ComboboxGroup>
               ) : (
-                <ComboboxItem key={option.value} value={option}>
-                  {option.icon}
-                  {option.label}
+                <ComboboxItem key={item.value} value={item}>
+                  {item.icon}
+                  {item.label}
                 </ComboboxItem>
               )
             }
@@ -129,31 +128,31 @@ export const ComboboxField = <Value extends string | number, Mode extends "singl
   );
 };
 
-const findSelectedOption = <Value extends string | number>(value: null | Value | Value[], options: ComboboxFieldProps<Value>["options"]): null | Option<Value> => {
-  for (const option of options) {
-    if (typeof option === "object" && "items" in option) {
-      const found = findSelectedOption(value, option.items);
+const findSelectedItem = <Value extends string | number>(value: null | Value | Value[], items: ComboboxFieldProps<Value>["items"]): null | Item<Value> => {
+  for (const item of items) {
+    if (typeof item === "object" && "items" in item) {
+      const found = findSelectedItem(value, item.items);
       if (found) {
         return found;
       }
-    } else if (option.value === value) {
-      return option;
+    } else if (item.value === value) {
+      return item;
     }
   }
   return null;
 };
 
-const findSelectedOptions = <Value extends string | number>(value: null | Value | Value[], options: ComboboxFieldProps<Value>["options"]): Option<Value>[] => {
+const findSelectedItems = <Value extends string | number>(value: null | Value | Value[], items: ComboboxFieldProps<Value>["items"]): Item<Value>[] => {
   if (!Array.isArray(value)) {
     return [];
   }
 
   const selected = [];
-  for (const option of options) {
-    if (typeof option === "object" && "items" in option) {
-      selected.push(...findSelectedOptions(value, option.items));
-    } else if (value.includes(option.value)) {
-      selected.push(option);
+  for (const item of items) {
+    if (typeof item === "object" && "items" in item) {
+      selected.push(...findSelectedItems(value, item.items));
+    } else if (value.includes(item.value)) {
+      selected.push(item);
     }
   }
   return selected;

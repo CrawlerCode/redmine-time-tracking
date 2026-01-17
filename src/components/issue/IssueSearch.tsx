@@ -160,7 +160,7 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
                               <settingsForm.AppField
                                 name="remoteSearchOptions.titlesOnly"
                                 children={(field) => (
-                                  <field.ToggleField
+                                  <field.SwitchField
                                     title={formatMessage({ id: "issues.search.remote-search-options.titles-only.title" })}
                                     info={formatMessage({ id: "issues.search.remote-search-options.titles-only.description" })}
                                   />
@@ -168,11 +168,11 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
                               />
                               <settingsForm.AppField
                                 name="remoteSearchOptions.openIssuesOnly"
-                                children={(field) => <field.ToggleField title={formatMessage({ id: "issues.search.remote-search-options.open-issues-only.title" })} />}
+                                children={(field) => <field.SwitchField title={formatMessage({ id: "issues.search.remote-search-options.open-issues-only.title" })} />}
                               />
                               <settingsForm.AppField
                                 name="remoteSearchOptions.assignedToMe"
-                                children={(field) => <field.ToggleField title={formatMessage({ id: "issues.search.remote-search-options.assigned-to-me.title" })} />}
+                                children={(field) => <field.SwitchField title={formatMessage({ id: "issues.search.remote-search-options.assigned-to-me.title" })} />}
                               />
                             </FieldGroup>
                           </FieldSet>

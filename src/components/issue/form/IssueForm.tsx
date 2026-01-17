@@ -136,7 +136,7 @@ export const IssueForm = (props: PropTypes) => {
                     title={formatMessage({ id: "issues.issue.field.tracker" })}
                     placeholder={formatMessage({ id: "issues.issue.field.tracker" })}
                     required
-                    options={
+                    items={
                       issueTrackers.data?.map((tracker) => ({
                         label: tracker.name,
                         value: tracker.id,
@@ -164,7 +164,7 @@ export const IssueForm = (props: PropTypes) => {
                     placeholder={formatMessage({ id: "issues.issue.field.status" })}
                     required
                     disabled={props.action === "edit" ? props.issue.allowed_statuses?.length === 0 : true}
-                    options={
+                    items={
                       props.action === "create"
                         ? selectedTracker?.default_status
                           ? [

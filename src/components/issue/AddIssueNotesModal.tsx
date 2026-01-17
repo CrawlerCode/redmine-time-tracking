@@ -68,7 +68,7 @@ const AddIssueNotesModal = ({ issue, onClose, onSuccess }: PropTypes) => {
                 )}
               />
 
-              <form.AppField name="private_notes" children={(field) => <field.ToggleField title={formatMessage({ id: "issues.issue.field.private-notes" })} />} />
+              <form.AppField name="private_notes" children={(field) => <field.SwitchField title={formatMessage({ id: "issues.issue.field.private-notes" })} />} />
             </FormGrid>
             <DialogFooter>
               <form.AppForm>

@@ -4,15 +4,15 @@ import { useFieldContext } from "../../hooks/useAppForm";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
-type ToggleGroupFieldProps = Omit<ComponentProps<typeof ToggleGroup>, "value" | "defaultValue" | "onValueChange" | "className"> & {
+type ToggleGroupFieldProps = Omit<ComponentProps<typeof ToggleGroup>, "multiple" | "value" | "defaultValue" | "onValueChange" | "className"> & {
   mode?: "single" | "multiple";
   title?: string;
   required?: boolean;
-  options: { value: string; name: string }[];
+  items: { value: string; name: string }[];
   className?: string;
 };
 
-export const ToggleGroupField = ({ title, className, required, options, mode = "single", variant = "outline", ...props }: ToggleGroupFieldProps) => {
+export const ToggleGroupField = ({ title, className, required, items, mode = "single", variant = "outline", ...props }: ToggleGroupFieldProps) => {
   const { state, handleChange } = useFieldContext<string | string[]>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
 
@@ -24,9 +24,9 @@ export const ToggleGroupField = ({ title, className, required, options, mode = "
       </span>
       <ToggleGroup
         size="sm"
+        {...props}
         multiple={mode === "multiple"}
         variant={variant}
-        {...props}
         value={Array.isArray(state.value) ? state.value : [state.value]}
         onValueChange={(value) => {
           if (mode === "single") {
@@ -37,9 +37,9 @@ export const ToggleGroupField = ({ title, className, required, options, mode = "
           }
         }}
       >
-        {options.map((option) => (
-          <ToggleGroupItem key={option.value} value={option.value} aria-label={option.name}>
-            {option.name}
+        {items.map((item) => (
+          <ToggleGroupItem key={item.value} value={item.value} aria-label={item.name}>
+            {item.name}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
