@@ -19,7 +19,7 @@ export const TimerResetButton = () => {
       </HelpTooltip>
 
       {confirmResetModal && (
-        <AlertDialog open onOpenChange={() => setConfirmResetModal(false)}>
+        <AlertDialog open onOpenChange={setConfirmResetModal}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>{formatMessage({ id: "issues.modal.reset-timer.title" })}</AlertDialogTitle>
@@ -27,7 +27,14 @@ export const TimerResetButton = () => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>{formatMessage({ id: "issues.modal.reset-timer.cancel" })}</AlertDialogCancel>
-              <AlertDialogAction onClick={() => timer.resetTimer()}>{formatMessage({ id: "issues.modal.reset-timer.reset" })}</AlertDialogAction>
+              <AlertDialogAction
+                onClick={() => {
+                  timer.resetTimer();
+                  setConfirmResetModal(false);
+                }}
+              >
+                {formatMessage({ id: "issues.modal.reset-timer.reset" })}
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
