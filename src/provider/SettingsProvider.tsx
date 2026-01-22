@@ -6,22 +6,22 @@ import z from "zod/v4";
 import { getStorage, setStorage, useSuspenseStorage } from "../hooks/useStorage";
 import { LANGUAGES } from "./IntlProvider";
 
-export const settingsSchema = ({ formatMessage }: { formatMessage: ReturnType<typeof useIntl>["formatMessage"] }) =>
+export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<typeof useIntl>["formatMessage"] } = {}) =>
   z.object({
     language: z.enum(["browser", ...LANGUAGES]),
     redmineURL: z
-      .string(formatMessage({ id: "settings.redmine.url.validation.required" }))
-      .nonempty(formatMessage({ id: "settings.redmine.url.validation.required" }))
-      .regex(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?[\w\-/]*\/?$/, formatMessage({ id: "settings.redmine.url.validation.valid-url" })),
-    redmineApiKey: z.string().nonempty(formatMessage({ id: "settings.redmine.api-key.validation.required" })),
+      .string(formatMessage?.({ id: "settings.redmine.url.validation.required" }))
+      .nonempty(formatMessage?.({ id: "settings.redmine.url.validation.required" }))
+      .regex(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?[\w\-/]*\/?$/, formatMessage?.({ id: "settings.redmine.url.validation.valid-url" })),
+    redmineApiKey: z.string().nonempty(formatMessage?.({ id: "settings.redmine.api-key.validation.required" })),
     features: z.object({
       autoPauseOnSwitch: z.boolean(),
       roundTimeNearestQuarterHour: z.boolean().optional(), // ! Legacy
       roundToNearestInterval: z.boolean(),
       roundingInterval: z
-        .int(formatMessage({ id: "settings.features.rounding-interval.validation.required" }))
-        .min(1, formatMessage({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
-        .max(60, formatMessage({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
+        .int(formatMessage?.({ id: "settings.features.rounding-interval.validation.required" }))
+        .min(1, formatMessage?.({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
+        .max(60, formatMessage?.({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
       addNotes: z.boolean(),
       cacheComments: z.boolean().optional(), // ! Legacy
       persistentComments: z.boolean(),

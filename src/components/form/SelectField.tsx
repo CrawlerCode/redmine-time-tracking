@@ -13,7 +13,7 @@ type SelectFieldProps<Value extends string | number = string | number> = Omit<Co
   className?: string;
 };
 
-export const SelectField = <Value extends string | number>({ items, title, placeholder, required, disabled, className, ...props }: SelectFieldProps<Value>) => {
+export const SelectField = <Value extends string | number>({ items, title, placeholder, required, disabled, className, children, ...props }: SelectFieldProps<Value>) => {
   const { name, state, handleChange, handleBlur } = useFieldContext<null | Value>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
@@ -60,6 +60,7 @@ export const SelectField = <Value extends string | number>({ items, title, place
         </SelectContent>
       </Select>
       {isInvalid && <FieldError errors={state.meta.errors} />}
+      {children}
     </Field>
   );
 };

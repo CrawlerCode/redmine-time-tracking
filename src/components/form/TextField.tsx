@@ -11,7 +11,7 @@ type TextFieldProps = Omit<ComponentProps<typeof Input>, "id" | "value" | "onCha
   fieldErrorVariant?: ComponentProps<typeof FieldError>["variant"];
 };
 
-export const TextField = ({ title, required, className, classNames, fieldErrorVariant, ...props }: TextFieldProps) => {
+export const TextField = ({ title, required, className, classNames, fieldErrorVariant, children, ...props }: TextFieldProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { name, state, handleChange, handleBlur } = useFieldContext<any>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
@@ -19,9 +19,11 @@ export const TextField = ({ title, required, className, classNames, fieldErrorVa
 
   return (
     <Field data-invalid={isInvalid} className={className}>
-      <FieldLabel required={required} htmlFor={id}>
-        {title}
-      </FieldLabel>
+      {title && (
+        <FieldLabel required={required} htmlFor={id}>
+          {title}
+        </FieldLabel>
+      )}
       <Input
         {...props}
         id={id}
@@ -33,6 +35,7 @@ export const TextField = ({ title, required, className, classNames, fieldErrorVa
         className={classNames?.input}
       />
       {isInvalid && <FieldError variant={fieldErrorVariant} errors={state.meta.errors} />}
+      {children}
     </Field>
   );
 };

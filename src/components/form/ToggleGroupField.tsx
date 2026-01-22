@@ -18,10 +18,12 @@ export const ToggleGroupField = ({ title, className, required, items, mode = "si
 
   return (
     <Field data-invalid={isInvalid} orientation="horizontal" className={clsxm("justify-between", className)}>
-      <span className="flex items-center gap-2 truncate">
-        <FieldLabel required={required}>{title}</FieldLabel>
-        {isInvalid && <FieldError variant="tooltip" errors={state.meta.errors} />}
-      </span>
+      {title && (
+        <span className="flex items-center gap-2 truncate">
+          <FieldLabel required={required}>{title}</FieldLabel>
+          {isInvalid && <FieldError variant="tooltip" errors={state.meta.errors} />}
+        </span>
+      )}
       <ToggleGroup
         size="sm"
         {...props}

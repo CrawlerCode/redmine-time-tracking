@@ -275,6 +275,7 @@ export type TUser = {
   updated_on: string;
   last_login_on: string;
   passwd_changed_on: string;
+  avatar_url?: string; // available since Redmine 5.0.0
   memberships?: TMembership[];
 };
 

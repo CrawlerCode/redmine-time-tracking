@@ -67,6 +67,7 @@ function RootLayout() {
           <Outlet />
         </div>
       </main>
+      <footer id="footer" className="bg-muted/50 flex w-full justify-end border-t p-4 empty:hidden" />
     </>
   );
 }

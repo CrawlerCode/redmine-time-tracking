@@ -144,6 +144,7 @@
   "settings.redmine.connection-successful": "Verbindung erfolgreich!",
   "settings.redmine.hello-user": "Hallo <strong>{firstName} {lastName}</strong> ({accountName})",
   "settings.redmine.edit": "Bearbeiten",
+  "settings.redmine.test-connection": "Verbindung testen",
   "settings.features": "Funktionen",
   "settings.features.auto-pause-on-switch.title": "Auto Pause",
   "settings.features.auto-pause-on-switch.description": "Timer automatisch pausieren, wenn Ticket gewechselt wird",

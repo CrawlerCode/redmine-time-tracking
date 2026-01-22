@@ -25,6 +25,7 @@ import {
 
 export class RedmineApiClient {
   private instance: AxiosInstance;
+  public id = crypto.randomUUID();
 
   constructor(redmineURL: string, redmineApiKey: string) {
     this.instance = axios.create({
