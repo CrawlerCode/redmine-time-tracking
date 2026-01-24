@@ -54,7 +54,10 @@ export const useStorage = <T>(name: string, defaultValue: T) => {
   return {
     isLoading: query.isLoading,
     data: query.data ?? defaultValue,
-    setData: (data: T) => setStorage(name, data),
+    setData: (data: T) => {
+      queryClient.setQueryData(["storage", name], data, { updatedAt: Date.now() });
+      setStorage(name, data);
+    },
   };
 };
 
@@ -80,6 +83,9 @@ export const useSuspenseStorage = <T>(name: string, defaultValue: T) => {
 
   return {
     data: query.data,
-    setData: (data: T) => setStorage(name, data),
+    setData: (data: T) => {
+      queryClient.setQueryData(["storage", name], data, { updatedAt: Date.now() });
+      setStorage(name, data);
+    },
   };
 };

@@ -77,6 +77,11 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
     },
   });
 
+  const persistentComments = usePersistentComments({
+    identifier: timer.id,
+    enabled: settings.features.persistentComments,
+  });
+
   const form = useAppForm({
     defaultValues: {
       issue_id: issue.id,
@@ -89,6 +94,10 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
       add_notes: false,
       notes: undefined,
       ...initialValues,
+      ...(persistentComments.isEnabled &&
+        persistentComments.isPersisted && {
+          comments: persistentComments.comment,
+        }),
     } satisfies Partial<TCreateTimeEntryForm> as TCreateTimeEntryForm,
     validators: {
       onChange: createTimeEntryFormSchema({ formatMessage }),
@@ -128,14 +137,6 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
 
         onSuccess();
       }
-    },
-  });
-
-  const persistentComments = usePersistentComments({
-    identifier: timer.id,
-    enabled: settings.features.persistentComments,
-    onLoad: (comment) => {
-      form.setFieldValue("comments", comment);
     },
   });
 
