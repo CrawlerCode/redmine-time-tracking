@@ -2,7 +2,7 @@ import deepmerge from "deepmerge";
 import { ReactNode, createContext, use } from "react";
 import { useIntl } from "react-intl";
 import { browser } from "wxt/browser";
-import z from "zod/v4";
+import { z } from "zod";
 import { getStorage, setStorage, useSuspenseStorage } from "../hooks/useStorage";
 import { LANGUAGES } from "./IntlProvider";
 

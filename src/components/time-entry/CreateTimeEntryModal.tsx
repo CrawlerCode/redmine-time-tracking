@@ -4,7 +4,7 @@ import { TimerController } from "@/hooks/useTimers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { startOfDay } from "date-fns";
 import { useIntl } from "react-intl";
-import z from "zod/v4";
+import { z } from "zod";
 import { TCreateTimeEntry, TIssue, TUpdateIssue } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
 import useMyProjectRoles from "../../hooks/useMyProjectRoles";
@@ -28,20 +28,22 @@ type PropTypes = {
   onSuccess: () => void;
 };
 
-const createTimeEntryFormSchema = ({ formatMessage }: { formatMessage: ReturnType<typeof useIntl>["formatMessage"] }) =>
+const createTimeEntryFormSchema = ({ formatMessage }: { formatMessage?: ReturnType<typeof useIntl>["formatMessage"] }) =>
   z.object({
     issue_id: z.int(),
-    user_id: z.array(z.int()).optional(),
+    user_id: z.array(z.int()),
     hours: z
-      .number(formatMessage({ id: "time.time-entry.field.hours.validation.required" }))
-      .min(0.01, formatMessage({ id: "time.time-entry.field.hours.validation.greater-than-zero" }))
-      .max(24, formatMessage({ id: "time.time-entry.field.hours.validation.less-than-24" })),
-    spent_on: z.date(formatMessage({ id: "time.time-entry.field.spent-on.validation.required" })).max(new Date(), formatMessage({ id: "time.time-entry.field.spent-on.validation.in-future" })),
-    comments: z.string().optional(),
-    activity_id: z.int(formatMessage({ id: "time.time-entry.field.activity.validation.required" })),
-    done_ratio: z.number().min(0).max(100).optional(),
-    add_notes: z.boolean().optional(),
-    notes: z.string().optional(),
+      .number(formatMessage?.({ id: "time.time-entry.field.hours.validation.required" }))
+      .min(0.01, formatMessage?.({ id: "time.time-entry.field.hours.validation.greater-than-zero" }))
+      .max(24, formatMessage?.({ id: "time.time-entry.field.hours.validation.less-than-24" })),
+    spent_on: z.date(formatMessage?.({ id: "time.time-entry.field.spent-on.validation.required" })).max(new Date(), formatMessage?.({ id: "time.time-entry.field.spent-on.validation.in-future" })),
+    comments: z.string().nullable(),
+    activity_id: z.int(formatMessage?.({ id: "time.time-entry.field.activity.validation.required" })),
+    issue: z.object({
+      done_ratio: z.number().min(0).max(100),
+      _add_notes: z.boolean(),
+      notes: z.string().nullable(),
+    }),
   });
 
 type TCreateTimeEntryForm = z.infer<ReturnType<typeof createTimeEntryFormSchema>>;
@@ -85,14 +87,16 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
   const form = useAppForm({
     defaultValues: {
       issue_id: issue.id,
-      user_id: myUser.data?.id ? [myUser.data.id] : undefined,
+      user_id: myUser.data?.id ? [myUser.data.id] : [],
       hours: 0,
       spent_on: new Date(),
-      comments: undefined,
+      comments: null,
       activity_id: undefined,
-      done_ratio: undefined,
-      add_notes: false,
-      notes: undefined,
+      issue: {
+        done_ratio: issue.done_ratio,
+        _add_notes: false,
+        notes: null,
+      },
       ...initialValues,
       ...(persistentComments.isEnabled &&
         persistentComments.isPersisted && {
@@ -103,12 +107,12 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
       onChange: createTimeEntryFormSchema({ formatMessage }),
     },
     onSubmit: async ({ value: originalValue }) => {
-      const { done_ratio, add_notes, notes, ...value } = { ...originalValue };
+      const { issue: updateIssue, ...value } = { ...originalValue };
 
       // Update issue done_ratio and notes
-      const updatedDoneRatio = done_ratio && done_ratio !== issue.done_ratio ? done_ratio : undefined;
-      const addNotes = add_notes && notes ? notes : undefined;
-      if (updatedDoneRatio || addNotes) {
+      const updatedDoneRatio = updateIssue.done_ratio !== issue.done_ratio ? updateIssue.done_ratio : undefined;
+      const addNotes = updateIssue._add_notes && updateIssue.notes ? updateIssue.notes : undefined;
+      if (updatedDoneRatio !== undefined || addNotes) {
         await updateIssueMutation.mutateAsync({
           done_ratio: updatedDoneRatio,
           notes: addNotes,
@@ -116,7 +120,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
       }
 
       // Create time entry
-      if (value.user_id && Array.isArray(value.user_id) && value.user_id.length > 0) {
+      if (Array.isArray(value.user_id) && value.user_id.length > 0) {
         // create for multiple users
         for (const userId of value.user_id) {
           try {
@@ -127,7 +131,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
         }
       } else {
         // create for me
-        await createTimeEntryMutation.mutateAsync({ ...value, user_id: undefined as never });
+        await createTimeEntryMutation.mutateAsync({ ...value, user_id: undefined });
       }
 
       if (!createTimeEntryMutation.isError) {
@@ -147,7 +151,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
         onOpenChange={() => {
           const comment = form.state.values.comments;
           if (persistentComments.isEnabled && ((comment && comment != initialValues.comments) || persistentComments.isPersisted)) {
-            persistentComments.saveComment(comment);
+            persistentComments.saveComment(comment ?? undefined);
           }
 
           onClose();
@@ -160,7 +164,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
             </DialogHeader>
             <IssueTitle issue={issue} />
             <FormGrid cols={2}>
-              <form.AppField name="done_ratio" children={() => <DoneSliderField className="col-span-1 self-center" />} />
+              <form.AppField name="issue.done_ratio" children={() => <DoneSliderField className="col-span-1 self-center" />} />
 
               <form.Subscribe selector={(state) => state.values.hours} children={(hours) => <SpentVsEstimatedTime issue={issue} previewHours={hours} className="col-span-1 justify-self-end" />} />
 
@@ -229,15 +233,15 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
 
               {settings.features.addNotes && projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes") && (
                 <form.Subscribe
-                  selector={(state) => state.values.add_notes}
+                  selector={(state) => state.values.issue._add_notes}
                   children={(add_notes) =>
                     !add_notes ? (
-                      <form.AppField name="add_notes" children={(field) => <field.SwitchField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
+                      <form.AppField name="issue._add_notes" children={(field) => <field.SwitchField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
                     ) : (
                       <FormFieldset legend={formatMessage({ id: "issues.issue.field.notes" })}>
                         <FormGrid>
-                          <form.AppField name="add_notes" children={(field) => <field.SwitchField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
-                          <form.AppField name="notes" children={(field) => <field.TextareaField placeholder={formatMessage({ id: "issues.issue.field.notes" })} />} />
+                          <form.AppField name="issue._add_notes" children={(field) => <field.SwitchField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
+                          <form.AppField name="issue.notes" children={(field) => <field.TextareaField placeholder={formatMessage({ id: "issues.issue.field.notes" })} />} />
                         </FormGrid>
                       </FormFieldset>
                     )

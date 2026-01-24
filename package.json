@@ -50,7 +50,7 @@
     "shadcn": "^3.6.3",
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.1",
-    "zod": "^3.25.46"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

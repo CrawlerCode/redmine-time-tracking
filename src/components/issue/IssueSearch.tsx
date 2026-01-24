@@ -4,7 +4,7 @@ import { useSuspenseStorage } from "@/hooks/useStorage";
 import { ChevronRightIcon, CloudIcon, ListTreeIcon, MoreHorizontalIcon, SearchIcon, XIcon } from "lucide-react";
 import { createContext, PropsWithChildren, use, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { TIssue, TReference } from "../../api/redmine/types";
 import useDebounce from "../../hooks/useDebounce";
 import useHotKey from "../../hooks/useHotkey";

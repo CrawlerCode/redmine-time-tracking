@@ -67,7 +67,6 @@ export const ComboboxField = <Value extends string | number, Mode extends "singl
         {...props}
         id={id}
         name={name}
-        required={required}
         disabled={disabled}
         items={items}
         multiple={mode === "multiple"}

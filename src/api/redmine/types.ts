@@ -20,7 +20,7 @@ export type TIssue = {
   author: TReference;
   assigned_to?: TReference;
   subject: string;
-  description: string;
+  description?: string;
   done_ratio: number;
   fixed_version?: TReference;
   start_date?: string; // YYYY-MM-DD
@@ -167,7 +167,7 @@ export type TTimeEntryActivity = {
 
 export type TCreateTimeEntry = {
   issue_id: number;
-  user_id: number;
+  user_id?: number;
   spent_on: Date;
   activity_id: number;
   hours: number;

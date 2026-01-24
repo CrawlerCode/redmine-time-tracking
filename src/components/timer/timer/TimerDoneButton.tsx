@@ -39,9 +39,8 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
           timer={timer}
           issue={issue}
           initialValues={{
-            done_ratio: issue.done_ratio,
             hours: createTimeEntryHours,
-            comments: timer.name,
+            ...(timer.name && { comments: timer.name }),
           }}
           onClose={() => setCreateTimeEntryHours(undefined)}
           onSuccess={() => {

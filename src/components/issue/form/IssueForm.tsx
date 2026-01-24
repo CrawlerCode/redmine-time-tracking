@@ -4,7 +4,7 @@ import { Form, FormGrid } from "@/components/ui/form";
 import { useIssueStatuses } from "@/hooks/useIssueStatuses";
 import { parseISO } from "date-fns";
 import { FormattedMessage, useIntl } from "react-intl";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { TIssue } from "../../../api/redmine/types";
 import { useAppForm } from "../../../hooks/useAppForm";
 import { useIssuePriorities } from "../../../hooks/useIssuePriorities";
@@ -37,15 +37,15 @@ const createOrEditIssueFormSchema = ({ formatMessage }: { formatMessage: ReturnT
       tracker_id: z.int(formatMessage({ id: "issues.issue.field.tracker.validation.required" })),
       status_id: z.int(formatMessage({ id: "issues.issue.field.status.validation.required" })),
       subject: z.string().nonempty(formatMessage({ id: "issues.issue.field.subject.validation.required" })),
-      description: z.string().nullish(),
+      description: z.string().nullable(),
       priority_id: z.int(formatMessage({ id: "issues.issue.field.priority.validation.required" })),
-      assigned_to_id: z.int().nullish(),
-      category_id: z.int().nullish(),
-      fixed_version_id: z.int().nullish(),
-      start_date: z.date().nullish(),
-      due_date: z.date().nullish(),
-      estimated_hours: z.number().nullish(),
-      done_ratio: z.int().min(0).max(100).nullish(),
+      assigned_to_id: z.int().nullable(),
+      category_id: z.int().nullable(),
+      fixed_version_id: z.int().nullable(),
+      start_date: z.date().nullable(),
+      due_date: z.date().nullable(),
+      estimated_hours: z.number().nullable(),
+      done_ratio: z.int().min(0).max(100),
     })
     .check((ctx) => {
       if (ctx.value.start_date && ctx.value.due_date && ctx.value.start_date > ctx.value.due_date) {
@@ -82,14 +82,14 @@ export const IssueForm = (props: PropTypes) => {
             tracker_id: issueTrackers.defaultTracker?.id,
             status_id: issueTrackers.defaultTracker?.default_status?.id,
             subject: "",
-            description: undefined,
+            description: null,
             priority_id: issuePriorities.defaultPriority?.id,
-            assigned_to_id: myUser.data?.id,
-            category_id: undefined,
-            fixed_version_id: project.data?.default_version?.id,
-            start_date: undefined,
-            due_date: undefined,
-            estimated_hours: undefined,
+            assigned_to_id: myUser.data?.id ?? null,
+            category_id: null,
+            fixed_version_id: project.data?.default_version?.id ?? null,
+            start_date: null,
+            due_date: null,
+            estimated_hours: null,
             done_ratio: 0,
           } satisfies Partial<TCreateOrEditIssueForm> as TCreateOrEditIssueForm)
         : ({
@@ -97,14 +97,14 @@ export const IssueForm = (props: PropTypes) => {
             tracker_id: props.issue.tracker.id,
             status_id: props.issue.status.id,
             subject: props.issue.subject,
-            description: props.issue.description,
+            description: props.issue.description ?? null,
             priority_id: props.issue.priority.id,
-            assigned_to_id: props.issue.assigned_to?.id,
-            category_id: props.issue.category?.id,
-            fixed_version_id: props.issue.fixed_version?.id,
-            start_date: props.issue.start_date ? parseISO(props.issue.start_date) : undefined,
-            due_date: props.issue.due_date ? parseISO(props.issue.due_date) : undefined,
-            estimated_hours: props.issue.estimated_hours,
+            assigned_to_id: props.issue.assigned_to?.id ?? null,
+            category_id: props.issue.category?.id ?? null,
+            fixed_version_id: props.issue.fixed_version?.id ?? null,
+            start_date: props.issue.start_date ? parseISO(props.issue.start_date) : null,
+            due_date: props.issue.due_date ? parseISO(props.issue.due_date) : null,
+            estimated_hours: props.issue.estimated_hours ?? null,
             done_ratio: props.issue.done_ratio,
           } satisfies TCreateOrEditIssueForm as TCreateOrEditIssueForm),
     validators: {

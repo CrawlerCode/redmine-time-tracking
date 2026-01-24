@@ -6,7 +6,7 @@ import deepmerge from "deepmerge";
 import { SlidersHorizontalIcon } from "lucide-react";
 import { createContext, PropsWithChildren, use, useState } from "react";
 import { useIntl } from "react-intl";
-import { z } from "zod/v4";
+import { z } from "zod";
 import useMyProjects from "../../hooks/useMyProjects";
 import { useSuspenseStorage } from "../../hooks/useStorage";
 import { Button } from "../ui/button";

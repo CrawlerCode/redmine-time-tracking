@@ -83,8 +83,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       zod:
-        specifier: ^3.25.46
-        version: 3.25.46
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@eslint/js':
         specifier: ^9.19.0
@@ -4603,11 +4603,11 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@3.25.46:
-    resolution: {integrity: sha512-IqRxcHEIjqLd4LNS/zKffB3Jzg3NwqJxQQ0Ns7pdrvgGkwQsEBdEQcOHaBVqvvZArShRzI39+aMST3FBGmTrLQ==}
-
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
 snapshots:
 
@@ -5640,7 +5640,7 @@ snapshots:
       recast: 0.23.11
       source-map: 0.7.6
       tsx: 4.19.3
-      zod: 3.25.46
+      zod: 3.25.76
     transitivePeerDependencies:
       - supports-color
 
@@ -5659,7 +5659,7 @@ snapshots:
       babel-dead-code-elimination: 1.0.10
       chokidar: 3.6.0
       unplugin: 2.3.11
-      zod: 3.25.46
+      zod: 3.25.76
     optionalDependencies:
       '@tanstack/react-router': 1.141.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       vite: 7.3.0(@types/node@22.13.1)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.19.3)(yaml@2.7.1)
@@ -6754,8 +6754,8 @@ snapshots:
       '@babel/parser': 7.28.5
       eslint: 9.28.0(jiti@2.6.1)
       hermes-parser: 0.25.1
-      zod: 3.25.46
-      zod-validation-error: 4.0.2(zod@3.25.46)
+      zod: 4.3.6
+      zod-validation-error: 4.0.2(zod@4.3.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -8151,7 +8151,7 @@ snapshots:
       formdata-node: 6.0.3
       listr2: 8.3.3
       ofetch: 1.5.1
-      zod: 3.25.76
+      zod: 4.3.6
 
   punycode@2.3.0: {}
 
@@ -9222,10 +9222,10 @@ snapshots:
     dependencies:
       zod: 3.25.76
 
-  zod-validation-error@4.0.2(zod@3.25.46):
+  zod-validation-error@4.0.2(zod@4.3.6):
     dependencies:
-      zod: 3.25.46
-
-  zod@3.25.46: {}
+      zod: 4.3.6
 
   zod@3.25.76: {}
+
+  zod@4.3.6: {}

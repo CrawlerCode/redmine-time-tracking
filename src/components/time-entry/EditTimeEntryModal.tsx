@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { parseISO } from "date-fns";
 import { useIntl } from "react-intl";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { TTimeEntry, TUpdateTimeEntry } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
 import useIssue from "../../hooks/useIssue";
@@ -27,7 +27,7 @@ const editTimeEntryFormSchema = ({ formatMessage }: { formatMessage: ReturnType<
       .min(0.01, formatMessage({ id: "time.time-entry.field.hours.validation.greater-than-zero" }))
       .max(24, formatMessage({ id: "time.time-entry.field.hours.validation.less-than-24" })),
     spent_on: z.date(formatMessage({ id: "time.time-entry.field.spent-on.validation.required" })).max(new Date(), formatMessage({ id: "time.time-entry.field.spent-on.validation.in-future" })),
-    comments: z.string().nullish(),
+    comments: z.string().nullable(),
     activity_id: z.int(formatMessage({ id: "time.time-entry.field.activity.validation.required" })),
   });
 
