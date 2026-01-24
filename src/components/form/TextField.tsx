@@ -20,7 +20,7 @@ export const TextField = ({ title, required, className, classNames, fieldErrorVa
   return (
     <Field data-invalid={isInvalid} className={className}>
       {title && (
-        <FieldLabel required={required} htmlFor={id}>
+        <FieldLabel required={required} htmlFor={id} errors={isInvalid && fieldErrorVariant === "tooltip" ? state.meta.errors : undefined}>
           {title}
         </FieldLabel>
       )}
@@ -34,7 +34,7 @@ export const TextField = ({ title, required, className, classNames, fieldErrorVa
         aria-invalid={isInvalid}
         className={classNames?.input}
       />
-      {isInvalid && <FieldError variant={fieldErrorVariant} errors={state.meta.errors} />}
+      {isInvalid && fieldErrorVariant !== "tooltip" && <FieldError errors={state.meta.errors} />}
       {children}
     </Field>
   );

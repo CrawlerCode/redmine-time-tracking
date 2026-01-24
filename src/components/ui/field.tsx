@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { useMemo } from "react";
+import { ComponentProps, useMemo } from "react";
 
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -47,7 +47,7 @@ function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
   return <div data-slot="field-content" className={cn("group/field-content flex flex-1 flex-col gap-0.5 leading-snug", className)} {...props} />;
 }
 
-function FieldLabel({ className, required, children, ...props }: React.ComponentProps<typeof Label> & { required?: boolean }) {
+function FieldLabel({ className, required, children, errors, ...props }: React.ComponentProps<typeof Label> & { required?: boolean } & Pick<ComponentProps<typeof FieldError>, "errors">) {
   return (
     <Label
       data-slot="field-label"
@@ -66,6 +66,7 @@ function FieldLabel({ className, required, children, ...props }: React.Component
       ) : (
         children
       )}
+      {errors && errors.length && <FieldError variant="tooltip" errors={errors} />}
     </Label>
   );
 }
@@ -143,7 +144,7 @@ function FieldError({
   if (variant === "tooltip") {
     return (
       <Tooltip delay={0}>
-        <TooltipTrigger render={<InfoIcon className="text-destructive size-3.5" />} />
+        <TooltipTrigger render={<InfoIcon className="text-destructive size-3.5 shrink-0" />} />
         <TooltipContent className="max-w-64 text-wrap">
           <div role="alert" data-slot="field-error" className={cn("text-sm", className)} {...props}>
             {content}

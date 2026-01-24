@@ -1,7 +1,7 @@
 import HelpTooltip from "@/components/general/HelpTooltip";
 import CreateTimeEntryModal from "@/components/time-entry/CreateTimeEntryModal";
 import { useSettings } from "@/provider/SettingsProvider";
-import { roundTimeNearestInterval } from "@/utils/date";
+import { roundMillisecondsToInterval } from "@/utils/date";
 import { BadgeCheckIcon } from "lucide-react";
 import { useState } from "react";
 import { useIntl } from "react-intl";
@@ -26,7 +26,7 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
           data-disabled={isDisabled}
           onClick={() => {
             if (isDisabled) return;
-            const time = settings.features.roundToNearestInterval ? roundTimeNearestInterval(currentTime, settings.features.roundingInterval) : currentTime;
+            const time = settings.features.roundToInterval ? roundMillisecondsToInterval(currentTime, settings.features.roundingInterval, settings.features.roundingMode) : currentTime;
             const hours = Number((time / 1000 / 60 / 60).toFixed(2));
             setCreateTimeEntryHours(hours);
           }}

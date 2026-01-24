@@ -17,7 +17,9 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
     features: z.object({
       autoPauseOnSwitch: z.boolean(),
       roundTimeNearestQuarterHour: z.boolean().optional(), // ! Legacy
-      roundToNearestInterval: z.boolean(),
+      roundToNearestInterval: z.boolean().optional(), // ! Legacy
+      roundToInterval: z.boolean(),
+      roundingMode: z.enum(["down", "nearest", "up"]),
       roundingInterval: z
         .int(formatMessage?.({ id: "settings.features.rounding-interval.validation.required" }))
         .min(1, formatMessage?.({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
@@ -48,7 +50,8 @@ const defaultSettings: Settings = {
   redmineApiKey: "",
   features: {
     autoPauseOnSwitch: true,
-    roundToNearestInterval: false,
+    roundToInterval: false,
+    roundingMode: "nearest",
     roundingInterval: 15,
     persistentComments: true,
     addNotes: false,
@@ -73,8 +76,15 @@ export const runSettingsMigration = async () => {
 
   if (settings.features.roundTimeNearestQuarterHour === true) {
     settings.features.roundTimeNearestQuarterHour = undefined;
-    settings.features.roundToNearestInterval = true;
+    settings.features.roundToInterval = true;
+    settings.features.roundingMode = "nearest";
     settings.features.roundingInterval = 15;
+  }
+
+  if (settings.features.roundToNearestInterval === true) {
+    settings.features.roundToNearestInterval = undefined;
+    settings.features.roundToInterval = true;
+    settings.features.roundingMode = "nearest";
   }
 
   if (settings.features.cacheComments) {

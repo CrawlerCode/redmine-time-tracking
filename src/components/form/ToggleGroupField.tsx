@@ -1,5 +1,4 @@
-import { clsxm } from "@/utils/clsxm";
-import { ComponentProps } from "react";
+import { ComponentProps, ReactNode } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
@@ -8,16 +7,17 @@ type ToggleGroupFieldProps = Omit<ComponentProps<typeof ToggleGroup>, "multiple"
   mode?: "single" | "multiple";
   title?: string;
   required?: boolean;
-  items: { value: string; name: string }[];
+  items: { label: string; value: string; icon?: ReactNode }[];
+  orientation?: ComponentProps<typeof Field>["orientation"];
   className?: string;
 };
 
-export const ToggleGroupField = ({ title, className, required, items, mode = "single", variant = "outline", ...props }: ToggleGroupFieldProps) => {
+export const ToggleGroupField = ({ title, orientation, className, required, items, mode = "single", variant = "outline", ...props }: ToggleGroupFieldProps) => {
   const { state, handleChange } = useFieldContext<string | string[]>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
 
   return (
-    <Field data-invalid={isInvalid} orientation="horizontal" className={clsxm("justify-between", className)}>
+    <Field data-invalid={isInvalid} orientation={orientation} className={className}>
       {title && (
         <span className="flex items-center gap-2 truncate">
           <FieldLabel required={required}>{title}</FieldLabel>
@@ -40,8 +40,9 @@ export const ToggleGroupField = ({ title, className, required, items, mode = "si
         }}
       >
         {items.map((item) => (
-          <ToggleGroupItem key={item.value} value={item.value} aria-label={item.name}>
-            {item.name}
+          <ToggleGroupItem key={item.value} value={item.value} aria-label={item.label}>
+            {item.icon}
+            {item.label}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>

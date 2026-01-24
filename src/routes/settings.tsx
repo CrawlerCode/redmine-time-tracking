@@ -10,7 +10,22 @@ import { useStore as useFormStore } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { DE, FlagComponent, FR, GB, RU } from "country-flag-icons/react/3x2";
-import { BugIcon, ChevronRightIcon, ExternalLinkIcon, GlobeIcon, Loader2Icon, PaletteIcon, PencilIcon, ServerIcon, SignalIcon, UserIcon, Wand2Icon } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowDownUpIcon,
+  ArrowUpIcon,
+  BugIcon,
+  ChevronRightIcon,
+  ExternalLinkIcon,
+  GlobeIcon,
+  Loader2Icon,
+  PaletteIcon,
+  PencilIcon,
+  ServerIcon,
+  SignalIcon,
+  UserIcon,
+  Wand2Icon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { toast } from "sonner";
@@ -117,33 +132,63 @@ function PageComponent() {
               />
 
               <form.AppField
-                name="features.roundToNearestInterval"
+                name="features.roundToInterval"
                 children={(field) => (
-                  <div className="flex">
+                  <>
                     <field.SwitchField
-                      title={formatMessage({ id: "settings.features.round-to-nearest-interval.title" })}
-                      description={formatMessage({ id: "settings.features.round-to-nearest-interval.description" })}
+                      title={formatMessage({ id: "settings.features.round-to-interval.title" })}
+                      description={formatMessage({ id: "settings.features.round-to-interval.description" })}
                     />
                     {field.state.value && (
-                      <form.AppField
-                        name="features.roundingInterval"
-                        children={(field) => (
-                          <field.TextField
-                            type="number"
-                            min={1}
-                            max={60}
-                            step={1}
-                            placeholder={formatMessage({ id: "settings.features.rounding-interval.placeholder" })}
-                            className="w-20"
-                            classNames={{
-                              input: "appearance-none text-center",
-                            }}
-                            fieldErrorVariant="tooltip"
-                          />
-                        )}
-                      />
+                      <div className="ml-11 flex items-center justify-between gap-2">
+                        <form.AppField
+                          name="features.roundingMode"
+                          children={(field) => (
+                            <field.ToggleGroupField
+                              title={formatMessage({ id: "settings.features.rounding-mode.title" })}
+                              required
+                              items={[
+                                {
+                                  value: "down",
+                                  icon: <ArrowDownIcon className="text-red-800 max-[360px]:hidden dark:text-red-400" />,
+                                  label: formatMessage({ id: "settings.features.rounding-mode.down" }),
+                                },
+                                {
+                                  value: "nearest",
+                                  icon: <ArrowDownUpIcon className="text-blue-800 max-[360px]:hidden dark:text-blue-400" />,
+                                  label: formatMessage({ id: "settings.features.rounding-mode.nearest" }),
+                                },
+                                {
+                                  value: "up",
+                                  icon: <ArrowUpIcon className="text-green-700 max-[360px]:hidden dark:text-green-400" />,
+                                  label: formatMessage({ id: "settings.features.rounding-mode.up" }),
+                                },
+                              ]}
+                              className="w-auto"
+                            />
+                          )}
+                        />
+                        <form.AppField
+                          name="features.roundingInterval"
+                          children={(field) => (
+                            <field.TextField
+                              type="number"
+                              title={formatMessage({ id: "settings.features.rounding-interval.title" })}
+                              placeholder={formatMessage({ id: "settings.features.rounding-interval.title" })}
+                              min={1}
+                              max={60}
+                              step={1}
+                              className="w-18 min-w-14"
+                              classNames={{
+                                input: "appearance-none text-center",
+                              }}
+                              fieldErrorVariant="tooltip"
+                            />
+                          )}
+                        />
+                      </div>
                     )}
-                  </div>
+                  </>
                 )}
               />
 
@@ -201,7 +246,7 @@ function PageComponent() {
                     items={[
                       {
                         value: "decimal",
-                        name: formatMessage(
+                        label: formatMessage(
                           { id: "format.hours" },
                           {
                             hours: formatNumber(0.75),
@@ -210,7 +255,7 @@ function PageComponent() {
                       },
                       {
                         value: "minutes",
-                        name: formatMessage(
+                        label: formatMessage(
                           { id: "format.hours" },
                           {
                             hours: formatHoursUsually(0.75),
@@ -218,6 +263,8 @@ function PageComponent() {
                         ),
                       },
                     ]}
+                    orientation="horizontal"
+                    className="justify-between"
                   />
                 )}
               />
