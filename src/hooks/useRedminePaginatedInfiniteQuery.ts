@@ -2,7 +2,6 @@ import {
   DefaultError,
   InfiniteData,
   infiniteQueryOptions,
-  Optional,
   QueryKey,
   UnusedSkipTokenInfiniteOptions,
   useInfiniteQuery,
@@ -24,7 +23,7 @@ export const redminePaginatedInfiniteQueryOptions = <
   TData = InfiniteData<TQueryFnData, typeof defaultInitialPageParam>,
   TQueryKey extends QueryKey = QueryKey,
 >(
-  options: Omit<Optional<UnusedSkipTokenInfiniteOptions<TQueryFnData, TError, TData, TQueryKey, typeof defaultInitialPageParam>, "initialPageParam">, "getNextPageParam" | "getPreviousPageParam">
+  options: Omit<UnusedSkipTokenInfiniteOptions<TQueryFnData, TError, TData, TQueryKey, typeof defaultInitialPageParam>, "initialPageParam" | "getNextPageParam" | "getPreviousPageParam">
 ) =>
   infiniteQueryOptions({
     initialPageParam: defaultInitialPageParam,
@@ -43,7 +42,7 @@ export const useRedminePaginatedInfiniteQuery = <
 >({
   autoFetchPages = false,
   ...options
-}: Omit<Optional<UseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryFnData, TQueryKey, typeof defaultInitialPageParam>, "initialPageParam">, "getNextPageParam" | "getPreviousPageParam"> & {
+}: Omit<UseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryKey, typeof defaultInitialPageParam>, "initialPageParam" | "getNextPageParam" | "getPreviousPageParam"> & {
   /**
    * Automatically fetch next pages
    * - `false`: disabled
@@ -91,10 +90,7 @@ export const useSuspenseRedminePaginatedInfiniteQuery = <
 >({
   autoFetchPages = false,
   ...options
-}: Omit<
-  Optional<UseSuspenseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryFnData, TQueryKey, typeof defaultInitialPageParam>, "initialPageParam">,
-  "getNextPageParam" | "getPreviousPageParam"
-> & {
+}: Omit<UseSuspenseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryKey, typeof defaultInitialPageParam>, "initialPageParam" | "getNextPageParam" | "getPreviousPageParam"> & {
   /**
    * Automatically fetch next pages
    * - `false`: disabled
