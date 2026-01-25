@@ -2,7 +2,7 @@ import { TIssue } from "@/api/redmine/types";
 import { TimerSearchContext } from "@/components/timer/TimerSearch";
 import { useMemo } from "react";
 import { useSettings } from "../provider/SettingsProvider";
-import { useSuspenseStorage } from "./useStorage";
+import { getStorage, setStorage, useSuspenseStorage } from "./useStorage";
 
 type TimerInfo = {
   id: string;
@@ -238,5 +238,40 @@ const newTimer = (timerInfo: Pick<TimerInfo, "issueId"> & Partial<TimerInfo>): T
   elapsedTime: 0,
   ...timerInfo,
 });
+
+/**
+ * Migrate legacy issue data from "issues" storage to "timers" storage
+ */
+export const runTimersMigration = async (
+  legacyIssues: Record<
+    number,
+    {
+      active: boolean;
+      start?: number;
+      time: number;
+    }
+  >
+) => {
+  const timerInfos = await getStorage<Record<string, TimerInfo>>("timers", _defaultTimers);
+
+  const newTimerInfos = Object.entries(legacyIssues)
+    .filter(([_, issue]) => issue.start || issue.time)
+    .map(
+      ([id, issue]) =>
+        ({
+          issueId: Number(id),
+          isActive: issue.active,
+          startTime: issue.start,
+          elapsedTime: issue.time,
+        }) satisfies Omit<TimerInfo, "id">
+    )
+    .reduce((acc, timer) => {
+      const newTime = newTimer(timer);
+      acc[newTime.id] = newTime;
+      return acc;
+    }, timerInfos);
+
+  await setStorage("timers", newTimerInfos);
+};
 
 export default useTimers;

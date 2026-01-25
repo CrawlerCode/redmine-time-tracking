@@ -1,4 +1,4 @@
-import { useSuspenseStorage } from "./useStorage";
+import { getStorage, setStorage, useSuspenseStorage } from "./useStorage";
 
 export type LocalIssueData = {
   id: number;
@@ -46,6 +46,37 @@ const useLocalIssues = () => {
 
 const isDefaultLocalIssue = (issue: LocalIssueData) => {
   return issue.pinned === defaultLocalIssueData.pinned && issue.remembered === defaultLocalIssueData.remembered;
+};
+
+/**
+ * Migrate legacy issue data from "issues" storage to "localIssues" storage
+ */
+export const runLocalIssuesMigration = async (
+  legacyIssues: Record<
+    number,
+    {
+      pinned: boolean;
+      remembered: boolean;
+    }
+  >
+) => {
+  const newLocalIssues = Object.entries(legacyIssues)
+    .filter(([_, issue]) => issue.pinned || issue.remembered)
+    .map(
+      ([id, issue]) =>
+        ({
+          id: Number(id),
+          pinned: issue.pinned,
+          remembered: issue.remembered,
+        }) satisfies LocalIssueData
+    );
+
+  const localIssues = await getStorage<LocalIssueData[]>("localIssues", _defaultLocalIssues);
+  for (const issue of newLocalIssues) {
+    if (localIssues.find((localIssue) => localIssue.id === issue.id)) continue;
+    localIssues.push(issue);
+  }
+  await setStorage("localIssues", localIssues);
 };
 
 export default useLocalIssues;

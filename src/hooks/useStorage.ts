@@ -21,6 +21,10 @@ export const setStorage = async <T>(name: string, data: T) => {
   await Storage.setItem(name, Storage.serialize(data));
 };
 
+export const removeStorage = async (name: string) => {
+  await Storage.removeItem(name);
+};
+
 const storageOptions = <T>(name: string, defaultValue: T) =>
   queryOptions({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
