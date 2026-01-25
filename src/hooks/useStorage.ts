@@ -17,8 +17,8 @@ export const getStorage = async <T>(name: string, defaultValue: T): Promise<T> =
   return Storage.deserialize(data);
 };
 
-export const setStorage = <T>(name: string, data: T) => {
-  Storage.setItem(name, Storage.serialize(data));
+export const setStorage = async <T>(name: string, data: T) => {
+  await Storage.setItem(name, Storage.serialize(data));
 };
 
 const storageOptions = <T>(name: string, defaultValue: T) =>
@@ -54,9 +54,9 @@ export const useStorage = <T>(name: string, defaultValue: T) => {
   return {
     isLoading: query.isLoading,
     data: query.data ?? defaultValue,
-    setData: (data: T) => {
+    setData: async (data: T) => {
       queryClient.setQueryData(["storage", name], data, { updatedAt: Date.now() });
-      setStorage(name, data);
+      await setStorage(name, data);
     },
   };
 };
@@ -83,9 +83,9 @@ export const useSuspenseStorage = <T>(name: string, defaultValue: T) => {
 
   return {
     data: query.data,
-    setData: (data: T) => {
+    setData: async (data: T) => {
       queryClient.setQueryData(["storage", name], data, { updatedAt: Date.now() });
-      setStorage(name, data);
+      await setStorage(name, data);
     },
   };
 };

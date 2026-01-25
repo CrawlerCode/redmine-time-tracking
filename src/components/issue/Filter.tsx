@@ -22,23 +22,23 @@ const filterSettingsSchema = z.object({
 
 type FilterSettings = z.infer<typeof filterSettingsSchema>;
 
-const defaultSettings: FilterSettings = { projects: [], statuses: [], hideCompletedIssues: false };
+const defaultFilterSettings: FilterSettings = { projects: [], statuses: [], hideCompletedIssues: false };
 
 type FilterContextType = {
   settings: FilterSettings;
-  setSettings: (settings: FilterSettings) => void;
+  setSettings: (settings: FilterSettings) => Promise<void>;
 };
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 const FilterProvider = ({ children }: PropsWithChildren) => {
-  const { data: settings, setData: setSettings } = useSuspenseStorage<FilterSettings>("filter", defaultSettings);
+  const { data: filterSettings, setData: setFilterSettings } = useSuspenseStorage<FilterSettings>("filter", defaultFilterSettings);
 
   return (
     <FilterContext
       value={{
-        settings: deepmerge(defaultSettings, settings),
-        setSettings,
+        settings: deepmerge(defaultFilterSettings, filterSettings),
+        setSettings: setFilterSettings,
       }}
     >
       {children}
@@ -79,8 +79,8 @@ const FilterButton = () => {
         }
       },
     },
-    onSubmit: ({ value }) => {
-      filter.setSettings(value);
+    onSubmit: async ({ value }) => {
+      await filter.setSettings(value);
     },
   });
 

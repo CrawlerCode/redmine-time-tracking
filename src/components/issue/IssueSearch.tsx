@@ -71,8 +71,8 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
         }
       },
     },
-    onSubmit: ({ value }) => {
-      setSearchSettings(value);
+    onSubmit: async ({ value }) => {
+      await setSearchSettings(value);
     },
   });
 

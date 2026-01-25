@@ -57,11 +57,13 @@ function PageComponent() {
     validators: {
       onChange: settingsSchema({ formatMessage }),
     },
-    onSubmit: ({ value }) => {
+    onSubmit: async ({ value }) => {
       value.redmineURL = value.redmineURL.replace(/\/$/, "");
-      setSettings(value);
+      await setSettings(value);
+      toast.success(formatMessage({ id: "settings.settings-saved" }), {
+        duration: 1000,
+      });
       queryClient.resetQueries();
-      toast.success(formatMessage({ id: "settings.settings-saved" }));
     },
   });
 

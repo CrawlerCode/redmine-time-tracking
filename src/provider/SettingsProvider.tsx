@@ -71,56 +71,56 @@ const defaultSettings: Settings = {
 };
 
 export const runSettingsMigration = async () => {
-  const rawSettings = await getStorage<Partial<Settings>>("settings", defaultSettings);
-  const settings = deepmerge<Settings>(defaultSettings, rawSettings);
+  const settingsData = await getStorage<Partial<Settings>>("settings", defaultSettings);
+  const settings = deepmerge<Settings>(defaultSettings, settingsData);
 
   if (settings.features.roundTimeNearestQuarterHour === true) {
-    settings.features.roundTimeNearestQuarterHour = undefined;
     settings.features.roundToInterval = true;
     settings.features.roundingMode = "nearest";
     settings.features.roundingInterval = 15;
+    settings.features.roundTimeNearestQuarterHour = undefined;
   }
 
   if (settings.features.roundToNearestInterval === true) {
-    settings.features.roundToNearestInterval = undefined;
     settings.features.roundToInterval = true;
     settings.features.roundingMode = "nearest";
+    settings.features.roundToNearestInterval = undefined;
   }
 
-  if (settings.features.cacheComments) {
+  if (typeof settings.features.cacheComments === "boolean") {
+    settings.features.persistentComments = settings.features.cacheComments;
     settings.features.cacheComments = undefined;
-    settings.features.persistentComments = true;
   }
 
-  if (JSON.stringify(settings) !== JSON.stringify(rawSettings)) {
-    setStorage("settings", settings);
+  if (JSON.stringify(settings) !== JSON.stringify(settingsData)) {
+    await setStorage("settings", settings);
   }
 };
 
 export const getSettings = async () => {
-  const rawSettings = await getStorage<Partial<Settings>>("settings", defaultSettings);
-  return deepmerge<Settings>(defaultSettings, rawSettings);
+  const settingsData = await getStorage<Partial<Settings>>("settings", defaultSettings);
+  return deepmerge<Settings>(defaultSettings, settingsData);
 };
 
 const SettingsContext = createContext({
   settings: defaultSettings,
-  setSettings: (_data: Settings) => undefined,
+  setSettings: (_data: Settings) => Promise.resolve(),
 });
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-  const { data: rawSettings, setData } = useSuspenseStorage<Partial<Settings>>("settings", defaultSettings);
-  const settings = deepmerge<Settings>(defaultSettings, rawSettings);
+  const { data: settingsData, setData: setSettingsData } = useSuspenseStorage<Partial<Settings>>("settings", defaultSettings);
+  const settings = deepmerge<Settings>(defaultSettings, settingsData);
 
   return (
     <SettingsContext
       value={{
         settings: settings,
-        setSettings: (newData: Settings) => {
-          setData(newData);
-          if (newData.redmineURL !== settings.redmineURL) {
+        setSettings: async (newSettings: Settings) => {
+          await setSettingsData(newSettings);
+          if (newSettings.redmineURL !== settings.redmineURL) {
             browser.runtime.sendMessage("settings-changed:redmineURL");
           }
-          if (newData.features.showCurrentIssueTimer !== settings.features?.showCurrentIssueTimer) {
+          if (newSettings.features.showCurrentIssueTimer !== settings.features.showCurrentIssueTimer) {
             browser.runtime.sendMessage("settings-changed:showCurrentIssueTimer");
           }
         },
