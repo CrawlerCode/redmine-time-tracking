@@ -195,12 +195,6 @@ function PageComponent() {
               />
 
               <form.AppField
-                name="features.addNotes"
-                children={(field) => (
-                  <field.SwitchField title={formatMessage({ id: "settings.features.add-notes.title" })} description={formatMessage({ id: "settings.features.add-notes.description" })} />
-                )}
-              />
-              <form.AppField
                 name="features.persistentComments"
                 children={(field) => (
                   <field.SwitchField

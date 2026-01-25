@@ -158,8 +158,6 @@
   "settings.features.rounding-mode.down": "Down",
   "settings.features.rounding-mode.nearest": "Nearest",
   "settings.features.rounding-mode.up": "Up",
-  "settings.features.add-notes.title": "Добавление примечаний",
-  "settings.features.add-notes.description": "Добавлять примечания в задачи",
   "settings.features.persistent-comments.title": "Кеширование комментариев",
   "settings.features.persistent-comments.description": "Кешировать комментарии пока они не отправлены",
   "settings.features.show-current-issue-timer.title": "Show current issue timer",

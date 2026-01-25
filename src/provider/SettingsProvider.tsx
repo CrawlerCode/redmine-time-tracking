@@ -24,7 +24,7 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
         .int(formatMessage?.({ id: "settings.features.rounding-interval.validation.required" }))
         .min(1, formatMessage?.({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
         .max(60, formatMessage?.({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
-      addNotes: z.boolean(),
+      addNotes: z.boolean().optional(), // ! Legacy
       cacheComments: z.boolean().optional(), // ! Legacy
       persistentComments: z.boolean(),
       showCurrentIssueTimer: z.boolean(),
@@ -54,7 +54,6 @@ const defaultSettings: Settings = {
     roundingMode: "nearest",
     roundingInterval: 15,
     persistentComments: true,
-    addNotes: false,
     showCurrentIssueTimer: true,
   },
   style: {
@@ -90,6 +89,10 @@ export const runSettingsMigration = async () => {
   if (typeof settings.features.cacheComments === "boolean") {
     settings.features.persistentComments = settings.features.cacheComments;
     settings.features.cacheComments = undefined;
+  }
+
+  if (typeof settings.features.addNotes === "boolean") {
+    settings.features.addNotes = undefined;
   }
 
   if (JSON.stringify(settings) !== JSON.stringify(settingsData)) {

@@ -158,8 +158,6 @@
   "settings.features.rounding-mode.down": "Down",
   "settings.features.rounding-mode.nearest": "Nearest",
   "settings.features.rounding-mode.up": "Up",
-  "settings.features.add-notes.title": "Add notes",
-  "settings.features.add-notes.description": "Adding notes to an issue",
   "settings.features.persistent-comments.title": "Persistent comments",
   "settings.features.persistent-comments.description": "Save comments until they are submitted",
   "settings.features.show-current-issue-timer.title": "Show current issue timer",

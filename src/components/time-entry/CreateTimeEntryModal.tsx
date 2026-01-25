@@ -231,7 +231,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
                 </FormGrid>
               </FormFieldset>
 
-              {settings.features.addNotes && projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes") && (
+              {projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes") && (
                 <form.Subscribe
                   selector={(state) => state.values.issue._add_notes}
                   children={(add_notes) =>

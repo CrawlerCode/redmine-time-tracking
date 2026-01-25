@@ -158,8 +158,6 @@
   "settings.features.rounding-mode.down": "Runter",
   "settings.features.rounding-mode.nearest": "Nächstes",
   "settings.features.rounding-mode.up": "Hoch",
-  "settings.features.add-notes.title": "Notizen hinzufügen",
-  "settings.features.add-notes.description": "Notizen zu Ticket hinzufügen",
   "settings.features.persistent-comments.title": "Kommentare zwischenspeichern",
   "settings.features.persistent-comments.description": "Kommentare zwischenspeichern, bis sie übermittelt wurden",
   "settings.features.show-current-issue-timer.title": "Aktuellen Ticket-Timer anzeigen",
