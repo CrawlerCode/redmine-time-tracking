@@ -1,8 +1,10 @@
 import { createShadowRootUi, defineContentScript } from "#imports";
 import { CurrentIssueTimer } from "@/components/timer/CurrentIssueTimer";
+import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/provider/Providers";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "sonner/dist/styles.css";
 import "../index.css";
 
 export default defineContentScript({
@@ -30,6 +32,7 @@ export default defineContentScript({
           <React.StrictMode>
             <Providers>
               <CurrentIssueTimer />
+              <Toaster />
             </Providers>
           </React.StrictMode>
         );

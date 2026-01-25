@@ -1,4 +1,3 @@
-import { Toaster } from "@/components/ui/sonner";
 import { PropsWithChildren, Suspense } from "react";
 import IntlProvider from "./IntlProvider";
 import QueryClientProvider from "./QueryClientProvider";
@@ -14,10 +13,7 @@ const Providers = ({ suspense, children }: ProvidersProps) => {
     <QueryClientProvider>
       <SettingsProvider>
         <RedmineApiProvider>
-          <IntlProvider>
-            {children}
-            <Toaster />
-          </IntlProvider>
+          <IntlProvider>{children}</IntlProvider>
         </RedmineApiProvider>
       </SettingsProvider>
     </QueryClientProvider>

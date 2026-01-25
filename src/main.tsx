@@ -11,6 +11,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { createHashHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Toaster } from "./components/ui/sonner";
 import "./index.css";
 
 const entrypoint = getEntrypoint();
@@ -63,6 +64,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <Layout entrypoint={entrypoint}>
       <Providers suspense={entrypoint === "options"}>
         <App />
+        <Toaster />
       </Providers>
     </Layout>
   </React.StrictMode>

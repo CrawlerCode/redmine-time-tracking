@@ -270,7 +270,7 @@ function PageComponent() {
 
         <InfoSection />
 
-        <Portal containerId="footer">
+        <Portal container={() => document.getElementById("footer")}>
           <form.AppForm>
             <form.SubmitButton size="lg" className="w-full sm:w-auto" children={formatMessage({ id: "settings.save-settings" })} onClick={form.handleSubmit} />
           </form.AppForm>
