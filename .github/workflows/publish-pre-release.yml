@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   publish-chrome-pre-release:
-    name: Publish to Chrome Web Store
+    name: Publish Pre-Release to Chrome Web Store
     runs-on: ubuntu-latest
 
     steps:
@@ -27,6 +27,8 @@ jobs:
       - run: pnpm run zip:chrome --mode pre-release
 
       - run: gh release upload ${{ github.event.release.tag_name }} $(ls .output/*-chrome.zip)
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
 
       - run: pnpm wxt submit --chrome-zip .output/*-chrome.zip
         env:
