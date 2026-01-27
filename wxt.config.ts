@@ -58,10 +58,14 @@ export default defineConfig({
       if (wxt.config.mode === "development") {
         manifest.name += " (DEV)";
         manifest.version_name = `${manifest.version}-dev`;
+      } else if (wxt.config.mode === "production") {
+        if (!/^\d+\.\d+\.\d+$/.test(pkg.version)) {
+          throw new Error("Invalid version format for 'production' build. Expected format x.x.x (e.g. 1.0.0)");
+        }
       } else if (wxt.config.mode === "pre-release") {
         const versionMatch = pkg.version.match(/^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)-(?<distributionChannel>beta|alpha|canary)\.(?<preReleaseIdentifier>\d+)$/);
         if (!versionMatch?.groups) {
-          throw new Error("Invalid version format for pre-release build. Expected format x.x.x-channel.x (e.g. 1.0.0-beta.1)");
+          throw new Error("Invalid version format for 'pre-release' build. Expected format x.x.x-channel.x (e.g. 1.0.0-beta.1)");
         }
         const { major, minor, patch, distributionChannel, preReleaseIdentifier } = versionMatch.groups;
         const build = (distributionChannel === "beta" ? 2000 : distributionChannel === "alpha" ? 1000 : 0) + Number(preReleaseIdentifier);
