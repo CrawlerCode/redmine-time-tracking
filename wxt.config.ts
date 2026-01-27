@@ -2,6 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "wxt";
+import pkg from "./package.json";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -57,13 +58,16 @@ export default defineConfig({
       if (wxt.config.mode === "development") {
         manifest.name += " (DEV)";
         manifest.version_name = `${manifest.version}-dev`;
-      } else if (wxt.config.mode === "canary") {
-        manifest.name += " (CANARY)";
-        const baseVersion = manifest.version;
-        const buildNr = Number(process.env.GITHUB_RUN_NUMBER ?? 0);
-        const commitHash = process.env.GITHUB_SHA?.slice(0, 7);
-        manifest.version = `${baseVersion}.${buildNr}`;
-        manifest.version_name = `${baseVersion}-canary${commitHash ? `.${commitHash}` : ""}${buildNr ? `+${buildNr}` : ""}`;
+      } else if (wxt.config.mode === "pre-release") {
+        const versionMatch = pkg.version.match(/^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)-(?<distributionChannel>beta|alpha|canary)\.(?<preReleaseIdentifier>\d+)$/);
+        if (!versionMatch?.groups) {
+          throw new Error("Invalid version format for pre-release build. Expected format x.x.x-channel.x (e.g. 1.0.0-beta.1)");
+        }
+        const { major, minor, patch, distributionChannel, preReleaseIdentifier } = versionMatch.groups;
+        const build = (distributionChannel === "beta" ? 2000 : distributionChannel === "alpha" ? 1000 : 0) + Number(preReleaseIdentifier);
+        manifest.name += ` (${distributionChannel.toUpperCase()})`;
+        manifest.version = `${major}.${minor}.${patch}.${build}`;
+        manifest.version_name = pkg.version;
       }
     },
   },

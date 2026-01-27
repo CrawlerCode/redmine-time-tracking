@@ -1,7 +1,7 @@
-![Package Version](https://img.shields.io/github/package-json/v/CrawlerCode/redmine-time-tracking?logo=github)
 ![License](https://img.shields.io/github/license/CrawlerCode/redmine-time-tracking?logo=github)
+[![Semantic-Release](https://img.shields.io/badge/semantic--release-conventional%20commits-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+![Release Version](https://img.shields.io/github/v/release/CrawlerCode/redmine-time-tracking?logo=github)
 ![GitHub Release Date](https://img.shields.io/github/release-date/CrawlerCode/redmine-time-tracking?logo=github)
-![GitHub issues](https://img.shields.io/github/issues/CrawlerCode/redmine-time-tracking?logo=github)
 
 ![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/ldcanhhkffokndenejhafhlkapflgcjg?logo=google-chrome&logoColor=white)
 ![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldcanhhkffokndenejhafhlkapflgcjg?logo=google-chrome&logoColor=white)

@@ -1,12 +1,15 @@
-name: Publish Canary
+name: Publish Pre-Release
 
 on:
-  push:
-    branches:
-      - main
-      - v2
+  release:
+    types:
+      - prereleased
+
+permissions:
+  contents: write
+
 jobs:
-  publish-chrome-canary:
+  publish-chrome-pre-release:
     name: Publish to Chrome Web Store
     runs-on: ubuntu-latest
 
@@ -21,7 +24,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm run zip:chrome --mode canary
+      - run: pnpm run zip:chrome --mode pre-release
+
+      - run: gh release upload ${{ github.event.release.tag_name }} $(ls .output/*-chrome.zip)
 
       - run: pnpm wxt submit --chrome-zip .output/*-chrome.zip
         env:
