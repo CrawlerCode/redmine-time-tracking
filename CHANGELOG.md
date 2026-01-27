@@ -1,3 +1,22 @@
+## [2.0.0-beta.2](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2026-01-27)
+
+### 🩹 Fixes
+
+* Enforce next release ([1d7d37c](https://github.com/CrawlerCode/redmine-time-tracking/commit/1d7d37c099aa1de809d5f143eabb9f75bb24950a))
+
+### 🏡 Chore
+
+* **deps:** Update dependencies ([6f800bd](https://github.com/CrawlerCode/redmine-time-tracking/commit/6f800bd82bd7fcb3cf806fddc372b3ff20ef4cc0))
+
+### 📖 Documentation
+
+* Update README ([8011225](https://github.com/CrawlerCode/redmine-time-tracking/commit/801122541f2d5590eff14949d5726068b680cb38))
+
+### ⚡CI
+
+* Fix pre-release asset upload ([ac8f132](https://github.com/CrawlerCode/redmine-time-tracking/commit/ac8f1327ef3636142c112d57a7912d8fdea7c7d3))
+* Publish production only for real releases not for pre-releases ([9855905](https://github.com/CrawlerCode/redmine-time-tracking/commit/9855905c077172cec3c3c39853b309d0cb400179))
+
 ## [2.0.0-beta.1](https://github.com/CrawlerCode/redmine-time-tracking/compare/v1.21.2...v2.0.0-beta.1) (2026-01-27)
 
 ### ⚠ BREAKING CHANGES
