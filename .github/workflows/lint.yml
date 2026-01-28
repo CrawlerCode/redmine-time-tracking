@@ -33,5 +33,7 @@ jobs:
         uses: super-linter/super-linter/slim@v8.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IGNORE_GITIGNORED_FILES: true
+          FILTER_REGEX_EXCLUDE: ^CHANGELOG\.md|pnpm-lock.yaml$
           VALIDATE_BIOME_FORMAT: false
           VALIDATE_BIOME_LINT: false
