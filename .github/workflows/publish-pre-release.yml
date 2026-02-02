@@ -29,9 +29,10 @@ jobs:
 
       - run: pnpm run zip:chrome --mode pre-release
 
-      - run: gh release upload ${{ github.event.release.tag_name }} "$(ls .output/*-chrome.zip)"
+      - run: gh release upload ${RELEASE_TAG} "$(ls .output/*-chrome.zip)"
         env:
-          GITHUB_TOKEN: ${{ github.TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
 
       - run: pnpm wxt submit \
           --chrome-zip .output/*-chrome.zip
