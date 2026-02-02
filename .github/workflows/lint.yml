@@ -37,5 +37,6 @@ jobs:
           IGNORE_GITIGNORED_FILES: true
           STRIP_DEFAULT_WORKSPACE_FOR_REGEX: true
           FILTER_REGEX_EXCLUDE: ^(CHANGELOG\.md|pnpm-lock\.yaml)$
-          VALIDATE_BIOME_FORMAT: false
-          VALIDATE_BIOME_LINT: false
+          VALIDATE_BIOME_FORMAT: false # Prettier is used instead
+          VALIDATE_BIOME_LINT: false # Prettier is used instead
+          VALIDATE_JSCPD: false # TODO: Enable this linter in the future to detect code duplication
