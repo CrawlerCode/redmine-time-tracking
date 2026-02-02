@@ -61,11 +61,4 @@ export default [
       ],
     },
   },
-  // Disable some rule for super-linter
-  {
-    files: ["src/lang/*.json"],
-    rules: {
-      "jsonc/no-irregular-whitespace": "off",
-    },
-  },
 ];

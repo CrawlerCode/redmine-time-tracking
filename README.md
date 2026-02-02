@@ -81,4 +81,4 @@ At least **Redmine version `3.0` or higher** required. Recommended version `5.0`
 
 ## Credits
 
-Logo is Copyright (C) 2009 Martin Herr and is licensed under Creative Commons \(https://www.redmine.org/projects/redmine/wiki/logo\)
+Logo is Copyright (C) 2009 Martin Herr and is licensed under Creative Commons ([https://www.redmine.org/projects/redmine/wiki/logo](https://www.redmine.org/projects/redmine/wiki/logo))
