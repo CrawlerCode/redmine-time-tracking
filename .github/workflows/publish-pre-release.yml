@@ -1,3 +1,4 @@
+---
 name: Publish Pre-Release
 
 on:
@@ -15,6 +16,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
 
@@ -30,7 +33,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
 
-      - run: pnpm wxt submit --chrome-zip .output/*-chrome.zip
+      - run: pnpm wxt submit \
+          --chrome-zip .output/*-chrome.zip
         env:
           CHROME_EXTENSION_ID: adgcdimdkkaddeopcabokepmaihfhklb
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}

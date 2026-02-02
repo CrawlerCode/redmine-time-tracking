@@ -70,7 +70,7 @@ At least **Redmine version `3.0` or higher** required. Recommended version `5.0`
 
 > If you want to add more languages or extend existing ones, feel free to contribute. Just create a pull request with the desired changes. The language files are located under [src/lang](src/lang) and [public/\_locales](public/_locales).
 
-# 📸 Screenshots
+## 📸 Screenshots
 
 ![issues](screenshots/en/dark/issues.png)
 ![issues-time](screenshots/en/dark/time.png)
@@ -81,4 +81,4 @@ At least **Redmine version `3.0` or higher** required. Recommended version `5.0`
 
 ## Credits
 
-Logo is Copyright (C) 2009 Martin Herr and is licensed under Creative Commons (https://www.redmine.org/projects/redmine/wiki/logo)
+Logo is Copyright (C) 2009 Martin Herr and is licensed under Creative Commons \(https://www.redmine.org/projects/redmine/wiki/logo\)

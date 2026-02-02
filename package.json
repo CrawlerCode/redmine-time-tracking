@@ -22,8 +22,8 @@
     "lint": "eslint --fix src tests fixtures",
     "format": "prettier --write src tests public fixtures",
     "compile": "tsc --noEmit",
+    "lang-verify": "formatjs verify --source-locale en --missing-keys src/lang/*.json",
     "test": "playwright test",
-    "lang:verify": "formatjs verify --source-locale en --missing-keys src/lang/*.json",
     "release": "semantic-release"
   },
   "dependencies": {

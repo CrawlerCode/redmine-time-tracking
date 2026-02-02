@@ -1,3 +1,4 @@
+---
 name: Publish
 
 on:
@@ -15,6 +16,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
 
@@ -42,6 +45,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
 
@@ -57,7 +62,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
 
-      - run: pnpm wxt submit --firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip
+      - run: pnpm wxt submit \
+          --firefox-zip .output/*-firefox.zip \
+          --firefox-sources-zip .output/*-sources.zip
         env:
           FIREFOX_EXTENSION_ID: "{ea2ad5bc-e458-414d-8565-5cfe9f7cf0c2}"
           FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
