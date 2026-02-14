@@ -10,9 +10,9 @@ type PropTypes = {
 };
 
 function DismissibleWarning({ name, children }: PropTypes) {
-  const { data: hideWarning, setData, isLoading } = useStorage<boolean>(`hideWarning.${name}`, false);
+  const { isPending, data: hideWarning, setData } = useStorage<boolean>(`hideWarning.${name}`, false);
 
-  if (hideWarning || isLoading) return null;
+  if (isPending || hideWarning) return null;
 
   return (
     <Alert>
