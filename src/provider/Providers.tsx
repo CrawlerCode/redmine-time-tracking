@@ -1,15 +1,11 @@
-import { PropsWithChildren, Suspense } from "react";
+import { PropsWithChildren } from "react";
 import IntlProvider from "./IntlProvider";
 import QueryClientProvider from "./QueryClientProvider";
 import RedmineApiProvider from "./RedmineApiProvider";
 import SettingsProvider from "./SettingsProvider";
 
-interface ProvidersProps extends PropsWithChildren {
-  suspense?: boolean;
-}
-
-const Providers = ({ suspense, children }: ProvidersProps) => {
-  const providers = (
+const Providers = ({ children }: PropsWithChildren) => {
+  return (
     <QueryClientProvider>
       <SettingsProvider>
         <RedmineApiProvider>
@@ -18,12 +14,6 @@ const Providers = ({ suspense, children }: ProvidersProps) => {
       </SettingsProvider>
     </QueryClientProvider>
   );
-
-  if (suspense) {
-    return <Suspense>{providers}</Suspense>;
-  }
-
-  return providers;
 };
 
 export default Providers;

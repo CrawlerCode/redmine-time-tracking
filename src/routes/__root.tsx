@@ -2,7 +2,6 @@ import { GlobalErrorComponent } from "@/components/error/GlobalErrorComponent";
 import { NotFoundComponent } from "@/components/error/NotFoundComponent";
 import Navbar from "@/components/general/Navbar";
 import { RouteContext } from "@/main";
-import { restoreQueryClient } from "@/provider/QueryClientProvider";
 import { createPopOut } from "@/utils/popout";
 import { createRootRouteWithContext, HeadContent, Outlet } from "@tanstack/react-router";
 import { CalendarDaysIcon, ListIcon, SettingsIcon, SquareArrowOutUpRightIcon, TimerIcon } from "lucide-react";
@@ -10,10 +9,6 @@ import { useIntl } from "react-intl";
 import { browser } from "wxt/browser";
 
 export const Route = createRootRouteWithContext<RouteContext>()({
-  beforeLoad: async () => {
-    // Restore query client state before loading any route
-    await restoreQueryClient();
-  },
   head: () => ({
     meta: [
       {

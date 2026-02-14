@@ -62,7 +62,7 @@ const App = () => {
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Layout entrypoint={entrypoint}>
-      <Providers suspense={entrypoint === "options"}>
+      <Providers>
         <App />
         <Toaster />
       </Providers>

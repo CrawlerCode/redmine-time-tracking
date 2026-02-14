@@ -27,7 +27,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm run zip:chrome
+      - run: pnpm run build:chrome:release
 
       - run: gh release upload ${RELEASE_TAG} "$(ls .output/*-chrome.zip)"
         env:
@@ -57,7 +57,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm run zip:firefox
+      - run: pnpm run build:firefox:release
 
       - run: gh release upload ${RELEASE_TAG} "$(ls .output/*-firefox.zip)"
         env:

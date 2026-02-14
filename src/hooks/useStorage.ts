@@ -56,7 +56,7 @@ export const useStorage = <T>(name: string, defaultValue: T) => {
   }, [name]);
 
   return {
-    isLoading: query.isLoading,
+    isPending: query.isPending,
     data: query.data ?? defaultValue,
     setData: async (data: T) => {
       queryClient.setQueryData(["storage", name], data, { updatedAt: Date.now() });

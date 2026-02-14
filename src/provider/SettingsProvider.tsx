@@ -3,7 +3,7 @@ import { ReactNode, createContext, use } from "react";
 import { useIntl } from "react-intl";
 import { browser } from "wxt/browser";
 import { z } from "zod";
-import { getStorage, setStorage, useSuspenseStorage } from "../hooks/useStorage";
+import { getStorage, setStorage, useStorage } from "../hooks/useStorage";
 import { LANGUAGES } from "./IntlProvider";
 
 export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<typeof useIntl>["formatMessage"] } = {}) =>
@@ -111,8 +111,10 @@ const SettingsContext = createContext({
 });
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-  const { data: settingsData, setData: setSettingsData } = useSuspenseStorage<Partial<Settings>>("settings", defaultSettings);
+  const { isPending, data: settingsData, setData: setSettingsData } = useStorage<Partial<Settings>>("settings", defaultSettings);
   const settings = deepmerge<Settings>(defaultSettings, settingsData);
+
+  if (isPending) return null;
 
   return (
     <SettingsContext
