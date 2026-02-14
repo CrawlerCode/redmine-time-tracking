@@ -1,13 +1,12 @@
-## Redmine dev setup
+# Redmine dev setup
 
 This folder provides local Redmine instances for manual testing against multiple Redmine versions.
 
-### Start a version
+## Start a version
 
-Run from this directory:
+Run from this directory (`.redmine`):
 
 ```bash
-cd .redmine
 docker compose up -d redmine-v6
 ```
 
@@ -19,7 +18,7 @@ Available services and ports:
 - Redmine 3: [http://localhost:3003](http://localhost:3003) (service `redmine-v3`)
 - Redmine 2: [http://localhost:3002](http://localhost:3002) (service `redmine-v2`)
 
-### Notes
+## Notes
 
 - [Default credentials](https://hub.docker.com/_/redmine#accessing-the-application): `admin`/`admin`
 - [Themes](https://www.redmine.org/projects/redmine/wiki/theme_list) are mounted from `.redmine/themes`
