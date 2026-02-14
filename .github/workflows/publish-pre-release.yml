@@ -6,13 +6,15 @@ on:
     types:
       - prereleased
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   publish-chrome-pre-release:
     name: Publish Pre-Release to Chrome Web Store
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -29,7 +31,7 @@ jobs:
 
       - run: pnpm run build:chrome:pre-release
 
-      - run: gh release upload ${RELEASE_TAG} "$(ls .output/*-chrome.zip)"
+      - run: gh release upload "${RELEASE_TAG}" "$(ls .output/*-chrome.zip)"
         env:
           GITHUB_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
