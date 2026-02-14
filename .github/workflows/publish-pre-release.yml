@@ -24,7 +24,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm run zip:chrome --mode pre-release
+      - run: pnpm run build:chrome:pre-release
 
       - run: gh release upload ${{ github.event.release.tag_name }} $(ls .output/*-chrome.zip)
         env:
