@@ -1,8 +1,8 @@
 import { MissingRedmineConfigError } from "@/api/redmine/MissingRedmineConfigError";
 import { getErrorMessage } from "@/utils/error";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
-import { PersistQueryClientOptions, PersistQueryClientProvider, persistQueryClientRestore } from "@tanstack/react-query-persist-client";
+import { MutationCache, QueryCache, QueryClient, useIsRestoring } from "@tanstack/react-query";
+import { PersistQueryClientOptions, PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { isAxiosError } from "axios";
 import { lazy, PropsWithChildren, Suspense, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
@@ -134,19 +134,18 @@ const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
   maxAge: CACHE_TIME,
 };
 
-export const restoreQueryClient = async () =>
-  persistQueryClientRestore({
-    queryClient,
-    ...persistOptions,
-  });
-
 const QueryClientProvider = ({ children }: PropsWithChildren) => {
   return (
     <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
-      {children}
+      <QueryClientRestoringGate>{children}</QueryClientRestoringGate>
       <QueryClientDevtools />
     </PersistQueryClientProvider>
   );
+};
+
+const QueryClientRestoringGate = ({ children }: PropsWithChildren) => {
+  const isRestoring = useIsRestoring();
+  return isRestoring ? null : children;
 };
 
 const ReactQueryDevtoolsProduction = lazy(() =>
