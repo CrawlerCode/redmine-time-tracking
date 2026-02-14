@@ -8,8 +8,13 @@ dist
 
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+.redmine/data/
+.redmine/themes/*
+!.redmine/themes/.gitkeep
