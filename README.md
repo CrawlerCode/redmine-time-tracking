@@ -23,7 +23,7 @@
 [Install-Button-Firefox]: https://img.shields.io/badge/Install-71b500?style=for-the-badge&logoColor=white&logo=firefox-browser
 [Install-Link-Firefox]: https://addons.mozilla.org/de/firefox/addon/redmine-time-tracking "Open in firefox add-on store"
 
-# 🚀 Features
+## 🚀 Features
 
 - View all your assigned Redmine issues grouped by projects
 - Filter issues by project and status
@@ -38,7 +38,7 @@
 - Multiple languages
 - Dark & light mode (system default)
 
-# 🛠️ Requirements
+## 🛠️ Requirements
 
 Supported browsers:
 
@@ -61,7 +61,7 @@ At least **Redmine version `3.0` or higher** required. Recommended version `5.0`
 | Display project-available time entry activities when _adding spent time entries_  | `< 3.4.0`                   |
 | Remote Redmine search                                                             | `< 3.3.0`                   |
 
-# 🌐 Supported languages
+## 🌐 Supported languages
 
 - English
 - German
@@ -70,7 +70,7 @@ At least **Redmine version `3.0` or higher** required. Recommended version `5.0`
 
 > If you want to add more languages or extend existing ones, feel free to contribute. Just create a pull request with the desired changes. The language files are located under [src/lang](src/lang) and [public/\_locales](public/_locales).
 
-# 📸 Screenshots
+## 📸 Screenshots
 
 ![issues](screenshots/en/dark/issues.png)
 ![issues-time](screenshots/en/dark/time.png)
@@ -79,6 +79,6 @@ At least **Redmine version `3.0` or higher** required. Recommended version `5.0`
 ![issues-add-spent-time](screenshots/en/dark/issues-add-spent-time.png)
 ![issues-context-menu](screenshots/en/dark/issues-context-menu.png)
 
-# Credits
+## Credits
 
-Logo is Copyright (C) 2009 Martin Herr and is licensed under Creative Commons (https://www.redmine.org/projects/redmine/wiki/logo)
+Logo is Copyright (C) 2009 Martin Herr and is licensed under Creative Commons ([https://www.redmine.org/projects/redmine/wiki/logo](https://www.redmine.org/projects/redmine/wiki/logo))

@@ -1,3 +1,4 @@
+---
 name: Publish
 
 on:
@@ -5,16 +6,20 @@ on:
     types:
       - released
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   publish-chrome:
     name: Publish to Chrome Web Store
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
 
@@ -26,9 +31,10 @@ jobs:
 
       - run: pnpm run build:chrome:release
 
-      - run: gh release upload ${{ github.event.release.tag_name }} $(ls .output/*-chrome.zip)
+      - run: gh release upload "${RELEASE_TAG}" "$(ls .output/*-chrome.zip)"
         env:
-          GITHUB_TOKEN: ${{ github.TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
       - run: pnpm wxt submit --chrome-zip .output/*-chrome.zip
         env:
           CHROME_EXTENSION_ID: ldcanhhkffokndenejhafhlkapflgcjg
@@ -40,8 +46,13 @@ jobs:
     name: Publish to Firefox Addon Store
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
 
@@ -53,11 +64,14 @@ jobs:
 
       - run: pnpm run build:firefox:release
 
-      - run: gh release upload ${{ github.event.release.tag_name }} $(ls .output/*-firefox.zip)
+      - run: gh release upload "${RELEASE_TAG}" "$(ls .output/*-firefox.zip)"
         env:
-          GITHUB_TOKEN: ${{ github.TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
 
-      - run: pnpm wxt submit --firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip
+      - run: pnpm wxt submit \
+          --firefox-zip .output/*-firefox.zip \
+          --firefox-sources-zip .output/*-sources.zip
         env:
           FIREFOX_EXTENSION_ID: "{ea2ad5bc-e458-414d-8565-5cfe9f7cf0c2}"
           FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
