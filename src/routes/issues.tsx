@@ -3,6 +3,7 @@ import useActiveRedmineTab from "@/hooks/useActiveRedmineTab";
 import { issuePrioritiesQueryOptions, useSuspenseIssuePriorities } from "@/hooks/useIssuePriorities";
 import { myOpenIssuesQueryOptions, useSuspenseMyIssues } from "@/hooks/useMyIssues";
 import { useSuspenseMultipleProjectVersions } from "@/hooks/useProjectVersions";
+import PermissionProvider from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { groupIssues } from "@/utils/groupIssues";
 import { createFileRoute } from "@tanstack/react-router";
@@ -77,7 +78,7 @@ const IssuesPage = () => {
   );
 
   return (
-    <>
+    <PermissionProvider>
       <TimersBadge activeTimerCount={timers.getActiveTimerCount()} />
 
       <div className="mb-1 flex justify-end">
@@ -93,6 +94,6 @@ const IssuesPage = () => {
           </Button>
         </div>
       )}
-    </>
+    </PermissionProvider>
   );
 };

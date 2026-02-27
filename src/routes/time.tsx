@@ -1,3 +1,4 @@
+import PermissionProvider from "@/provider/PermissionsProvider";
 import { createFileRoute } from "@tanstack/react-router";
 import { isMonday, previousMonday, startOfDay, subWeeks } from "date-fns";
 import TimeEntryList from "../components/time-entry/TimeEntryList";
@@ -15,5 +16,9 @@ function PageComponent() {
 
   const myTimeEntriesQuery = useSuspenseMyTimeEntries(startOfLastWeek, today);
 
-  return <TimeEntryList entries={myTimeEntriesQuery.data} />;
+  return (
+    <PermissionProvider>
+      <TimeEntryList entries={myTimeEntriesQuery.data} />
+    </PermissionProvider>
+  );
 }
