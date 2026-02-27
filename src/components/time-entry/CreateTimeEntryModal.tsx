@@ -7,8 +7,8 @@ import { useIntl } from "react-intl";
 import { z } from "zod";
 import { TCreateTimeEntry, TIssue, TUpdateIssue } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
-import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useMyUser from "../../hooks/useMyUser";
+import { usePermissions } from "../../provider/PermissionProvider";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";
 import ActivityField from "../issue/form/fields/ActivityField";
@@ -55,7 +55,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
   const queryClient = useQueryClient();
 
   const myUser = useMyUser();
-  const projectRoles = useMyProjectRoles([issue.project.id]);
+  const { hasProjectPermission } = usePermissions();
 
   const createTimeEntryMutation = useMutation({
     mutationFn: (entry: TCreateTimeEntry) => redmineApi.createTimeEntry(entry),
@@ -209,9 +209,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
                     )}
                   />
 
-                  {projectRoles.hasProjectPermission(issue.project.id, "log_time_for_other_users") && (
-                    <form.AppField name="user_id" children={() => <UserField projectId={issue.project.id} mode="multiple" />} />
-                  )}
+                  {hasProjectPermission(issue.project.id, "log_time_for_other_users") && <form.AppField name="user_id" children={() => <UserField projectId={issue.project.id} mode="multiple" />} />}
 
                   <form.AppField
                     name="comments"
@@ -231,7 +229,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
                 </FormGrid>
               </FormFieldset>
 
-              {projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes") && (
+              {hasProjectPermission(issue.project.id, "add_issue_notes") && (
                 <form.Subscribe
                   selector={(state) => state.values.issue._add_notes}
                   children={(add_notes) =>

@@ -6,7 +6,7 @@ type TimerItem = {
   issue: TIssue | undefined;
 };
 
-export type TimersGroup = {
+export type ProjectTimersGroup = {
   /**
    * A unique key for the group
    */
@@ -32,7 +32,7 @@ export type TimersGroup = {
  * @param issues - The list of issues associated with the timers
  * @returns An array of grouped timers by project
  */
-export const groupTimers = (timers: TimerController[], issues: TIssue[]): TimersGroup[] => {
+export const groupTimers = (timers: TimerController[], issues: TIssue[]): ProjectTimersGroup[] => {
   const reversedTimers = timers.toReversed(); // Show the most recent timers first
 
   // Combine timers with their associated issues
@@ -46,7 +46,7 @@ export const groupTimers = (timers: TimerController[], issues: TIssue[]): Timers
     items.reduce<
       Record<
         string,
-        TimersGroup & {
+        ProjectTimersGroup & {
           sortIdx: number;
         }
       >

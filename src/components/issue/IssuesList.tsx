@@ -2,14 +2,14 @@ import { useIssuePriorities } from "@/hooks/useIssuePriorities";
 import { ProjectGroup } from "@/utils/groupIssues";
 import clsx from "clsx";
 import { PinIcon, PlusIcon, SearchIcon, SquareChartGanttIcon, SquareMousePointerIcon, TimerIcon } from "lucide-react";
-import { Fragment, ReactNode, useMemo, useState } from "react";
+import { Fragment, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { TProject, TReference, TVersion } from "../../api/redmine/types";
 import useLocalIssues from "../../hooks/useLocalIssues";
-import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useMyProjects from "../../hooks/useMyProjects";
 import useMyUser from "../../hooks/useMyUser";
 import useTimers from "../../hooks/useTimers";
+import { usePermissions } from "../../provider/PermissionProvider";
 import { useSettings } from "../../provider/SettingsProvider";
 import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";
@@ -26,38 +26,17 @@ type PropTypes = {
 
 const IssuesList = ({ groupedIssues, localIssues, timers }: PropTypes) => {
   const { settings } = useSettings();
-  const { searchInProject } = useIssueSearch();
 
   const myUser = useMyUser();
   const issuePriorities = useIssuePriorities({ enabled: settings.style.showIssuesPriority });
 
   const projects = useMyProjects();
-  const projectIds = useMemo(() => [...new Set(groupedIssues.map((g) => g.project.id))], [groupedIssues]);
-  const projectRoles = useMyProjectRoles(projectIds);
-
-  const [createIssue, setCreateIssue] = useState<number | undefined>(undefined);
 
   return (
     <div className="flex flex-col gap-y-4">
       {groupedIssues.map((projectGroup) => (
         <div key={projectGroup.key} className="flex flex-col gap-y-2">
-          <IssueProject
-            type={projectGroup.type}
-            projectRef={projectGroup.project}
-            project={projects.data?.find((p) => p.id === projectGroup.project.id)}
-            actions={
-              <>
-                {projectRoles?.hasProjectPermission(projectGroup.project.id, "add_issues") && (
-                  <button type="button" onClick={() => setCreateIssue(projectGroup.project.id)} tabIndex={-1}>
-                    <PlusIcon className="size-4" />
-                  </button>
-                )}
-                <button type="button" onClick={() => searchInProject(projectGroup.project)} tabIndex={-1}>
-                  <SearchIcon className="size-4" />
-                </button>
-              </>
-            }
-          />
+          <IssueProject type={projectGroup.type} projectRef={projectGroup.project} project={projects.data?.find((p) => p.id === projectGroup.project.id)} />
           {projectGroup.groups.map((issueGroup) => (
             <Fragment key={issueGroup.key}>
               {["version", "no-version"].includes(issueGroup.type) && <ProjectVersion version={issueGroup.version} />}
@@ -71,12 +50,6 @@ const IssuesList = ({ groupedIssues, localIssues, timers }: PropTypes) => {
                   assignedToMe={myUser.data ? myUser.data.id === issue.assigned_to?.id : true}
                   timers={timers.getTimersByIssue(issue.id)}
                   onAddTimer={() => timers.addTimer(issue.id)}
-                  canEdit={
-                    projectRoles.hasProjectPermission(issue.project.id, "edit_issues") ||
-                    (projectRoles.hasProjectPermission(issue.project.id, "edit_own_issues") && issue.author.id === myUser.data?.id)
-                  }
-                  canLogTime={projectRoles.hasProjectPermission(issue.project.id, "log_time")}
-                  canAddNotes={projectRoles.hasProjectPermission(issue.project.id, "add_issue_notes")}
                 />
               ))}
             </Fragment>
@@ -89,12 +62,11 @@ const IssuesList = ({ groupedIssues, localIssues, timers }: PropTypes) => {
           <FormattedMessage id="issues.list.no-options" />
         </p>
       )}
-      {createIssue !== undefined && <CreateIssueModal projectId={createIssue} onClose={() => setCreateIssue(undefined)} onSuccess={() => setCreateIssue(undefined)} />}
     </div>
   );
 };
 
-const IssueProject = ({ projectRef, project, type, actions }: { projectRef: TReference; project?: TProject; type: ProjectGroup["type"]; actions: ReactNode }) => {
+const IssueProject = ({ projectRef, project, type }: { projectRef: TReference; project?: TProject; type: ProjectGroup["type"] }) => {
   const { settings } = useSettings();
 
   return (
@@ -119,8 +91,39 @@ const IssueProject = ({ projectRef, project, type, actions }: { projectRef: TRef
         </a>
       )}
       <span className="grow" />
-      <div className="flex gap-x-2">{actions}</div>
+      <div className="flex gap-x-2">
+        <CreateIssueButton projectRef={projectRef} />
+        <SearchInProjectButton projectRef={projectRef} />
+      </div>
     </div>
+  );
+};
+
+const CreateIssueButton = ({ projectRef }: { projectRef: TReference }) => {
+  const { hasProjectPermission } = usePermissions();
+
+  const [createIssue, setCreateIssue] = useState<boolean>(false);
+
+  if (!hasProjectPermission(projectRef.id, "add_issues")) return;
+
+  return (
+    <>
+      <button type="button" onClick={() => setCreateIssue(true)} tabIndex={-1}>
+        <PlusIcon className="size-4" />
+      </button>
+
+      {createIssue && <CreateIssueModal projectId={projectRef.id} onClose={() => setCreateIssue(false)} onSuccess={() => setCreateIssue(false)} />}
+    </>
+  );
+};
+
+const SearchInProjectButton = ({ projectRef }: { projectRef: TReference }) => {
+  const { searchInProject } = useIssueSearch();
+
+  return (
+    <button type="button" onClick={() => searchInProject(projectRef)} tabIndex={-1}>
+      <SearchIcon className="size-4" />
+    </button>
   );
 };
 

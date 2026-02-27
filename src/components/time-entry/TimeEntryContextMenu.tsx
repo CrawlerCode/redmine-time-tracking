@@ -1,3 +1,4 @@
+import { usePermissions } from "@/provider/PermissionProvider";
 import { PencilIcon, SquareArrowOutUpRightIcon } from "lucide-react";
 import { ComponentProps, useState } from "react";
 import { useIntl } from "react-intl";
@@ -8,13 +9,14 @@ import EditTimeEntryModal from "./EditTimeEntryModal";
 
 type PropTypes = {
   entry: TTimeEntry;
-  canEdit: boolean;
 } & ComponentProps<typeof ContextMenuTrigger>;
 
-function TimeEntryContextMenu({ entry, canEdit, children, ...props }: PropTypes) {
+function TimeEntryContextMenu({ entry, children, ...props }: PropTypes) {
   const { formatMessage } = useIntl();
-
   const { settings } = useSettings();
+
+  const { hasProjectPermission } = usePermissions();
+  const canEdit = hasProjectPermission(entry.project.id, "edit_own_time_entries");
 
   const [edit, setEdit] = useState<boolean>(false);
 

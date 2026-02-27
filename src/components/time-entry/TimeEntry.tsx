@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
-import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import TimeEntryContextMenu from "./TimeEntryContextMenu";
 import TimeEntryTooltip from "./TimeEntryTooltip";
@@ -18,8 +17,6 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
 
   const sumHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
 
-  const projectRoles = useMyProjectRoles([...new Set(entries.map((e) => e.project.id))]);
-
   return (
     <div role="row" className="flex items-center gap-x-0.5">
       {entries.map((entry) => (
@@ -28,7 +25,6 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
             {withContextMenu ? (
               <TimeEntryContextMenu
                 entry={entry}
-                canEdit={projectRoles.hasProjectPermission(entry.project.id, "edit_own_time_entries")}
                 role="cell"
                 data-type="time-entry"
                 className="bg-primary h-4 rounded-sm"

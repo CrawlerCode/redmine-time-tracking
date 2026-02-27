@@ -1,5 +1,5 @@
+import { usePermissions } from "@/provider/PermissionProvider";
 import useIssue from "../../hooks/useIssue";
-import useMyProjectRoles from "../../hooks/useMyProjectRoles";
 import useRedmineUrl from "../../hooks/useRedmineUrl";
 import useTimers from "../../hooks/useTimers";
 import Timer from "./timer";
@@ -11,11 +11,11 @@ type PropTypes = {
 const CurrentIssueTimerInner = ({ issueId }: PropTypes) => {
   const timers = useTimers();
   const { data: issue } = useIssue(issueId);
-  const projectRoles = useMyProjectRoles(issue ? [issue.project.id] : []);
+  const { hasProjectPermission } = usePermissions();
 
   if (!issue) return;
 
-  const canLogTime = projectRoles.hasProjectPermission(issue.project.id, "log_time");
+  const canLogTime = hasProjectPermission(issue.project.id, "log_time");
 
   const issueTimers = timers.getTimersByIssue(issue.id);
   const primaryTimer = issueTimers[0];
