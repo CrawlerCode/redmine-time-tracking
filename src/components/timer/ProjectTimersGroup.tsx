@@ -2,7 +2,7 @@ import { ToggleableCard } from "@/components/general/ToggleableCard";
 import IssueTitle from "@/components/issue/IssueTitle";
 import Timer from "@/components/timer/timer";
 import { useIssuePriorities } from "@/hooks/useIssuePriorities";
-import { usePermissions } from "@/provider/PermissionProvider";
+import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { clsxm } from "@/utils/clsxm";
 import { ProjectTimersGroup as ProjectTimersGroupType } from "@/utils/groupTimers";
@@ -46,7 +46,7 @@ export const ProjectTimersGroup = ({ projectGroup, className, ...props }: Projec
   );
 };
 
-const TimerProject = ({ project, type }: { project?: TReference; type: ProjectTimersGroupProps["type"] }) => {
+const TimerProject = ({ project, type }: { project?: TReference; type: ProjectTimersGroupType["type"] }) => {
   const { settings } = useSettings();
 
   return (

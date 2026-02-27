@@ -1,7 +1,7 @@
 import { ProjectTimersGroup } from "@/components/timer/ProjectTimersGroup";
 import TimerSearch, { useTimerSearch } from "@/components/timer/TimerSearch";
 import { useSuspenseIssues } from "@/hooks/useIssues";
-import PermissionProvider from "@/provider/PermissionProvider";
+import PermissionProvider from "@/provider/PermissionsProvider";
 import { groupTimers } from "@/utils/groupTimers";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";

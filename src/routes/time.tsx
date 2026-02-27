@@ -1,4 +1,4 @@
-import PermissionProvider from "@/provider/PermissionProvider";
+import PermissionProvider from "@/provider/PermissionsProvider";
 import { createFileRoute } from "@tanstack/react-router";
 import { isMonday, previousMonday, startOfDay, subWeeks } from "date-fns";
 import TimeEntryList from "../components/time-entry/TimeEntryList";

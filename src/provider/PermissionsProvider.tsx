@@ -11,19 +11,19 @@ type PermissionContextType = {
 const PermissionContext = createContext<PermissionContextType | null>(null);
 
 const PermissionProvider = ({ children }: { children: ReactNode }) => {
-  const myUser = useMyUser();
+  const me = useMyUser();
 
   const roles = useRoles([
-    ...new Set((myUser.data?.memberships ?? []).flatMap((m) => m.roles).map((r) => r.id)),
+    ...new Set((me.data?.memberships ?? []).flatMap((m) => m.roles).map((r) => r.id)),
     1, // Non member (system role)
   ]);
 
   const projects = useMyProjects();
 
-  const projectRolesMap = buildProjectRolesMap({ user: myUser.data, roles: roles.data, projects: projects.data });
+  const projectRolesMap = buildProjectRolesMap({ user: me.data, roles: roles.data, projects: projects.data });
 
   const hasProjectPermission = (projectId: number, permission: TRole["permissions"][number]): boolean =>
-    myUser.data?.admin || projectRolesMap.get(projectId)?.some((r) => r.permissions.includes(permission)) || false;
+    me.data?.admin || projectRolesMap.get(projectId)?.some((r) => r.permissions.includes(permission)) || false;
 
   return (
     <PermissionContext

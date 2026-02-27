@@ -1,5 +1,5 @@
 import useMyUser from "@/hooks/useMyUser";
-import { usePermissions } from "@/provider/PermissionProvider";
+import { usePermissions } from "@/provider/PermissionsProvider";
 import {
   BookmarkMinusIcon,
   BookmarkPlusIcon,

@@ -1,4 +1,4 @@
-import { usePermissions } from "@/provider/PermissionProvider";
+import { usePermissions } from "@/provider/PermissionsProvider";
 import clsx from "clsx";
 import { PinIcon, UserIcon } from "lucide-react";
 import { useState } from "react";

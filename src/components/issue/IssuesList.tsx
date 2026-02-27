@@ -9,7 +9,7 @@ import useLocalIssues from "../../hooks/useLocalIssues";
 import useMyProjects from "../../hooks/useMyProjects";
 import useMyUser from "../../hooks/useMyUser";
 import useTimers from "../../hooks/useTimers";
-import { usePermissions } from "../../provider/PermissionProvider";
+import { usePermissions } from "../../provider/PermissionsProvider";
 import { useSettings } from "../../provider/SettingsProvider";
 import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";

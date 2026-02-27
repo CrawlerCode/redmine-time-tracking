@@ -1,4 +1,4 @@
-import { usePermissions } from "@/provider/PermissionProvider";
+import { usePermissions } from "@/provider/PermissionsProvider";
 import { PencilIcon, SquareArrowOutUpRightIcon } from "lucide-react";
 import { ComponentProps, useState } from "react";
 import { useIntl } from "react-intl";

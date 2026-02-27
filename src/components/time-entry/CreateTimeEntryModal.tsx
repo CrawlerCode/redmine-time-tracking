@@ -8,7 +8,7 @@ import { z } from "zod";
 import { TCreateTimeEntry, TIssue, TUpdateIssue } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
 import useMyUser from "../../hooks/useMyUser";
-import { usePermissions } from "../../provider/PermissionProvider";
+import { usePermissions } from "../../provider/PermissionsProvider";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";
 import ActivityField from "../issue/form/fields/ActivityField";

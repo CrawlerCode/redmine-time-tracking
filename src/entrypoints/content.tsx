@@ -1,7 +1,7 @@
 import { createShadowRootUi, defineContentScript } from "#imports";
 import { CurrentIssueTimer } from "@/components/timer/CurrentIssueTimer";
 import { Toaster } from "@/components/ui/sonner";
-import PermissionProvider from "@/provider/PermissionProvider";
+import PermissionProvider from "@/provider/PermissionsProvider";
 import Providers from "@/provider/Providers";
 import React from "react";
 import ReactDOM from "react-dom/client";

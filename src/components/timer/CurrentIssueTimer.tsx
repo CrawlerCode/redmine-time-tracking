@@ -1,4 +1,4 @@
-import { usePermissions } from "@/provider/PermissionProvider";
+import { usePermissions } from "@/provider/PermissionsProvider";
 import useIssue from "../../hooks/useIssue";
 import useRedmineUrl from "../../hooks/useRedmineUrl";
 import useTimers from "../../hooks/useTimers";
