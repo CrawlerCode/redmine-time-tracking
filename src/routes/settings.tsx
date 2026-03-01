@@ -232,6 +232,7 @@ function PageComponent() {
               <form.AppField name="style.sortIssuesByPriority" children={(field) => <field.CheckboxField title={formatMessage({ id: "settings.style.sort-issues-by-priority.title" })} />} />
               <form.AppField name="style.pinTrackedIssues" children={(field) => <field.CheckboxField title={formatMessage({ id: "settings.style.pin-tracked-issues.title" })} />} />
               <form.AppField name="style.pinActiveTabIssue" children={(field) => <field.CheckboxField title={formatMessage({ id: "settings.style.pin-active-tab-issue.title" })} />} />
+              <form.AppField name="style.fullscreenSidebarScrollspy" children={(field) => <field.CheckboxField title={formatMessage({ id: "settings.style.fullscreen-sidebar-scrollspy.title" })} />} />
               <form.AppField name="style.showTooltips" children={(field) => <field.CheckboxField title={formatMessage({ id: "settings.style.show-tooltips.title" })} />} />
               <form.AppField
                 name="style.timeFormat"

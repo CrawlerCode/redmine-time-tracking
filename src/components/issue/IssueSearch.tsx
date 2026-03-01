@@ -1,8 +1,10 @@
 /* eslint-disable react/no-children-prop */
 import { useAppForm } from "@/hooks/useAppForm";
+import useRedmineSearch from "@/hooks/useRedmineSearch";
 import { useSuspenseStorage } from "@/hooks/useStorage";
+import { clsxm } from "@/utils/clsxm";
 import { ChevronRightIcon, CloudIcon, ListTreeIcon, MoreHorizontalIcon, SearchIcon, XIcon } from "lucide-react";
-import { createContext, PropsWithChildren, use, useRef, useState } from "react";
+import { createContext, PropsWithChildren, use, useEffect, useRef, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { z } from "zod";
 import { TIssue, TReference } from "../../api/redmine/types";
@@ -10,6 +12,7 @@ import useDebounce from "../../hooks/useDebounce";
 import useHotKey from "../../hooks/useHotkey";
 import { useSettings } from "../../provider/SettingsProvider";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { FieldGroup, FieldLabel, FieldSet } from "../ui/field";
 import { Form, FormGrid } from "../ui/form";
@@ -45,47 +48,38 @@ export type IssueSearchContext = {
   searchInProject: (project: TReference) => void;
 };
 
-const SearchContext = createContext<IssueSearchContext | undefined>(undefined);
+type IssueSearchInternalContext = IssueSearchContext & {
+  isSearchOpen: boolean;
+  rawQuery: string;
+  setRawQuery: (query: string) => void;
+  setInProject: (project: TReference | undefined) => void;
+  setSettings: (settings: SearchSettingsSchema) => Promise<void>;
+  focusTrigger: number;
+};
 
-const IssueSearch = ({ children }: PropsWithChildren) => {
-  const { formatMessage } = useIntl();
+const SearchContext = createContext<IssueSearchInternalContext | undefined>(undefined);
+
+const IssueSearchProvider = ({ children }: PropsWithChildren) => {
   const { settings } = useSettings();
 
-  const searchRef = useRef<HTMLInputElement>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(settings.style.displaySearchAlways);
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
   const [inProject, setInProject] = useState<TReference | undefined>(undefined);
+  const [focusTrigger, setFocusTrigger] = useState(0);
 
   const { data: searchSettings, setData: setSearchSettings } = useSuspenseStorage<SearchSettingsSchema>("search", defaultSearchSettings);
 
-  const settingsForm = useAppForm({
-    defaultValues: searchSettings,
-    validators: {
-      onChange: searchSettingsSchema,
-    },
-    listeners: {
-      onChange: ({ formApi }) => {
-        if (formApi.state.isValid) {
-          formApi.handleSubmit();
-        }
-      },
-    },
-    onSubmit: async ({ value }) => {
-      await setSearchSettings(value);
-    },
-  });
+  const requestFocus = () => setFocusTrigger((prev) => prev + 1);
 
   // hotkeys
   useHotKey({ ctrl: true, key: "k" }, () => {
     setIsSearchOpen(true);
-    searchRef.current?.focus();
-    searchRef.current?.select();
+    requestFocus();
   });
   useHotKey({ ctrl: true, key: "f" }, () => {
     setIsSearchOpen(true);
-    searchRef.current?.focus();
-    searchRef.current?.select();
+    requestFocus();
   });
   useHotKey(
     { key: "Escape" },
@@ -98,139 +92,205 @@ const IssueSearch = ({ children }: PropsWithChildren) => {
     },
     isSearchOpen
   );
+
+  return (
+    <SearchContext
+      value={{
+        isSearching: isSearchOpen && (searchSettings.mode === "local" ? query.length > 0 : debouncedQuery.length >= 3),
+        query: searchSettings.mode === "local" ? query : debouncedQuery,
+        inProject,
+        setInProject,
+        settings: searchSettings,
+        setSettings: setSearchSettings,
+        isSearchOpen,
+        rawQuery: query,
+        setRawQuery: setQuery,
+        searchInProject: (project: TReference) => {
+          setInProject(project);
+          setIsSearchOpen(true);
+          requestFocus();
+        },
+        focusTrigger,
+      }}
+    >
+      {children}
+    </SearchContext>
+  );
+};
+
+const IssueSearchInput = ({ className }: { className?: string }) => {
+  const { formatMessage } = useIntl();
+  const ctx = useIssueSearchInternal();
+
+  const settingsForm = useAppForm({
+    defaultValues: ctx.settings,
+    validators: {
+      onChange: searchSettingsSchema,
+    },
+    listeners: {
+      onChange: ({ formApi }) => {
+        if (formApi.state.isValid) {
+          formApi.handleSubmit();
+        }
+      },
+    },
+    onSubmit: async ({ value }) => {
+      await ctx.setSettings(value);
+    },
+  });
+
+  // Focus when requested by provider
+  const searchRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (ctx.focusTrigger > 0) {
+      searchRef.current?.focus();
+      searchRef.current?.select();
+    }
+  }, [ctx.focusTrigger]);
+
+  // Toggle search mode hotkey
   useHotKey(
     { ctrl: true, key: "m" },
     () => {
       settingsForm.setFieldValue("mode", (current) => (current === "local" ? "remote" : "local"));
       settingsForm.handleSubmit();
     },
-    isSearchOpen
+    ctx.isSearchOpen
   );
 
+  if (!ctx.isSearchOpen) return null;
+
   return (
-    <>
-      {isSearchOpen && (
-        <div className="mb-4 flex flex-col gap-2">
-          <Form onSubmit={settingsForm.handleSubmit}>
-            <InputGroup>
-              <InputGroupInput ref={searchRef} name="query" placeholder={formatMessage({ id: "issues.search" })} value={query} onChange={(e) => setQuery(e.target.value)} autoFocus />
-              <InputGroupAddon>
-                <SearchIcon />
-              </InputGroupAddon>
-              <InputGroupAddon align="inline-end" className="gap-1">
-                <settingsForm.AppField
-                  name="mode"
-                  children={(field) => (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger render={<InputGroupButton variant="secondary" />}>
-                        {field.state.value === "local"
-                          ? formatMessage({ id: "issues.search.mode.local" })
-                          : field.state.value === "remote"
-                            ? formatMessage({ id: "issues.search.mode.remote" })
-                            : "unknown"}
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent sideOffset={10} align="center" className="w-auto">
-                        <DropdownMenuItem onClick={() => field.handleChange("local")}>
-                          <ListTreeIcon />
-                          {formatMessage({ id: "issues.search.mode.local" })}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => field.handleChange("remote")}>
-                          <CloudIcon />
-                          {formatMessage({ id: "issues.search.mode.remote" })}
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-                />
-                <Separator orientation="vertical" className="my-auto h-4" />
-                <settingsForm.Subscribe
-                  selector={(state) => ({
-                    mode: state.values.mode,
-                  })}
-                  children={({ mode }) => (
-                    <Popover>
-                      <PopoverTrigger render={<InputGroupButton variant="ghost" size="icon-xs" />} disabled={mode !== "remote"}>
-                        <MoreHorizontalIcon />
-                      </PopoverTrigger>
-                      <PopoverContent sideOffset={10} collisionPadding={10} className="bg-background w-[14rem]">
-                        <FormGrid className="gap-3">
-                          <FieldSet>
-                            <FieldLabel>{formatMessage({ id: "issues.search.remote-search-options.title" })}</FieldLabel>
-                            <FieldGroup data-slot="checkbox-group">
-                              <settingsForm.AppField
-                                name="remoteSearchOptions.titlesOnly"
-                                children={(field) => (
-                                  <field.SwitchField
-                                    title={formatMessage({ id: "issues.search.remote-search-options.titles-only.title" })}
-                                    info={formatMessage({ id: "issues.search.remote-search-options.titles-only.description" })}
-                                  />
-                                )}
+    <div className={clsxm("flex flex-col gap-2", className)}>
+      <Form onSubmit={settingsForm.handleSubmit}>
+        <InputGroup>
+          <InputGroupInput ref={searchRef} name="query" placeholder={formatMessage({ id: "issues.search" })} value={ctx.rawQuery} onChange={(e) => ctx.setRawQuery(e.target.value)} autoFocus />
+          <InputGroupAddon>
+            <SearchIcon />
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end" className="gap-1">
+            <settingsForm.AppField
+              name="mode"
+              children={(field) => (
+                <DropdownMenu>
+                  <DropdownMenuTrigger render={<InputGroupButton variant="secondary" />}>
+                    {field.state.value === "local"
+                      ? formatMessage({ id: "issues.search.mode.local" })
+                      : field.state.value === "remote"
+                        ? formatMessage({ id: "issues.search.mode.remote" })
+                        : "unknown"}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent sideOffset={10} align="center" className="w-auto">
+                    <DropdownMenuItem onClick={() => field.handleChange("local")}>
+                      <ListTreeIcon />
+                      {formatMessage({ id: "issues.search.mode.local" })}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => field.handleChange("remote")}>
+                      <CloudIcon />
+                      {formatMessage({ id: "issues.search.mode.remote" })}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            />
+            <Separator orientation="vertical" className="my-auto h-4" />
+            <settingsForm.Subscribe
+              selector={(state) => ({
+                mode: state.values.mode,
+              })}
+              children={({ mode }) => (
+                <Popover>
+                  <PopoverTrigger render={<InputGroupButton variant="ghost" size="icon-xs" />} disabled={mode !== "remote"}>
+                    <MoreHorizontalIcon />
+                  </PopoverTrigger>
+                  <PopoverContent sideOffset={10} collisionPadding={10} className="bg-background w-56">
+                    <FormGrid className="gap-3">
+                      <FieldSet>
+                        <FieldLabel>{formatMessage({ id: "issues.search.remote-search-options.title" })}</FieldLabel>
+                        <FieldGroup data-slot="checkbox-group">
+                          <settingsForm.AppField
+                            name="remoteSearchOptions.titlesOnly"
+                            children={(field) => (
+                              <field.SwitchField
+                                title={formatMessage({ id: "issues.search.remote-search-options.titles-only.title" })}
+                                info={formatMessage({ id: "issues.search.remote-search-options.titles-only.description" })}
                               />
-                              <settingsForm.AppField
-                                name="remoteSearchOptions.openIssuesOnly"
-                                children={(field) => <field.SwitchField title={formatMessage({ id: "issues.search.remote-search-options.open-issues-only.title" })} />}
-                              />
-                              <settingsForm.AppField
-                                name="remoteSearchOptions.assignedToMe"
-                                children={(field) => <field.SwitchField title={formatMessage({ id: "issues.search.remote-search-options.assigned-to-me.title" })} />}
-                              />
-                            </FieldGroup>
-                          </FieldSet>
-                        </FormGrid>
-                      </PopoverContent>
-                    </Popover>
-                  )}
-                />
-              </InputGroupAddon>
-            </InputGroup>
-          </Form>
-          {inProject && (
-            <div className="flex items-center gap-x-1.5 px-1 whitespace-nowrap">
-              <ChevronRightIcon className="size-4 shrink-0" />
-              <FormattedMessage
-                id="issues.search.search-in-project"
-                values={{
-                  projectName: inProject.name,
-                  badge: (children) => (
-                    <Badge variant="secondary" className="shrink justify-start">
-                      {children}
-                    </Badge>
-                  ),
-                }}
-              />
-              <div className="flex grow justify-end">
-                <XIcon className="size-4 cursor-pointer opacity-70 transition-opacity hover:opacity-100" onClick={() => setInProject(undefined)} />
-              </div>
-            </div>
-          )}
+                            )}
+                          />
+                          <settingsForm.AppField
+                            name="remoteSearchOptions.openIssuesOnly"
+                            children={(field) => <field.SwitchField title={formatMessage({ id: "issues.search.remote-search-options.open-issues-only.title" })} />}
+                          />
+                          <settingsForm.AppField
+                            name="remoteSearchOptions.assignedToMe"
+                            children={(field) => <field.SwitchField title={formatMessage({ id: "issues.search.remote-search-options.assigned-to-me.title" })} />}
+                          />
+                        </FieldGroup>
+                      </FieldSet>
+                    </FormGrid>
+                  </PopoverContent>
+                </Popover>
+              )}
+            />
+          </InputGroupAddon>
+        </InputGroup>
+      </Form>
+      {ctx.inProject && (
+        <div className="flex items-center gap-x-1.5 px-1 whitespace-nowrap">
+          <ChevronRightIcon className="size-4 shrink-0" />
+          <FormattedMessage
+            id="issues.search.search-in-project"
+            values={{
+              projectName: ctx.inProject.name,
+              badge: (children) => (
+                <Badge variant="secondary" className="shrink justify-start">
+                  {children}
+                </Badge>
+              ),
+            }}
+          />
+          <div className="flex grow justify-end">
+            <XIcon className="size-4 cursor-pointer opacity-70 transition-opacity hover:opacity-100" onClick={() => ctx.setInProject(undefined)} />
+          </div>
         </div>
       )}
-      <SearchContext
-        value={{
-          isSearching: isSearchOpen && (searchSettings.mode === "local" ? query.length > 0 : debouncedQuery.length >= 3),
-          query: searchSettings.mode === "local" ? query : debouncedQuery,
-          inProject,
-          settings: searchSettings,
-          searchInProject: (project: TReference) => {
-            setInProject(project);
-            setIsSearchOpen(true);
-            searchRef.current?.focus();
-            searchRef.current?.select();
-          },
-        }}
-      >
-        {children}
-      </SearchContext>
-    </>
+    </div>
   );
 };
 
-export const useIssueSearch = () => {
+const IssueSearchLoadMore = ({
+  hasNextPage,
+  isLoading,
+  fetchNextPage,
+  className,
+}: Pick<ReturnType<typeof useRedmineSearch>, "hasNextPage" | "isLoading" | "fetchNextPage"> & {
+  className?: string;
+}) => {
+  const { formatMessage } = useIntl();
+  const ctx = useIssueSearchInternal();
+
+  if (!(ctx.isSearching && ctx.settings.mode === "remote" && hasNextPage && !isLoading)) return null;
+
+  return (
+    <div className={clsxm("flex justify-center", className)}>
+      <Button variant="outline" onClick={() => fetchNextPage()}>
+        {formatMessage({ id: "issues.list.load-more" })}
+      </Button>
+    </div>
+  );
+};
+
+const useIssueSearchInternal = () => {
   const context = use(SearchContext);
   if (!context) {
-    throw new Error("useIssueSearch must be used within a IssueSearch component");
+    throw new Error("useIssueSearch must be used within a IssueSearch.Provider component");
   }
   return context;
+};
+
+export const useIssueSearch = (): IssueSearchContext => {
+  const { isSearching, query, inProject, settings, searchInProject } = useIssueSearchInternal();
+  return { isSearching, query, inProject, settings, searchInProject };
 };
 
 export const filterIssuesByLocalSearch = (issues: TIssue[], search: IssueSearchContext) => {
@@ -247,6 +307,12 @@ export const filterIssuesByLocalSearch = (issues: TIssue[], search: IssueSearchC
   }
 
   return issues;
+};
+
+const IssueSearch = {
+  Provider: IssueSearchProvider,
+  Input: IssueSearchInput,
+  LoadMore: IssueSearchLoadMore,
 };
 
 export default IssueSearch;

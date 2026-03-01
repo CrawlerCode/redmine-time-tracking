@@ -52,7 +52,7 @@ const TimerProject = ({ project, type }: { project?: TReference; type: ProjectTi
   return (
     <div
       className={clsx("flex items-center gap-x-1", {
-        "bg-background shadow-background sticky top-0 z-5 -mx-2 -my-1 px-2 py-1 shadow": settings.style.stickyScroll,
+        "bg-background shadow-background sticky top-0 z-5 py-1 shadow": settings.style.stickyScroll,
       })}
     >
       <SquareChartGanttIcon className="size-3.5 shrink-0" />

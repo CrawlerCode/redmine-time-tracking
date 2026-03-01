@@ -37,6 +37,7 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
       sortIssuesByPriority: z.boolean(),
       pinTrackedIssues: z.boolean(),
       pinActiveTabIssue: z.boolean(),
+      fullscreenSidebarScrollspy: z.boolean(), // ! Experimental
       showTooltips: z.boolean(),
       timeFormat: z.enum(["decimal", "minutes"]),
     }),
@@ -64,6 +65,7 @@ const defaultSettings: Settings = {
     sortIssuesByPriority: true,
     pinTrackedIssues: false,
     pinActiveTabIssue: true,
+    fullscreenSidebarScrollspy: false,
     showTooltips: true,
     timeFormat: "decimal",
   },

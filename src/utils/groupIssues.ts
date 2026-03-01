@@ -3,7 +3,7 @@ import { LocalIssueData } from "@/hooks/useLocalIssues";
 import { TimerController } from "@/hooks/useTimers";
 import { Settings } from "@/provider/SettingsProvider";
 
-export type ProjectGroup = {
+export type ProjectIssuesGroup = {
   /**
    * A unique key for the group
    */
@@ -70,7 +70,7 @@ export const groupIssues = (
     activeTabIssueId?: number;
     settings: Settings;
   }
-): ProjectGroup[] => {
+): ProjectIssuesGroup[] => {
   // Pre-compute lookup maps
   const pinnedIssuesSet = buildPinnedIssuesSet(localIssues);
   const timersByIssueId = settings.style.pinTrackedIssues ? buildTimerLookupMap(timers) : new Map();
@@ -123,7 +123,7 @@ export const groupIssues = (
   }
 
   // Build final project groups
-  const result: ProjectGroup[] = [];
+  const result: ProjectIssuesGroup[] = [];
 
   // Sort categorized project issues by their original order
   const sortedCategorizedProjects = Array.from(categorizedProjectMap.values()).sort((a, b) => a.sortIdx - b.sortIdx);
