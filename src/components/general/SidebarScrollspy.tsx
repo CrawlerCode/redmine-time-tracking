@@ -14,12 +14,11 @@ interface SidebarScrollspyProps {
     root?: string;
     sidebar?: string;
     section?: string;
-    list?: string;
   };
 }
 
 export function SidebarScrollspy({ groups, classNames, children }: SidebarScrollspyProps) {
-  const [activeGroup, setActiveGroup] = useState<string | undefined>(groups[0]?.key);
+  const [activeGroup, setActiveGroup] = useState<string | undefined>(groups[0]?.key ?? null);
 
   const groupRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
