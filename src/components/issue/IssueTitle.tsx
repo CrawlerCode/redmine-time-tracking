@@ -1,9 +1,9 @@
+import { IssueInfoTooltip } from "@/components/issue/IssueInfoTooltip";
 import { ComponentProps } from "react";
 import { TIssue } from "../../api/redmine/types";
 import { PriorityType } from "../../hooks/useIssuePriorities";
 import { useSettings } from "../../provider/SettingsProvider";
 import { clsxm } from "../../utils/clsxm";
-import IssueInfoTooltip from "./IssueInfoTooltip";
 
 type PropTypes = {
   issue: TIssue;

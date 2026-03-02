@@ -1,5 +1,6 @@
+import { ProjectTooltip } from "@/components/issue/ProjectTooltip";
+import { VersionTooltip } from "@/components/issue/VersionTooltip";
 import { useIssuePriorities } from "@/hooks/useIssuePriorities";
-import useMyProjects from "@/hooks/useMyProjects";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { clsxm } from "@/utils/clsxm";
@@ -16,8 +17,6 @@ import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";
 import Issue from "./Issue";
 import { useIssueSearch } from "./IssueSearch";
-import ProjectTooltip from "./ProjectTooltip";
-import VersionTooltip from "./VersionTooltip";
 
 interface ProjectIssuesGroupProps extends ComponentProps<"div"> {
   projectGroup: ProjectIssuesGroupType;
@@ -33,7 +32,7 @@ export const ProjectIssuesGroup = ({ projectGroup, localIssues, timers, classNam
 
   return (
     <div {...props} className={clsxm("flex flex-col gap-y-2", className)}>
-      <IssueProject type={projectGroup.type} projectRef={projectGroup.project} />
+      <IssueProject type={projectGroup.type} project={projectGroup.project} />
       {projectGroup.groups.map((issueGroup) => (
         <Fragment key={issueGroup.key}>
           {["version", "no-version"].includes(issueGroup.type) && <ProjectVersion version={issueGroup.version} />}
@@ -55,11 +54,8 @@ export const ProjectIssuesGroup = ({ projectGroup, localIssues, timers, classNam
   );
 };
 
-const IssueProject = ({ projectRef, type }: { projectRef: TReference; type: ProjectIssuesGroupType["type"] }) => {
+const IssueProject = ({ project, type }: { project: TReference; type: ProjectIssuesGroupType["type"] }) => {
   const { settings } = useSettings();
-
-  const projects = useMyProjects();
-  const project = projects.data?.find((p) => p.id === projectRef.id);
 
   return (
     <div
@@ -68,21 +64,15 @@ const IssueProject = ({ projectRef, type }: { projectRef: TReference; type: Proj
       })}
     >
       <ProjectGroupIcon type={type} />
-      {project ? (
-        <ProjectTooltip project={project}>
-          <a href={`${settings.redmineURL}/projects/${projectRef.id}`} target="_blank" tabIndex={-1} className="truncate text-sm hover:underline" rel="noreferrer">
-            {projectRef.name}
-          </a>
-        </ProjectTooltip>
-      ) : (
-        <a href={`${settings.redmineURL}/projects/${projectRef.id}`} target="_blank" tabIndex={-1} className="truncate text-sm hover:underline" rel="noreferrer">
-          {projectRef.name}
+      <ProjectTooltip projectId={project.id}>
+        <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="truncate text-sm hover:underline" rel="noreferrer">
+          {project.name}
         </a>
-      )}
+      </ProjectTooltip>
       <span className="grow" />
       <div className="flex gap-x-2">
-        <CreateIssueButton project={projectRef} />
-        <SearchInProjectButton project={projectRef} />
+        <CreateIssueButton project={project} />
+        <SearchInProjectButton project={project} />
       </div>
     </div>
   );

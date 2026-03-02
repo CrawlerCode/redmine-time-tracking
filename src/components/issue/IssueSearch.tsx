@@ -5,7 +5,7 @@ import { useSuspenseStorage } from "@/hooks/useStorage";
 import { clsxm } from "@/utils/clsxm";
 import { ChevronRightIcon, CloudIcon, ListTreeIcon, MoreHorizontalIcon, SearchIcon, XIcon } from "lucide-react";
 import { createContext, PropsWithChildren, use, useEffect, useRef, useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import { z } from "zod";
 import { TIssue, TReference } from "../../api/redmine/types";
 import useDebounce from "../../hooks/useDebounce";
@@ -238,17 +238,19 @@ const IssueSearchInput = ({ className }: { className?: string }) => {
       {ctx.inProject && (
         <div className="flex items-center gap-x-1.5 px-1 whitespace-nowrap">
           <ChevronRightIcon className="size-4 shrink-0" />
-          <FormattedMessage
-            id="issues.search.search-in-project"
-            values={{
+          {formatMessage(
+            {
+              id: "issues.search.search-in-project",
+            },
+            {
               projectName: ctx.inProject.name,
               badge: (children) => (
                 <Badge variant="secondary" className="shrink justify-start">
                   {children}
                 </Badge>
               ),
-            }}
-          />
+            }
+          )}
           <div className="flex grow justify-end">
             <XIcon className="size-4 cursor-pointer opacity-70 transition-opacity hover:opacity-100" onClick={() => ctx.setInProject(undefined)} />
           </div>

@@ -33,7 +33,18 @@ type PropTypes = {
   onAddTimer: () => void;
 };
 
-const IssueContextMenuContent = ({ issue, localIssue, primaryTimer, assignedToMe, onAddTimer }: PropTypes) => {
+export const IssueContextMenu = ({ children, ...props }: PropTypes & { children: ReactElement }) => {
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger render={children} />
+      <ContextMenuContent>
+        <IssueContextMenuItems {...props} />
+      </ContextMenuContent>
+    </ContextMenu>
+  );
+};
+
+const IssueContextMenuItems = ({ issue, localIssue, primaryTimer, assignedToMe, onAddTimer }: PropTypes) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
@@ -49,80 +60,68 @@ const IssueContextMenuContent = ({ issue, localIssue, primaryTimer, assignedToMe
 
   return (
     <>
-      <ContextMenuContent>
-        <ContextMenuItem onClick={() => window.open(`${settings.redmineURL}/issues/${issue.id}`, "_blank")}>
-          <SquareArrowOutUpRightIcon />
-          {formatMessage({ id: "issues.context-menu.open-in-redmine" })}
-        </ContextMenuItem>
-        <ContextMenuItem
-          onClick={() => {
-            navigator.clipboard.writeText(`#${issue.id}`);
-            toast.success(formatMessage({ id: "issues.id-copied-to-clipboard" }, { issueId: issue.id }), {
-              duration: 2000,
-            });
-          }}
-        >
-          <CopyIcon />
-          {formatMessage({ id: "issues.context-menu.copy-id-to-clipboard" })}
-        </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem disabled={!canEdit} onClick={() => setEditIssue(true)}>
-          <PencilIcon />
-          {formatMessage({ id: "issues.context-menu.edit" })}
-        </ContextMenuItem>
-        <ContextMenuItem disabled={!canAddNotes} onClick={() => setAddNotes(true)}>
-          <NotebookPenIcon />
-          {formatMessage({ id: "issues.context-menu.add-notes" })}
-        </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem onClick={primaryTimer.isActive ? primaryTimer.pauseTimer : primaryTimer.startTimer} disabled={!canLogTime}>
-          {primaryTimer.isActive ? <TimerOffIcon /> : <TimerIcon />}
-          {formatMessage({ id: primaryTimer.isActive ? "timer.context-menu.pause" : "timer.context-menu.start" })}
-        </ContextMenuItem>
-        <ContextMenuItem onClick={primaryTimer.resetTimer} disabled={primaryTimer.getElapsedTime() === 0 || !canLogTime}>
-          <TimerResetIcon />
-          {formatMessage({ id: "timer.context-menu.reset" })}
-        </ContextMenuItem>
-        <ContextMenuItem onClick={onAddTimer} disabled={!canLogTime}>
-          <PlusIcon />
-          {formatMessage({ id: "timer.context-menu.add-timer" })}
-        </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem disabled={localIssue.pinned} onClick={() => localIssue.setLocalIssue({ pinned: true, remembered: !assignedToMe ? true : undefined })}>
-          <PinIcon className="rotate-30" />
-          {formatMessage({ id: assignedToMe || localIssue.remembered ? "issues.context-menu.pin" : "issues.context-menu.pin-and-remember" })}
-        </ContextMenuItem>
-        <ContextMenuItem disabled={!localIssue.pinned} onClick={() => localIssue.setLocalIssue({ pinned: false })}>
-          <PinOffIcon />
-          {formatMessage({ id: "issues.context-menu.unpin" })}
-        </ContextMenuItem>
-        {!assignedToMe && (
-          <>
-            <ContextMenuSeparator />
-            <ContextMenuItem disabled={localIssue.remembered} onClick={() => localIssue.setLocalIssue({ remembered: true })}>
-              <BookmarkPlusIcon />
-              {formatMessage({ id: "issues.context-menu.remember" })}
-            </ContextMenuItem>
-            <ContextMenuItem disabled={!localIssue.remembered} onClick={() => localIssue.setLocalIssue({ remembered: false })}>
-              <BookmarkMinusIcon />
-              {formatMessage({ id: "issues.context-menu.forgot" })}
-            </ContextMenuItem>
-          </>
-        )}
-      </ContextMenuContent>
+      <ContextMenuItem onClick={() => window.open(`${settings.redmineURL}/issues/${issue.id}`, "_blank")}>
+        <SquareArrowOutUpRightIcon />
+        {formatMessage({ id: "issues.context-menu.open-in-redmine" })}
+      </ContextMenuItem>
+      <ContextMenuItem
+        onClick={() => {
+          navigator.clipboard.writeText(`#${issue.id}`);
+          toast.success(formatMessage({ id: "issues.id-copied-to-clipboard" }, { issueId: issue.id }), {
+            duration: 2000,
+          });
+        }}
+      >
+        <CopyIcon />
+        {formatMessage({ id: "issues.context-menu.copy-id-to-clipboard" })}
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem disabled={!canEdit} onClick={() => setEditIssue(true)}>
+        <PencilIcon />
+        {formatMessage({ id: "issues.context-menu.edit" })}
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!canAddNotes} onClick={() => setAddNotes(true)}>
+        <NotebookPenIcon />
+        {formatMessage({ id: "issues.context-menu.add-notes" })}
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem onClick={primaryTimer.isActive ? primaryTimer.pauseTimer : primaryTimer.startTimer} disabled={!canLogTime}>
+        {primaryTimer.isActive ? <TimerOffIcon /> : <TimerIcon />}
+        {formatMessage({ id: primaryTimer.isActive ? "timer.context-menu.pause" : "timer.context-menu.start" })}
+      </ContextMenuItem>
+      <ContextMenuItem onClick={primaryTimer.resetTimer} disabled={primaryTimer.getElapsedTime() === 0 || !canLogTime}>
+        <TimerResetIcon />
+        {formatMessage({ id: "timer.context-menu.reset" })}
+      </ContextMenuItem>
+      <ContextMenuItem onClick={onAddTimer} disabled={!canLogTime}>
+        <PlusIcon />
+        {formatMessage({ id: "timer.context-menu.add-timer" })}
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem disabled={localIssue.pinned} onClick={() => localIssue.setLocalIssue({ pinned: true, remembered: !assignedToMe ? true : undefined })}>
+        <PinIcon className="rotate-30" />
+        {formatMessage({ id: assignedToMe || localIssue.remembered ? "issues.context-menu.pin" : "issues.context-menu.pin-and-remember" })}
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!localIssue.pinned} onClick={() => localIssue.setLocalIssue({ pinned: false })}>
+        <PinOffIcon />
+        {formatMessage({ id: "issues.context-menu.unpin" })}
+      </ContextMenuItem>
+      {!assignedToMe && (
+        <>
+          <ContextMenuSeparator />
+          <ContextMenuItem disabled={localIssue.remembered} onClick={() => localIssue.setLocalIssue({ remembered: true })}>
+            <BookmarkPlusIcon />
+            {formatMessage({ id: "issues.context-menu.remember" })}
+          </ContextMenuItem>
+          <ContextMenuItem disabled={!localIssue.remembered} onClick={() => localIssue.setLocalIssue({ remembered: false })}>
+            <BookmarkMinusIcon />
+            {formatMessage({ id: "issues.context-menu.forgot" })}
+          </ContextMenuItem>
+        </>
+      )}
 
       {editIssue && <EditIssueModal issue={issue} onClose={() => setEditIssue(false)} onSuccess={() => setEditIssue(false)} />}
       {addNotes && <AddIssueNotesModal issue={issue} onClose={() => setAddNotes(false)} onSuccess={() => setAddNotes(false)} />}
     </>
   );
 };
-
-const IssueContextMenuTrigger = ({ children }: { children: ReactElement }) => <ContextMenuTrigger render={children} />;
-
-const IssueContextMenu = {
-  Provider: ContextMenu,
-  Trigger: IssueContextMenuTrigger,
-  Content: IssueContextMenuContent,
-};
-
-export default IssueContextMenu;

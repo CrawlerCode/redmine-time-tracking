@@ -27,7 +27,7 @@ import {
   Wand2Icon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import { toast } from "sonner";
 import { browser } from "wxt/browser";
 import { Form } from "../components/ui/form";
@@ -74,7 +74,7 @@ function PageComponent() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <GlobeIcon className="text-muted-foreground size-4" />
-              <FormattedMessage id="settings.general" />
+              {formatMessage({ id: "settings.general" })}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -103,7 +103,7 @@ function PageComponent() {
                 >
                   <FieldDescription>
                     <a href="https://github.com/CrawlerCode/redmine-time-tracking#supported-languages" target="_blank" tabIndex={-1} rel="noreferrer">
-                      <FormattedMessage id="settings.general.language.missing-hint" />
+                      {formatMessage({ id: "settings.general.language.missing-hint" })}
                     </a>
                   </FieldDescription>
                 </field.SelectField>
@@ -118,7 +118,7 @@ function PageComponent() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <Wand2Icon className="text-muted-foreground size-4" />
-              <FormattedMessage id="settings.features" />
+              {formatMessage({ id: "settings.features" })}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -220,7 +220,7 @@ function PageComponent() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <PaletteIcon className="text-muted-foreground size-4" />
-              <FormattedMessage id="settings.style" />
+              {formatMessage({ id: "settings.style" })}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -306,7 +306,7 @@ const RedmineServerSection = withForm({
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
             <ServerIcon className="text-muted-foreground size-4" />
-            <FormattedMessage id="settings.redmine" />
+            {formatMessage({ id: "settings.redmine" })}
           </CardTitle>
           <CardAction>
             {editRedmineInstance ? (
@@ -325,14 +325,14 @@ const RedmineServerSection = withForm({
                       setEditRedmineInstance(false);
                     }}
                   >
-                    <FormattedMessage id="settings.redmine.test-connection" />
+                    {formatMessage({ id: "settings.redmine.test-connection" })}
                   </Button>
                 )}
               />
             ) : (
               <Button type="button" size="sm" variant="outline" onClick={() => setEditRedmineInstance(true)}>
                 <PencilIcon />
-                <FormattedMessage id="settings.redmine.edit" />
+                {formatMessage({ id: "settings.redmine.edit" })}
               </Button>
             )}
           </CardAction>
@@ -357,16 +357,18 @@ const RedmineServerSection = withForm({
                       children={({ redmineURL, displayHint }) =>
                         displayHint && (
                           <FieldDescription className="font-semibold">
-                            <FormattedMessage
-                              id="settings.redmine.api-key.hint"
-                              values={{
+                            {formatMessage(
+                              {
+                                id: "settings.redmine.api-key.hint",
+                              },
+                              {
                                 link: (children) => (
                                   <a href={`${redmineURL}/my/account`} target="_blank" tabIndex={-1} rel="noreferrer" className="font-bold">
                                     {children}
                                   </a>
                                 ),
-                              }}
-                            />
+                              }
+                            )}
                           </FieldDescription>
                         )
                       }
@@ -392,31 +394,27 @@ const RedmineServerSection = withForm({
                 <ItemContent className="overflow-hidden">
                   <ItemTitle>{form.state.values.redmineURL}</ItemTitle>
                   {redmineConnection.isLoading ? (
-                    <ItemDescription>
-                      <FormattedMessage id="settings.redmine.connecting" />
-                    </ItemDescription>
+                    <ItemDescription>{formatMessage({ id: "settings.redmine.connecting" })}</ItemDescription>
                   ) : redmineConnection.isError ? (
                     <>
-                      <ItemDescription className="text-destructive font-semibold">
-                        <FormattedMessage id="settings.redmine.connection-failed" />
-                      </ItemDescription>
+                      <ItemDescription className="text-destructive font-semibold">{formatMessage({ id: "settings.redmine.connection-failed" })}</ItemDescription>
                       {redmineConnection.error && <ItemDescription className="text-destructive/80">{redmineConnection.error.message}</ItemDescription>}
                     </>
                   ) : redmineConnection.data ? (
                     <>
-                      <ItemDescription className="text-green-600">
-                        <FormattedMessage id="settings.redmine.connection-successful" />
-                      </ItemDescription>
+                      <ItemDescription className="text-green-600">{formatMessage({ id: "settings.redmine.connection-successful" })}</ItemDescription>
                       <ItemDescription>
-                        <FormattedMessage
-                          id="settings.redmine.hello-user"
-                          values={{
+                        {formatMessage(
+                          {
+                            id: "settings.redmine.hello-user",
+                          },
+                          {
                             firstName: redmineConnection.data.firstname,
                             lastName: redmineConnection.data.lastname,
                             accountName: redmineConnection.data.login,
                             strong: (children) => <strong>{children}</strong>,
-                          }}
-                        />
+                          }
+                        )}
                       </ItemDescription>
                     </>
                   ) : undefined}
@@ -431,6 +429,7 @@ const RedmineServerSection = withForm({
 });
 
 const InfoSection = () => {
+  const { formatMessage } = useIntl();
   const { name, version, version_name } = browser.runtime.getManifest();
 
   return (
@@ -464,9 +463,7 @@ const InfoSection = () => {
           <BugIcon />
         </ItemMedia>
         <ItemContent>
-          <ItemTitle>
-            <FormattedMessage id="settings.info.report-an-issue" />
-          </ItemTitle>
+          <ItemTitle>{formatMessage({ id: "settings.info.report-an-issue" })}</ItemTitle>
         </ItemContent>
         <ItemActions>
           <ChevronRightIcon className="size-4" />

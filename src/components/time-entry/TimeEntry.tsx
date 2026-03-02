@@ -1,8 +1,8 @@
+import { TimeEntryContextMenu } from "@/components/time-entry/TimeEntryContextMenu";
 import { Fragment } from "react";
 import { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import TimeEntryContextMenu from "./TimeEntryContextMenu";
 import TimeEntryTooltip from "./TimeEntryTooltip";
 
 type PropTypes = {
@@ -19,33 +19,32 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
 
   return (
     <div role="row" className="flex items-center gap-x-0.5">
-      {entries.map((entry) => (
-        <Fragment key={entry.id}>
+      {entries.map((entry) => {
+        const entryElement = (
           <TimeEntryTooltip entry={entry}>
-            {withContextMenu ? (
-              <TimeEntryContextMenu
-                entry={entry}
-                role="cell"
-                data-type="time-entry"
-                className="bg-primary h-4 rounded-sm"
-                style={{
-                  width: `${(entry.hours / maxHours) * 100}%`,
-                }}
-              />
-            ) : (
-              <div
-                role="cell"
-                data-type="time-entry"
-                className="bg-primary h-4 rounded-sm"
-                style={{
-                  width: `${(entry.hours / maxHours) * 100}%`,
-                }}
-              />
-            )}
+            <div
+              role="cell"
+              data-type="time-entry"
+              className="bg-primary h-4 rounded-sm"
+              style={{
+                width: `${(entry.hours / maxHours) * 100}%`,
+              }}
+            />
           </TimeEntryTooltip>
-        </Fragment>
-      ))}
-      {(previewHours && (
+        );
+        return (
+          <Fragment key={entry.id}>
+            {withContextMenu ? (
+              <TimeEntryContextMenu entry={entry}>
+                <div className="contents">{entryElement}</div>
+              </TimeEntryContextMenu>
+            ) : (
+              entryElement
+            )}
+          </Fragment>
+        );
+      })}
+      {!!previewHours && (
         <Tooltip>
           <TooltipTrigger
             render={
@@ -63,8 +62,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
             <p className="text-sm font-semibold">{formatHours(previewHours)}</p>
           </TooltipContent>
         </Tooltip>
-      )) ||
-        undefined}
+      )}
       <div
         className="h-3 rounded-sm bg-gray-400/40 dark:bg-gray-700/40"
         style={{

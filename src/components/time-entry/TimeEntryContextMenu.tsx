@@ -1,6 +1,6 @@
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { PencilIcon, SquareArrowOutUpRightIcon } from "lucide-react";
-import { ComponentProps, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useIntl } from "react-intl";
 import { TTimeEntry } from "../../api/redmine/types";
 import { useSettings } from "../../provider/SettingsProvider";
@@ -9,9 +9,20 @@ import EditTimeEntryModal from "./EditTimeEntryModal";
 
 type PropTypes = {
   entry: TTimeEntry;
-} & ComponentProps<typeof ContextMenuTrigger>;
+};
 
-function TimeEntryContextMenu({ entry, children, ...props }: PropTypes) {
+export const TimeEntryContextMenu = ({ children, ...props }: PropTypes & { children: ReactElement }) => {
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger render={children} />
+      <ContextMenuContent>
+        <TimeEntryContextMenuItems {...props} />
+      </ContextMenuContent>
+    </ContextMenu>
+  );
+};
+
+const TimeEntryContextMenuItems = ({ entry }: PropTypes) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
@@ -22,28 +33,21 @@ function TimeEntryContextMenu({ entry, children, ...props }: PropTypes) {
 
   return (
     <>
-      <ContextMenu>
-        <ContextMenuTrigger {...props}>{children}</ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuItem
-            onClick={() => {
-              window.open(`${settings.redmineURL}/time_entries/${entry.id}/edit`, "_blank");
-            }}
-          >
-            <SquareArrowOutUpRightIcon />
-            {formatMessage({ id: "time.time-entry.context-menu.open-in-redmine" })}
-          </ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem onClick={() => setEdit(true)} disabled={!canEdit}>
-            <PencilIcon />
-            {formatMessage({ id: "time.time-entry.context-menu.edit" })}
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
+      <ContextMenuItem
+        onClick={() => {
+          window.open(`${settings.redmineURL}/time_entries/${entry.id}/edit`, "_blank");
+        }}
+      >
+        <SquareArrowOutUpRightIcon />
+        {formatMessage({ id: "time.time-entry.context-menu.open-in-redmine" })}
+      </ContextMenuItem>
+      <ContextMenuSeparator />
+      <ContextMenuItem onClick={() => setEdit(true)} disabled={!canEdit}>
+        <PencilIcon />
+        {formatMessage({ id: "time.time-entry.context-menu.edit" })}
+      </ContextMenuItem>
 
       {edit && <EditTimeEntryModal entry={entry} onClose={() => setEdit(false)} onSuccess={() => setEdit(false)} />}
     </>
   );
-}
-
-export default TimeEntryContextMenu;
+};

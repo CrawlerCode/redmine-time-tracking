@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { FormattedMessage } from "react-intl";
+import { useIntl } from "react-intl";
 import { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -10,6 +10,7 @@ type PropTypes = {
 };
 
 const TimeEntryTooltip = ({ entry, children }: PropTypes) => {
+  const { formatMessage } = useIntl();
   const formatHours = useFormatHours();
 
   return (
@@ -21,29 +22,21 @@ const TimeEntryTooltip = ({ entry, children }: PropTypes) => {
         <table className="-mx-1 border-separate border-spacing-x-1 truncate text-left text-sm">
           <tbody>
             <tr>
-              <th className="text-xs font-medium">
-                <FormattedMessage id="time.time-entry.field.project" />:
-              </th>
+              <th className="text-xs font-medium">{formatMessage({ id: "time.time-entry.field.project" })}:</th>
               <td>{entry.project.name}</td>
             </tr>
             {entry.issue && (
               <tr>
-                <th className="text-xs font-medium">
-                  <FormattedMessage id="time.time-entry.field.issue" />:
-                </th>
+                <th className="text-xs font-medium">{formatMessage({ id: "time.time-entry.field.issue" })}:</th>
                 <td>#{entry.issue.id}</td>
               </tr>
             )}
             <tr>
-              <th className="text-xs font-medium">
-                <FormattedMessage id="time.time-entry.field.activity" />:
-              </th>
+              <th className="text-xs font-medium">{formatMessage({ id: "time.time-entry.field.activity" })}:</th>
               <td>{entry.activity.name}</td>
             </tr>
             <tr>
-              <th className="text-xs font-medium">
-                <FormattedMessage id="time.time-entry.field.hours" />:
-              </th>
+              <th className="text-xs font-medium">{formatMessage({ id: "time.time-entry.field.hours" })}:</th>
               <td>{formatHours(entry.hours)}</td>
             </tr>
             {entry.custom_fields?.map((field) => {

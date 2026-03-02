@@ -4,7 +4,7 @@ import { useAppForm } from "@/hooks/useAppForm";
 import { useStatuses } from "@/hooks/useIssueStatuses";
 import deepmerge from "deepmerge";
 import { SlidersHorizontalIcon } from "lucide-react";
-import { createContext, PropsWithChildren, use, useState } from "react";
+import { createContext, PropsWithChildren, use } from "react";
 import { useIntl } from "react-intl";
 import { z } from "zod";
 import useMyProjects from "../../hooks/useMyProjects";
@@ -56,16 +56,23 @@ export const useFilter = () => {
 
 const FilterButton = () => {
   const { formatMessage } = useIntl();
+
+  return (
+    <Popover>
+      <PopoverTrigger render={<Button variant="secondary" size="sm" tabIndex={-1} />}>
+        <SlidersHorizontalIcon />
+        {formatMessage({ id: "issues.filter" })}
+      </PopoverTrigger>
+      <PopoverContent collisionPadding={10} className="bg-background w-[18.5rem]">
+        <FilterForm />
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+const FilterForm = () => {
+  const { formatMessage } = useIntl();
   const filter = useFilter();
-
-  const [showFilter, setShowFilter] = useState(false);
-
-  const { data: projects, isLoading: isLoadingProjects } = useMyProjects({
-    enabled: showFilter,
-  });
-  const { data: statuses, isLoading: isLoadingStatuses } = useStatuses({
-    enabled: showFilter,
-  });
 
   const form = useAppForm({
     defaultValues: filter.settings,
@@ -84,61 +91,53 @@ const FilterButton = () => {
     },
   });
 
+  const { data: projects, isLoading: isLoadingProjects } = useMyProjects();
+  const { data: statuses, isLoading: isLoadingStatuses } = useStatuses();
+
   return (
-    <Popover open={showFilter} onOpenChange={setShowFilter}>
-      <PopoverTrigger render={<Button variant="secondary" size="sm" tabIndex={-1} />}>
-        <SlidersHorizontalIcon />
-        {formatMessage({ id: "issues.filter" })}
-      </PopoverTrigger>
-      <PopoverContent collisionPadding={10} className="bg-background w-[18.5rem]">
-        <Form onSubmit={form.handleSubmit}>
-          <FieldSet className="gap-3">
-            <FieldGroup>
-              <form.AppField
-                name="projects"
-                children={(field) => (
-                  <field.ComboboxField
-                    title={formatMessage({ id: "issues.filter.projects" })}
-                    placeholder={formatMessage({ id: "issues.filter.projects" })}
-                    noOptionsMessage={formatMessage({ id: "issues.filter.projects.no-options" })}
-                    items={projects.map((project) => ({ value: project.id, label: project.name }))}
-                    isLoading={isLoadingProjects}
-                    mode="multiple"
-                  />
-                )}
+    <Form onSubmit={form.handleSubmit}>
+      <FieldSet className="gap-3">
+        <FieldGroup>
+          <form.AppField
+            name="projects"
+            children={(field) => (
+              <field.ComboboxField
+                title={formatMessage({ id: "issues.filter.projects" })}
+                placeholder={formatMessage({ id: "issues.filter.projects" })}
+                noOptionsMessage={formatMessage({ id: "issues.filter.projects.no-options" })}
+                items={projects.map((project) => ({ value: project.id, label: project.name }))}
+                isLoading={isLoadingProjects}
+                mode="multiple"
               />
-              <form.AppField
-                name="statuses"
-                children={(field) => (
-                  <field.ComboboxField
-                    title={formatMessage({ id: "issues.filter.statuses" })}
-                    placeholder={formatMessage({ id: "issues.filter.statuses" })}
-                    items={
-                      statuses?.map((status) => ({
-                        label: status.name,
-                        value: status.id,
-                        disabled: status.is_closed,
-                      })) ?? []
-                    }
-                    isLoading={isLoadingStatuses}
-                    mode="multiple"
-                  />
-                )}
+            )}
+          />
+          <form.AppField
+            name="statuses"
+            children={(field) => (
+              <field.ComboboxField
+                title={formatMessage({ id: "issues.filter.statuses" })}
+                placeholder={formatMessage({ id: "issues.filter.statuses" })}
+                items={
+                  statuses?.map((status) => ({
+                    label: status.name,
+                    value: status.id,
+                    disabled: status.is_closed,
+                  })) ?? []
+                }
+                isLoading={isLoadingStatuses}
+                mode="multiple"
               />
-              <form.AppField
-                name="hideCompletedIssues"
-                children={(field) => (
-                  <field.CheckboxField
-                    title={formatMessage({ id: "issues.filter.hide-completed-issues.title" })}
-                    description={formatMessage({ id: "issues.filter.hide-completed-issues.description" })}
-                  />
-                )}
-              />
-            </FieldGroup>
-          </FieldSet>
-        </Form>
-      </PopoverContent>
-    </Popover>
+            )}
+          />
+          <form.AppField
+            name="hideCompletedIssues"
+            children={(field) => (
+              <field.CheckboxField title={formatMessage({ id: "issues.filter.hide-completed-issues.title" })} description={formatMessage({ id: "issues.filter.hide-completed-issues.description" })} />
+            )}
+          />
+        </FieldGroup>
+      </FieldSet>
+    </Form>
   );
 };
 

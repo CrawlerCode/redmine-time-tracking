@@ -3,7 +3,7 @@ import { DialogFooter } from "@/components/ui/dialog";
 import { Form, FormGrid } from "@/components/ui/form";
 import { useIssueStatuses } from "@/hooks/useIssueStatuses";
 import { parseISO } from "date-fns";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import { z } from "zod";
 import { TIssue } from "../../../api/redmine/types";
 import { useAppForm } from "../../../hooks/useAppForm";
@@ -283,20 +283,14 @@ export const IssueForm = (props: PropTypes) => {
             </FormGrid>
 
             {props.action === "create" && issueStatuses.hasIssueNoAllowedStatuses && (
-              <DismissibleWarning name="issueNoAllowedStatuses">
-                <FormattedMessage id="issues.modal.edit-issue.issue-with-no-allowed-statuses.warning" />
-              </DismissibleWarning>
+              <DismissibleWarning name="issueNoAllowedStatuses">{formatMessage({ id: "issues.modal.edit-issue.issue-with-no-allowed-statuses.warning" })}</DismissibleWarning>
             )}
 
             {hasTrackerNoEnabledFields && (
-              <DismissibleWarning name="trackerNoEnabledFields">
-                <FormattedMessage id="issues.modal.add-issue.tracker-with-no-enabled-fields.warning" />
-              </DismissibleWarning>
+              <DismissibleWarning name="trackerNoEnabledFields">{formatMessage({ id: "issues.modal.add-issue.tracker-with-no-enabled-fields.warning" })}</DismissibleWarning>
             )}
 
-            <DismissibleWarning name="unknownWorkflowPermissions">
-              <FormattedMessage id="issues.modal.add-issue.unknown-workflow-permissions.warning" />
-            </DismissibleWarning>
+            <DismissibleWarning name="unknownWorkflowPermissions">{formatMessage({ id: "issues.modal.add-issue.unknown-workflow-permissions.warning" })}</DismissibleWarning>
           </>
         )}
       />

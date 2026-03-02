@@ -4,29 +4,23 @@ import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorComponentProps } from "@tanstack/react-router";
 import { isAxiosError } from "axios";
 import { AlertCircleIcon } from "lucide-react";
-import { FormattedMessage } from "react-intl";
+import { useIntl } from "react-intl";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Button } from "../ui/button";
 
 export function ErrorComponent({ error, reset: resetPage }: ErrorComponentProps) {
+  const { formatMessage } = useIntl();
   const { reset: resetQueries } = useQueryErrorResetBoundary();
 
   return (
     <Alert variant="destructive">
       <AlertCircleIcon />
       <AlertTitle>
-        {isAxiosError(error) ? (
-          <FormattedMessage id="general.error.api-error" />
-        ) : error instanceof MissingRedmineConfigError ? (
-          <FormattedMessage id="general.error.missing-redmine-configuration" />
-        ) : (
-          <FormattedMessage
-            id="general.error.unknown-error"
-            values={{
-              name: error.name,
-            }}
-          />
-        )}
+        {isAxiosError(error)
+          ? formatMessage({ id: "general.error.api-error" })
+          : error instanceof MissingRedmineConfigError
+            ? formatMessage({ id: "general.error.missing-redmine-configuration" })
+            : formatMessage({ id: "general.error.unknown-error" }, { name: error.name })}
       </AlertTitle>
       {!(error instanceof MissingRedmineConfigError) && (
         <AlertDescription>
@@ -40,7 +34,7 @@ export function ErrorComponent({ error, reset: resetPage }: ErrorComponentProps)
                 resetPage();
               }}
             >
-              <FormattedMessage id="general.retry" />
+              {formatMessage({ id: "general.retry" })}
             </Button>
           </div>
         </AlertDescription>
