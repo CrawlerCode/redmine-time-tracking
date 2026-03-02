@@ -14,7 +14,7 @@ import {
   TimerOffIcon,
   TimerResetIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useIntl } from "react-intl";
 import { toast } from "sonner";
 import { TIssue } from "../../api/redmine/types";
@@ -117,9 +117,11 @@ const IssueContextMenuContent = ({ issue, localIssue, primaryTimer, assignedToMe
   );
 };
 
+const IssueContextMenuTrigger = ({ children }: { children: ReactElement }) => <ContextMenuTrigger render={children} />;
+
 const IssueContextMenu = {
   Provider: ContextMenu,
-  Trigger: ContextMenuTrigger,
+  Trigger: IssueContextMenuTrigger,
   Content: IssueContextMenuContent,
 };
 

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { OptionalSidebarScrollspy } from "@/components/general/SidebarScrollspy";
 import useActiveRedmineTab from "@/hooks/useActiveRedmineTab";
 import { issuePrioritiesQueryOptions, useSuspenseIssuePriorities } from "@/hooks/useIssuePriorities";
 import { myOpenIssuesQueryOptions, useSuspenseMyIssues } from "@/hooks/useMyIssues";
@@ -8,11 +8,12 @@ import { useSettings } from "@/provider/SettingsProvider";
 import { groupIssues } from "@/utils/groupIssues";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
+import { useMediaQuery } from "usehooks-ts";
 import Filter, { filterIssues, useFilter } from "../components/issue/Filter";
 import IssueSearch, { filterIssuesByLocalSearch, useIssueSearch } from "../components/issue/IssueSearch";
-import IssuesList from "../components/issue/IssuesList";
 import IssuesListSkeleton from "../components/issue/IssuesListSkeleton";
+import { ProjectGroupIcon, ProjectIssuesGroup } from "../components/issue/ProjectIssuesGroup";
 import TimersBadge from "../components/timer/TimersBadge";
 import useLocalIssues from "../hooks/useLocalIssues";
 import useRedmineSearch from "../hooks/useRedmineSearch";
@@ -35,25 +36,24 @@ export const Route = createFileRoute("/issues")({
 
 function PageComponent() {
   return (
-    <IssueSearch>
+    <IssueSearch.Provider>
       <Filter.Provider>
         <IssuesPage />
       </Filter.Provider>
-    </IssueSearch>
+    </IssueSearch.Provider>
   );
 }
 
 const IssuesPage = () => {
-  const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
   const localIssues = useLocalIssues();
   const timers = useTimers();
 
   const search = useIssueSearch();
-  const searchIssues = useRedmineSearch(search);
   const filter = useFilter();
 
+  const searchIssues = useRedmineSearch(search);
   const myIssuesQuery = useSuspenseMyIssues(Array.from(new Set([...timers.getIssuesIds(), ...localIssues.getIssuesIds()])));
   const unsortedIssues = filterIssues(search.isSearching && search.settings.mode === "remote" ? searchIssues.data : filterIssuesByLocalSearch(myIssuesQuery.data, search), filter.settings);
 
@@ -77,23 +77,52 @@ const IssuesPage = () => {
     [unsortedIssues, localIssues.localIssues, timers, priorities, projectVersionsMap, activeTab, settings]
   );
 
+  const showSidebarScrollspy = useMediaQuery("(width > calc(320px + 12rem))");
+
   return (
     <PermissionProvider>
       <TimersBadge activeTimerCount={timers.getActiveTimerCount()} />
 
-      <div className="mb-1 flex justify-end">
-        <Filter.Button />
-      </div>
+      <IssueSearch.Input className="mb-2" />
 
-      <IssuesList groupedIssues={groupedIssues} localIssues={localIssues} timers={timers} />
+      <OptionalSidebarScrollspy
+        enabled={showSidebarScrollspy && settings.style.fullscreenSidebarScrollspy}
+        groups={groupedIssues.map((projectGroup) => ({
+          key: projectGroup.key,
+          label: (
+            <>
+              <ProjectGroupIcon type={projectGroup.type} />
+              <span className="truncate">{projectGroup.project.name}</span>
+            </>
+          ),
+        }))}
+        classNames={{
+          root: "-m-2",
+          sidebar: "w-48",
+          section: "p-2 mt-2 pt-0",
+        }}
+      >
+        {({ getGroupProps }) => (
+          <div className="space-y-2">
+            <div className="flex justify-end">
+              <Filter.Button />
+            </div>
 
-      {search.isSearching && search.settings.mode === "remote" && searchIssues.hasNextPage && !searchIssues.isLoading && (
-        <div className="mt-4 flex justify-center">
-          <Button variant="outline" onClick={() => searchIssues.fetchNextPage()}>
-            {formatMessage({ id: "issues.list.load-more" })}
-          </Button>
-        </div>
-      )}
+            <div className="flex flex-col gap-y-4">
+              {groupedIssues.map((projectGroup) => (
+                <ProjectIssuesGroup key={projectGroup.key} projectGroup={projectGroup} localIssues={localIssues} timers={timers} {...getGroupProps(projectGroup.key)} />
+              ))}
+              {groupedIssues.length === 0 && (
+                <p className="text-center">
+                  <FormattedMessage id="issues.list.no-options" />
+                </p>
+              )}
+            </div>
+
+            <IssueSearch.LoadMore hasNextPage={searchIssues.hasNextPage} isLoading={searchIssues.isLoading} fetchNextPage={searchIssues.fetchNextPage} />
+          </div>
+        )}
+      </OptionalSidebarScrollspy>
     </PermissionProvider>
   );
 };

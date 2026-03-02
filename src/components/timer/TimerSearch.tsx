@@ -1,5 +1,5 @@
 import { SearchIcon } from "lucide-react";
-import { createContext, PropsWithChildren, use, useRef, useState } from "react";
+import { createContext, PropsWithChildren, use, useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import useHotKey from "../../hooks/useHotkey";
 import { useSettings } from "../../provider/SettingsProvider";
@@ -10,27 +10,32 @@ export type TimerSearchContext = {
   query: string;
 };
 
-const SearchContext = createContext<TimerSearchContext | undefined>(undefined);
+type TimerSearchInternalContext = TimerSearchContext & {
+  isSearchOpen: boolean;
+  rawQuery: string;
+  setRawQuery: (query: string) => void;
+  focusTrigger: number;
+};
 
-const TimerSearch = ({ children }: PropsWithChildren) => {
-  const { formatMessage } = useIntl();
+const SearchContext = createContext<TimerSearchInternalContext | undefined>(undefined);
+
+const TimerSearchProvider = ({ children }: PropsWithChildren) => {
   const { settings } = useSettings();
 
-  const searchRef = useRef<HTMLInputElement>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(settings.style.displaySearchAlways);
-
   const [query, setQuery] = useState("");
+  const [focusTrigger, setFocusTrigger] = useState(0);
+
+  const requestFocus = () => setFocusTrigger((prev) => prev + 1);
 
   // hotkeys
   useHotKey({ ctrl: true, key: "k" }, () => {
     setIsSearchOpen(true);
-    searchRef.current?.focus();
-    searchRef.current?.select();
+    requestFocus();
   });
   useHotKey({ ctrl: true, key: "f" }, () => {
     setIsSearchOpen(true);
-    searchRef.current?.focus();
-    searchRef.current?.select();
+    requestFocus();
   });
   useHotKey(
     { key: "Escape" },
@@ -44,35 +49,63 @@ const TimerSearch = ({ children }: PropsWithChildren) => {
   );
 
   return (
-    <>
-      {isSearchOpen && (
-        <div className="mb-4 flex flex-col gap-2">
-          <InputGroup>
-            <InputGroupInput ref={searchRef} name="query" placeholder={formatMessage({ id: "issues.search" })} value={query} onChange={(e) => setQuery(e.target.value)} autoFocus />
-            <InputGroupAddon>
-              <SearchIcon />
-            </InputGroupAddon>
-          </InputGroup>
-        </div>
-      )}
-      <SearchContext
-        value={{
-          isSearching: isSearchOpen && query.length > 0,
-          query,
-        }}
-      >
-        {children}
-      </SearchContext>
-    </>
+    <SearchContext
+      value={{
+        isSearching: isSearchOpen && query.length > 0,
+        query,
+        isSearchOpen,
+        rawQuery: query,
+        setRawQuery: setQuery,
+        focusTrigger,
+      }}
+    >
+      {children}
+    </SearchContext>
   );
 };
 
-export const useTimerSearch = () => {
+const TimerSearchInput = ({ className }: { className?: string }) => {
+  const { formatMessage } = useIntl();
+  const ctx = useTimerSearchInternal();
+
+  const searchRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (ctx.focusTrigger > 0) {
+      searchRef.current?.focus();
+      searchRef.current?.select();
+    }
+  }, [ctx.focusTrigger]);
+
+  if (!ctx.isSearchOpen) return null;
+
+  return (
+    <div className={className}>
+      <InputGroup>
+        <InputGroupInput ref={searchRef} name="query" placeholder={formatMessage({ id: "issues.search" })} value={ctx.rawQuery} onChange={(e) => ctx.setRawQuery(e.target.value)} autoFocus />
+        <InputGroupAddon>
+          <SearchIcon />
+        </InputGroupAddon>
+      </InputGroup>
+    </div>
+  );
+};
+
+const useTimerSearchInternal = () => {
   const context = use(SearchContext);
   if (!context) {
-    throw new Error("useTimerSearch must be used within a TimerSearch component");
+    throw new Error("useTimerSearch must be used within a TimerSearch.Provider component");
   }
   return context;
+};
+
+export const useTimerSearch = (): TimerSearchContext => {
+  const { isSearching, query } = useTimerSearchInternal();
+  return { isSearching, query };
+};
+
+const TimerSearch = {
+  Provider: TimerSearchProvider,
+  Input: TimerSearchInput,
 };
 
 export default TimerSearch;

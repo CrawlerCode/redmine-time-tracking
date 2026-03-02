@@ -1,16 +1,16 @@
 import { PencilIcon, TimerIcon, TimerOffIcon, TimerResetIcon, TrashIcon } from "lucide-react";
-import { PropsWithChildren } from "react";
+import { ReactElement } from "react";
 import { useIntl } from "react-intl";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "../../ui/context-menu";
 import { useTimerContext } from "./TimerRoot";
 
-export const TimerContextMenu = ({ children }: PropsWithChildren) => {
+export const TimerContextMenu = ({ children }: { children: ReactElement }) => {
   const { formatMessage } = useIntl();
   const { timer, setIsEditing } = useTimerContext();
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger>{children}</ContextMenuTrigger>
+      <ContextMenuTrigger render={children} />
       <ContextMenuContent>
         <ContextMenuItem onClick={timer.isActive ? timer.pauseTimer : timer.startTimer}>
           {timer.isActive ? <TimerOffIcon /> : <TimerIcon />}

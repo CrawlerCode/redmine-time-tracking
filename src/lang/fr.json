@@ -170,6 +170,7 @@
   "settings.style.sort-issues-by-priority.title": "Trier les tickets par priorité",
   "settings.style.pin-tracked-issues.title": "Épingler les tickets suivis en haut",
   "settings.style.pin-active-tab-issue.title": "Épingler le ticket de l'onglet actif en haut",
+  "settings.style.fullscreen-sidebar-scrollspy.title": "Fullscreen sidebar (experimental)",
   "settings.style.show-tooltips.title": "Afficher les infobulles",
   "settings.style.time-format.title": "Format de l'intervalle de temps",
   "settings.save-settings": "Enregistrer les paramètres",
