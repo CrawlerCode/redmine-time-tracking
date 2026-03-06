@@ -34,17 +34,25 @@ type PropTypes = {
 };
 
 export const IssueContextMenu = ({ children, ...props }: PropTypes & { children: ReactElement }) => {
+  const [editIssue, setEditIssue] = useState(false);
+  const [addNotes, setAddNotes] = useState(false);
+
   return (
-    <ContextMenu>
-      <ContextMenuTrigger render={children} />
-      <ContextMenuContent>
-        <IssueContextMenuItems {...props} />
-      </ContextMenuContent>
-    </ContextMenu>
+    <>
+      <ContextMenu>
+        <ContextMenuTrigger render={children} />
+        <ContextMenuContent>
+          <IssueContextMenuItems {...props} onEdit={() => setEditIssue(true)} onAddNotes={() => setAddNotes(true)} />
+        </ContextMenuContent>
+      </ContextMenu>
+
+      {editIssue && <EditIssueModal issue={props.issue} onClose={() => setEditIssue(false)} onSuccess={() => setEditIssue(false)} />}
+      {addNotes && <AddIssueNotesModal issue={props.issue} onClose={() => setAddNotes(false)} onSuccess={() => setAddNotes(false)} />}
+    </>
   );
 };
 
-const IssueContextMenuItems = ({ issue, localIssue, primaryTimer, assignedToMe, onAddTimer }: PropTypes) => {
+const IssueContextMenuItems = ({ issue, localIssue, primaryTimer, assignedToMe, onAddTimer, onEdit, onAddNotes }: PropTypes & { onEdit: () => void; onAddNotes: () => void }) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
@@ -54,9 +62,6 @@ const IssueContextMenuItems = ({ issue, localIssue, primaryTimer, assignedToMe, 
   const canEdit = hasProjectPermission(issue.project.id, "edit_issues") || (hasProjectPermission(issue.project.id, "edit_own_issues") && issue.author.id === me.data?.id);
   const canLogTime = hasProjectPermission(issue.project.id, "log_time");
   const canAddNotes = hasProjectPermission(issue.project.id, "add_issue_notes");
-
-  const [editIssue, setEditIssue] = useState(false);
-  const [addNotes, setAddNotes] = useState(false);
 
   return (
     <>
@@ -76,11 +81,11 @@ const IssueContextMenuItems = ({ issue, localIssue, primaryTimer, assignedToMe, 
         {formatMessage({ id: "issues.context-menu.copy-id-to-clipboard" })}
       </ContextMenuItem>
       <ContextMenuSeparator />
-      <ContextMenuItem disabled={!canEdit} onClick={() => setEditIssue(true)}>
+      <ContextMenuItem disabled={!canEdit} onClick={onEdit}>
         <PencilIcon />
         {formatMessage({ id: "issues.context-menu.edit" })}
       </ContextMenuItem>
-      <ContextMenuItem disabled={!canAddNotes} onClick={() => setAddNotes(true)}>
+      <ContextMenuItem disabled={!canAddNotes} onClick={onAddNotes}>
         <NotebookPenIcon />
         {formatMessage({ id: "issues.context-menu.add-notes" })}
       </ContextMenuItem>
@@ -119,9 +124,6 @@ const IssueContextMenuItems = ({ issue, localIssue, primaryTimer, assignedToMe, 
           </ContextMenuItem>
         </>
       )}
-
-      {editIssue && <EditIssueModal issue={issue} onClose={() => setEditIssue(false)} onSuccess={() => setEditIssue(false)} />}
-      {addNotes && <AddIssueNotesModal issue={issue} onClose={() => setAddNotes(false)} onSuccess={() => setAddNotes(false)} />}
     </>
   );
 };

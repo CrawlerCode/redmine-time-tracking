@@ -12,24 +12,26 @@ type PropTypes = {
 };
 
 export const TimeEntryContextMenu = ({ children, ...props }: PropTypes & { children: ReactElement }) => {
+  const [edit, setEdit] = useState<boolean>(false);
   return (
-    <ContextMenu>
-      <ContextMenuTrigger render={children} />
-      <ContextMenuContent>
-        <TimeEntryContextMenuItems {...props} />
-      </ContextMenuContent>
-    </ContextMenu>
+    <>
+      <ContextMenu>
+        <ContextMenuTrigger render={children} />
+        <ContextMenuContent>
+          <TimeEntryContextMenuItems {...props} onEdit={() => setEdit(true)} />
+        </ContextMenuContent>
+      </ContextMenu>
+      {edit && <EditTimeEntryModal entry={props.entry} onClose={() => setEdit(false)} onSuccess={() => setEdit(false)} />}
+    </>
   );
 };
 
-const TimeEntryContextMenuItems = ({ entry }: PropTypes) => {
+const TimeEntryContextMenuItems = ({ entry, onEdit }: PropTypes & { onEdit: () => void }) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
   const { hasProjectPermission } = usePermissions();
   const canEdit = hasProjectPermission(entry.project.id, "edit_own_time_entries");
-
-  const [edit, setEdit] = useState<boolean>(false);
 
   return (
     <>
@@ -42,12 +44,10 @@ const TimeEntryContextMenuItems = ({ entry }: PropTypes) => {
         {formatMessage({ id: "time.time-entry.context-menu.open-in-redmine" })}
       </ContextMenuItem>
       <ContextMenuSeparator />
-      <ContextMenuItem onClick={() => setEdit(true)} disabled={!canEdit}>
+      <ContextMenuItem onClick={onEdit} disabled={!canEdit}>
         <PencilIcon />
         {formatMessage({ id: "time.time-entry.context-menu.edit" })}
       </ContextMenuItem>
-
-      {edit && <EditTimeEntryModal entry={entry} onClose={() => setEdit(false)} onSuccess={() => setEdit(false)} />}
     </>
   );
 };
