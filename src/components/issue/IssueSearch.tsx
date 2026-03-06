@@ -203,7 +203,7 @@ const IssueSearchInput = ({ className }: { className?: string }) => {
                   <PopoverTrigger render={<InputGroupButton variant="ghost" size="icon-xs" />} disabled={mode !== "remote"}>
                     <MoreHorizontalIcon />
                   </PopoverTrigger>
-                  <PopoverContent sideOffset={10} collisionPadding={10} className="bg-background w-56">
+                  <PopoverContent sideOffset={10} collisionPadding={10} className="w-56">
                     <FormGrid className="gap-3">
                       <FieldSet>
                         <FieldLabel>{formatMessage({ id: "issues.search.remote-search-options.title" })}</FieldLabel>

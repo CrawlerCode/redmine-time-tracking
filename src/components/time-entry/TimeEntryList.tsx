@@ -5,6 +5,7 @@ import { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
 import { roundHours } from "../../utils/date";
 import { Badge } from "../ui/badge";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "../ui/card";
 import TimeEntry from "./TimeEntry";
 
 type PropTypes = {
@@ -45,7 +46,7 @@ const TimeEntryList = ({ entries }: PropTypes) => {
   const monday = isMonday(today) ? today : previousMonday(today);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-3 sm:gap-4">
       {Array(2)
         .fill(monday)
         .map((d, i) => subWeeks(d, i))
@@ -55,39 +56,43 @@ const TimeEntryList = ({ entries }: PropTypes) => {
             .map((d, i) => addDays(d, 6 - i));
           const summedHours = groupedEntries.filter((entries) => days.find((d) => d.getTime() === entries.date.getTime())).reduce((sum, entry) => sum + entry.hours, 0);
           return (
-            <div role="group" className="flex flex-col gap-y-1" key={i}>
-              <div className="flex items-center gap-x-3">
-                <h1 className="text-lg">
-                  {formatDate(monday)} - {formatDate(addDays(monday, 6))}
-                </h1>
-                <Badge variant="secondary">
-                  <ClockIcon />
-                  {formatHours(roundHours(summedHours))}
-                </Badge>
-              </div>
-              {days.map((d, i) => {
-                if (isFuture(d)) return;
-                const {
-                  date,
-                  hours,
-                  entries: groupEntries,
-                } = groupedEntries.find((entries) => entries.date.getTime() === d.getTime()) ?? {
-                  date: d,
-                  hours: 0,
-                  entries: [],
-                };
-                if (isWeekend(date) && hours === 0) return;
-                return (
-                  <div className="flex items-center gap-x-1" key={i}>
-                    <h4 className="w-8 text-sm">{format(date, "EEE")}</h4>
-                    <h3 className="w-17 truncate text-end text-sm font-semibold">{formatHours(roundHours(hours))}</h3>
-                    <div className="grow">
-                      <TimeEntry entries={groupEntries} maxHours={maxHours > 0 ? maxHours : undefined} withContextMenu />
+            <Card size="sm" key={i}>
+              <CardHeader>
+                <CardTitle>
+                  {formatDate(monday)} – {formatDate(addDays(monday, 6))}
+                </CardTitle>
+                <CardAction>
+                  <Badge variant="secondary">
+                    <ClockIcon />
+                    {formatHours(roundHours(summedHours))}
+                  </Badge>
+                </CardAction>
+              </CardHeader>
+              <CardContent>
+                {days.map((d, i) => {
+                  if (isFuture(d)) return;
+                  const {
+                    date,
+                    hours,
+                    entries: groupEntries,
+                  } = groupedEntries.find((entries) => entries.date.getTime() === d.getTime()) ?? {
+                    date: d,
+                    hours: 0,
+                    entries: [],
+                  };
+                  if (isWeekend(date) && hours === 0) return;
+                  return (
+                    <div className="flex items-center gap-x-1 py-1" key={i}>
+                      <span className="text-muted-foreground w-7 text-xs">{format(date, "EEE")}</span>
+                      <span className="w-17 truncate text-end text-xs font-semibold">{formatHours(roundHours(hours))}</span>
+                      <div className="grow">
+                        <TimeEntry entries={groupEntries} maxHours={maxHours > 0 ? maxHours : undefined} withContextMenu />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </CardContent>
+            </Card>
           );
         })}
     </div>

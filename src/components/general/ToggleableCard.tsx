@@ -11,12 +11,7 @@ export const ToggleableCard = ({ as = "div", className, onToggle, ...props }: Pr
   return (
     <Comp
       {...props}
-      className={clsxm(
-        "bg-card rounded-lg p-1",
-        "border border-gray-200 dark:border-gray-700",
-        "focus-visible:border-ring focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
-        className
-      )}
+      className={clsxm("bg-card rounded-lg p-1", "border-border border", "focus-visible:border-ring focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]", className)}
       {...(!!onToggle && {
         tabIndex: 1,
         onKeyDown: (e) => {

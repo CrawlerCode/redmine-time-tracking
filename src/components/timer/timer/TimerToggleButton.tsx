@@ -11,13 +11,13 @@ export const TimerToggleButton = () => {
   if (!timer.isActive) {
     return (
       <HelpTooltip message={formatMessage({ id: "issues.timer.action.start.tooltip" })}>
-        <TimerIcon role="button" data-type="start-timer" className="size-6 shrink-0 cursor-pointer text-green-500 focus:outline-hidden" onClick={timer.startTimer} tabIndex={-1} />
+        <TimerIcon role="button" data-type="start-timer" className="size-6 shrink-0 cursor-pointer text-green-700 focus:outline-hidden dark:text-green-600" onClick={timer.startTimer} tabIndex={-1} />
       </HelpTooltip>
     );
   } else {
     return (
       <HelpTooltip message={formatMessage({ id: "issues.timer.action.pause.tooltip" })}>
-        <TimerOffIcon role="button" data-type="pause-timer" className="size-6 shrink-0 cursor-pointer text-red-500 focus:outline-hidden" onClick={timer.pauseTimer} tabIndex={-1} />
+        <TimerOffIcon role="button" data-type="pause-timer" className="size-6 shrink-0 cursor-pointer text-red-600 focus:outline-hidden dark:text-red-500" onClick={timer.pauseTimer} tabIndex={-1} />
       </HelpTooltip>
     );
   }

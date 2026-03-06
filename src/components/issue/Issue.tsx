@@ -61,8 +61,8 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
         />
         <div className="flex justify-between gap-x-2">
           <div className="mt-1">
-            <div className="w-[80px] bg-[#eeeeee]">
-              <div className="bg-[#bae0ba] p-1 text-center text-xs leading-none font-medium text-gray-600 select-none" style={{ width: `${issue.done_ratio}%` }}>
+            <div className="bg-muted w-20 overflow-hidden rounded-sm">
+              <div className="text-foreground bg-green-600/80 p-1 text-center text-xs leading-none font-medium select-none dark:bg-green-600/60" style={{ width: `${issue.done_ratio}%` }}>
                 {issue.done_ratio}%
               </div>
             </div>
@@ -77,7 +77,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
                 </Timer.Wrapper>
               </Timer.Root>
               {timers.length > 1 && (
-                <div className="pl-3 text-xs text-gray-500" onClick={() => setAreTimersExpanded(true)}>
+                <div className="text-muted-foreground pl-3 text-xs" onClick={() => setAreTimersExpanded(true)}>
                   {formatMessage({ id: "issues.timers.more-timers" }, { count: timers.length - 1 })}
                 </div>
               )}
@@ -103,12 +103,12 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
         <div className="absolute top-2 right-2 flex items-start justify-end gap-x-2">
           {localIssue.pinned && (
             <HelpTooltip message={formatMessage({ id: "issues.issue.pinned" })}>
-              <PinIcon className="size-3.5 rotate-30 fill-current text-gray-300 focus:outline-hidden dark:text-gray-600" tabIndex={-1} />
+              <PinIcon className="text-muted-foreground/30 size-3.5 rotate-30 fill-current focus:outline-hidden" tabIndex={-1} />
             </HelpTooltip>
           )}
           {!assignedToMe && (
             <HelpTooltip message={formatMessage({ id: "issues.issue.not-assigned-to-me" })}>
-              <UserIcon className="size-3.5 fill-current text-gray-300 focus:outline-hidden dark:text-gray-600" tabIndex={-1} />
+              <UserIcon className="text-muted-foreground/30 size-3.5 fill-current focus:outline-hidden" tabIndex={-1} />
             </HelpTooltip>
           )}
         </div>

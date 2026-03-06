@@ -3,24 +3,24 @@
 @import "shadcn/tailwind.css";
 
 :root {
-  --background: oklch(100% 0 0deg);
-  --foreground: oklch(32.11% 0 0deg);
-  --card: oklch(98% 0 0deg);
-  --card-foreground: oklch(32.11% 0 0deg);
+  --background: oklch(98.5% 0.005 255deg);
+  --foreground: oklch(25% 0.015 260deg);
+  --card: oklch(100% 0 0deg);
+  --card-foreground: oklch(25% 0.015 260deg);
   --popover: oklch(100% 0 0deg);
-  --popover-foreground: oklch(32.11% 0 0deg);
+  --popover-foreground: oklch(25% 0.015 260deg);
   --primary: oklch(62.31% 0.188 259.8145deg);
   --primary-foreground: oklch(100% 0 0deg);
   --secondary: oklch(96.7% 0.0029 264.5419deg);
   --secondary-foreground: oklch(44.61% 0.0263 256.8018deg);
-  --muted: oklch(93.46% 0.0017 247.8389deg);
-  --muted-foreground: oklch(55.1% 0.0234 264.3637deg);
+  --muted: oklch(93.5% 0.006 255deg);
+  --muted-foreground: oklch(52% 0.025 260deg);
   --accent: oklch(95.14% 0.025 236.8242deg);
   --accent-foreground: oklch(37.91% 0.1378 265.5222deg);
   --destructive: oklch(63.68% 0.2078 25.3313deg);
   --destructive-foreground: oklch(100% 0 0deg);
-  --border: oklch(92.76% 0.0058 264.5313deg);
-  --input: oklch(92.76% 0.0058 264.5313deg);
+  --border: oklch(90% 0.01 260deg);
+  --input: oklch(90% 0.01 260deg);
   --ring: oklch(62.31% 0.188 259.8145deg);
   --chart-1: oklch(62.31% 0.188 259.8145deg);
   --chart-2: oklch(54.61% 0.2152 262.8809deg);
@@ -48,7 +48,7 @@
     --foreground: oklch(92.19% 0 0deg);
     --card: oklch(24.5% 0 0deg);
     --card-foreground: oklch(92.19% 0 0deg);
-    --popover: oklch(26.86% 0 0deg);
+    --popover: oklch(23.75% 0 0deg);
     --popover-foreground: oklch(92.19% 0 0deg);
     --primary: oklch(62.31% 0.188 259.8145deg);
     --primary-foreground: oklch(100% 0 0deg);

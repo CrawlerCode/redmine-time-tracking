@@ -31,8 +31,8 @@ const IssueTitle = ({ issue, priorityType, className, ...props }: PropTypes) => 
           href={`${settings.redmineURL}/issues/${issue.id}`}
           target="_blank"
           tabIndex={-1}
-          className={clsxm("text-blue-500 hover:underline", {
-            "text-gray-500 line-through hover:line-through": issue.status.is_closed,
+          className={clsxm("text-primary hover:underline", {
+            "text-muted-foreground line-through hover:line-through": issue.status.is_closed,
           })}
           rel="noreferrer"
         >

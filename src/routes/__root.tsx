@@ -54,10 +54,13 @@ function RootLayout() {
           ]}
         />
         {entrypoint === "popup" && (
-          <SquareArrowOutUpRightIcon className="bg-card border-border/30 absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full border p-1.5" onClick={createPopOut} />
+          <SquareArrowOutUpRightIcon
+            className="bg-card border-border/50 hover:bg-muted hover:border-border absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full border p-1.5 transition-colors"
+            onClick={createPopOut}
+          />
         )}
       </header>
-      <main className="flex flex-1 flex-col overflow-y-auto p-2">
+      <main className="flex flex-1 flex-col overflow-y-auto p-2 sm:p-4">
         <Outlet />
       </main>
       <footer id="footer" className="bg-muted/50 flex w-full justify-end border-t p-4 empty:hidden" />

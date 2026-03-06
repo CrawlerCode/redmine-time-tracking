@@ -49,11 +49,9 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
           <TooltipTrigger
             render={
               <div
-                className="bg-primary h-4 rounded-sm opacity-50"
+                className="bg-primary/60 h-3.5 rounded-sm"
                 style={{
                   width: `${(previewHours / maxHours) * 100}%`,
-                  backgroundSize: "1rem 1rem",
-                  backgroundImage: "linear-gradient(45deg,rgba(255,255,255,.1) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.1) 75%,transparent 75%,transparent)",
                 }}
               />
             }
@@ -64,11 +62,9 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
         </Tooltip>
       )}
       <div
-        className="h-3 rounded-sm bg-gray-400/40 dark:bg-gray-700/40"
+        className="bg-muted h-3 rounded-sm"
         style={{
           width: `${((maxHours - sumHours - (previewHours ?? 0)) / maxHours) * 100}%`,
-          backgroundSize: "1rem 1rem",
-          backgroundImage: "linear-gradient(45deg,rgba(255,255,255,.05) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.05) 50%,rgba(255,255,255,.05) 75%,transparent 75%,transparent)",
         }}
       />
     </div>

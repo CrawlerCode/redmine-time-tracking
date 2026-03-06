@@ -83,7 +83,7 @@ const IssuesPage = () => {
     <PermissionProvider>
       <TimersBadge activeTimerCount={timers.getActiveTimerCount()} />
 
-      <IssueSearch.Input className="mb-2" />
+      <IssueSearch.Input className="mb-2 sm:mb-4" />
 
       <OptionalSidebarScrollspy
         enabled={showSidebarScrollspy && settings.style.fullscreenSidebarScrollspy}
@@ -97,9 +97,9 @@ const IssuesPage = () => {
           ),
         }))}
         classNames={{
-          root: "-m-2",
+          root: "-m-2 sm:-m-4",
           sidebar: "w-48",
-          section: "p-2 mt-2 pt-0",
+          section: "p-2 mt-2 pt-0 sm:px-4",
         }}
       >
         {({ getGroupProps }) => (

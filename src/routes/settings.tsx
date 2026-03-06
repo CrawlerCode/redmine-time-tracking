@@ -69,13 +69,14 @@ function PageComponent() {
 
   return (
     <Form onSubmit={form.handleSubmit}>
-      <div className="mx-auto flex max-w-4xl flex-col gap-3">
+      <div className="mx-auto grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <Card size="sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
+          <CardHeader className="border-b">
+            <CardTitle className="flex items-center gap-2">
               <GlobeIcon className="text-muted-foreground size-4" />
               {formatMessage({ id: "settings.general" })}
             </CardTitle>
+            <CardAction />
           </CardHeader>
           <CardContent>
             <form.AppField
@@ -115,8 +116,8 @@ function PageComponent() {
         <RedmineServerSection form={form} />
 
         <Card size="sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
+          <CardHeader className="border-b">
+            <CardTitle className="flex items-center gap-2">
               <Wand2Icon className="text-muted-foreground size-4" />
               {formatMessage({ id: "settings.features" })}
             </CardTitle>
@@ -217,8 +218,8 @@ function PageComponent() {
         </Card>
 
         <Card size="sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
+          <CardHeader className="border-b">
+            <CardTitle className="flex items-center gap-2">
               <PaletteIcon className="text-muted-foreground size-4" />
               {formatMessage({ id: "settings.style" })}
             </CardTitle>
@@ -269,7 +270,9 @@ function PageComponent() {
           </CardContent>
         </Card>
 
-        <InfoSection />
+        <div className="sm:col-span-2">
+          <InfoSection />
+        </div>
 
         <Portal container={() => document.getElementById("footer")}>
           <form.AppForm>
@@ -303,8 +306,8 @@ const RedmineServerSection = withForm({
 
     return (
       <Card size="sm">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3">
+        <CardHeader className="border-b">
+          <CardTitle className="flex items-center gap-2">
             <ServerIcon className="text-muted-foreground size-4" />
             {formatMessage({ id: "settings.redmine" })}
           </CardTitle>
@@ -317,7 +320,7 @@ const RedmineServerSection = withForm({
                 children={({ isValid }) => (
                   <Button
                     type="button"
-                    size="sm"
+                    size="xs"
                     variant="outline"
                     disabled={!isValid}
                     onClick={() => {
@@ -330,7 +333,7 @@ const RedmineServerSection = withForm({
                 )}
               />
             ) : (
-              <Button type="button" size="sm" variant="outline" onClick={() => setEditRedmineInstance(true)}>
+              <Button type="button" size="xs" variant="outline" onClick={() => setEditRedmineInstance(true)}>
                 <PencilIcon />
                 {formatMessage({ id: "settings.redmine.edit" })}
               </Button>
@@ -379,7 +382,7 @@ const RedmineServerSection = withForm({
             </FieldGroup>
           ) : (
             <ItemGroup className="gap-2">
-              <Item variant="muted" className="flex-nowrap">
+              <Item variant="outline" className="flex-nowrap">
                 <ItemMedia variant="icon" className="bg-muted text-muted-foreground size-8 overflow-hidden rounded-sm border">
                   {redmineConnection.isLoading ? (
                     <Loader2Icon className="animate-spin" />

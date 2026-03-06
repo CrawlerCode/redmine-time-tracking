@@ -63,7 +63,7 @@ const FilterButton = () => {
         <SlidersHorizontalIcon />
         {formatMessage({ id: "issues.filter" })}
       </PopoverTrigger>
-      <PopoverContent collisionPadding={10} className="bg-background w-[18.5rem]">
+      <PopoverContent collisionPadding={10} className="w-[18.5rem]">
         <FilterForm />
       </PopoverContent>
     </Popover>
