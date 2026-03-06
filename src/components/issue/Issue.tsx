@@ -73,7 +73,6 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
                 <Timer.Wrapper>
                   <Timer.Counter />
                   <Timer.ToggleButton />
-                  <Timer.ResetButton />
                   <Timer.DoneButton canLogTime={canLogTime} />
                 </Timer.Wrapper>
               </Timer.Root>
@@ -94,7 +93,6 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
                     <Timer.NameField />
                     <Timer.Counter />
                     <Timer.ToggleButton />
-                    <Timer.ResetButton />
                     <Timer.DoneButton canLogTime={canLogTime} />
                   </Timer.WrapperCard>
                 </Timer.ContextMenu>

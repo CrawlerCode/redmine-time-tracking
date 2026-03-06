@@ -28,7 +28,6 @@ const CurrentIssueTimerInner = ({ issueId }: PropTypes) => {
         <Timer.WrapperCard>
           <Timer.Counter />
           <Timer.ToggleButton />
-          <Timer.ResetButton />
           <Timer.DoneButton canLogTime={canLogTime} />
         </Timer.WrapperCard>
       </Timer.ContextMenu>
