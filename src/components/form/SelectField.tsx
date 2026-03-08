@@ -23,7 +23,7 @@ export const SelectField = <Value extends string | number>({ items, title, place
       <FieldLabel required={required} htmlFor={id}>
         {title}
       </FieldLabel>
-      <Select {...props} name={name} required={required} disabled={disabled} value={findSelectedItem(state.value, items)} onValueChange={(item) => handleChange(item?.value || null)}>
+      <Select {...props} name={name} required={required} disabled={disabled} value={findSelectedItem(state.value, items)} onValueChange={(item) => handleChange(item?.value ?? null)}>
         <SelectTrigger id={id} className="w-full truncate" aria-invalid={isInvalid} onBlur={handleBlur}>
           <SelectValue>
             {(selected: Item<Value>) =>
