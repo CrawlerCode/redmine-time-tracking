@@ -87,16 +87,26 @@ export class RedmineApiClient {
   }
 
   async searchIssues(
-    query: string,
     {
+      query,
+      projectId,
       scope,
       titlesOnly,
       openIssuesOnly,
     }: {
-      scope?: "all" | "my_projects" | "bookmarks"; // "bookmarks" available since Redmine 5.1.0
+      query: string;
       titlesOnly?: boolean;
       openIssuesOnly?: boolean;
-    },
+    } & (
+      | {
+          projectId: number;
+          scope?: "subprojects";
+        }
+      | {
+          projectId?: never;
+          scope?: "all" | "my_projects" | "bookmarks"; // "bookmarks" available since Redmine 5.1.0
+        }
+    ),
     { offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }
   ): Promise<
     TPaginatedResponse<{
@@ -105,40 +115,7 @@ export class RedmineApiClient {
   > {
     return this.instance
       .get(
-        `/search.json?${qs.stringify({
-          issues: 1,
-          q: query,
-          scope,
-          ...(titlesOnly ? { titles_only: 1 } : {}),
-          ...(openIssuesOnly ? { open_issues: 1 } : {}),
-          offset,
-          limit,
-        })}`
-      )
-      .then((res) => res.data); // available since Redmine 3.3.0
-  }
-
-  async searchIssuesInProject(
-    projectId: number,
-    query: string,
-    {
-      titlesOnly,
-      openIssuesOnly,
-      scope,
-    }: {
-      scope?: "subprojects";
-      titlesOnly?: boolean;
-      openIssuesOnly?: boolean;
-    },
-    { offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }
-  ): Promise<
-    TPaginatedResponse<{
-      results: TSearchResult[];
-    }>
-  > {
-    return this.instance
-      .get(
-        `/projects/${projectId}/search.json?${qs.stringify({
+        `${projectId ? `/projects/${projectId}` : ""}/search.json?${qs.stringify({
           issues: 1,
           q: query,
           scope,
@@ -193,7 +170,7 @@ export class RedmineApiClient {
   }
 
   // Projects
-  async getAllMyProjects({ offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }): Promise<
+  async getProjects({ offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }): Promise<
     TPaginatedResponse<{
       projects: TProject[];
     }>
@@ -243,9 +220,16 @@ export class RedmineApiClient {
   } */
 
   // Time entries
-  async getAllMyTimeEntries(
-    from: Date,
-    to: Date,
+  async getTimeEntries(
+    {
+      userId,
+      from,
+      to,
+    }: {
+      userId?: "me" | number;
+      from?: Date;
+      to?: Date;
+    },
     { offset, limit }: { offset: number; limit: number } = { offset: 0, limit: 100 }
   ): Promise<
     TPaginatedResponse<{
@@ -255,9 +239,9 @@ export class RedmineApiClient {
     return this.instance
       .get(
         `/time_entries.json?${qs.stringify({
-          user_id: "me",
-          from: formatISO(from, { representation: "date" }),
-          to: formatISO(to, { representation: "date" }),
+          user_id: userId,
+          ...(from && { from: formatISO(from, { representation: "date" }) }),
+          ...(to && { to: formatISO(to, { representation: "date" }) }),
           offset,
           limit,
         })}`
@@ -292,7 +276,7 @@ export class RedmineApiClient {
   }
 
   // Roles and permissions
-  async getAllRoles(): Promise<TReference[]> {
+  async getRoles(): Promise<TReference[]> {
     return this.instance.get(`/roles.json`).then((res) => res.data.roles);
   }
 
@@ -300,7 +284,7 @@ export class RedmineApiClient {
     return this.instance.get(`/roles/${id}.json`).then((res) => res.data.role);
   }
 
-  async getMyUser(): Promise<TUser> {
+  async getCurrentUser(): Promise<TUser> {
     return this.instance.get("/users/current.json?include=memberships").then((res) => res.data.user);
   }
 }

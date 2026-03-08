@@ -1,4 +1,5 @@
 /* eslint-disable react/no-children-prop */
+import { redmineIssuesQueries } from "@/api/redmine/queries/issues";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useIntl } from "react-intl";
 import { z } from "zod";
@@ -32,7 +33,7 @@ const AddIssueNotesModal = ({ issue, onClose, onSuccess }: PropTypes) => {
   const updateIssueMutation = useMutation({
     mutationFn: (data: TUpdateIssue) => redmineApi.updateIssue(issue.id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries(redmineIssuesQueries);
       onSuccess();
     },
     meta: {

@@ -1,4 +1,7 @@
 /* eslint-disable react/no-children-prop */
+import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser";
+import { redmineIssuesQueries } from "@/api/redmine/queries/issues";
+import { redmineTimeEntriesQueries } from "@/api/redmine/queries/timeEntries";
 import { usePersistentComments } from "@/hooks/usePersistentComments";
 import { TimerController } from "@/hooks/useTimers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,7 +10,6 @@ import { useIntl } from "react-intl";
 import { z } from "zod";
 import { TCreateTimeEntry, TIssue, TUpdateIssue } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
-import useMyUser from "../../hooks/useMyUser";
 import { usePermissions } from "../../provider/PermissionsProvider";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";
@@ -54,17 +56,15 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
   const redmineApi = useRedmineApi();
   const queryClient = useQueryClient();
 
-  const myUser = useMyUser();
+  const { data: me } = useRedmineCurrentUser();
   const { hasProjectPermission } = usePermissions();
 
   const createTimeEntryMutation = useMutation({
     mutationFn: (entry: TCreateTimeEntry) => redmineApi.createTimeEntry(entry),
     onSuccess: (_, entry) => {
       // if entry created for me => invalidate query
-      if (!entry.user_id || entry.user_id === myUser.data?.id) {
-        queryClient.invalidateQueries({
-          queryKey: ["timeEntries"],
-        });
+      if (!entry.user_id || entry.user_id === me?.id) {
+        queryClient.invalidateQueries(redmineTimeEntriesQueries);
       }
     },
     meta: {
@@ -75,7 +75,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
   const updateIssueMutation = useMutation({
     mutationFn: (data: TUpdateIssue) => redmineApi.updateIssue(issue.id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries(redmineIssuesQueries);
     },
   });
 
@@ -87,7 +87,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
   const form = useAppForm({
     defaultValues: {
       issue_id: issue.id,
-      user_id: myUser.data?.id ? [myUser.data.id] : [],
+      user_id: me?.id ? [me.id] : [],
       hours: 0,
       spent_on: new Date(),
       comments: null,

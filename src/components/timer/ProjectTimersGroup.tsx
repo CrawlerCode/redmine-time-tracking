@@ -1,7 +1,7 @@
+import { useRedmineIssuePriorities } from "@/api/redmine/hooks/useRedmineIssuePriorities";
 import { ToggleableCard } from "@/components/general/ToggleableCard";
 import IssueTitle from "@/components/issue/IssueTitle";
 import Timer from "@/components/timer/timer";
-import { useIssuePriorities } from "@/hooks/useIssuePriorities";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { clsxm } from "@/utils/clsxm";
@@ -21,7 +21,7 @@ export const ProjectTimersGroup = ({ projectGroup, className, ...props }: Projec
 
   const { hasProjectPermission } = usePermissions();
 
-  const { getPriorityType } = useIssuePriorities({ enabled: settings.style.showIssuesPriority });
+  const { getPriorityType } = useRedmineIssuePriorities({ enabled: settings.style.showIssuesPriority });
 
   return (
     <div {...props} className={clsxm("flex flex-col gap-y-2", className)}>

@@ -1,12 +1,12 @@
+import { useRedmineIssuePriorities } from "@/api/redmine/hooks/useRedmineIssuePriorities";
 import { ComboboxField } from "@/components/form/ComboboxField";
-import { useIssuePriorities } from "@/hooks/useIssuePriorities";
 import { ComponentProps } from "react";
 import { useIntl } from "react-intl";
 
 const PriorityField = (props: Omit<ComponentProps<typeof ComboboxField>, "items" | "isLoading">) => {
   const { formatMessage } = useIntl();
 
-  const issuePriorities = useIssuePriorities();
+  const issuePriorities = useRedmineIssuePriorities();
 
   return (
     <ComboboxField
@@ -17,7 +17,7 @@ const PriorityField = (props: Omit<ComponentProps<typeof ComboboxField>, "items"
         label: priority.name,
         value: priority.id,
       }))}
-      isLoading={issuePriorities.isLoading}
+      isLoading={issuePriorities.isPending}
     />
   );
 };

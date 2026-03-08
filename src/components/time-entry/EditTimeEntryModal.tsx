@@ -1,11 +1,12 @@
 /* eslint-disable react/no-children-prop */
+import { useRedmineIssue } from "@/api/redmine/hooks/useRedmineIssue";
+import { redmineTimeEntriesQueries } from "@/api/redmine/queries/timeEntries";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { parseISO } from "date-fns";
 import { useIntl } from "react-intl";
 import { z } from "zod";
 import { TTimeEntry, TUpdateTimeEntry } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
-import useIssue from "../../hooks/useIssue";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";
 import ActivityField from "../issue/form/fields/ActivityField";
@@ -39,16 +40,14 @@ const EditTimeEntryModal = ({ entry, onClose, onSuccess }: PropTypes) => {
   const redmineApi = useRedmineApi();
   const queryClient = useQueryClient();
 
-  const issue = useIssue(entry.issue?.id ?? 0, {
+  const issueQuery = useRedmineIssue(entry.issue?.id ?? 0, {
     enabled: !!entry.issue,
   });
 
   const updateTimeEntryMutation = useMutation({
     mutationFn: (data: TUpdateTimeEntry) => redmineApi.updateTimeEntry(entry.id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["timeEntries"],
-      });
+      queryClient.invalidateQueries(redmineTimeEntriesQueries);
     },
     meta: {
       successMessage: formatMessage({ id: "time.modal.edit-time-entry.success" }),
@@ -86,10 +85,15 @@ const EditTimeEntryModal = ({ entry, onClose, onSuccess }: PropTypes) => {
               <Input name="project_id" placeholder={formatMessage({ id: "time.time-entry.field.project" })} value={entry.project.name} disabled />
             </Field>
 
-            {issue.data && (
+            {issueQuery.data && (
               <Field>
                 <FieldLabel required>{formatMessage({ id: "time.time-entry.field.issue" })}</FieldLabel>
-                <Input name="issue_id" placeholder={formatMessage({ id: "time.time-entry.field.issue" })} value={`${issue.data.tracker.name} #${issue.data.id}: ${issue.data.subject}`} disabled />
+                <Input
+                  name="issue_id"
+                  placeholder={formatMessage({ id: "time.time-entry.field.issue" })}
+                  value={`${issueQuery.data.tracker.name} #${issueQuery.data.id}: ${issueQuery.data.subject}`}
+                  disabled
+                />
               </Field>
             )}
 

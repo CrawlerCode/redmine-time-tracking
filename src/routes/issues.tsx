@@ -1,22 +1,24 @@
+import { useSuspenseIssuePriorities } from "@/api/redmine/hooks/useRedmineIssuePriorities";
+import { useSuspenseRedmineIssues } from "@/api/redmine/hooks/useRedmineIssues";
+import { useSuspenseRedmineMultipleProjectVersions } from "@/api/redmine/hooks/useRedmineMultipleProjectVersions";
+import { redmineIssuePrioritiesQuery } from "@/api/redmine/queries/issuePriorities";
+import { redmineIssuesQuery } from "@/api/redmine/queries/issues";
 import { OptionalSidebarScrollspy } from "@/components/general/SidebarScrollspy";
 import useActiveRedmineTab from "@/hooks/useActiveRedmineTab";
-import { issuePrioritiesQueryOptions, useSuspenseIssuePriorities } from "@/hooks/useIssuePriorities";
-import { myOpenIssuesQueryOptions, useSuspenseMyIssues } from "@/hooks/useMyIssues";
-import { useSuspenseMultipleProjectVersions } from "@/hooks/useProjectVersions";
 import PermissionProvider from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { groupIssues } from "@/utils/groupIssues";
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useDeferredValue, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 import { useMediaQuery } from "usehooks-ts";
+import useRedmineIssuesSearch from "../api/redmine/hooks/useRedmineIssuesSearch";
 import Filter, { filterIssues, useFilter } from "../components/issue/Filter";
 import IssueSearch, { filterIssuesByLocalSearch, useIssueSearch } from "../components/issue/IssueSearch";
 import IssuesListSkeleton from "../components/issue/IssuesListSkeleton";
 import { ProjectGroupIcon, ProjectIssuesGroup } from "../components/issue/ProjectIssuesGroup";
 import TimersBadge from "../components/timer/TimersBadge";
 import useLocalIssues from "../hooks/useLocalIssues";
-import useRedmineSearch from "../hooks/useRedmineSearch";
 import useTimers from "../hooks/useTimers";
 
 export const Route = createFileRoute("/issues")({
@@ -25,10 +27,13 @@ export const Route = createFileRoute("/issues")({
     // Prefetch required data in parallel mode
     await Promise.all([
       queryClient.prefetchInfiniteQuery({
-        ...myOpenIssuesQueryOptions(redmineApi),
+        ...redmineIssuesQuery(redmineApi, {
+          assignedTo: "me",
+          statusId: "open",
+        }),
         pages: 3,
       }),
-      ...(settings.style.sortIssuesByPriority ? [queryClient.prefetchQuery(issuePrioritiesQueryOptions(redmineApi))] : []),
+      ...(settings.style.sortIssuesByPriority ? [queryClient.prefetchQuery(redmineIssuePrioritiesQuery(redmineApi))] : []),
     ]);
   },
   pendingComponent: () => <IssuesListSkeleton />,
@@ -50,17 +55,27 @@ const IssuesPage = () => {
   const localIssues = useLocalIssues();
   const timers = useTimers();
 
-  const search = useIssueSearch();
-  const filter = useFilter();
+  const { data: myOpenIssues } = useSuspenseRedmineIssues({
+    assignedTo: "me",
+    statusId: "open",
+  });
+  const fetchAdditionalIssuesIds = useDeferredValue(Array.from(new Set([...timers.getIssuesIds(), ...localIssues.getIssuesIds()]).difference(new Set(myOpenIssues.map((issue) => issue.id)))));
+  const { data: additionalIssues } = useSuspenseRedmineIssues({
+    issueIds: fetchAdditionalIssuesIds,
+    statusId: "*",
+  });
+  const issues = myOpenIssues.concat(additionalIssues.filter((issue) => !myOpenIssues.find((iss) => iss.id === issue.id)));
 
-  const searchIssues = useRedmineSearch(search);
-  const myIssuesQuery = useSuspenseMyIssues(Array.from(new Set([...timers.getIssuesIds(), ...localIssues.getIssuesIds()])));
-  const unsortedIssues = filterIssues(search.isSearching && search.settings.mode === "remote" ? searchIssues.data : filterIssuesByLocalSearch(myIssuesQuery.data, search), filter.settings);
+  const search = useIssueSearch();
+  const redmineIssuesSearch = useRedmineIssuesSearch(search);
+
+  const filter = useFilter();
+  const unsortedIssues = filterIssues(search.isSearching && search.settings.mode === "remote" ? redmineIssuesSearch.data : filterIssuesByLocalSearch(issues, search), filter.settings);
 
   const activeTab = useActiveRedmineTab();
 
   const { priorities } = useSuspenseIssuePriorities({ enabled: settings.style.sortIssuesByPriority });
-  const { projectVersionsMap } = useSuspenseMultipleProjectVersions([...new Set(unsortedIssues.filter((i) => i.fixed_version).map((i) => i.project.id))], {
+  const { projectVersionsMap } = useSuspenseRedmineMultipleProjectVersions([...new Set(unsortedIssues.filter((i) => i.fixed_version).map((i) => i.project.id))], {
     enabled: settings.style.groupIssuesByVersion,
   });
 
@@ -119,7 +134,7 @@ const IssuesPage = () => {
               )}
             </div>
 
-            <IssueSearch.LoadMore hasNextPage={searchIssues.hasNextPage} isLoading={searchIssues.isLoading} fetchNextPage={searchIssues.fetchNextPage} />
+            <IssueSearch.LoadMore hasNextPage={redmineIssuesSearch.hasNextPage} isLoading={redmineIssuesSearch.isLoading} fetchNextPage={redmineIssuesSearch.fetchNextPage} />
           </div>
         )}
       </OptionalSidebarScrollspy>

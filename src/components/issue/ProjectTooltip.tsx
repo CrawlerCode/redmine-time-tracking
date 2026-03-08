@@ -1,4 +1,4 @@
-import useProject from "@/hooks/useProject";
+import { useRedmineProject } from "@/api/redmine/hooks/useRedmineProject";
 import { ReactElement } from "react";
 import { useIntl } from "react-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -21,7 +21,7 @@ export const ProjectTooltip = ({ children, ...props }: PropTypes & { children: R
 const ProjectTooltipContent = ({ projectId }: PropTypes) => {
   const { formatMessage } = useIntl();
 
-  const { data: project } = useProject(projectId);
+  const { data: project } = useRedmineProject(projectId);
 
   return (
     <>

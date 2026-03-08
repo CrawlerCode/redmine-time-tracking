@@ -1,3 +1,4 @@
+import { redmineIssuesQueries } from "@/api/redmine/queries/issues";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useIntl } from "react-intl";
 import { TCreateIssue } from "../../api/redmine/types";
@@ -19,7 +20,7 @@ const CreateIssueModal = ({ projectId, onClose, onSuccess }: PropTypes) => {
   const createIssueMutation = useMutation({
     mutationFn: (issue: TCreateIssue) => redmineApi.createIssue(issue),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries(redmineIssuesQueries);
       onSuccess();
     },
     meta: {

@@ -1,9 +1,9 @@
+import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser";
+import { useRedmineProjectMembers } from "@/api/redmine/hooks/useRedmineProjectMembers";
 import { ComboboxField } from "@/components/form/ComboboxField";
-import { groupUsers } from "@/utils/groupUsers";
+import { groupMembers } from "@/utils/groupMembers";
 import { ComponentProps, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
-import useMyUser from "../../../../hooks/useMyUser";
-import useProjectUsers from "../../../../hooks/useProjectUsers";
 
 type Props = {
   projectId: number;
@@ -12,13 +12,13 @@ type Props = {
 const UserField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "items" | "isLoading"> & Props) => {
   const { formatMessage } = useIntl();
 
-  const [loadUsers, setLoadUsers] = useState(false);
+  const [fetchMembers, setFetchMembers] = useState(false);
 
-  const myUser = useMyUser();
-  const users = useProjectUsers(projectId, {
-    enabled: loadUsers,
+  const { data: me } = useRedmineCurrentUser();
+  const members = useRedmineProjectMembers(projectId, {
+    enabled: fetchMembers,
   });
-  const groupedUsers = useMemo(() => groupUsers(users.data), [users.data]);
+  const groupedMembers = useMemo(() => groupMembers(members.members), [members.members]);
 
   return (
     <ComboboxField
@@ -26,26 +26,26 @@ const UserField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxF
       title={formatMessage({ id: "time.time-entry.field.user" })}
       placeholder={formatMessage({ id: "time.time-entry.field.user" })}
       noOptionsMessage={formatMessage({ id: "time.time-entry.field.user.no-options" })}
-      onOpenChange={(open) => open && setLoadUsers(true)}
+      onOpenChange={(open) => open && setFetchMembers(true)}
       items={
-        loadUsers
-          ? groupedUsers.map(({ role, users }) => ({
+        fetchMembers
+          ? groupedMembers.map(({ role, users }) => ({
               label: role.name,
               items: users.map((user) => ({
                 value: user.id,
-                label: user.id === myUser.data?.id ? `${user.name} <<${formatMessage({ id: "issues.issue.field.assignee.me" })}>>` : user.name,
+                label: user.id === me?.id ? `${user.name} <<${formatMessage({ id: "issues.issue.field.assignee.me" })}>>` : user.name,
               })),
             }))
-          : myUser.data
+          : me
             ? [
                 {
-                  value: myUser.data.id,
-                  label: `${myUser.data.firstname} ${myUser.data.lastname} <<${formatMessage({ id: "issues.issue.field.assignee.me" })}>>`,
+                  value: me.id,
+                  label: `${me.firstname} ${me.lastname} <<${formatMessage({ id: "issues.issue.field.assignee.me" })}>>`,
                 },
               ]
             : []
       }
-      isLoading={users.isLoading}
+      isLoading={fetchMembers && members.isPending}
     />
   );
 };

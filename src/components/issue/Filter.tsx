@@ -1,13 +1,13 @@
 /* eslint-disable react/no-children-prop */
+import { useRedmineIssueStatuses } from "@/api/redmine/hooks/useRedmineIssueStatuses";
+import { useRedmineProjects } from "@/api/redmine/hooks/useRedmineProjects";
 import { TIssue } from "@/api/redmine/types";
 import { useAppForm } from "@/hooks/useAppForm";
-import { useStatuses } from "@/hooks/useIssueStatuses";
 import deepmerge from "deepmerge";
 import { SlidersHorizontalIcon } from "lucide-react";
 import { createContext, PropsWithChildren, use } from "react";
 import { useIntl } from "react-intl";
 import { z } from "zod";
-import useMyProjects from "../../hooks/useMyProjects";
 import { useSuspenseStorage } from "../../hooks/useStorage";
 import { Button } from "../ui/button";
 import { FieldGroup, FieldSet } from "../ui/field";
@@ -91,8 +91,8 @@ const FilterForm = () => {
     },
   });
 
-  const { data: projects, isLoading: isLoadingProjects } = useMyProjects();
-  const { data: statuses, isLoading: isLoadingStatuses } = useStatuses();
+  const projectsQuery = useRedmineProjects();
+  const statusesQuery = useRedmineIssueStatuses();
 
   return (
     <Form onSubmit={form.handleSubmit}>
@@ -105,8 +105,8 @@ const FilterForm = () => {
                 title={formatMessage({ id: "issues.filter.projects" })}
                 placeholder={formatMessage({ id: "issues.filter.projects" })}
                 noOptionsMessage={formatMessage({ id: "issues.filter.projects.no-options" })}
-                items={projects.map((project) => ({ value: project.id, label: project.name }))}
-                isLoading={isLoadingProjects}
+                items={projectsQuery.data?.map((project) => ({ value: project.id, label: project.name })) ?? []}
+                isLoading={projectsQuery.isPending}
                 mode="multiple"
               />
             )}
@@ -118,13 +118,13 @@ const FilterForm = () => {
                 title={formatMessage({ id: "issues.filter.statuses" })}
                 placeholder={formatMessage({ id: "issues.filter.statuses" })}
                 items={
-                  statuses?.map((status) => ({
+                  statusesQuery.data?.map((status) => ({
                     label: status.name,
                     value: status.id,
                     disabled: status.is_closed,
                   })) ?? []
                 }
-                isLoading={isLoadingStatuses}
+                isLoading={statusesQuery.isPending}
                 mode="multiple"
               />
             )}

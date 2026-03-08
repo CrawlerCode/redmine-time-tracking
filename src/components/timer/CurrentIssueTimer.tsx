@@ -1,5 +1,5 @@
+import { useRedmineIssue } from "@/api/redmine/hooks/useRedmineIssue";
 import { usePermissions } from "@/provider/PermissionsProvider";
-import useIssue from "../../hooks/useIssue";
 import useRedmineUrl from "../../hooks/useRedmineUrl";
 import useTimers from "../../hooks/useTimers";
 import Timer from "./timer";
@@ -10,7 +10,7 @@ type PropTypes = {
 
 const CurrentIssueTimerInner = ({ issueId }: PropTypes) => {
   const timers = useTimers();
-  const { data: issue } = useIssue(issueId);
+  const { data: issue } = useRedmineIssue(issueId);
   const { hasProjectPermission } = usePermissions();
 
   if (!issue) return;

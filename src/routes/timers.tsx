@@ -1,13 +1,13 @@
+import { useSuspenseRedmineIssues } from "@/api/redmine/hooks/useRedmineIssues";
 import { OptionalSidebarScrollspy } from "@/components/general/SidebarScrollspy";
 import { ProjectTimersGroup } from "@/components/timer/ProjectTimersGroup";
 import TimerSearch, { useTimerSearch } from "@/components/timer/TimerSearch";
-import { useSuspenseIssues } from "@/hooks/useIssues";
 import PermissionProvider from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { groupTimers } from "@/utils/groupTimers";
 import { createFileRoute } from "@tanstack/react-router";
 import { SquareChartGanttIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useDeferredValue, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 import { useMediaQuery } from "usehooks-ts";
 import IssuesListSkeleton from "../components/issue/IssuesListSkeleton";
@@ -31,12 +31,17 @@ const TimersPage = () => {
   const { settings } = useSettings();
 
   const timers = useTimers();
-  const issues = useSuspenseIssues(timers.getIssuesIds());
+
+  const issueIds = useDeferredValue(timers.getIssuesIds());
+  const { data: issues } = useSuspenseRedmineIssues({
+    issueIds,
+    statusId: "*",
+  });
 
   const search = useTimerSearch();
-  const matchedTimers = timers.searchTimers(search, issues.data);
+  const matchedTimers = timers.searchTimers(search, issues);
 
-  const groupedTimers = useMemo(() => groupTimers(matchedTimers, issues.data), [matchedTimers, issues.data]);
+  const groupedTimers = useMemo(() => groupTimers(matchedTimers, issues), [matchedTimers, issues]);
 
   const showSidebarScrollspy = useMediaQuery("(width > calc(320px + 12rem))");
 

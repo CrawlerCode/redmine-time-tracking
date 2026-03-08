@@ -1,11 +1,11 @@
 /* eslint-disable react/no-children-prop */
+import { useTestRedmineConnection } from "@/api/redmine/hooks/useTestRedmineConnection";
 import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { Portal } from "@/components/general/Portal";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
-import { useTestRedmineConnection } from "@/hooks/useTestRedmineConnection";
 import { useStore as useFormStore } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";

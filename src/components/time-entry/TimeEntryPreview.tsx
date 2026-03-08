@@ -1,4 +1,4 @@
-import { useMyTimeEntries } from "@/hooks/useMyTimeEntries";
+import { useRedmineTimeEntries } from "@/api/redmine/hooks/useRedmineTimeEntries";
 import clsx from "clsx";
 import useFormatHours from "../../hooks/useFormatHours";
 import { roundHours } from "../../utils/date";
@@ -13,15 +13,20 @@ type PropTypes = {
 const TimeEntryPreview = ({ date, previewHours, className }: PropTypes) => {
   const formatHours = useFormatHours();
 
-  const myTimeEntriesQuery = useMyTimeEntries(date, date);
+  const myTimeEntriesQuery = useRedmineTimeEntries({
+    userId: "me",
+    from: date,
+    to: date,
+  });
+  const timeEntries = myTimeEntriesQuery.data ?? [];
 
-  const sumHours = myTimeEntriesQuery.data.reduce((sum, entry) => sum + entry.hours, 0) + previewHours;
+  const sumHours = timeEntries.reduce((sum, entry) => sum + entry.hours, 0) + previewHours;
 
   return (
     <div className={clsx("flex items-center gap-x-1", className)}>
       <h3 className="max-w-20 truncate text-sm font-semibold">{formatHours(roundHours(sumHours))}</h3>
       <div className="grow">
-        <TimeEntry entries={myTimeEntriesQuery.data} previewHours={previewHours} maxHours={sumHours > 12 ? sumHours : 12} />
+        <TimeEntry entries={timeEntries} previewHours={previewHours} maxHours={sumHours > 12 ? sumHours : 12} />
       </div>
     </div>
   );

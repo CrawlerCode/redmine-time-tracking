@@ -1,7 +1,7 @@
+import { useRedmineProjectTimeEntryActivities } from "@/api/redmine/hooks/useRedmineProjectTimeEntryActivities";
 import { ComboboxField } from "@/components/form/ComboboxField";
 import { ComponentProps, useEffect, useEffectEvent } from "react";
 import { useIntl } from "react-intl";
-import useTimeEntryActivities from "../../../../hooks/useTimeEntryActivities";
 
 type Props = {
   projectId: number;
@@ -11,7 +11,7 @@ type Props = {
 const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: Omit<ComponentProps<typeof ComboboxField>, "items" | "isLoading"> & Props) => {
   const { formatMessage } = useIntl();
 
-  const timeEntryActivities = useTimeEntryActivities(projectId);
+  const timeEntryActivities = useRedmineProjectTimeEntryActivities(projectId);
 
   const handleDefaultActivityChange = useEffectEvent((activityId: number) => onDefaultActivityChange?.(activityId));
   useEffect(() => {
@@ -25,12 +25,12 @@ const ActivityField = ({ projectId, onDefaultActivityChange, ...props }: Omit<Co
       title={formatMessage({ id: "time.time-entry.field.activity" })}
       placeholder={formatMessage({ id: "time.time-entry.field.activity" })}
       items={
-        timeEntryActivities.data?.map((activity) => ({
+        timeEntryActivities.activities?.map((activity) => ({
           label: activity.name,
           value: activity.id,
         })) ?? []
       }
-      isLoading={timeEntryActivities.isLoading}
+      isLoading={timeEntryActivities.isPending}
     />
   );
 };

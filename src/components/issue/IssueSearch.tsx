@@ -1,6 +1,6 @@
 /* eslint-disable react/no-children-prop */
+import useRedmineIssuesSearch from "@/api/redmine/hooks/useRedmineIssuesSearch";
 import { useAppForm } from "@/hooks/useAppForm";
-import useRedmineSearch from "@/hooks/useRedmineSearch";
 import { useSuspenseStorage } from "@/hooks/useStorage";
 import { clsxm } from "@/utils/clsxm";
 import { ChevronRightIcon, CloudIcon, ListTreeIcon, MoreHorizontalIcon, SearchIcon, XIcon } from "lucide-react";
@@ -265,7 +265,7 @@ const IssueSearchLoadMore = ({
   isLoading,
   fetchNextPage,
   className,
-}: Pick<ReturnType<typeof useRedmineSearch>, "hasNextPage" | "isLoading" | "fetchNextPage"> & {
+}: Pick<ReturnType<typeof useRedmineIssuesSearch>, "hasNextPage" | "isLoading" | "fetchNextPage"> & {
   className?: string;
 }) => {
   const { formatMessage } = useIntl();

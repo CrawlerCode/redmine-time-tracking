@@ -1,6 +1,7 @@
+import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser";
+import { useRedmineIssuePriorities } from "@/api/redmine/hooks/useRedmineIssuePriorities";
 import { ProjectTooltip } from "@/components/issue/ProjectTooltip";
 import { VersionTooltip } from "@/components/issue/VersionTooltip";
-import { useIssuePriorities } from "@/hooks/useIssuePriorities";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { clsxm } from "@/utils/clsxm";
@@ -11,7 +12,6 @@ import { ComponentProps, Fragment, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { TReference, TVersion } from "../../api/redmine/types";
 import useLocalIssues from "../../hooks/useLocalIssues";
-import useMyUser from "../../hooks/useMyUser";
 import useTimers from "../../hooks/useTimers";
 import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";
@@ -27,8 +27,8 @@ interface ProjectIssuesGroupProps extends ComponentProps<"div"> {
 export const ProjectIssuesGroup = ({ projectGroup, localIssues, timers, className, ...props }: ProjectIssuesGroupProps) => {
   const { settings } = useSettings();
 
-  const myUser = useMyUser();
-  const { getPriorityType } = useIssuePriorities({ enabled: settings.style.showIssuesPriority });
+  const { data: me } = useRedmineCurrentUser();
+  const { getPriorityType } = useRedmineIssuePriorities({ enabled: settings.style.showIssuesPriority });
 
   return (
     <div {...props} className={clsxm("flex flex-col gap-y-2", className)}>
@@ -43,7 +43,7 @@ export const ProjectIssuesGroup = ({ projectGroup, localIssues, timers, classNam
               issue={issue}
               localIssue={localIssues.getLocalIssue(issue.id)}
               priorityType={getPriorityType(issue)}
-              assignedToMe={myUser.data ? myUser.data.id === issue.assigned_to?.id : true}
+              assignedToMe={me ? me.id === issue.assigned_to?.id : true}
               timers={timers.getTimersByIssue(issue.id)}
               onAddTimer={() => timers.addTimer(issue.id)}
             />

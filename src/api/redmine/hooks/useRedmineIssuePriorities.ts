@@ -1,30 +1,21 @@
-import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
-import { queryOptions, useQuery, useSuspenseQueries, UseSuspenseQueryResult } from "@tanstack/react-query";
-import { TIssue, TIssuePriority } from "../api/redmine/types";
-import { useRedmineApi } from "../provider/RedmineApiProvider";
+import { redmineIssuePrioritiesQuery } from "@/api/redmine/queries/issuePriorities";
+import { useRedmineApi } from "@/provider/RedmineApiProvider";
+import { combineFlatSuspenseQueries } from "@/utils/query";
+import { useQuery, useSuspenseQueries } from "@tanstack/react-query";
+import { TIssue, TIssuePriority } from "../types";
 
 type Options = {
   enabled?: boolean;
 };
 
 /**
- * Query options for issue priorities
+ * Hook to get redmine issue priorities
  */
-export const issuePrioritiesQueryOptions = (redmineApi: RedmineApiClient) =>
-  queryOptions({
-    queryKey: ["issuePriorities"],
-    queryFn: () => redmineApi.getIssuePriorities(),
-    select: (data) => data.filter((priority) => priority.active !== false),
-  });
-
-/**
- * Hook to get issue priorities
- */
-export const useIssuePriorities = ({ enabled = true }: Options = {}) => {
+export const useRedmineIssuePriorities = ({ enabled = true }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
   const issuePrioritiesQuery = useQuery({
-    ...issuePrioritiesQueryOptions(redmineApi),
+    ...redmineIssuePrioritiesQuery(redmineApi),
     enabled,
   });
 
@@ -32,37 +23,28 @@ export const useIssuePriorities = ({ enabled = true }: Options = {}) => {
   const priorityTypeMap = buildPriorityTypeMap(priorities);
 
   return {
-    isLoading: issuePrioritiesQuery.isLoading,
     priorities,
     defaultPriority: getDefaultPriority(priorities),
     getPriorityType: (issue: TIssue) => getPriorityType(issue, priorityTypeMap),
+    isPending: issuePrioritiesQuery.isPending,
   };
 };
 
 /**
- * Hook to get issue priorities with suspense
+ * Hook to get redmine issue priorities with suspense
  */
 export const useSuspenseIssuePriorities = ({ enabled = true }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
   const issuePrioritiesQuery = useSuspenseQueries({
-    queries: enabled ? [issuePrioritiesQueryOptions(redmineApi)] : ([] as ReturnType<typeof issuePrioritiesQueryOptions>[]),
-    combine: combineSuspenseQueries,
+    queries: enabled ? [redmineIssuePrioritiesQuery(redmineApi)] : ([] as ReturnType<typeof redmineIssuePrioritiesQuery>[]),
+    combine: combineFlatSuspenseQueries,
   });
 
   return {
     priorities: issuePrioritiesQuery.data,
   };
 };
-
-const combineSuspenseQueries = (results: UseSuspenseQueryResult<TIssuePriority[], Error>[]) => ({
-  data: results.reduce<TIssuePriority[]>((result, query) => {
-    if (query.data) {
-      result.push(...query.data);
-    }
-    return result;
-  }, []),
-});
 
 export type PriorityType = "highest" | "high" | "medium-high" | "medium" | "default" | "low" | "lowest" | "unknown";
 

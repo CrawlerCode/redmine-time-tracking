@@ -1,3 +1,4 @@
+import { PriorityType } from "@/api/redmine/hooks/useRedmineIssuePriorities";
 import { IssueContextMenu } from "@/components/issue/IssueContextMenu";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import clsx from "clsx";
@@ -5,7 +6,6 @@ import { PinIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useIntl } from "react-intl";
 import { TIssue } from "../../api/redmine/types";
-import { PriorityType } from "../../hooks/useIssuePriorities";
 import { LocalIssue } from "../../hooks/useLocalIssues";
 import { TimerController } from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";

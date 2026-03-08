@@ -1,7 +1,7 @@
+import { useRedmineProject } from "@/api/redmine/hooks/useRedmineProject";
 import { ComboboxField } from "@/components/form/ComboboxField";
 import { ComponentProps } from "react";
 import { useIntl } from "react-intl";
-import useProject from "../../../../hooks/useProject";
 
 type Props = {
   projectId: number;
@@ -10,9 +10,9 @@ type Props = {
 const CategoryField = ({ projectId, ...props }: Omit<ComponentProps<typeof ComboboxField>, "items" | "isLoading"> & Props) => {
   const { formatMessage } = useIntl();
 
-  const project = useProject(projectId);
+  const projectQuery = useRedmineProject(projectId);
 
-  if (project.data?.issue_categories?.length === 0) return null;
+  if (projectQuery.data?.issue_categories?.length === 0) return null;
 
   return (
     <ComboboxField
@@ -20,12 +20,12 @@ const CategoryField = ({ projectId, ...props }: Omit<ComponentProps<typeof Combo
       title={formatMessage({ id: "issues.issue.field.category" })}
       placeholder={formatMessage({ id: "issues.issue.field.category" })}
       items={
-        project.data?.issue_categories?.map((category) => ({
+        projectQuery.data?.issue_categories?.map((category) => ({
           label: category.name,
           value: category.id,
         })) ?? []
       }
-      isLoading={project.isLoading}
+      isLoading={projectQuery.isPending}
     />
   );
 };

@@ -1,16 +1,16 @@
 /* eslint-disable react/no-children-prop */
+import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser";
+import { useRedmineIssueAllowedStatuses } from "@/api/redmine/hooks/useRedmineIssueAllowedStatuses";
+import { useRedmineProject } from "@/api/redmine/hooks/useRedmineProject";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Form, FormGrid } from "@/components/ui/form";
-import { useIssueStatuses } from "@/hooks/useIssueStatuses";
 import { parseISO } from "date-fns";
 import { useIntl } from "react-intl";
 import { z } from "zod";
+import { useRedmineIssuePriorities } from "../../../api/redmine/hooks/useRedmineIssuePriorities";
+import { useRedmineProjectIssueTrackers } from "../../../api/redmine/hooks/useRedmineProjectIssueTrackers";
 import { TIssue } from "../../../api/redmine/types";
 import { useAppForm } from "../../../hooks/useAppForm";
-import { useIssuePriorities } from "../../../hooks/useIssuePriorities";
-import useIssueTrackers from "../../../hooks/useIssueTrackers";
-import useMyUser from "../../../hooks/useMyUser";
-import useProject from "../../../hooks/useProject";
 import DismissibleWarning from "../../general/DismissableWarning";
 import AssigneeField from "./fields/AssigneeField";
 import CategoryField from "./fields/CategoryField";
@@ -65,13 +65,13 @@ export const IssueForm = (props: PropTypes) => {
 
   const projectId = props.action === "create" ? props.projectId : props.issue.project.id;
 
-  const myUser = useMyUser();
-  const project = useProject(projectId);
-  const issueTrackers = useIssueTrackers(projectId);
-  const issuePriorities = useIssuePriorities();
-  const issueStatuses = useIssueStatuses(props.action === "edit" ? props.issue.id : 0, {
+  const { data: me } = useRedmineCurrentUser();
+  const projectQuery = useRedmineProject(projectId);
+  const issueTrackers = useRedmineProjectIssueTrackers(projectId);
+  const issuePriorities = useRedmineIssuePriorities();
+  const issueAllowedStatuses = useRedmineIssueAllowedStatuses(props.action === "edit" ? props.issue.id : 0, {
     enabled: props.action === "edit",
-    issueStaleTime: 0,
+    staleTime: 0,
   });
 
   const form = useAppForm({
@@ -84,9 +84,9 @@ export const IssueForm = (props: PropTypes) => {
             subject: "",
             description: null,
             priority_id: issuePriorities.defaultPriority?.id,
-            assigned_to_id: myUser.data?.id ?? null,
+            assigned_to_id: me?.id ?? null,
             category_id: null,
-            fixed_version_id: project.data?.default_version?.id ?? null,
+            fixed_version_id: projectQuery.data?.default_version?.id ?? null,
             start_date: null,
             due_date: null,
             estimated_hours: null,
@@ -119,7 +119,7 @@ export const IssueForm = (props: PropTypes) => {
     <Form onSubmit={form.handleSubmit}>
       <form.Subscribe
         selector={(state) => {
-          const selectedTracker = issueTrackers.data?.find((tracker) => tracker.id === state.values.tracker_id);
+          const selectedTracker = issueTrackers.trackers?.find((tracker) => tracker.id === state.values.tracker_id);
           const hasTrackerNoEnabledFields = selectedTracker && selectedTracker.enabled_standard_fields === undefined;
           return {
             selectedTracker,
@@ -137,19 +137,19 @@ export const IssueForm = (props: PropTypes) => {
                     placeholder={formatMessage({ id: "issues.issue.field.tracker" })}
                     required
                     items={
-                      issueTrackers.data?.map((tracker) => ({
+                      issueTrackers.trackers?.map((tracker) => ({
                         label: tracker.name,
                         value: tracker.id,
                       })) ?? []
                     }
-                    isLoading={issueTrackers.isLoading}
+                    isLoading={issueTrackers.isPending}
                     className="col-span-1"
                   />
                 )}
                 listeners={{
                   onChange: ({ value }) => {
                     if (props.action === "create") {
-                      const selectedTracker = issueTrackers.data?.find((tracker) => tracker.id === value);
+                      const selectedTracker = issueTrackers.trackers?.find((tracker) => tracker.id === value);
                       form.setFieldValue("status_id", selectedTracker?.default_status?.id ?? 0);
                     }
                   },
@@ -174,7 +174,7 @@ export const IssueForm = (props: PropTypes) => {
                               },
                             ]
                           : []
-                        : (issueStatuses.data?.map((status) => ({
+                        : (issueAllowedStatuses.statuses?.map((status) => ({
                             label: status.name,
                             value: status.id,
                           })) ?? [])
@@ -282,7 +282,7 @@ export const IssueForm = (props: PropTypes) => {
               </FormGrid>
             </FormGrid>
 
-            {props.action === "create" && issueStatuses.hasIssueNoAllowedStatuses && (
+            {props.action === "create" && issueAllowedStatuses.hasIssueNoAllowedStatuses && (
               <DismissibleWarning name="issueNoAllowedStatuses">{formatMessage({ id: "issues.modal.edit-issue.issue-with-no-allowed-statuses.warning" })}</DismissibleWarning>
             )}
 

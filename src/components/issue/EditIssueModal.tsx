@@ -1,7 +1,8 @@
+import { useRedmineIssue } from "@/api/redmine/hooks/useRedmineIssue";
+import { redmineIssuesQueries } from "@/api/redmine/queries/issues";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useIntl } from "react-intl";
 import { TIssue, TUpdateIssue } from "../../api/redmine/types";
-import useIssue from "../../hooks/useIssue";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { IssueForm } from "./form/IssueForm";
@@ -18,14 +19,15 @@ const EditIssueModal = ({ issue: currentIssue, onClose, onSuccess }: PropTypes) 
   const redmineApi = useRedmineApi();
   const queryClient = useQueryClient();
 
-  const issueQuery = useIssue(currentIssue.id, { staleTime: 0 });
-
+  const issueQuery = useRedmineIssue(currentIssue.id, {
+    staleTime: 0,
+  });
   const issue = issueQuery.data ?? currentIssue;
 
   const updateIssueMutation = useMutation({
     mutationFn: (data: TUpdateIssue) => redmineApi.updateIssue(issue.id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries(redmineIssuesQueries);
       onSuccess();
     },
     meta: {

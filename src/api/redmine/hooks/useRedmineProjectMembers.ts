@@ -1,37 +1,36 @@
+import { redmineProjectMembershipsQuery } from "@/api/redmine/queries/projectMemberships";
+import { redmineRolesQuery } from "@/api/redmine/queries/roles";
 import { useQuery } from "@tanstack/react-query";
-import { TMembership, TReference } from "../api/redmine/types";
-import { useRedmineApi } from "../provider/RedmineApiProvider";
+import { useRedmineApi } from "../../../provider/RedmineApiProvider";
+import { TMembership, TReference } from "../types";
 import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 type Options = {
   enabled?: boolean;
 };
 
-export type TUser = TMembership["user"] & {
+export type TProjectMember = TMembership["user"] & {
   roles: TMembership["roles"];
   highestRole?: TMembership["roles"][0];
 };
 
-const useProjectUsers = (projectId: number, { enabled = true }: Options = {}) => {
+export const useRedmineProjectMembers = (projectId: number, { enabled = true }: Options = {}) => {
   const redmineApi = useRedmineApi();
 
   const membershipsQuery = useRedminePaginatedInfiniteQuery({
-    queryKey: ["projectMemberships", projectId],
-    queryFn: ({ pageParam }) => redmineApi.getProjectMemberships(projectId, pageParam),
-    select: (data) => data?.pages.map((page) => page.memberships).flat(),
+    ...redmineProjectMembershipsQuery(redmineApi, projectId),
     enabled: enabled,
     autoFetchPages: true,
   });
 
   const rolesQuery = useQuery({
-    queryKey: ["roles"],
-    queryFn: () => redmineApi.getAllRoles(),
+    ...redmineRolesQuery(redmineApi),
     enabled: enabled,
   });
 
   const rolesSortMap = buildRolesSortMap(rolesQuery.data ?? []);
 
-  const users: TUser[] =
+  const members: TProjectMember[] =
     membershipsQuery.data
       ?.filter((m) => m.user)
       .map((m) => ({
@@ -41,9 +40,8 @@ const useProjectUsers = (projectId: number, { enabled = true }: Options = {}) =>
       })) ?? [];
 
   return {
-    data: users,
-    isLoading: membershipsQuery.isLoading || rolesQuery.isLoading,
-    isError: membershipsQuery.isError || rolesQuery.isError,
+    members,
+    isPending: membershipsQuery.isPending || rolesQuery.isPending,
   };
 };
 
@@ -56,12 +54,10 @@ const buildRolesSortMap = (roles: TReference[]) => {
 };
 
 const getHighestRole = (roles: TReference[], rolesSortMap: Map<number, number>) => {
-  return roles.reduce<TUser["highestRole"]>((highestRole, role) => {
+  return roles.reduce<TProjectMember["highestRole"]>((highestRole, role) => {
     if (!highestRole || (rolesSortMap.get(role.id) ?? 0) < (rolesSortMap.get(highestRole.id) ?? 0)) {
       highestRole = role;
     }
     return highestRole;
   }, undefined);
 };
-
-export default useProjectUsers;

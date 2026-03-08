@@ -1,14 +1,14 @@
 import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { useQuery } from "@tanstack/react-query";
-import { useRedmineApi } from "../provider/RedmineApiProvider";
+import { useRedmineApi } from "../../../provider/RedmineApiProvider";
 
 export const useTestRedmineConnection = (customRedmineApiClient?: RedmineApiClient) => {
   const defaultRedmineApi = useRedmineApi();
   const redmineApiClient = customRedmineApiClient ?? defaultRedmineApi;
 
   const myUserQuery = useQuery({
-    queryKey: ["testRedmineConnection", redmineApiClient.id],
-    queryFn: () => redmineApiClient.getMyUser(),
+    queryKey: ["redmine", "testRedmineConnection", redmineApiClient.id],
+    queryFn: () => redmineApiClient.getCurrentUser(),
     retry: 1,
     staleTime: 0,
     gcTime: 0,

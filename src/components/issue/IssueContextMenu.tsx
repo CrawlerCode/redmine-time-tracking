@@ -1,4 +1,4 @@
-import useMyUser from "@/hooks/useMyUser";
+import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import {
   BookmarkMinusIcon,
@@ -56,10 +56,10 @@ const IssueContextMenuItems = ({ issue, localIssue, primaryTimer, assignedToMe, 
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
-  const me = useMyUser();
+  const { data: me } = useRedmineCurrentUser();
 
   const { hasProjectPermission } = usePermissions();
-  const canEdit = hasProjectPermission(issue.project.id, "edit_issues") || (hasProjectPermission(issue.project.id, "edit_own_issues") && issue.author.id === me.data?.id);
+  const canEdit = hasProjectPermission(issue.project.id, "edit_issues") || (hasProjectPermission(issue.project.id, "edit_own_issues") && issue.author.id === me?.id);
   const canLogTime = hasProjectPermission(issue.project.id, "log_time");
   const canAddNotes = hasProjectPermission(issue.project.id, "add_issue_notes");
 
