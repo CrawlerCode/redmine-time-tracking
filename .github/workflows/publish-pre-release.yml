@@ -36,8 +36,9 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
 
-      - run: pnpm wxt submit \
-          --chrome-zip .output/*-chrome.zip
+      - run: |
+          pnpm wxt submit \
+            --chrome-zip .output/*-chrome.zip
         env:
           CHROME_EXTENSION_ID: adgcdimdkkaddeopcabokepmaihfhklb
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}

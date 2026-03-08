@@ -35,7 +35,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
-      - run: pnpm wxt submit --chrome-zip .output/*-chrome.zip
+      - run: |
+          pnpm wxt submit \
+            --chrome-zip .output/*-chrome.zip
         env:
           CHROME_EXTENSION_ID: ldcanhhkffokndenejhafhlkapflgcjg
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
@@ -69,9 +71,10 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
 
-      - run: pnpm wxt submit \
-          --firefox-zip .output/*-firefox.zip \
-          --firefox-sources-zip .output/*-sources.zip
+      - run: |
+          pnpm wxt submit \
+            --firefox-zip .output/*-firefox.zip \
+            --firefox-sources-zip .output/*-sources.zip
         env:
           FIREFOX_EXTENSION_ID: "{ea2ad5bc-e458-414d-8565-5cfe9f7cf0c2}"
           FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
