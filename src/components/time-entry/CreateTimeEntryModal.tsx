@@ -1,5 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser";
+import { useRedmineProjectTimeEntryActivities } from "@/api/redmine/hooks/useRedmineProjectTimeEntryActivities";
 import { redmineIssuesQueries } from "@/api/redmine/queries/issues";
 import { redmineTimeEntriesQueries } from "@/api/redmine/queries/timeEntries";
 import { usePersistentComments } from "@/hooks/usePersistentComments";
@@ -57,6 +58,8 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
   const queryClient = useQueryClient();
 
   const { data: me } = useRedmineCurrentUser();
+  const timeEntryActivities = useRedmineProjectTimeEntryActivities(issue.project.id);
+
   const { hasProjectPermission } = usePermissions();
 
   const createTimeEntryMutation = useMutation({
@@ -91,7 +94,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
       hours: 0,
       spent_on: new Date(),
       comments: null,
-      activity_id: undefined,
+      activity_id: timeEntryActivities.defaultActivity?.id,
       issue: {
         done_ratio: issue.done_ratio,
         _add_notes: false,
@@ -222,10 +225,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
                     )}
                   />
 
-                  <form.AppField
-                    name="activity_id"
-                    children={(field) => <ActivityField projectId={issue.project.id} onDefaultActivityChange={(activityId) => field.setValue(activityId)} required />}
-                  />
+                  <form.AppField name="activity_id" children={() => <ActivityField projectId={issue.project.id} required />} />
                 </FormGrid>
               </FormFieldset>
 
