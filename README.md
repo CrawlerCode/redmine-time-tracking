@@ -18,9 +18,9 @@
 [![Install-Button-Chrome]][Install-Link-Chrome]
 [![Install-Button-Firefox]][Install-Link-Firefox]
 
-[Install-Button-Chrome]: https://img.shields.io/badge/Install-71b500?style=for-the-badge&logoColor=white&logo=google-chrome
+[Install-Button-Chrome]: https://img.shields.io/badge/Install-Chrome-71b500?style=for-the-badge&logoColor=white&logo=google-chrome
 [Install-Link-Chrome]: https://chrome.google.com/webstore/detail/redmine-time-tracking/ldcanhhkffokndenejhafhlkapflgcjg "Open in chrome web store"
-[Install-Button-Firefox]: https://img.shields.io/badge/Install-71b500?style=for-the-badge&logoColor=white&logo=firefox-browser
+[Install-Button-Firefox]: https://img.shields.io/badge/Install-Firefox-71b500?style=for-the-badge&logoColor=white&logo=firefox-browser
 [Install-Link-Firefox]: https://addons.mozilla.org/de/firefox/addon/redmine-time-tracking "Open in firefox add-on store"
 
 ## 🚀 Features
