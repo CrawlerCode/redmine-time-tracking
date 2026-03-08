@@ -1,3 +1,42 @@
+## [2.0.0-beta.3](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2026-03-08)
+
+### 🚀 Features
+
+* Add full-screen project sidebar (experimental) ([#64](https://github.com/CrawlerCode/redmine-time-tracking/issues/64)) ([2f4c065](https://github.com/CrawlerCode/redmine-time-tracking/commit/2f4c065f6f0d4e51145318bd41e44f3958217d8e))
+
+### 🩹 Fixes
+
+* Fix 0 value selection for select field ([35af5e4](https://github.com/CrawlerCode/redmine-time-tracking/commit/35af5e4a145a39cf6862120cebaa9b0c6b70fb04))
+* Fix context menu dialog actions ([66cbc7a](https://github.com/CrawlerCode/redmine-time-tracking/commit/66cbc7a9dcb4dd08276eb862c836997c4e73a5a7))
+* Fix default time entry activity ([0f316ae](https://github.com/CrawlerCode/redmine-time-tracking/commit/0f316aefdcb0c72f9283c893812a1d473c753567))
+* Fix suspense settings provider ([#60](https://github.com/CrawlerCode/redmine-time-tracking/issues/60)) ([cfc47f3](https://github.com/CrawlerCode/redmine-time-tracking/commit/cfc47f33f42a0089f5fa1440ab428d5ba8aa9a32))
+* **ui:** Polished various ui elements ([c095c5c](https://github.com/CrawlerCode/redmine-time-tracking/commit/c095c5c0338832d1f73b95ec8f1bcd8a062d25a6))
+
+### 🔥 Performance
+
+* Add query client restoring gate instead of restoring twice ([30b9aeb](https://github.com/CrawlerCode/redmine-time-tracking/commit/30b9aeb2818f0e58c0ea749d22b1e2cfc7de0d80))
+* Improve performance by moving stuff to dedicated components ([f2f7fab](https://github.com/CrawlerCode/redmine-time-tracking/commit/f2f7fab23df7075946090df41288a1e5b941e4e1))
+* Set NODE_ENV=production for release & pre-release builds ([4a922ff](https://github.com/CrawlerCode/redmine-time-tracking/commit/4a922ff9fedd001671c000a16ef1876935b35738))
+* Use react context for permissions management ([#63](https://github.com/CrawlerCode/redmine-time-tracking/issues/63)) ([23f25f0](https://github.com/CrawlerCode/redmine-time-tracking/commit/23f25f00d628bdd1f910b6238aef5a9287538e7c))
+
+### 🏡 Chore
+
+* Add docker compose for dev setup ([bb79a02](https://github.com/CrawlerCode/redmine-time-tracking/commit/bb79a021a9b3c0f65465a2473b69883d8ddb1039))
+* Add install buttons to github releases ([3c97a80](https://github.com/CrawlerCode/redmine-time-tracking/commit/3c97a80ef1046608168c8f927bc47d7a58eb61ff))
+* **deps:** Update dependencies ([2a3f1fb](https://github.com/CrawlerCode/redmine-time-tracking/commit/2a3f1fbdab6fb67da33f91c821bb5e0b0b18885c))
+* Update dependencies ([891fd66](https://github.com/CrawlerCode/redmine-time-tracking/commit/891fd662232a49099abf96a71a8ed4a053eb2fc7))
+
+### 🛠️ Refactors
+
+* Refactor redmine api hooks ([6642499](https://github.com/CrawlerCode/redmine-time-tracking/commit/66424994e80f76c826a518967bc5d6b117b98523))
+* **timer:** Remove the reset timer button ([26e0f2f](https://github.com/CrawlerCode/redmine-time-tracking/commit/26e0f2fe898b6fb9d5d317f28fdec095e4d93864))
+
+### ⚡CI
+
+* Add super-linter for pull requests ([#59](https://github.com/CrawlerCode/redmine-time-tracking/issues/59)) ([9db6385](https://github.com/CrawlerCode/redmine-time-tracking/commit/9db6385931fcb6604368514f8d7fcfe0824b1efc))
+* Fix wxt submit ([74fe75d](https://github.com/CrawlerCode/redmine-time-tracking/commit/74fe75d9b951b42cc049c4cc41273cc4f8ddcc07))
+* Use pat for release creation to trigger publish pipeline ([7b15071](https://github.com/CrawlerCode/redmine-time-tracking/commit/7b15071bc083630ac0d7cbf45756e1edc87f7db0))
+
 ## [2.0.0-beta.2](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2026-01-27)
 
 ### 🩹 Fixes
