@@ -1,3 +1,11 @@
+## [2.0.0-beta.4](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2026-03-09)
+
+### 🩹 Fixes
+
+* Cleanup local issue data on reset to default data ([9a7adc1](https://github.com/CrawlerCode/redmine-time-tracking/commit/9a7adc1e73be2a11302b579f7f1a15db288e2fd3))
+* Fire toast after query reset ([f051446](https://github.com/CrawlerCode/redmine-time-tracking/commit/f051446513f00e4af352e28d46ce10e4c041d2fb))
+* Prevent empty issues fetch request ([#65](https://github.com/CrawlerCode/redmine-time-tracking/issues/65)) ([6616c64](https://github.com/CrawlerCode/redmine-time-tracking/commit/6616c6430da8649af0f9ccccdd6ab064ff0d402b))
+
 ## [2.0.0-beta.3](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2026-03-08)
 
 ### 🚀 Features
