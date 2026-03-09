@@ -45,7 +45,13 @@ const useLocalIssues = () => {
 };
 
 const isDefaultLocalIssue = (issue: LocalIssueData) => {
-  return issue.pinned === defaultLocalIssueData.pinned && issue.remembered === defaultLocalIssueData.remembered;
+  for (const key of Object.keys(defaultLocalIssueData) as (keyof typeof defaultLocalIssueData)[]) {
+    const value = issue[key];
+    if (value !== undefined && value !== defaultLocalIssueData[key]) {
+      return false;
+    }
+  }
+  return true;
 };
 
 /**
