@@ -71,6 +71,14 @@ export class RedmineApiClient {
       issues: TIssue[];
     }>
   > {
+    if (issueIds?.length === 0) {
+      return {
+        issues: [],
+        total_count: 0,
+        offset,
+        limit,
+      };
+    }
     return this.instance
       .get(
         `/issues.json?${qs.stringify({

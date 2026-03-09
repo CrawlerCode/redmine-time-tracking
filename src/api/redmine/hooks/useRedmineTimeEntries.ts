@@ -12,7 +12,10 @@ export const useRedmineTimeEntries = (options: Parameters<typeof redmineTimeEntr
   });
 };
 
-export const useSuspenseRedmineTimeEntries = (options: Parameters<typeof redmineTimeEntriesQuery>[1], queryOptions?: Omit<ReturnType<typeof redmineTimeEntriesQuery>, "queryKey" | "queryFn">) => {
+export const useSuspenseRedmineTimeEntries = (
+  options: Parameters<typeof redmineTimeEntriesQuery>[1],
+  queryOptions?: Omit<ReturnType<typeof redmineTimeEntriesQuery>, "queryKey" | "queryFn" | "enabled" | "throwOnError" | "placeholderData">
+) => {
   const redmineApi = useRedmineApi();
 
   return useSuspenseRedminePaginatedInfiniteQuery({
