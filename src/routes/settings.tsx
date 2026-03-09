@@ -60,10 +60,10 @@ function PageComponent() {
     onSubmit: async ({ value }) => {
       value.redmineURL = value.redmineURL.replace(/\/$/, "");
       await setSettings(value);
+      await queryClient.resetQueries();
       toast.success(formatMessage({ id: "settings.settings-saved" }), {
         duration: 1000,
       });
-      queryClient.resetQueries();
     },
   });
 
