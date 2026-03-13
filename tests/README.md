@@ -1,4 +1,4 @@
-# E2E Tests
+# End-to-end Tests
 
 These end-to-end tests run against a dedicated Redmine Docker service (`redmine-e2e-tests`).
 The service uses a prepared database from this repository with example data, so test scenarios are always based on the same dataset.
@@ -13,14 +13,14 @@ This makes test runs deterministic and reproducible.
 pnpm run build:chrome
 ```
 
-2. Start the Redmine test service:
+2. Start the Redmine service:
 
 ```bash
 cd .redmine
 docker compose up -d redmine-e2e-tests
 ```
 
-3. Run E2E tests:
+3. Run tests:
 
 ```bash
 pnpm test

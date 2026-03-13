@@ -12,6 +12,8 @@ test.beforeEach(async ({ page, issuesPage }) => {
 
   await issuesPage.triggerTimerAction(7, "start");
   await page.clock.fastForward("00:12:34");
+
+  await issuesPage.goTo("/timers");
 });
 
 test("Timers page", async ({ page, timersPage }) => {

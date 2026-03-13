@@ -12,9 +12,7 @@ export class ExtensionPage {
     public page: Page,
     private extensionURL: string,
     private route: Routes
-  ) {
-    //this.goTo(route);
-  }
+  ) {}
 
   async goTo(route: "/"): Promise<ExtensionPage>;
   async goTo(route: "/timers"): Promise<TimersPage>;
@@ -26,7 +24,7 @@ export class ExtensionPage {
     // Navigate to the page
     await this.page.goto(`${this.extensionURL}#${route}`);
 
-    // Return the correct page object based on the path
+    // Return the correct page object based on the route
     switch (route) {
       case this.route:
         return this;

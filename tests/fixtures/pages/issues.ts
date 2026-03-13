@@ -6,23 +6,17 @@ export class IssuesPage extends ExtensionPage {
   }
 
   async triggerTimerAction(idx: number, action: "start" | "pause" | "done") {
-    // Get issues list
-    const issues = await this.page.$$("[role=listitem][data-type='issue']");
-    if (idx >= issues.length) {
-      throw new Error(`Issue index ${idx} is out of bounds, only ${issues.length} issues available`);
-    }
-
     // Find and click the appropriate button based on the action
-    const button = await issues[idx].$(`[data-type='${action}-timer']`);
-    await button?.click();
+    const issue = this.page.locator("[role=listitem][data-type='issue']").nth(idx);
+    await issue.locator(`[data-type='${action}-timer']`).click();
 
     // Wait for the expected result of the action
     switch (action) {
       case "start":
-        await issues[idx].waitForSelector("[data-type='pause-timer']");
+        await issue.locator("[data-type='pause-timer']").waitFor();
         break;
       case "pause":
-        await issues[idx].waitForSelector("[data-type='pause-timer']", { state: "detached" });
+        await issue.locator("[data-type='pause-timer']").waitFor({ state: "detached" });
         break;
       case "done":
         await this.page.waitForSelector("[role=dialog]");

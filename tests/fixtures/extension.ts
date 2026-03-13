@@ -7,7 +7,8 @@ import type { SettingsPage } from "./pages/settings";
 import type { TimePage } from "./pages/time";
 import type { TimersPage } from "./pages/timers";
 
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config({ path: "tests/.env.test", quiet: true });
 
 export const test = base.extend<{
   context: BrowserContext;
