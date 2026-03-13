@@ -1,25 +1,49 @@
-import { test } from "../fixtures/chromeExtension";
-import { TimersPage } from "../fixtures/pages/timers";
-import { createScreenshot } from "../screenshots/screenshot";
+import { expect, test } from "./fixtures/extension";
 
-test("Render page", async ({ issuesPage, locale, colorScheme }) => {
+test.beforeEach(async ({ page, issuesPage }) => {
   await issuesPage.waitForIssuesToLoad();
 
-  // Start some of the first 5 timers 3 times
-  const issuesCount = await issuesPage.getIssuesCount();
-  for (let i = 0; i < 3; i++) {
-    const idx = Math.min(Math.floor(Math.random() * 5), issuesCount - 1);
-    await issuesPage.startTimer(idx);
+  // Start some timers
+  await issuesPage.triggerTimerAction(0, "start");
+  await page.clock.fastForward("01:33:07");
 
-    // Wait random time
-    await issuesPage.page.waitForTimeout(Math.floor(Math.random() * 1000 * 5));
-  }
+  await issuesPage.triggerTimerAction(2, "start");
+  await page.clock.fastForward("42:00");
 
-  // Go to timers page
-  const timersPages = await issuesPage.goToPage(TimersPage);
-  await timersPages.waitForTimersToLoad();
-  await timersPages.page.waitForTimeout(500);
+  await issuesPage.triggerTimerAction(7, "start");
+  await page.clock.fastForward("00:12:34");
+});
 
-  // Take a screenshot
-  createScreenshot("timers", timersPages.page, locale!, colorScheme!);
+test("Timers page", async ({ page, timersPage }) => {
+  await timersPage.waitForTimersToLoad();
+
+  await expect(page).toHaveScreenshot();
+});
+
+test("Open timer context menu", async ({ page, timersPage }) => {
+  await timersPage.waitForTimersToLoad();
+
+  // Open context menu on the first timer
+  await page.click("[data-type='timer']", { button: "right", position: { x: 70, y: 20 } });
+  await page.waitForSelector("[data-slot=context-menu-content]", { state: "visible" });
+
+  await expect(page).toHaveScreenshot();
+});
+
+test("Search timer", async ({ page, timersPage }) => {
+  await timersPage.waitForTimersToLoad();
+
+  await timersPage.searchTimers("");
+
+  await expect(page).toHaveScreenshot();
+});
+
+test("Open done button", async ({ page, timersPage }) => {
+  await timersPage.waitForTimersToLoad();
+
+  // Click the done button on the first timer to open the create time entry form
+  await page.locator("[data-type='timer']").first().locator("[role='button'][data-type='done-timer']").click();
+  await page.waitForSelector("[role=dialog]");
+
+  await expect(page).toHaveScreenshot();
 });

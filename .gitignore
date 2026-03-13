@@ -4,8 +4,6 @@ dist
 .output
 .wxt
 
-.env
-
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
@@ -14,7 +12,9 @@ dist
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/tests/screenshots
 
-.redmine/data/
+.redmine/data
+!.redmine/data/e2e-tests
 .redmine/themes/*
 !.redmine/themes/.gitkeep

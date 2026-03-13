@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const LANGUAGES = ["en", "de", "ru", "fr"] as const;
-const COLOR_SCHEMES = ["dark", "light"] as const;
+const LANGUAGES = ["en", "de", "fr", "ru"] as const;
+const COLOR_SCHEMES = ["dark"] as const;
 
 /**
  * @see https://playwright.dev/docs/test-configuration.
@@ -9,20 +9,29 @@ const COLOR_SCHEMES = ["dark", "light"] as const;
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 1,
-  workers: process.env.CI ? 1 : undefined,
+  retries: 1,
+  workers: 5,
   reporter: [["list"], ["html"]],
   use: {
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
-
+  expect: {
+    toHaveScreenshot: {
+      pathTemplate: "{testDir}/screenshots{/projectName}/{testFilePath}/{testName}{ext}",
+    },
+  },
   projects: [
     ...LANGUAGES.map((locale) =>
       COLOR_SCHEMES.map((colorScheme) => ({
-        name: `Chrome | ${locale} (${colorScheme})`,
+        name: `Chrome popup | ${colorScheme}/${locale}`,
         use: { ...devices["Desktop Chrome"], viewport: { width: 320, height: 548 }, colorScheme, locale, timezoneId: "Europe/Berlin" },
+      }))
+    ).flat(),
+    ...LANGUAGES.map((locale) =>
+      COLOR_SCHEMES.map((colorScheme) => ({
+        name: `Chrome fullscreen | ${colorScheme}/${locale}`,
+        use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 720 }, colorScheme, locale, timezoneId: "Europe/Berlin" },
       }))
     ).flat(),
   ],

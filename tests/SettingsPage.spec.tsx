@@ -1,10 +1,7 @@
-import { test } from "../fixtures/chromeExtension";
-import { createScreenshot } from "../screenshots/screenshot";
+import { expect, test } from "./fixtures/extension";
 
-test("Render page", async ({ settingsPage, locale, colorScheme }) => {
-  // Wait for the form to be rendered
-  await settingsPage.page.waitForSelector("form");
+test("Settings page", async ({ page, settingsPage }) => {
+  await settingsPage.page.waitForSelector('[data-testid="connection-successful"]');
 
-  // Take a screenshot
-  createScreenshot("settings", settingsPage.page, locale!, colorScheme!);
+  await expect(page).toHaveScreenshot();
 });
