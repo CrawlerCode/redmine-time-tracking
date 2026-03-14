@@ -102,7 +102,7 @@ const CreateIssueButton = ({ project }: { project: TReference }) => {
 
   return (
     <>
-      <button type="button" onClick={() => setCreateIssue(true)} tabIndex={-1}>
+      <button type="button" data-action="create-issue" onClick={() => setCreateIssue(true)} tabIndex={-1}>
         <PlusIcon className="size-4" />
       </button>
 

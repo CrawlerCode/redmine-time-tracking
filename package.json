@@ -26,7 +26,7 @@
     "compile": "tsc --noEmit",
     "lang-verify": "formatjs verify --source-locale en --missing-keys src/lang/*.json",
     "test": "playwright test",
-    "test:update-snapshots": "playwright test --update-snapshots",
+    "test:update-snapshots": "playwright test --update-snapshots=changed",
     "release": "semantic-release"
   },
   "dependencies": {

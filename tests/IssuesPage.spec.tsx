@@ -46,7 +46,8 @@ test("Add spent time", async ({ page, issuesPage }) => {
 
   await expect(page).toHaveScreenshot();
 
-  // await issuesPage.submitSpentTimeForm();
+  //await page.click('button[type="submit"]');
+  //await page.waitForSelector("[role=dialog]", { state: "detached" });
 });
 
 test("Open issue context menu", async ({ page, issuesPage }) => {
@@ -71,6 +72,34 @@ test("Open filter", async ({ page, issuesPage }) => {
   await page.click('[role="option"][data-slot="combobox-item"]');
   await page.keyboard.press("Escape");
   await page.waitForSelector('[data-slot="combobox-list"]', { state: "detached" });
+
+  await expect(page).toHaveScreenshot();
+});
+
+test("Create issue", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
+
+  await page.click("button[data-action='create-issue']");
+  await page.waitForSelector("[role=dialog]");
+
+  await issuesPage.fillIssueForm();
+
+  await issuesPage.dismissAlertAndScrollDialogToTop();
+
+  await expect(page).toHaveScreenshot();
+});
+
+test("Edit issue", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
+
+  // Open context menu and click "Edit"
+  await page.click("[role=listitem][data-type='issue']", { button: "right", position: { x: 70, y: 20 } });
+  await page.waitForSelector("[data-slot=context-menu-content]", { state: "visible" });
+  await page.locator("[data-slot=context-menu-content] [data-slot=context-menu-item]").nth(2).click();
+
+  await page.waitForSelector("[role=dialog]");
+
+  await issuesPage.dismissAlertAndScrollDialogToTop();
 
   await expect(page).toHaveScreenshot();
 });

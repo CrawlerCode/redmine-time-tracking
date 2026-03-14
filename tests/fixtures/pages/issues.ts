@@ -2,21 +2,21 @@ import { ExtensionPage } from "./base";
 
 export class IssuesPage extends ExtensionPage {
   async waitForIssuesToLoad() {
-    await this.page.waitForSelector("[role=listitem][data-type='issue']");
+    await this.page.waitForSelector("[role=listitem][data-type='issue'] [data-type='timer']");
   }
 
   async triggerTimerAction(idx: number, action: "start" | "pause" | "done") {
     // Find and click the appropriate button based on the action
     const issue = this.page.locator("[role=listitem][data-type='issue']").nth(idx);
-    await issue.locator(`[data-type='${action}-timer']`).click();
+    await issue.locator(`[data-action='timer-${action}']`).click();
 
     // Wait for the expected result of the action
     switch (action) {
       case "start":
-        await issue.locator("[data-type='pause-timer']").waitFor();
+        await issue.locator("[data-action='timer-pause']").waitFor();
         break;
       case "pause":
-        await issue.locator("[data-type='pause-timer']").waitFor({ state: "detached" });
+        await issue.locator("[data-action='timer-pause']").waitFor({ state: "detached" });
         break;
       case "done":
         await this.page.waitForSelector("[role=dialog]");
@@ -46,13 +46,30 @@ export class IssuesPage extends ExtensionPage {
     await this.page.focus('button[type="submit"]');
   }
 
-  async submitSpentTimeForm() {
-    // Check that the dialog is open
+  async fillIssueForm({
+    subject = "New issue",
+    description = "Something went wrong",
+  }: {
+    subject?: string;
+    description?: string;
+  } = {}) {
     await this.page.waitForSelector("[role=dialog]");
 
-    await this.page.click('button[type="submit"]');
+    await this.page.fill('input[name="subject"]', subject);
+    await this.page.fill('textarea[name="description"]', description);
 
-    // Wait for modal to close
-    await this.page.waitForSelector("[role=dialog]", { state: "detached" });
+    await this.page.focus('button[type="submit"]');
+  }
+
+  async dismissAlertAndScrollDialogToTop() {
+    await this.page.click("[role=dialog] [role=alert] button");
+    await this.page.waitForSelector("[role=dialog] [role=alert]", { state: "detached" });
+
+    await this.page
+      .locator("[data-slot='dialog-content']")
+      .first()
+      .evaluate((el) => {
+        el.scrollTop = 0;
+      });
   }
 }

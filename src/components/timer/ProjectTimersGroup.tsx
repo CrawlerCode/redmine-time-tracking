@@ -29,7 +29,7 @@ export const ProjectTimersGroup = ({ projectGroup, className, ...props }: Projec
       {projectGroup.items.map(({ timer, issue }) => (
         <Timer.Root key={timer.id} timer={timer} issue={issue}>
           <Timer.ContextMenu>
-            <ToggleableCard role="listitem" data-type="timer" className="flex flex-col gap-1" onToggle={() => timer.toggleTimer()}>
+            <ToggleableCard role="listitem" data-type="timer-card" className="flex flex-col gap-1" onToggle={() => timer.toggleTimer()}>
               {issue ? <IssueTitle issue={issue} priorityType={getPriorityType(issue)} /> : <h1 className="truncate text-gray-500 line-through">#{timer.issueId}</h1>}
               <Timer.Wrapper>
                 <Timer.NameField />
