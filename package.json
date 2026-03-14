@@ -27,6 +27,7 @@
     "lang-verify": "formatjs verify --source-locale en --missing-keys src/lang/*.json",
     "test": "playwright test",
     "test:update-snapshots": "playwright test --update-snapshots=changed",
+    "generate-store-screenshots": "tsx screenshots/generate-store-screenshots.ts",
     "release": "semantic-release"
   },
   "dependencies": {

@@ -6,5 +6,45 @@
   "extDesc": {
     "message": "Start-/Stoppuhr für Redmine",
     "description": "Extension description"
+  },
+  "screenshotIssuesTitle": {
+    "message": "Aufgaben im Überblick",
+    "description": "Store screenshot headline for issues page"
+  },
+  "screenshotIssuesSubtitle": {
+    "message": "Alle zugewiesenen Redmine-Aufgaben auf einen Blick",
+    "description": "Store screenshot subtitle for issues page"
+  },
+  "screenshotTimersTitle": {
+    "message": "Timer starten & verwalten",
+    "description": "Store screenshot headline for timers page"
+  },
+  "screenshotTimersSubtitle": {
+    "message": "Ein-Klick-Timer für jede Aufgabe",
+    "description": "Store screenshot subtitle for timers page"
+  },
+  "screenshotTimeEntriesTitle": {
+    "message": "Zeiteinträge im Blick",
+    "description": "Store screenshot headline for time entries"
+  },
+  "screenshotTimeEntriesSubtitle": {
+    "message": "Wöchentliche Übersicht aller erfassten Stunden",
+    "description": "Store screenshot subtitle for time entries"
+  },
+  "screenshotManageIssuesTitle": {
+    "message": "Aufgaben verwalten",
+    "description": "Store screenshot headline for manage issues"
+  },
+  "screenshotManageIssuesSubtitle": {
+    "message": "Neue Aufgaben anlegen und bestehende bearbeiten",
+    "description": "Store screenshot subtitle for manage issues"
+  },
+  "screenshotSettingsTitle": {
+    "message": "Einfache Einrichtung",
+    "description": "Store screenshot headline for settings"
+  },
+  "screenshotSettingsSubtitle": {
+    "message": "Mit beliebiger Redmine-Instanz verbinden und individuell anpassen",
+    "description": "Store screenshot subtitle for settings"
   }
 }

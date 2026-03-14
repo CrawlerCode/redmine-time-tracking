@@ -4,7 +4,47 @@
     "description": "Extension name"
   },
   "extDesc": {
-    "message": "Start-stop timer for Redmine",
+    "message": "Minuteur start-stop pour Redmine",
     "description": "Extension description"
+  },
+  "screenshotIssuesTitle": {
+    "message": "Track your issues",
+    "description": "Store screenshot headline for issues page"
+  },
+  "screenshotIssuesSubtitle": {
+    "message": "View and manage all your assigned Redmine issues",
+    "description": "Store screenshot subtitle for issues page"
+  },
+  "screenshotTimersTitle": {
+    "message": "Start & manage timers",
+    "description": "Store screenshot headline for timers page"
+  },
+  "screenshotTimersSubtitle": {
+    "message": "One-click timer for any issue",
+    "description": "Store screenshot subtitle for timers page"
+  },
+  "screenshotTimeEntriesTitle": {
+    "message": "Review time entries",
+    "description": "Store screenshot headline for time entries"
+  },
+  "screenshotTimeEntriesSubtitle": {
+    "message": "Weekly overview of all your tracked hours",
+    "description": "Store screenshot subtitle for time entries"
+  },
+  "screenshotManageIssuesTitle": {
+    "message": "Create & edit issues",
+    "description": "Store screenshot headline for manage issues"
+  },
+  "screenshotManageIssuesSubtitle": {
+    "message": "Create new issues and edit existing ones",
+    "description": "Store screenshot subtitle for manage issues"
+  },
+  "screenshotSettingsTitle": {
+    "message": "Easy setup",
+    "description": "Store screenshot headline for settings"
+  },
+  "screenshotSettingsSubtitle": {
+    "message": "Connect to any Redmine instance and customize to your workflow",
+    "description": "Store screenshot subtitle for settings"
   }
 }
