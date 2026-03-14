@@ -11,6 +11,7 @@ export default defineConfig({
   fullyParallel: true,
   retries: 1,
   workers: 3,
+  timeout: 10_000,
   reporter: [["list"], ["html"]],
   use: {
     trace: "on-first-retry",

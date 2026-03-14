@@ -55,6 +55,9 @@ export class IssuesPage extends ExtensionPage {
   } = {}) {
     await this.page.waitForSelector("[role=dialog]");
 
+    // Wait before the full form is loaded (especially the description textarea which is loaded asynchronously)
+    await this.page.waitForSelector('textarea[name="description"]');
+
     await this.page.fill('input[name="subject"]', subject);
     await this.page.fill('textarea[name="description"]', description);
 
