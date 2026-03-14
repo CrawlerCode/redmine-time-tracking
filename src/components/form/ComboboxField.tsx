@@ -59,7 +59,7 @@ export const ComboboxField = <Value extends string | number, Mode extends "singl
 
   return (
     <Field data-invalid={isInvalid} className={className}>
-      <FieldLabel required={required} htmlFor={id}>
+      <FieldLabel required={required} htmlFor={id} className="truncate">
         {title}
       </FieldLabel>
       <Combobox

@@ -35,7 +35,7 @@ export const DateField = ({ title, disabled, placeholder, mode = "single", class
 
   return (
     <Field data-invalid={isInvalid} className={className}>
-      <FieldLabel required={props.required} htmlFor={id}>
+      <FieldLabel required={props.required} htmlFor={id} className="truncate">
         {title}
       </FieldLabel>
       <Popover modal open={open} onOpenChange={setOpen}>

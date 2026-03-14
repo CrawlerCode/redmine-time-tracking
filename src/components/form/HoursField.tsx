@@ -20,7 +20,7 @@ export const HoursField = ({
 
   return (
     <Field data-invalid={isInvalid} className={className}>
-      <FieldLabel required={required} htmlFor={id}>
+      <FieldLabel required={required} htmlFor={id} className="truncate">
         {title}
       </FieldLabel>
       {settings.style.timeFormat === "decimal" ? (

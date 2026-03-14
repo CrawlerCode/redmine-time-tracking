@@ -12,7 +12,7 @@ export const TextareaField = ({ title, required, className, ...props }: Textarea
 
   return (
     <Field data-invalid={isInvalid} className={className}>
-      <FieldLabel required={required} htmlFor={id}>
+      <FieldLabel required={required} htmlFor={id} className="truncate">
         {title}
       </FieldLabel>
       <Textarea {...props} id={id} name={name} value={state.value} onChange={(e) => handleChange(e.target.value)} onBlur={handleBlur} aria-invalid={isInvalid} />

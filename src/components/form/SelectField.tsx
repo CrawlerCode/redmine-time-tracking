@@ -20,7 +20,7 @@ export const SelectField = <Value extends string | number>({ items, title, place
 
   return (
     <Field data-invalid={isInvalid} className={className}>
-      <FieldLabel required={required} htmlFor={id}>
+      <FieldLabel required={required} htmlFor={id} className="truncate">
         {title}
       </FieldLabel>
       <Select {...props} name={name} required={required} disabled={disabled} value={findSelectedItem(state.value, items)} onValueChange={(item) => handleChange(item?.value ?? null)}>
