@@ -1,2 +1,2 @@
 [codespell]
-skip = */src/lang/*.json
+skip = */src/lang/*.json,*/public/_locales/*/messages.json
