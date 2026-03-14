@@ -12,6 +12,7 @@ docker compose up -d redmine-v6
 
 Available services and ports:
 
+- Redmine end-to-end tests: [http://localhost:9999](http://localhost:9999) (service `redmine-e2e-tests`)
 - Redmine 6: [http://localhost:3006](http://localhost:3006) (service `redmine-v6`)
 - Redmine 5: [http://localhost:3005](http://localhost:3005) (service `redmine-v5`)
 - Redmine 4: [http://localhost:3004](http://localhost:3004) (service `redmine-v4`)

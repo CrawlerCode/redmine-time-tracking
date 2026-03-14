@@ -21,11 +21,12 @@
     "build:firefox:pre-release": "cross-env NODE_ENV=production wxt zip -b firefox --mv3 --mode pre-release",
     "build:chrome:release": "cross-env NODE_ENV=production wxt zip -b chrome --mode release",
     "build:firefox:release": "cross-env NODE_ENV=production wxt zip -b firefox --mv3 --mode release",
-    "lint": "eslint --fix src tests fixtures && stylelint --fix src/**/*.css",
+    "lint": "eslint --fix src tests && stylelint --fix src/**/*.css",
     "format": "prettier --write .",
     "compile": "tsc --noEmit",
     "lang-verify": "formatjs verify --source-locale en --missing-keys src/lang/*.json",
     "test": "playwright test",
+    "test:update-snapshots": "playwright test --update-snapshots=changed",
     "release": "semantic-release"
   },
   "dependencies": {

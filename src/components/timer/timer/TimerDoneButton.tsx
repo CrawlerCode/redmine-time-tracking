@@ -21,8 +21,8 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
       <HelpTooltip message={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })}>
         <BadgeCheckIcon
           role="button"
-          data-type="done-timer"
-          className="size-6 shrink-0 cursor-pointer text-primary focus:outline-hidden data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50"
+          data-action="timer-done"
+          className="text-primary size-6 shrink-0 cursor-pointer focus:outline-hidden data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50"
           data-disabled={isDisabled}
           onClick={() => {
             if (isDisabled) return;
