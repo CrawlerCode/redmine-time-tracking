@@ -5,14 +5,17 @@ import sharp from "sharp";
 const LANGUAGES = ["en", "de", "fr", "ru"] as const;
 type Language = (typeof LANGUAGES)[number];
 
-const WIDTH = 1280;
-const HEIGHT = 800;
-const POPUP_WIDTH = 320;
-const POPUP_HEIGHT = 548;
+const SCREENSHOT_WIDTH = 1280;
+const SCREENSHOT_HEIGHT = 800;
 const THUMBNAIL_WIDTH = 440;
 const THUMBNAIL_HEIGHT = 280;
-const RADIUS = 12;
+const BANNER_WIDTH = 1280;
+const BANNER_HEIGHT = 640;
 
+const POPUP_WIDTH = 320;
+const POPUP_HEIGHT = 548;
+
+const RADIUS = 12;
 const BORDER_BLUR = 18;
 const BORDER_GRAD = ["#1e40af", "#3b82f6", "#93c5fd"];
 
@@ -127,7 +130,7 @@ async function addScreenshotWithBorder(composites: sharp.OverlayOptions[], image
   const sw = 14;
   const expand = sw / 2;
   const glowSvg = Buffer.from(
-    `<svg width="${WIDTH}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">
+    `<svg width="${SCREENSHOT_WIDTH}" height="${SCREENSHOT_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
       ${borderGradDefs("g")}
       <rect x="${left - expand}" y="${top - expand}" width="${imgW + sw}" height="${imgH + sw}"
             rx="${RADIUS + expand}" ry="${RADIUS + expand}"
@@ -137,7 +140,7 @@ async function addScreenshotWithBorder(composites: sharp.OverlayOptions[], image
   const glow = await sharp(glowSvg).blur(BORDER_BLUR).png().toBuffer();
 
   const crispSvg = Buffer.from(
-    `<svg width="${WIDTH}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">
+    `<svg width="${SCREENSHOT_WIDTH}" height="${SCREENSHOT_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
       ${borderGradDefs("g")}
       <rect x="${left - 0.5}" y="${top - 0.5}" width="${imgW + 1}" height="${imgH + 1}"
             rx="${RADIUS + 0.5}" ry="${RADIUS + 0.5}"
@@ -164,23 +167,23 @@ async function generateSinglePopup(
   }
 
   const hl = getHeadline(headline.titleKey, headline.subtitleKey, messages);
-  const bg = Buffer.from(backgroundSvg(WIDTH, HEIGHT));
+  const bg = Buffer.from(backgroundSvg(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT));
   const composites: sharp.OverlayOptions[] = [];
 
   const ppScale = 1.2;
   const ppW = Math.round(POPUP_WIDTH * ppScale);
   const ppH = Math.round(POPUP_HEIGHT * ppScale);
-  const ppLeft = WIDTH - ppW - 140;
-  const ppTop = Math.round((HEIGHT - ppH) / 2);
+  const ppLeft = SCREENSHOT_WIDTH - ppW - 140;
+  const ppTop = Math.round((SCREENSHOT_HEIGHT - ppH) / 2);
 
   const ppRounded = await roundImage(ppPath, ppW, ppH, RADIUS);
   await addScreenshotWithBorder(composites, ppRounded, ppTop, ppLeft, ppW, ppH);
 
   composites.push({
     input: Buffer.from(
-      headlineSvg(WIDTH, HEIGHT, hl.title, hl.subtitle, headline.icon, {
+      headlineSvg(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT, hl.title, hl.subtitle, headline.icon, {
         x: 60,
-        y: Math.round(HEIGHT / 2 - 90),
+        y: Math.round(SCREENSHOT_HEIGHT / 2 - 90),
         titleSize: 38,
         subtitleSize: 16,
         iconSize: 34,
@@ -212,15 +215,15 @@ async function generateDualPopup(
   }
 
   const hl = getHeadline(headline.titleKey, headline.subtitleKey, messages);
-  const bg = Buffer.from(backgroundSvg(WIDTH, HEIGHT));
+  const bg = Buffer.from(backgroundSvg(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT));
   const composites: sharp.OverlayOptions[] = [];
 
   const ppScale = 0.95;
   const ppW = Math.round(POPUP_WIDTH * ppScale);
   const ppH = Math.round(POPUP_HEIGHT * ppScale);
   const gap = 28;
-  const popupsLeft = WIDTH - (ppW * 2 + gap) - 80;
-  const pp1Top = Math.round((HEIGHT - ppH) / 2) - 20;
+  const popupsLeft = SCREENSHOT_WIDTH - (ppW * 2 + gap) - 80;
+  const pp1Top = Math.round((SCREENSHOT_HEIGHT - ppH) / 2) - 20;
   const pp2Top = pp1Top + 40;
 
   const [pp1Rounded, pp2Rounded] = await Promise.all([roundImage(p1Path, ppW, ppH, RADIUS), roundImage(p2Path, ppW, ppH, RADIUS)]);
@@ -229,9 +232,9 @@ async function generateDualPopup(
 
   composites.push({
     input: Buffer.from(
-      headlineSvg(WIDTH, HEIGHT, hl.title, hl.subtitle, headline.icon, {
+      headlineSvg(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT, hl.title, hl.subtitle, headline.icon, {
         x: 50,
-        y: Math.round(HEIGHT / 2 - 90),
+        y: Math.round(SCREENSHOT_HEIGHT / 2 - 90),
         titleSize: 36,
         subtitleSize: 15,
         iconSize: 32,
@@ -246,10 +249,21 @@ async function generateDualPopup(
   return true;
 }
 
-async function generateThumbnail(outputPath: string, locale: Language, messages: Messages): Promise<boolean> {
+interface PromoImageOptions {
+  canvasWidth: number;
+  canvasHeight: number;
+  pad: number;
+  textAreaRight: number;
+  iconSize: number;
+  fontSize: number;
+  lineGap: number;
+  iconTextGap: number;
+  outputSize?: { width: number; height: number };
+}
+
+async function generatePromoImage(outputPath: string, locale: Language, messages: Messages, opts: PromoImageOptions): Promise<boolean> {
+  const { canvasWidth: cW, canvasHeight: cH, pad: PAD, textAreaRight, iconSize, fontSize, lineGap, iconTextGap } = opts;
   const scale = 2;
-  const cW = THUMBNAIL_WIDTH * scale;
-  const cH = THUMBNAIL_HEIGHT * scale;
 
   const shotPaths = [popupPath(locale, "IssuesPage.spec.tsx", "Issues-page"), popupPath(locale, "IssuesPage.spec.tsx", "Add-spent-time"), popupPath(locale, "SettingsPage.spec.tsx", "Settings-page")];
 
@@ -264,13 +278,10 @@ async function generateThumbnail(outputPath: string, locale: Language, messages:
   const bg = Buffer.from(backgroundSvg(cW, cH));
   const composites: sharp.OverlayOptions[] = [];
 
-  const PAD = 20;
   const ppH = Math.round(cH * 0.82);
   const ppW = Math.round(ppH * (POPUP_WIDTH / POPUP_HEIGHT));
   const frontLeft = cW - PAD - ppW;
   const frontTop = cH - PAD - ppH;
-
-  const textAreaRight = 300;
   const cardStep = Math.round((frontLeft - textAreaRight) / 2);
   const vertRange = frontTop - PAD;
 
@@ -299,11 +310,6 @@ async function generateThumbnail(outputPath: string, locale: Language, messages:
     composites.push({ input: roundedShots[i], top, left });
     composites.push({ input: Buffer.from(borderSvg), top, left });
   }
-
-  const iconSize = 56;
-  const fontSize = 30;
-  const lineGap = 6;
-  const iconTextGap = 14;
 
   const nameParts = appName.split(" ");
   const midIdx = Math.ceil(nameParts.length / 2);
@@ -336,9 +342,37 @@ async function generateThumbnail(outputPath: string, locale: Language, messages:
   });
 
   const composed = await sharp(bg).composite(composites).png().toBuffer();
-  await sharp(composed).resize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT).png().toFile(outputPath);
+  const output = opts.outputSize ? sharp(composed).resize(opts.outputSize.width, opts.outputSize.height).png() : sharp(composed);
+  await output.toFile(outputPath);
   console.log(`\x1b[32m  created ${outputPath}\x1b[0m`);
   return true;
+}
+
+async function generateThumbnail(outputPath: string, locale: Language, messages: Messages): Promise<boolean> {
+  return generatePromoImage(outputPath, locale, messages, {
+    canvasWidth: THUMBNAIL_WIDTH * 2,
+    canvasHeight: THUMBNAIL_HEIGHT * 2,
+    pad: 20,
+    textAreaRight: 300,
+    iconSize: 56,
+    fontSize: 30,
+    lineGap: 6,
+    iconTextGap: 14,
+    outputSize: { width: THUMBNAIL_WIDTH, height: THUMBNAIL_HEIGHT },
+  });
+}
+
+async function generateBanner(outputPath: string, locale: Language, messages: Messages): Promise<boolean> {
+  return generatePromoImage(outputPath, locale, messages, {
+    canvasWidth: BANNER_WIDTH,
+    canvasHeight: BANNER_HEIGHT,
+    pad: 40,
+    textAreaRight: Math.round(BANNER_WIDTH * 0.38),
+    iconSize: 72,
+    fontSize: 42,
+    lineGap: 8,
+    iconTextGap: 18,
+  });
 }
 
 const ICON_ISSUES = `<path d="M3 5h.01"/><path d="M3 12h.01"/><path d="M3 19h.01"/><path d="M8 5h13"/><path d="M8 12h13"/><path d="M8 19h13"/>`;
@@ -421,9 +455,15 @@ async function main() {
     await Promise.all(STORE_IMAGES.map((img) => img.generate(path.join(chromeDir, img.filename), locale, messages)));
   }
 
+  const enMessages = loadMessages("en");
+
   const chromeRoot = path.join("screenshots", "chrome");
   console.log("[thumbnail]");
-  await generateThumbnail(path.join(chromeRoot, "thumbnail.png"), "en", loadMessages("en"));
+  await generateThumbnail(path.join(chromeRoot, "thumbnail.png"), "en", enMessages);
+
+  const screenshotsRoot = path.join("screenshots");
+  console.log("[banner]");
+  await generateBanner(path.join(screenshotsRoot, "banner.png"), "en", enMessages);
 }
 
 main().catch(console.error);

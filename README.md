@@ -1,4 +1,4 @@
-<p align="center"><img src="./screenshots/chrome/thumbnail.png" alt="Redmine Time Tracking Banner"></p>
+<p align="center"><img src="./screenshots/banner.png" alt="Redmine Time Tracking Banner"></p>
 
 # Redmine Time Tracking (Chrome Extension / Firefox Extension)
 
