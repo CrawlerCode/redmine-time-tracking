@@ -8,7 +8,7 @@ export const TimerNameField = () => {
   return (
     <input
       type="text"
-      className="placeholder:text-muted-foreground min-w-0 grow truncate bg-transparent text-foreground placeholder:italic focus:outline-hidden"
+      className="placeholder:text-muted-foreground text-foreground min-w-0 grow truncate bg-transparent placeholder:italic focus:outline-hidden"
       value={timer.name}
       placeholder={formatMessage({ id: "timer.unnamed-timer" })}
       tabIndex={-1}

@@ -11,8 +11,8 @@ type PropTypes = {
 export const VersionTooltip = ({ children, ...props }: PropTypes & { children: ReactElement }) => {
   return (
     <Tooltip>
-      <TooltipTrigger render={children} />
-      <TooltipContent className="flex max-w-[17rem] flex-col gap-y-3 truncate">
+      <TooltipTrigger delay={300} render={children} />
+      <TooltipContent className="flex max-w-[17rem] flex-col items-start gap-y-3 truncate">
         <VersionTooltipContent {...props} />
       </TooltipContent>
     </Tooltip>

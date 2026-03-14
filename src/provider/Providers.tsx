@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { PropsWithChildren } from "react";
 import IntlProvider from "./IntlProvider";
 import QueryClientProvider from "./QueryClientProvider";
@@ -9,7 +10,9 @@ const Providers = ({ children }: PropsWithChildren) => {
     <QueryClientProvider>
       <SettingsProvider>
         <RedmineApiProvider>
-          <IntlProvider>{children}</IntlProvider>
+          <IntlProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+          </IntlProvider>
         </RedmineApiProvider>
       </SettingsProvider>
     </QueryClientProvider>

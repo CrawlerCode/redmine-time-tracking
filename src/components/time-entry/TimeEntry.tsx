@@ -47,6 +47,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
       {!!previewHours && (
         <Tooltip>
           <TooltipTrigger
+            delay={300}
             render={
               <div
                 className="bg-primary/60 h-3.5 rounded-sm"

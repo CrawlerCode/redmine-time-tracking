@@ -13,8 +13,8 @@ const HelpTooltip = ({ message, children }: PropTypes) => {
   if (!settings.style.showTooltips) return children;
 
   return (
-    <Tooltip delay={700}>
-      <TooltipTrigger render={children} />
+    <Tooltip>
+      <TooltipTrigger delay={700} render={children} />
       <TooltipContent className="italic">{message}</TooltipContent>
     </Tooltip>
   );

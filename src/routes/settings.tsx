@@ -405,7 +405,9 @@ const RedmineServerSection = withForm({
                     </>
                   ) : redmineConnection.data ? (
                     <>
-                      <ItemDescription className="text-green-600" data-testid="connection-successful">{formatMessage({ id: "settings.redmine.connection-successful" })}</ItemDescription>
+                      <ItemDescription className="text-green-600" data-testid="connection-successful">
+                        {formatMessage({ id: "settings.redmine.connection-successful" })}
+                      </ItemDescription>
                       <ItemDescription>
                         {formatMessage(
                           {
