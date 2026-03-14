@@ -1,6 +1,6 @@
-<p align="center"><img src="./screenshots/banner.png" alt="Redmine Time Tracking Banner"></p>
-
 # Redmine Time Tracking (Chrome Extension / Firefox Extension)
+
+<p align="center"><img src="./screenshots/banner.png" alt="Redmine Time Tracking Banner"></p>
 
 ![License](https://img.shields.io/github/license/CrawlerCode/redmine-time-tracking?logo=github)
 [![Semantic-Release](https://img.shields.io/badge/semantic--release-conventional%20commits-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)

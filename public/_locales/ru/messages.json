@@ -4,7 +4,7 @@
     "description": "Extension name"
   },
   "extDesc": {
-    "message": "Таймер для отслеживания времени в Redmine",
+    "message": "Start-stop timer for Redmine",
     "description": "Extension description"
   },
   "screenshotIssuesTitle": {
