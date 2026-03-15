@@ -65,7 +65,7 @@ export const useRedminePaginatedInfiniteQuery = <
   const [autoFetchedPages, setAutoFetchedPages] = useState(0);
   useEffect(() => {
     // Disabled or nothing to fetch
-    if (!enabled || !autoFetchPages || !hasNextPage || isFetchingNextPage) return;
+    if (enabled === false || !autoFetchPages || !hasNextPage || isFetchingNextPage) return;
 
     // No more pages to fetch (limit reached)
     if (typeof autoFetchPages === "number" && autoFetchedPages >= autoFetchPages) return;
