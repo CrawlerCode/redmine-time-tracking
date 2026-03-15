@@ -19,9 +19,9 @@ const IssueTitle = ({ issue, priorityType, className, ...props }: PropTypes) => 
       className={clsxm(
         "truncate",
         settings.style.showIssuesPriority && {
-          "text-[#559] dark:text-[#9393ed]": priorityType === "lowest",
-          "text-[#900] dark:text-[#fa7070]": priorityType === "medium-high",
-          "font-bold text-[#900] dark:text-[#fa7070]": priorityType === "high" || priorityType === "highest",
+          "text-priority-lowest-text": priorityType === "lowest",
+          "text-priority-medium-high-text": priorityType === "medium-high",
+          "text-priority-high-text font-bold": priorityType === "high" || priorityType === "highest",
         },
         className
       )}

@@ -59,8 +59,8 @@ const IssueProject = ({ project, type }: { project: TReference; type: ProjectIss
 
   return (
     <div
-      className={clsx("flex items-center gap-x-1", {
-        "bg-background shadow-background sticky top-0 z-5 py-1 shadow": settings.style.stickyScroll,
+      className={clsx("flex items-center gap-x-1 py-1", {
+        "bg-background shadow-background sticky top-0 z-5 -mx-1 px-1 shadow": settings.style.stickyScroll,
       })}
     >
       <ProjectGroupIcon type={type} />
@@ -127,7 +127,7 @@ const ProjectVersion = ({ version }: { version?: TVersion }) => {
   return (
     <div
       className={clsx({
-        "bg-background shadow-background sticky top-7 z-5 -my-1 py-1 shadow": settings.style.stickyScroll,
+        "bg-background shadow-background sticky top-7 z-5 -mx-1 -my-1 px-1 py-1 shadow": settings.style.stickyScroll,
       })}
     >
       {version ? (

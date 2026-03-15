@@ -44,9 +44,9 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
         className={clsxm(
           "relative flex flex-col gap-1",
           settings.style.showIssuesPriority && {
-            "border-2 border-[#add7f3] dark:border-[#4973f3]/40": priorityType === "lowest",
-            "border-2 border-[#fcc] dark:border-[#fc6f6f]/40": priorityType === "medium-high",
-            "border-2 border-[#ffb4b4] dark:border-[#ff5050]/40": priorityType === "high" || priorityType === "highest",
+            "border-priority-lowest-bg ring-priority-lowest-bg ring-1": priorityType === "lowest",
+            "border-priority-medium-high-bg ring-priority-medium-high-bg ring-1": priorityType === "medium-high",
+            "border-priority-high-bg ring-priority-high-bg ring-1": priorityType === "high" || priorityType === "highest",
           }
         )}
         {...(canLogTime && { onToggle: () => primaryTimer.toggleTimer() })}
