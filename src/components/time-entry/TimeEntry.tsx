@@ -8,11 +8,11 @@ import TimeEntryTooltip from "./TimeEntryTooltip";
 type PropTypes = {
   entries: TTimeEntry[];
   previewHours?: number;
-  maxHours?: number;
+  maxDayHours?: number;
   withContextMenu?: boolean;
 };
 
-const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = false }: PropTypes) => {
+const TimeEntry = ({ entries, previewHours, maxDayHours = 24, withContextMenu = false }: PropTypes) => {
   const formatHours = useFormatHours();
 
   const sumHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
@@ -27,7 +27,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
               data-type="time-entry"
               className="bg-primary h-4 rounded-sm"
               style={{
-                width: `${(entry.hours / maxHours) * 100}%`,
+                width: `${(entry.hours / maxDayHours) * 100}%`,
               }}
             />
           </TimeEntryTooltip>
@@ -52,7 +52,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
               <div
                 className="bg-primary/60 h-3.5 rounded-sm"
                 style={{
-                  width: `${(previewHours / maxHours) * 100}%`,
+                  width: `${(previewHours / maxDayHours) * 100}%`,
                 }}
               />
             }
@@ -65,7 +65,7 @@ const TimeEntry = ({ entries, previewHours, maxHours = 24, withContextMenu = fal
       <div
         className="bg-muted h-3 rounded-sm"
         style={{
-          width: `${((maxHours - sumHours - (previewHours ?? 0)) / maxHours) * 100}%`,
+          width: `${((maxDayHours - sumHours - (previewHours ?? 0)) / maxDayHours) * 100}%`,
         }}
       />
     </div>

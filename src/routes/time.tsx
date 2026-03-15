@@ -1,8 +1,8 @@
 import { useSuspenseRedmineTimeEntries } from "@/api/redmine/hooks/useRedmineTimeEntries";
+import { GroupedTimeEntries, TimeEntryWeekOverview } from "@/components/time-entry/TimeEntryWeekOverview";
 import PermissionProvider from "@/provider/PermissionsProvider";
 import { createFileRoute } from "@tanstack/react-router";
-import { isMonday, previousMonday, startOfDay, subWeeks } from "date-fns";
-import TimeEntryList from "../components/time-entry/TimeEntryList";
+import { isMonday, parseISO, previousMonday, startOfDay, subWeeks } from "date-fns";
 import TimeEntryListSkeleton from "../components/time-entry/TimeEntryListSkeleton";
 
 export const Route = createFileRoute("/time")({
@@ -12,17 +12,40 @@ export const Route = createFileRoute("/time")({
 
 function PageComponent() {
   const today = startOfDay(new Date());
-  const startOfLastWeek = subWeeks(isMonday(today) ? today : previousMonday(today), 1);
+  const startOfThisWeek = isMonday(today) ? today : previousMonday(today);
+  const startOfPreviousWeek = subWeeks(startOfThisWeek, 1);
 
   const entriesQuery = useSuspenseRedmineTimeEntries({
     userId: "me",
-    from: startOfLastWeek,
+    from: startOfPreviousWeek,
     to: today,
   });
 
+  const groupedTimeEntries = entriesQuery.data.reduce<Map<string, GroupedTimeEntries>>((map, entry) => {
+    const date = entry.spent_on;
+    if (!map.has(date)) {
+      map.set(date, {
+        date: parseISO(date),
+        entries: [],
+        hours: 0,
+      });
+    }
+    map.get(date)!.entries.push(entry);
+    map.get(date)!.hours += entry.hours;
+    return map;
+  }, new Map());
+
+  const maxDayHours = Math.max(
+    groupedTimeEntries.values().reduce((max, { hours }) => Math.max(max, hours), 0),
+    8
+  );
+
   return (
     <PermissionProvider>
-      <TimeEntryList entries={entriesQuery.data} />
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <TimeEntryWeekOverview startOfWeek={startOfThisWeek} groupedTimeEntries={groupedTimeEntries} maxDayHours={maxDayHours} />
+        <TimeEntryWeekOverview startOfWeek={startOfPreviousWeek} groupedTimeEntries={groupedTimeEntries} maxDayHours={maxDayHours} />
+      </div>
     </PermissionProvider>
   );
 }
