@@ -1,9 +1,9 @@
 import { TimerContextMenu } from "./TimerContextMenu";
-import { TimerCounter } from "./TimerCounter";
-import { TimerDoneButton } from "./TimerDoneButton";
-import { TimerNameField } from "./TimerNameField";
+import { TimerCounter, TimerCounterSkeleton } from "./TimerCounter";
+import { TimerDoneButton, TimerDoneButtonSkeleton } from "./TimerDoneButton";
+import { TimerNameField, TimerNameFieldSkeleton } from "./TimerNameField";
 import { TimerRoot } from "./TimerRoot";
-import { TimerToggleButton } from "./TimerToggleButton";
+import { TimerToggleButton, TimerToggleButtonSkeleton } from "./TimerToggleButton";
 import { TimerWrapper, TimerWrapperCard } from "./TimerWrapper";
 
 const Timer = {
@@ -15,6 +15,12 @@ const Timer = {
   Counter: TimerCounter,
   ToggleButton: TimerToggleButton,
   DoneButton: TimerDoneButton,
+  Skeleton: {
+    NameField: TimerNameFieldSkeleton,
+    Counter: TimerCounterSkeleton,
+    ToggleButton: TimerToggleButtonSkeleton,
+    DoneButton: TimerDoneButtonSkeleton,
+  },
 };
 
 export default Timer;

@@ -1,11 +1,13 @@
 import { useRedmineIssuePriorities } from "@/api/redmine/hooks/useRedmineIssuePriorities";
 import { ToggleableCard } from "@/components/general/ToggleableCard";
-import IssueTitle from "@/components/issue/IssueTitle";
+import { IssueTitle, IssueTitleSkeleton } from "@/components/issue/IssueTitle";
 import Timer from "@/components/timer/timer";
+import { Skeleton } from "@/components/ui/skeleton";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { clsxm } from "@/utils/clsxm";
 import { ProjectTimersGroup as ProjectTimersGroupType } from "@/utils/groupTimers";
+import { randomElement } from "@/utils/random";
 import clsx from "clsx";
 import { SquareChartGanttIcon } from "lucide-react";
 import { ComponentProps } from "react";
@@ -66,3 +68,24 @@ const TimerProject = ({ project, type }: { project?: TReference; type: ProjectTi
     </div>
   );
 };
+
+export const ProjectTimersGroupSkeleton = ({ groups }: { groups: number[] }) => (
+  <div className="flex flex-col gap-y-2">
+    <div className="flex items-center gap-x-1 py-1">
+      <Skeleton className={clsx("h-5.5", randomElement(["w-32", "w-40", "w-60"]))} />
+    </div>
+    <div className="flex flex-col gap-y-2">
+      {groups.map((key) => (
+        <ToggleableCard key={key} className="flex flex-col gap-1">
+          <IssueTitleSkeleton />
+          <Timer.Wrapper>
+            <Timer.Skeleton.NameField />
+            <Timer.Skeleton.Counter />
+            <Timer.Skeleton.ToggleButton />
+            <Timer.Skeleton.DoneButton />
+          </Timer.Wrapper>
+        </ToggleableCard>
+      ))}
+    </div>
+  </div>
+);

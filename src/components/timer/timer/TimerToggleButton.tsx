@@ -1,4 +1,5 @@
 import HelpTooltip from "@/components/general/HelpTooltip";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TimerIcon, TimerOffIcon } from "lucide-react";
 import { useIntl } from "react-intl";
 import { useTimerContext } from "./TimerRoot";
@@ -28,3 +29,5 @@ export const TimerToggleButton = () => {
     );
   }
 };
+
+export const TimerToggleButtonSkeleton = () => <Skeleton className="size-6 rounded-lg" />;

@@ -16,7 +16,7 @@ import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";
 import ActivityField from "../issue/form/fields/ActivityField";
 import { DoneSliderField } from "../issue/form/fields/DoneSliderField";
-import IssueTitle from "../issue/IssueTitle";
+import { IssueTitle } from "../issue/IssueTitle";
 import SpentVsEstimatedTime from "../issue/SpentVsEstimatedTime";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Form, FormFieldset, FormGrid } from "../ui/form";

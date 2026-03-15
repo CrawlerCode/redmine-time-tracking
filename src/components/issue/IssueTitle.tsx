@@ -1,4 +1,7 @@
 import { IssueInfoTooltip } from "@/components/issue/IssueInfoTooltip";
+import { Skeleton } from "@/components/ui/skeleton";
+import { randomElement } from "@/utils/random";
+import clsx from "clsx";
 import { ComponentProps } from "react";
 import { PriorityType } from "../../api/redmine/hooks/useRedmineIssuePriorities";
 import { TIssue } from "../../api/redmine/types";
@@ -10,7 +13,7 @@ type PropTypes = {
   priorityType?: PriorityType;
 } & Omit<ComponentProps<"h1">, "children">;
 
-const IssueTitle = ({ issue, priorityType, className, ...props }: PropTypes) => {
+export const IssueTitle = ({ issue, priorityType, className, ...props }: PropTypes) => {
   const { settings } = useSettings();
 
   return (
@@ -44,4 +47,4 @@ const IssueTitle = ({ issue, priorityType, className, ...props }: PropTypes) => 
   );
 };
 
-export default IssueTitle;
+export const IssueTitleSkeleton = () => <Skeleton className={clsx("h-5", randomElement(["w-40", "w-56", "w-72"]))} />;

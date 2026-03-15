@@ -1,5 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import useRedmineIssuesSearch from "@/api/redmine/hooks/useRedmineIssuesSearch";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAppForm } from "@/hooks/useAppForm";
 import { useSuspenseStorage } from "@/hooks/useStorage";
 import { clsxm } from "@/utils/clsxm";
@@ -311,10 +312,25 @@ export const filterIssuesByLocalSearch = (issues: TIssue[], search: IssueSearchC
   return issues;
 };
 
+const IssueSearchInputSkeleton = ({ className }: { className?: string }) => {
+  const { settings } = useSettings();
+
+  if (!settings.style.displaySearchAlways) return null;
+
+  return (
+    <div className={clsxm("flex flex-col gap-2", className)}>
+      <Skeleton className="h-8 w-full" />
+    </div>
+  );
+};
+
 const IssueSearch = {
   Provider: IssueSearchProvider,
   Input: IssueSearchInput,
   LoadMore: IssueSearchLoadMore,
+  Skeleton: {
+    Input: IssueSearchInputSkeleton,
+  },
 };
 
 export default IssueSearch;

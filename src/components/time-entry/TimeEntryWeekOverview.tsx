@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { addDays, format, formatISO, isFuture, isWeekend } from "date-fns";
 import { ClockIcon } from "lucide-react";
 import { useIntl } from "react-intl";
@@ -58,7 +59,7 @@ export const TimeEntryWeekOverview = ({ startOfWeek, groupedTimeEntries, maxDayH
           if (isFuture(date)) return;
           if (isWeekend(date) && entries.length === 0) return;
           return (
-            <div className="flex items-center gap-x-1 py-1" key={i}>
+            <div key={i} className="flex items-center gap-x-1 py-1">
               <span className="text-muted-foreground w-7 text-xs">{format(date, "EEE")}</span>
               <span className="w-17 truncate text-end text-xs font-semibold">{formatHours(roundHours(hours))}</span>
               <div className="grow">
@@ -67,6 +68,34 @@ export const TimeEntryWeekOverview = ({ startOfWeek, groupedTimeEntries, maxDayH
             </div>
           );
         })}
+      </CardContent>
+    </Card>
+  );
+};
+
+export const TimeEntryWeekOverviewSkeleton = () => {
+  return (
+    <Card size="sm">
+      <CardHeader>
+        <CardTitle>
+          <Skeleton className="h-5.25 w-38" />
+        </CardTitle>
+        <CardAction>
+          <Skeleton className="h-5 w-12" />
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        {[...Array(5).keys()].map((i) => (
+          <div key={i} className="flex items-center gap-x-1 py-1">
+            <Skeleton className="h-4.5 w-7" />
+            <span className="w-17 justify-self-end">
+              <Skeleton className="h-4.5 w-12 justify-self-end" />
+            </span>
+            <div className="grow">
+              <Skeleton className="h-4 w-full" />
+            </div>
+          </div>
+        ))}
       </CardContent>
     </Card>
   );

@@ -2,6 +2,7 @@ import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser
 import { useRedmineIssuePriorities } from "@/api/redmine/hooks/useRedmineIssuePriorities";
 import { ProjectTooltip } from "@/components/issue/ProjectTooltip";
 import { VersionTooltip } from "@/components/issue/VersionTooltip";
+import { Skeleton } from "@/components/ui/skeleton";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { clsxm } from "@/utils/clsxm";
@@ -15,8 +16,9 @@ import useLocalIssues from "../../hooks/useLocalIssues";
 import useTimers from "../../hooks/useTimers";
 import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";
-import Issue from "./Issue";
+import Issue, { IssueSkeleton } from "./Issue";
 import { useIssueSearch } from "./IssueSearch";
+import { randomElement } from "@/utils/random";
 
 interface ProjectIssuesGroupProps extends ComponentProps<"div"> {
   projectGroup: ProjectIssuesGroupType;
@@ -146,3 +148,21 @@ const ProjectVersion = ({ version }: { version?: TVersion }) => {
     </div>
   );
 };
+
+export const ProjectIssuesGroupSkeleton = ({ groups }: { groups: number[] }) => (
+  <div className="flex flex-col gap-y-2">
+    <div className="flex items-center gap-x-1 py-1">
+      <Skeleton className={clsx("h-5.5", randomElement(["w-32", "w-40", "w-60"]))} />
+      <span className="grow" />
+      <div className="flex gap-x-2">
+        <Skeleton className="size-4" />
+        <Skeleton className="size-4" />
+      </div>
+    </div>
+    <div className="flex flex-col gap-y-2">
+      {groups.map((key) => (
+        <IssueSkeleton key={key} />
+      ))}
+    </div>
+  </div>
+);

@@ -4,6 +4,7 @@ import { useSuspenseRedmineMultipleProjectVersions } from "@/api/redmine/hooks/u
 import { redmineIssuePrioritiesQuery } from "@/api/redmine/queries/issuePriorities";
 import { redmineIssuesQuery } from "@/api/redmine/queries/issues";
 import { OptionalSidebarScrollspy } from "@/components/general/SidebarScrollspy";
+import { Skeleton } from "@/components/ui/skeleton";
 import useActiveRedmineTab from "@/hooks/useActiveRedmineTab";
 import PermissionProvider from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
@@ -15,8 +16,7 @@ import { useMediaQuery } from "usehooks-ts";
 import useRedmineIssuesSearch from "../api/redmine/hooks/useRedmineIssuesSearch";
 import Filter, { filterIssues, useFilter } from "../components/issue/Filter";
 import IssueSearch, { filterIssuesByLocalSearch, useIssueSearch } from "../components/issue/IssueSearch";
-import IssuesListSkeleton from "../components/issue/IssuesListSkeleton";
-import { ProjectGroupIcon, ProjectIssuesGroup } from "../components/issue/ProjectIssuesGroup";
+import { ProjectGroupIcon, ProjectIssuesGroup, ProjectIssuesGroupSkeleton } from "../components/issue/ProjectIssuesGroup";
 import TimersBadge from "../components/timer/TimersBadge";
 import useLocalIssues from "../hooks/useLocalIssues";
 import useTimers from "../hooks/useTimers";
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/issues")({
       ...(settings.style.sortIssuesByPriority ? [queryClient.prefetchQuery(redmineIssuePrioritiesQuery(redmineApi))] : []),
     ]);
   },
-  pendingComponent: () => <IssuesListSkeleton />,
+  pendingComponent: () => <PageSkeleton />,
 });
 
 function PageComponent() {
@@ -139,5 +139,55 @@ const IssuesPage = () => {
         )}
       </OptionalSidebarScrollspy>
     </PermissionProvider>
+  );
+};
+
+const PageSkeleton = () => {
+  const { settings } = useSettings();
+
+  const groupedIssues = useMemo(
+    () =>
+      // eslint-disable-next-line react-hooks/purity
+      [...Array(Math.floor(Math.random() * 3 + 2)).keys()].map((i) => ({
+        key: `${i}`,
+        // eslint-disable-next-line react-hooks/purity
+        groups: [...Array(Math.floor(Math.random() * 5 + 2)).keys()],
+      })),
+    []
+  );
+
+  const showSidebarScrollspy = useMediaQuery("(width > calc(320px + 12rem))");
+
+  return (
+    <>
+      <IssueSearch.Skeleton.Input className="mb-2 sm:mb-4" />
+
+      <OptionalSidebarScrollspy
+        enabled={showSidebarScrollspy && settings.style.fullscreenSidebarScrollspy}
+        groups={groupedIssues.map((projectGroup) => ({
+          key: projectGroup.key,
+          label: <Skeleton className="h-5.5 w-32" />,
+        }))}
+        classNames={{
+          root: "-m-2 sm:-m-4",
+          sidebar: "w-48",
+          section: "p-2 mt-2 pt-0 sm:px-4",
+        }}
+      >
+        {() => (
+          <div className="space-y-2">
+            <div className="flex justify-end">
+              <Skeleton className="h-7 w-18" />
+            </div>
+
+            <div className="flex flex-col gap-y-4">
+              {groupedIssues.map((projectGroup) => (
+                <ProjectIssuesGroupSkeleton key={projectGroup.key} groups={projectGroup.groups} />
+              ))}
+            </div>
+          </div>
+        )}
+      </OptionalSidebarScrollspy>
+    </>
   );
 };

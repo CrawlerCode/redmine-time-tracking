@@ -8,7 +8,7 @@ import { useAppForm } from "../../hooks/useAppForm";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Form, FormGrid } from "../ui/form";
-import IssueTitle from "./IssueTitle";
+import { IssueTitle } from "./IssueTitle";
 
 const addIssueNotesFormSchema = ({ formatMessage }: { formatMessage: ReturnType<typeof useIntl>["formatMessage"] }) =>
   z.object({

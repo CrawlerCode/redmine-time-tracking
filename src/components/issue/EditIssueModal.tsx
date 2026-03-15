@@ -6,7 +6,7 @@ import { TIssue, TUpdateIssue } from "../../api/redmine/types";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { IssueForm } from "./form/IssueForm";
-import IssueTitle from "./IssueTitle";
+import { IssueTitle } from "./IssueTitle";
 
 type PropTypes = {
   issue: TIssue;

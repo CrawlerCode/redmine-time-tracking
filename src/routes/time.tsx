@@ -1,13 +1,12 @@
 import { useSuspenseRedmineTimeEntries } from "@/api/redmine/hooks/useRedmineTimeEntries";
-import { GroupedTimeEntries, TimeEntryWeekOverview } from "@/components/time-entry/TimeEntryWeekOverview";
+import { GroupedTimeEntries, TimeEntryWeekOverview, TimeEntryWeekOverviewSkeleton } from "@/components/time-entry/TimeEntryWeekOverview";
 import PermissionProvider from "@/provider/PermissionsProvider";
 import { createFileRoute } from "@tanstack/react-router";
 import { isMonday, parseISO, previousMonday, startOfDay, subWeeks } from "date-fns";
-import TimeEntryListSkeleton from "../components/time-entry/TimeEntryListSkeleton";
 
 export const Route = createFileRoute("/time")({
   component: PageComponent,
-  pendingComponent: () => <TimeEntryListSkeleton />,
+  pendingComponent: () => <PageSkeleton />,
 });
 
 function PageComponent() {
@@ -49,3 +48,12 @@ function PageComponent() {
     </PermissionProvider>
   );
 }
+
+const PageSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-3 sm:gap-4">
+      <TimeEntryWeekOverviewSkeleton />
+      <TimeEntryWeekOverviewSkeleton />
+    </div>
+  );
+};

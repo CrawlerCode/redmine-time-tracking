@@ -1,5 +1,6 @@
 import HelpTooltip from "@/components/general/HelpTooltip";
 import CreateTimeEntryModal from "@/components/time-entry/CreateTimeEntryModal";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useSettings } from "@/provider/SettingsProvider";
 import { roundMillisecondsToInterval } from "@/utils/date";
 import { BadgeCheckIcon } from "lucide-react";
@@ -52,3 +53,5 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
     </>
   );
 };
+
+export const TimerDoneButtonSkeleton = () => <Skeleton className="size-6 rounded-lg" />;

@@ -1,3 +1,5 @@
+import { Skeleton } from "@/components/ui/skeleton";
+import { clsxm } from "@/utils/clsxm";
 import { SearchIcon } from "lucide-react";
 import { createContext, PropsWithChildren, use, useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
@@ -103,9 +105,23 @@ export const useTimerSearch = (): TimerSearchContext => {
   return { isSearching, query };
 };
 
+const TimerSearchInputSkeleton = ({ className }: { className?: string }) => {
+  const { settings } = useSettings();
+
+  if (!settings.style.displaySearchAlways) return null;
+
+  return (
+    <div className={clsxm("flex flex-col gap-2", className)}>
+      <Skeleton className="h-8 w-full" />
+    </div>
+  );
+};
 const TimerSearch = {
   Provider: TimerSearchProvider,
   Input: TimerSearchInput,
+  Skeleton: {
+    Input: TimerSearchInputSkeleton,
+  },
 };
 
 export default TimerSearch;

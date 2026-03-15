@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { useIntl } from "react-intl";
 import { useTimerContext } from "./TimerRoot";
 
@@ -19,3 +20,9 @@ export const TimerNameField = () => {
     />
   );
 };
+
+export const TimerNameFieldSkeleton = () => (
+  <div className="min-w-0 grow">
+    <Skeleton className="h-5 w-24" />
+  </div>
+);

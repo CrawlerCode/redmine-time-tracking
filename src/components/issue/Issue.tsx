@@ -1,5 +1,6 @@
 import { PriorityType } from "@/api/redmine/hooks/useRedmineIssuePriorities";
 import { IssueContextMenu } from "@/components/issue/IssueContextMenu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import clsx from "clsx";
 import { PinIcon, UserIcon } from "lucide-react";
@@ -13,7 +14,7 @@ import { clsxm } from "../../utils/clsxm";
 import HelpTooltip from "../general/HelpTooltip";
 import { ToggleableCard } from "../general/ToggleableCard";
 import Timer from "../timer/timer";
-import IssueTitle from "./IssueTitle";
+import { IssueTitle, IssueTitleSkeleton } from "./IssueTitle";
 
 type PropTypes = {
   issue: TIssue;
@@ -60,7 +61,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
           })}
         />
         <div className="flex justify-between gap-x-2">
-          <div className="mt-1">
+          <div className="mt-0.5">
             <div className="bg-muted w-20 overflow-hidden rounded-sm">
               <div className="text-foreground bg-green-600/80 p-1 text-center text-xs leading-none font-medium select-none dark:bg-green-600/60" style={{ width: `${issue.done_ratio}%` }}>
                 {issue.done_ratio}%
@@ -116,5 +117,21 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
     </IssueContextMenu>
   );
 };
+
+export const IssueSkeleton = () => (
+  <ToggleableCard className="flex flex-col gap-1">
+    <IssueTitleSkeleton />
+    <div className="flex justify-between gap-x-2">
+      <div className="mt-0.5">
+        <Skeleton className="h-5.5 w-20 rounded-sm" />
+      </div>
+      <Timer.Wrapper>
+        <Timer.Skeleton.Counter />
+        <Timer.Skeleton.ToggleButton />
+        <Timer.Skeleton.DoneButton />
+      </Timer.Wrapper>
+    </div>
+  </ToggleableCard>
+);
 
 export default Issue;

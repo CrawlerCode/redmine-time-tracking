@@ -1,4 +1,5 @@
 import HelpTooltip from "@/components/general/HelpTooltip";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatTimer } from "@/utils/date";
 import clsx from "clsx";
 import { FocusEvent, useState } from "react";
@@ -166,4 +167,8 @@ export const EditTimer = () => {
 
 const to2Digit = (val: number) => {
   return `${val < 10 ? "0" : ""}${val}`;
+};
+
+export const TimerCounterSkeleton = () => {
+  return <Skeleton className="h-5 w-16" />;
 };
