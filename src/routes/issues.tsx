@@ -9,6 +9,7 @@ import useActiveRedmineTab from "@/hooks/useActiveRedmineTab";
 import PermissionProvider from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { groupIssues } from "@/utils/groupIssues";
+import { randomInt } from "@/utils/random";
 import { createFileRoute } from "@tanstack/react-router";
 import { useDeferredValue, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
@@ -147,11 +148,9 @@ const PageSkeleton = () => {
 
   const groupedIssues = useMemo(
     () =>
-      // eslint-disable-next-line react-hooks/purity
-      [...Array(Math.floor(Math.random() * 3 + 2)).keys()].map((i) => ({
+      [...Array(randomInt(2, 5)).keys()].map((i) => ({
         key: `${i}`,
-        // eslint-disable-next-line react-hooks/purity
-        groups: [...Array(Math.floor(Math.random() * 5 + 2)).keys()],
+        groups: [...Array(randomInt(2, 7)).keys()],
       })),
     []
   );

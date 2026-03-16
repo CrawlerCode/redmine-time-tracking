@@ -1,6 +1,7 @@
 import { TIssue } from "@/api/redmine/types";
 import { TimerController } from "@/hooks/useTimers";
-import { createContext, PropsWithChildren, use, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, use, useEffect, useEffectEvent, useState } from "react";
+import { useInterval } from "usehooks-ts";
 
 type TimerContextType = {
   timer: TimerController;
@@ -15,23 +16,12 @@ const TimerContext = createContext<TimerContextType | undefined>(undefined);
 type TimerRootProps = PropsWithChildren & Pick<TimerContextType, "timer" | "issue">;
 
 export const TimerRoot = ({ timer, issue, children }: TimerRootProps) => {
-  const [currentTime, setCurrentTime] = useState(timer.getElapsedTime());
-  useEffect(() => {
-    const timeout = setTimeout(() => setCurrentTime(timer.getElapsedTime()), 0);
-    if (timer.isActive) {
-      const timerInterval = setInterval(() => {
-        setCurrentTime(timer.getElapsedTime());
-      }, 1000);
-      return () => {
-        clearTimeout(timeout);
-        clearInterval(timerInterval);
-      };
-    } else {
-      return () => {
-        clearTimeout(timeout);
-      };
-    }
-  }, [timer]);
+  const [currentTime, setCurrentTime] = useState(() => timer.getElapsedTime());
+
+  const updateTimer = useEffectEvent(() => setCurrentTime(timer.getElapsedTime()));
+  useEffect(() => updateTimer(), [timer.elapsedTime]);
+
+  useInterval(() => setCurrentTime(timer.getElapsedTime()), timer.isActive ? 1000 : null);
 
   const [isEditing, setIsEditing] = useState(false);
 

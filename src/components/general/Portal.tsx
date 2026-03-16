@@ -1,22 +1,19 @@
-import { ReactNode, useLayoutEffect, useState } from "react";
+import { ReactNode, useEffectEvent, useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-export type PortalContainer = HTMLElement | ShadowRoot | null;
+type PortalNode = HTMLElement | ShadowRoot | null;
 
-export type PortalProps = {
-  container: PortalContainer | (() => PortalContainer);
+type PortalProps = {
+  container: PortalNode | (() => PortalNode);
   children: ReactNode;
 };
 
 export function Portal({ container, children }: PortalProps) {
-  const [containerElement, setContainerElement] = useState<PortalContainer>(null);
+  const [portalNode, setPortalNode] = useState<PortalNode>(null);
 
-  useLayoutEffect(() => {
-    const resolvedContainer = typeof container === "function" ? container() : container;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setContainerElement(resolvedContainer);
-  }, [container]);
+  const updateNode = useEffectEvent(() => setPortalNode(typeof container === "function" ? container() : container));
+  useLayoutEffect(() => updateNode(), []);
 
-  if (!containerElement) return null;
-  return createPortal(children, containerElement);
+  if (!portalNode) return null;
+  return createPortal(children, portalNode);
 }

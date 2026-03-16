@@ -55,11 +55,11 @@ export const TimeEntryWeekOverview = ({ startOfWeek, groupedTimeEntries, maxDayH
         </CardAction>
       </CardHeader>
       <CardContent>
-        {days.toReversed().map(({ date, entries, hours }, i) => {
+        {days.toReversed().map(({ date, entries, hours }) => {
           if (isFuture(date)) return;
           if (isWeekend(date) && entries.length === 0) return;
           return (
-            <div key={i} className="flex items-center gap-x-1 py-1">
+            <div key={date.toISOString()} className="flex items-center gap-x-1 py-1">
               <span className="text-muted-foreground w-7 text-xs">{format(date, "EEE")}</span>
               <span className="w-17 truncate text-end text-xs font-semibold">{formatHours(roundHours(hours))}</span>
               <div className="grow">
@@ -85,8 +85,8 @@ export const TimeEntryWeekOverviewSkeleton = () => {
         </CardAction>
       </CardHeader>
       <CardContent>
-        {[...Array(5).keys()].map((i) => (
-          <div key={i} className="flex items-center gap-x-1 py-1">
+        {[...Array(5).keys()].map((e) => (
+          <div key={e} className="flex items-center gap-x-1 py-1">
             <Skeleton className="h-4.5 w-7" />
             <span className="w-17 justify-self-end">
               <Skeleton className="h-4.5 w-12 justify-self-end" />

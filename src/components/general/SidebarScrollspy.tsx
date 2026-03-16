@@ -2,7 +2,7 @@ import { clsxm } from "@/utils/clsxm";
 import { ComponentPropsWithRef, ReactNode, useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 
-export interface ScrollspyGroup {
+interface ScrollspyGroup {
   key: string;
   label: ReactNode;
 }

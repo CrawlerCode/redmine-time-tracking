@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PermissionProvider from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { groupTimers } from "@/utils/groupTimers";
+import { randomInt } from "@/utils/random";
 import { createFileRoute } from "@tanstack/react-router";
 import { SquareChartGanttIcon } from "lucide-react";
 import { useDeferredValue, useMemo } from "react";
@@ -90,11 +91,9 @@ const PageSkeleton = () => {
 
   const groupedIssues = useMemo(
     () =>
-      // eslint-disable-next-line react-hooks/purity
-      [...Array(Math.floor(Math.random() + 2)).keys()].map((i) => ({
+      [...Array(randomInt(2, 3)).keys()].map((i) => ({
         key: `${i}`,
-        // eslint-disable-next-line react-hooks/purity
-        groups: [...Array(Math.floor(Math.random() * 5 + 2)).keys()],
+        groups: [...Array(randomInt(2, 7)).keys()],
       })),
     []
   );

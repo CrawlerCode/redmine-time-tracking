@@ -139,5 +139,3 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useSettings = () => use(SettingsContext);
-
-export default SettingsProvider;

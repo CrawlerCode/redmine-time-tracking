@@ -35,9 +35,9 @@ export const EditTimer = () => {
 
   const { timer, currentTime, setIsEditing } = useTimerContext();
 
-  const [h, setH] = useState(Math.floor(currentTime / 1000 / 60 / 60).toString());
-  const [m, setM] = useState(to2Digit(Math.floor((currentTime / 1000 / 60) % 60)));
-  const [s, setS] = useState(to2Digit(Math.floor((currentTime / 1000) % 60)));
+  const [h, setH] = useState(() => Math.floor(currentTime / 1000 / 60 / 60).toString());
+  const [m, setM] = useState(() => to2Digit(Math.floor((currentTime / 1000 / 60) % 60)));
+  const [s, setS] = useState(() => to2Digit(Math.floor((currentTime / 1000) % 60)));
   const updatedTime = (Number(h) * 60 * 60 + Number(m) * 60 + Number(s)) * 1000;
 
   const onOverrideTime = () => {

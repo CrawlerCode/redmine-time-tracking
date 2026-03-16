@@ -78,9 +78,9 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
                 </Timer.Wrapper>
               </Timer.Root>
               {timers.length > 1 && (
-                <div className="text-muted-foreground pl-3 text-xs" onClick={() => setAreTimersExpanded(true)}>
+                <button type="button" className="text-muted-foreground pl-3 text-xs" onClick={() => setAreTimersExpanded(true)}>
                   {formatMessage({ id: "issues.timers.more-timers" }, { count: timers.length - 1 })}
-                </div>
+                </button>
               )}
             </div>
           )}
