@@ -436,6 +436,7 @@ const RedmineServerSection = withForm({
 const InfoSection = () => {
   const { formatMessage } = useIntl();
   const { name, version, version_name } = browser.runtime.getManifest();
+  const reportIssueUrl = useReportIssueUrl(version_name || version);
 
   return (
     <ItemGroup>
@@ -463,7 +464,7 @@ const InfoSection = () => {
           <ExternalLinkIcon className="size-4" />
         </ItemActions>
       </Item>
-      <Item variant="outline" size="sm" render={<a href="https://github.com/CrawlerCode/redmine-time-tracking/issues" target="_blank" tabIndex={-1} rel="noreferrer" />}>
+      <Item variant="outline" size="sm" render={<a href={reportIssueUrl} target="_blank" tabIndex={-1} rel="noreferrer" />}>
         <ItemMedia variant="icon" className="bg-muted size-8 rounded-sm border">
           <BugIcon />
         </ItemMedia>
@@ -477,3 +478,34 @@ const InfoSection = () => {
     </ItemGroup>
   );
 };
+
+function useReportIssueUrl(extensionVersion: string) {
+  const issueUrl = "https://github.com/CrawlerCode/redmine-time-tracking/issues/new";
+  const issueTemplate = "bug_report.yml";
+
+  const getBrowserLabel = (userAgent: string): string => {
+    const browserMatchers = [
+      ["Edge", /Edg\/([\d.]+)/],
+      ["Chrome", /Chrome\/([\d.]+)/],
+      ["Firefox", /Firefox\/([\d.]+)/],
+      ["Safari", /Version\/([\d.]+).*Safari/],
+    ] as const;
+
+    for (const [name, matcher] of browserMatchers) {
+      const version = userAgent.match(matcher)?.[1];
+      if (version) {
+        return `${name} ${version}`;
+      }
+    }
+
+    return "Unknown";
+  };
+
+  const params = new URLSearchParams({
+    template: issueTemplate,
+    browser: getBrowserLabel(navigator.userAgent),
+    "extension-version": extensionVersion,
+  });
+
+  return `${issueUrl}?${params.toString()}`;
+}

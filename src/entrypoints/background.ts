@@ -37,7 +37,7 @@ export default defineBackground({
           browser.runtime.openOptionsPage();
 
           // Open discussion page on uninstall to collect feedback
-          browser.runtime.setUninstallURL("https://github.com/CrawlerCode/redmine-time-tracking/discussions/1");
+          browser.runtime.setUninstallURL("https://github.com/CrawlerCode/redmine-time-tracking/discussions");
         }
       });
 
