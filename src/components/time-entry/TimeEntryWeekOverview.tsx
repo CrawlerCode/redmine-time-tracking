@@ -45,7 +45,7 @@ export const TimeEntryWeekOverview = ({ startOfWeek, groupedTimeEntries, maxDayH
     <Card size="sm">
       <CardHeader>
         <CardTitle>
-          {formatDate(days[0].date)} – {formatDate(days[6].date)}
+          {formatDate(days[0]!.date)} – {formatDate(days[6]!.date)}
         </CardTitle>
         <CardAction>
           <Badge variant="secondary">

@@ -19,7 +19,7 @@ export const groupMembers = (members: TProjectMember[]) =>
           users: [],
         };
       }
-      result[member.highestRole.id].users.push(member);
+      result[member.highestRole.id]?.users.push(member);
       return result;
     }, {})
   );

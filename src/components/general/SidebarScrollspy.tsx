@@ -18,7 +18,7 @@ interface SidebarScrollspyProps {
 }
 
 export function SidebarScrollspy({ groups, classNames, children }: SidebarScrollspyProps) {
-  const [activeGroup, setActiveGroup] = useState<string | undefined>(groups[0]?.key ?? null);
+  const [activeGroup, setActiveGroup] = useState<string | undefined>(groups[0]?.key ?? undefined);
 
   const groupRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -35,7 +35,7 @@ export function SidebarScrollspy({ groups, classNames, children }: SidebarScroll
   const getGroupProps = useCallback(
     (key: string) => ({
       ref: (el: HTMLDivElement | null) => {
-        const prevEl = groupRefs.current[key];
+        const prevEl = groupRefs.current[key] || null;
         groupRefs.current[key] = el;
         registerElement(el, prevEl);
       },

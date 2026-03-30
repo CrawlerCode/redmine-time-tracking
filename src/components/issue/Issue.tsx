@@ -33,7 +33,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
   const { hasProjectPermission } = usePermissions();
   const canLogTime = hasProjectPermission(issue.project.id, "log_time");
 
-  const primaryTimer = timers[0];
+  const primaryTimer = timers[0]!;
 
   const [areTimersExpanded, setAreTimersExpanded] = useState(false);
 

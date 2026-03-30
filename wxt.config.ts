@@ -69,7 +69,7 @@ export default defineConfig({
         }
         const { major, minor, patch, distributionChannel, preReleaseIdentifier } = versionMatch.groups;
         const build = (distributionChannel === "beta" ? 2000 : distributionChannel === "alpha" ? 1000 : 0) + Number(preReleaseIdentifier);
-        manifest.name += ` (${distributionChannel.toUpperCase()})`;
+        manifest.name += ` (${distributionChannel?.toUpperCase()})`;
         manifest.version = `${major}.${minor}.${patch}.${build}`;
         manifest.version_name = pkg.version;
       }

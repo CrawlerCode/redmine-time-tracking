@@ -33,7 +33,7 @@ export const ToggleGroupField = ({ title, orientation, className, required, item
         onValueChange={(value) => {
           if (mode === "single") {
             if (value.length === 0 && required) return;
-            handleChange(value[0] ?? null);
+            handleChange(value[0] ?? (null as unknown as string));
           } else {
             handleChange(value);
           }

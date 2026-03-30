@@ -18,7 +18,7 @@ const CurrentIssueTimerInner = ({ issueId }: PropTypes) => {
   const canLogTime = hasProjectPermission(issue.project.id, "log_time");
 
   const issueTimers = timers.getTimersByIssue(issue.id);
-  const primaryTimer = issueTimers[0];
+  const primaryTimer = issueTimers[0]!;
 
   if (!canLogTime && primaryTimer.getElapsedTime() === 0) return;
 

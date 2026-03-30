@@ -114,7 +114,7 @@ export const groupIssues = (
 
     // Group by version if enabled and project versions available
     if (settings.style.groupIssuesByVersion && projectVersions[issue.project.id]) {
-      addIssueToProjectVersionGroup(issue, categorizedProject, projectVersions[issue.project.id], versionSortMap);
+      addIssueToProjectVersionGroup(issue, categorizedProject, projectVersions[issue.project.id] ?? [], versionSortMap);
       continue;
     }
 

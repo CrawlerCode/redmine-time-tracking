@@ -94,8 +94,8 @@ function formatHoursToHmm(hours: number | null): string {
 function parseHmmToHours(value: string): number {
   const match = value?.match(/^(\d+):([0-5]?\d)$/);
   if (!match) return 0;
-  const h = parseInt(match[1], 10);
-  const m = parseInt(match[2], 10);
+  const h = parseInt(match[1]!, 10);
+  const m = parseInt(match[2]!, 10);
   if (isNaN(h) || isNaN(m)) return 0;
   return h + m / 60;
 }

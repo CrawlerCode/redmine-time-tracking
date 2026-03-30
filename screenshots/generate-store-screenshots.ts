@@ -265,7 +265,11 @@ async function generatePromoImage(outputPath: string, locale: Language, messages
   const { canvasWidth: cW, canvasHeight: cH, pad: PAD, textAreaRight, iconSize, fontSize, lineGap, iconTextGap } = opts;
   const scale = 2;
 
-  const shotPaths = [popupPath(locale, "IssuesPage.spec.tsx", "Issues-page"), popupPath(locale, "IssuesPage.spec.tsx", "Add-spent-time"), popupPath(locale, "SettingsPage.spec.tsx", "Settings-page")];
+  const shotPaths = [
+    popupPath(locale, "IssuesPage.spec.tsx", "Start-timer"),
+    popupPath(locale, "IssuesPage.spec.tsx", "Add-spent-time"),
+    popupPath(locale, "SettingsPage.spec.tsx", "Settings-page"),
+  ] as const;
 
   const missing = shotPaths.filter((p) => !fs.existsSync(p));
   if (missing.length > 0) {
@@ -289,12 +293,16 @@ async function generatePromoImage(outputPath: string, locale: Language, messages
     { shot: 2, dx: -cardStep * 2, dy: -vertRange },
     { shot: 1, dx: -cardStep, dy: -Math.round(vertRange / 2) },
     { shot: 0, dx: 0, dy: 0 },
-  ];
+  ] as const;
 
-  const roundedShots = await Promise.all(stackConfigs.map((cfg) => roundImage(shotPaths[cfg.shot], ppW, ppH, RADIUS * scale)));
+  const stackedShots = await Promise.all(
+    stackConfigs.map(async (cfg) => ({
+      cfg,
+      image: await roundImage(shotPaths[cfg.shot], ppW, ppH, RADIUS * scale),
+    }))
+  );
 
-  for (let i = 0; i < stackConfigs.length; i++) {
-    const cfg = stackConfigs[i];
+  for (const { cfg, image } of stackedShots) {
     const left = frontLeft + cfg.dx;
     const top = frontTop + cfg.dy;
 
@@ -307,7 +315,7 @@ async function generatePromoImage(outputPath: string, locale: Language, messages
       </svg>`
     );
 
-    composites.push({ input: roundedShots[i], top, left });
+    composites.push({ input: image, top, left });
     composites.push({ input: Buffer.from(borderSvg), top, left });
   }
 

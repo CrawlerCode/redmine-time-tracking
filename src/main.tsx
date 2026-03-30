@@ -1,7 +1,7 @@
 import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { ErrorComponent } from "@/components/error/ErrorComponent";
 import { Layout } from "@/components/general/Layout";
-import Providers from "@/provider/Providers.tsx";
+import Providers from "@/provider/Providers";
 import { queryClient } from "@/provider/QueryClientProvider";
 import { useRedmineApi } from "@/provider/RedmineApiProvider";
 import { Settings, useSettings } from "@/provider/SettingsProvider";
