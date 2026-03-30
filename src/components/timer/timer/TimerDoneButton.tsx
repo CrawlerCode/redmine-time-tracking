@@ -12,7 +12,7 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
-  const { timer, issue, currentTime } = useTimerContext();
+  const { timer, timerApi, issue, currentTime } = useTimerContext();
 
   const isDisabled = !canLogTime || !issue;
   const [createTimeEntryHours, setCreateTimeEntryHours] = useState<number | undefined>(undefined);
@@ -46,7 +46,7 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
           onClose={() => setCreateTimeEntryHours(undefined)}
           onSuccess={() => {
             setCreateTimeEntryHours(undefined);
-            timer.deleteTimer();
+            timerApi.deleteTimer(timer);
           }}
         />
       )}

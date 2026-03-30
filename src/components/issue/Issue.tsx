@@ -8,12 +8,12 @@ import { useState } from "react";
 import { useIntl } from "react-intl";
 import { TIssue } from "../../api/redmine/types";
 import { LocalIssue } from "../../hooks/useLocalIssues";
-import { TimerController } from "../../hooks/useTimers";
+import { Timer, useTimerApi } from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
 import { clsxm } from "../../utils/clsxm";
 import HelpTooltip from "../general/HelpTooltip";
 import { ToggleableCard } from "../general/ToggleableCard";
-import Timer from "../timer/timer";
+import { TimerComponents } from "../timer/timer";
 import { IssueTitle, IssueTitleSkeleton } from "./IssueTitle";
 
 type PropTypes = {
@@ -21,11 +21,10 @@ type PropTypes = {
   localIssue: LocalIssue;
   priorityType: PriorityType;
   assignedToMe: boolean;
-  timers: TimerController[];
-  onAddTimer: () => void;
+  timers: Timer[];
 };
 
-const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTimer }: PropTypes) => {
+const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers }: PropTypes) => {
   const { formatMessage } = useIntl();
 
   const { settings } = useSettings();
@@ -33,12 +32,14 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
   const { hasProjectPermission } = usePermissions();
   const canLogTime = hasProjectPermission(issue.project.id, "log_time");
 
+  const timerApi = useTimerApi();
+
   const primaryTimer = timers[0]!;
 
   const [areTimersExpanded, setAreTimersExpanded] = useState(false);
 
   return (
-    <IssueContextMenu issue={issue} localIssue={localIssue} primaryTimer={primaryTimer} assignedToMe={assignedToMe} onAddTimer={onAddTimer}>
+    <IssueContextMenu issue={issue} localIssue={localIssue} primaryTimer={primaryTimer} timerApi={timerApi} assignedToMe={assignedToMe}>
       <ToggleableCard
         role="listitem"
         data-type="issue"
@@ -50,7 +51,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
             "border-priority-high-bg ring-priority-high-bg ring-1": priorityType === "high" || priorityType === "highest",
           }
         )}
-        {...(canLogTime && { onToggle: () => primaryTimer.toggleTimer() })}
+        {...(canLogTime && { onToggle: () => timerApi.toggleTimer(primaryTimer) })}
       >
         <IssueTitle
           issue={issue}
@@ -70,13 +71,13 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
           </div>
           {canLogTime && !areTimersExpanded && (
             <div>
-              <Timer.Root timer={primaryTimer} issue={issue}>
-                <Timer.Wrapper>
-                  <Timer.Counter />
-                  <Timer.ToggleButton />
-                  <Timer.DoneButton canLogTime={canLogTime} />
-                </Timer.Wrapper>
-              </Timer.Root>
+              <TimerComponents.Root timer={primaryTimer} issue={issue}>
+                <TimerComponents.Wrapper>
+                  <TimerComponents.Counter />
+                  <TimerComponents.ToggleButton />
+                  <TimerComponents.DoneButton canLogTime={canLogTime} />
+                </TimerComponents.Wrapper>
+              </TimerComponents.Root>
               {timers.length > 1 && (
                 <button type="button" className="text-muted-foreground pl-3 text-xs" onClick={() => setAreTimersExpanded(true)}>
                   {formatMessage({ id: "issues.timers.more-timers" }, { count: timers.length - 1 })}
@@ -88,16 +89,16 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers, onAddTim
         {canLogTime && areTimersExpanded && (
           <div className="mt-2 flex flex-col gap-y-1">
             {timers.map((timer) => (
-              <Timer.Root key={timer.id} timer={timer} issue={issue}>
-                <Timer.ContextMenu>
-                  <Timer.WrapperCard>
-                    <Timer.NameField />
-                    <Timer.Counter />
-                    <Timer.ToggleButton />
-                    <Timer.DoneButton canLogTime={canLogTime} />
-                  </Timer.WrapperCard>
-                </Timer.ContextMenu>
-              </Timer.Root>
+              <TimerComponents.Root key={timer.id} timer={timer} issue={issue}>
+                <TimerComponents.ContextMenu>
+                  <TimerComponents.WrapperCard>
+                    <TimerComponents.NameField />
+                    <TimerComponents.Counter />
+                    <TimerComponents.ToggleButton />
+                    <TimerComponents.DoneButton canLogTime={canLogTime} />
+                  </TimerComponents.WrapperCard>
+                </TimerComponents.ContextMenu>
+              </TimerComponents.Root>
             ))}
           </div>
         )}
@@ -125,11 +126,11 @@ export const IssueSkeleton = () => (
       <div className="mt-0.5">
         <Skeleton className="h-5.5 w-20 rounded-sm" />
       </div>
-      <Timer.Wrapper>
-        <Timer.Skeleton.Counter />
-        <Timer.Skeleton.ToggleButton />
-        <Timer.Skeleton.DoneButton />
-      </Timer.Wrapper>
+      <TimerComponents.Wrapper>
+        <TimerComponents.Skeleton.Counter />
+        <TimerComponents.Skeleton.ToggleButton />
+        <TimerComponents.Skeleton.DoneButton />
+      </TimerComponents.Wrapper>
     </div>
   </ToggleableCard>
 );

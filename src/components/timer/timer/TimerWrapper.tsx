@@ -13,7 +13,7 @@ export const TimerWrapper = ({ className, children, ...props }: ComponentProps<"
 };
 
 export const TimerWrapperCard = ({ className, ...props }: ComponentProps<typeof TimerWrapper>) => {
-  const { timer } = useTimerContext();
+  const { timer, timerApi } = useTimerContext();
 
-  return <ToggleableCard as={TimerWrapper} {...props} className={clsx("px-1.5", className)} onToggle={() => timer.toggleTimer()} />;
+  return <ToggleableCard as={TimerWrapper} {...props} className={clsx("px-1.5", className)} onToggle={() => timerApi.toggleTimer(timer)} />;
 };

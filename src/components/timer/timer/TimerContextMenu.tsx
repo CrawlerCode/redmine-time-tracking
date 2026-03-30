@@ -17,11 +17,11 @@ export const TimerContextMenu = ({ children }: { children: ReactElement }) => {
 
 const TimerContextMenuItems = () => {
   const { formatMessage } = useIntl();
-  const { timer, setIsEditing } = useTimerContext();
+  const { timer, timerApi, currentTime, setIsEditing } = useTimerContext();
 
   return (
     <>
-      <ContextMenuItem onClick={timer.isActive ? timer.pauseTimer : timer.startTimer}>
+      <ContextMenuItem onClick={timer.isActive ? () => timerApi.pauseTimer(timer) : () => timerApi.startTimer(timer)}>
         {timer.isActive ? <TimerOffIcon /> : <TimerIcon />}
         {formatMessage({ id: timer.isActive ? "timer.context-menu.pause" : "timer.context-menu.start" })}
       </ContextMenuItem>
@@ -29,11 +29,11 @@ const TimerContextMenuItems = () => {
         <PencilIcon />
         {formatMessage({ id: "timer.context-menu.edit" })}
       </ContextMenuItem>
-      <ContextMenuItem onClick={timer.resetTimer} disabled={timer.getElapsedTime() === 0}>
+      <ContextMenuItem onClick={() => timerApi.resetTimer(timer)} disabled={currentTime === 0}>
         <TimerResetIcon />
         {formatMessage({ id: "timer.context-menu.reset" })}
       </ContextMenuItem>
-      <ContextMenuItem onClick={timer.deleteTimer}>
+      <ContextMenuItem onClick={() => timerApi.deleteTimer(timer)}>
         <TrashIcon />
         {formatMessage({ id: "timer.context-menu.delete" })}
       </ContextMenuItem>

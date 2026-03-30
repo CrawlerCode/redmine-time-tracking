@@ -6,7 +6,7 @@ import { TimerRoot } from "./TimerRoot";
 import { TimerToggleButton, TimerToggleButtonSkeleton } from "./TimerToggleButton";
 import { TimerWrapper, TimerWrapperCard } from "./TimerWrapper";
 
-const Timer = {
+export const TimerComponents = {
   Root: TimerRoot,
   ContextMenu: TimerContextMenu,
   Wrapper: TimerWrapper,
@@ -22,5 +22,3 @@ const Timer = {
     DoneButton: TimerDoneButtonSkeleton,
   },
 };
-
-export default Timer;

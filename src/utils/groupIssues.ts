@@ -1,6 +1,6 @@
 import { TIssue, TIssuePriority, TReference, TVersion } from "@/api/redmine/types";
 import { LocalIssueData } from "@/hooks/useLocalIssues";
-import { TimerController } from "@/hooks/useTimers";
+import { Timer } from "@/hooks/useTimers";
 import { Settings } from "@/provider/SettingsProvider";
 
 export type ProjectIssuesGroup = {
@@ -64,7 +64,7 @@ export const groupIssues = (
     settings,
   }: {
     localIssues: LocalIssueData[];
-    timers: TimerController[];
+    timers: Timer[];
     issuePriorities: TIssuePriority[];
     projectVersions: Record<string, TVersion[]>;
     activeTabIssueId?: number;
@@ -275,7 +275,7 @@ const getCategorizedProject = (categorizedProjectMap: Map<number, CategorizedPro
 /**
  * Build a lookup map for issue ids to their timer status
  */
-const buildTimerLookupMap = (timers: TimerController[]) => {
+const buildTimerLookupMap = (timers: Timer[]) => {
   const timersByIssueId = new Map<number, boolean>();
   timers.forEach((timer) => {
     const existing = timersByIssueId.get(timer.issueId);

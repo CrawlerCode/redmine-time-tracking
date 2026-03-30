@@ -33,7 +33,7 @@ export const TimerCounter = () => {
 export const EditTimer = () => {
   const { formatMessage } = useIntl();
 
-  const { timer, currentTime, setIsEditing } = useTimerContext();
+  const { timer, timerApi, currentTime, setIsEditing } = useTimerContext();
 
   const [h, setH] = useState(() => Math.floor(currentTime / 1000 / 60 / 60).toString());
   const [m, setM] = useState(() => to2Digit(Math.floor((currentTime / 1000 / 60) % 60)));
@@ -42,7 +42,7 @@ export const EditTimer = () => {
 
   const onOverrideTime = () => {
     setIsEditing(false);
-    timer.setElapsedTime(updatedTime);
+    timerApi.setElapsedTime(timer, updatedTime);
   };
 
   const [confirmCancelModal, setConfirmCancelModal] = useState(false);

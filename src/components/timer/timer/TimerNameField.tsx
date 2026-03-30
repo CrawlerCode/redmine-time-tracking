@@ -4,7 +4,7 @@ import { useTimerContext } from "./TimerRoot";
 
 export const TimerNameField = () => {
   const { formatMessage } = useIntl();
-  const { timer } = useTimerContext();
+  const { timer, timerApi } = useTimerContext();
 
   return (
     <input
@@ -16,7 +16,7 @@ export const TimerNameField = () => {
       onKeyDown={(e) => {
         e.stopPropagation();
       }}
-      onChange={(e) => timer.setName(e.target.value)}
+      onChange={(e) => timerApi.setName(timer, e.target.value)}
     />
   );
 };
