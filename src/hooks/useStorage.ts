@@ -26,8 +26,8 @@ export const removeStorage = async (name: string) => {
 };
 
 const storageOptions = <T>(name: string, defaultValue: T) =>
+  // eslint-disable-next-line @tanstack/query/exhaustive-deps
   queryOptions({
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ["storage", name],
     queryFn: () => getStorage(name, defaultValue),
     staleTime: 0, // Always refetch the latest data

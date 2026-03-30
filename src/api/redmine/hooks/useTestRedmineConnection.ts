@@ -7,7 +7,7 @@ export const useTestRedmineConnection = (customRedmineApiClient?: RedmineApiClie
   const redmineApiClient = customRedmineApiClient ?? defaultRedmineApi;
 
   const myUserQuery = useQuery({
-    queryKey: ["redmine", "testRedmineConnection", redmineApiClient.id],
+    queryKey: ["redmine", "testRedmineConnection", redmineApiClient],
     queryFn: () => redmineApiClient.getCurrentUser(),
     retry: 1,
     staleTime: 0,

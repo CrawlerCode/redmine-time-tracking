@@ -47,6 +47,14 @@ export default [
   // Customizations
   {
     rules: {
+      "@tanstack/query/exhaustive-deps": [
+        "error",
+        {
+          allowlist: {
+            types: ["RedmineApiClient"],
+          },
+        },
+      ],
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
