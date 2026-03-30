@@ -1,3 +1,36 @@
+## [2.0.0-beta.5](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2026-03-30)
+
+### 🩹 Fixes
+
+* Fix autoFetchPages for redmine paginated queries ([a925baa](https://github.com/CrawlerCode/redmine-time-tracking/commit/a925baa79ec4c5575dbf81072ead535d09b9e5c2))
+* **ui:** Enhance skeleton components ([d89a901](https://github.com/CrawlerCode/redmine-time-tracking/commit/d89a901413cc12f5411277b883a96a48c07e633f))
+* **ui:** Fix layout inconsistencies depending on style settings ([6cef7e3](https://github.com/CrawlerCode/redmine-time-tracking/commit/6cef7e3a70316e10e9dfae210a998bae2f19c336))
+* **ui:** Improve combobox clear button position ([932d36d](https://github.com/CrawlerCode/redmine-time-tracking/commit/932d36d319515bbdfc0300e1325a6ae886f58ef7))
+* **ui:** Truncate field labels ([e779018](https://github.com/CrawlerCode/redmine-time-tracking/commit/e779018f048e6b90833f309fcfceab12797311b0))
+
+### 🏡 Chore
+
+* Fix eslint errors ([9ec1e07](https://github.com/CrawlerCode/redmine-time-tracking/commit/9ec1e07ee3895d36d0433ff3a899370b58659b46))
+* Introduced script to automate chrome store screenshot generation ([#67](https://github.com/CrawlerCode/redmine-time-tracking/issues/67)) ([c34baa2](https://github.com/CrawlerCode/redmine-time-tracking/commit/c34baa265578f22b6ea46cae13cfd1d6bacb3b63))
+* Update npm dependencies ([a9bb249](https://github.com/CrawlerCode/redmine-time-tracking/commit/a9bb2494a5369159ab24a8c2babd2e72fc8ed5a4))
+* Update shadcn components ([4f9bb88](https://github.com/CrawlerCode/redmine-time-tracking/commit/4f9bb883c8f68977c67e39838e5dbd5f242d4b7c))
+* Upgrade to typescript 6 and hardened  ts config ([5e34a03](https://github.com/CrawlerCode/redmine-time-tracking/commit/5e34a039d764a0c482529f9bdb334931b1cebfc0))
+* Upgrade to vite v8 ([8210cb5](https://github.com/CrawlerCode/redmine-time-tracking/commit/8210cb5c64a6dafc2ef0f15cf748bdcae80c5162))
+
+### 🛠️ Refactors
+
+* Fix some warnings and errors from react-doctor ([c4d9c84](https://github.com/CrawlerCode/redmine-time-tracking/commit/c4d9c8493f29ee162e7ae36417aeb63c7b94a261))
+* **ui:** Refactor time entry week overview ([2710d3b](https://github.com/CrawlerCode/redmine-time-tracking/commit/2710d3be7012217ea79b0b23bcef546f7e7ceb69))
+
+### 📖 Documentation
+
+* **github:** Enhance issue and feature request templates ([#68](https://github.com/CrawlerCode/redmine-time-tracking/issues/68)) ([e70f419](https://github.com/CrawlerCode/redmine-time-tracking/commit/e70f4192ef8032137d1831568622f249cd0d8913))
+
+### 🧪 Tests
+
+* Fix flaky tests ([1e0a7a2](https://github.com/CrawlerCode/redmine-time-tracking/commit/1e0a7a2c6ef7b23e460b4ea8f3e04c665feae843))
+* Introduce snapshot-based e2e tests ([#66](https://github.com/CrawlerCode/redmine-time-tracking/issues/66)) ([dfcb7fb](https://github.com/CrawlerCode/redmine-time-tracking/commit/dfcb7fbcb1f6a76c3fb3c628945591b6f7a48ca1))
+
 ## [2.0.0-beta.4](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2026-03-09)
 
 ### 🩹 Fixes
