@@ -19,7 +19,7 @@ import { useIntl } from "react-intl";
 import { toast } from "sonner";
 import { TIssue } from "../../api/redmine/types";
 import { LocalIssue } from "../../hooks/useLocalIssues";
-import { calculateElapsedTime, Timer, TimerApi } from "../../hooks/useTimers";
+import { calculateTimerTotalElapsedTime, Timer, TimerApi } from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";
 import AddIssueNotesModal from "./AddIssueNotesModal";
@@ -90,11 +90,11 @@ const IssueContextMenuItems = ({ issue, localIssue, primaryTimer, timerApi, assi
         {formatMessage({ id: "issues.context-menu.add-notes" })}
       </ContextMenuItem>
       <ContextMenuSeparator />
-      <ContextMenuItem onClick={primaryTimer.isActive ? () => timerApi.pauseTimer(primaryTimer) : () => timerApi.startTimer(primaryTimer)} disabled={!canLogTime}>
-        {primaryTimer.isActive ? <TimerOffIcon /> : <TimerIcon />}
-        {formatMessage({ id: primaryTimer.isActive ? "timer.context-menu.pause" : "timer.context-menu.start" })}
+      <ContextMenuItem onClick={primaryTimer.activeSession ? () => timerApi.pauseTimer(primaryTimer) : () => timerApi.startTimer(primaryTimer)} disabled={!canLogTime}>
+        {primaryTimer.activeSession ? <TimerOffIcon /> : <TimerIcon />}
+        {formatMessage({ id: primaryTimer.activeSession ? "timer.context-menu.pause" : "timer.context-menu.start" })}
       </ContextMenuItem>
-      <ContextMenuItem onClick={() => timerApi.resetTimer(primaryTimer)} disabled={calculateElapsedTime(primaryTimer) === 0 || !canLogTime}>
+      <ContextMenuItem onClick={() => timerApi.resetTimer(primaryTimer)} disabled={calculateTimerTotalElapsedTime(primaryTimer) === 0 || !canLogTime}>
         <TimerResetIcon />
         {formatMessage({ id: "timer.context-menu.reset" })}
       </ContextMenuItem>

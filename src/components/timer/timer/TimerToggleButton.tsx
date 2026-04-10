@@ -9,7 +9,7 @@ export const TimerToggleButton = () => {
 
   const { timer, timerApi } = useTimerContext();
 
-  if (!timer.isActive) {
+  if (!timer.activeSession) {
     return (
       <HelpTooltip message={formatMessage({ id: "issues.timer.action.start.tooltip" })}>
         <TimerIcon

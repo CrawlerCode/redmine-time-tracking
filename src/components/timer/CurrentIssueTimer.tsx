@@ -1,7 +1,7 @@
 import { useRedmineIssue } from "@/api/redmine/hooks/useRedmineIssue";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import useRedmineUrl from "../../hooks/useRedmineUrl";
-import useTimers, { calculateElapsedTime } from "../../hooks/useTimers";
+import useTimers, { calculateTimerTotalElapsedTime } from "../../hooks/useTimers";
 import { TimerComponents } from "./timer";
 
 type PropTypes = {
@@ -20,7 +20,7 @@ const CurrentIssueTimerInner = ({ issueId }: PropTypes) => {
   const issueTimers = timers.getTimersByIssue(issue.id);
   const primaryTimer = issueTimers[0]!;
 
-  if (!canLogTime && calculateElapsedTime(primaryTimer) === 0) return;
+  if (!canLogTime && calculateTimerTotalElapsedTime(primaryTimer) === 0) return;
 
   return (
     <TimerComponents.Root timer={primaryTimer} issue={issue}>

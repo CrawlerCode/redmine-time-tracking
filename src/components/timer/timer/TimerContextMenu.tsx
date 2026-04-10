@@ -17,19 +17,19 @@ export const TimerContextMenu = ({ children }: { children: ReactElement }) => {
 
 const TimerContextMenuItems = () => {
   const { formatMessage } = useIntl();
-  const { timer, timerApi, currentTime, setIsEditing } = useTimerContext();
+  const { timer, timerApi, totalElapsedTime, setIsEditing } = useTimerContext();
 
   return (
     <>
-      <ContextMenuItem onClick={timer.isActive ? () => timerApi.pauseTimer(timer) : () => timerApi.startTimer(timer)}>
-        {timer.isActive ? <TimerOffIcon /> : <TimerIcon />}
-        {formatMessage({ id: timer.isActive ? "timer.context-menu.pause" : "timer.context-menu.start" })}
+      <ContextMenuItem onClick={timer.activeSession ? () => timerApi.pauseTimer(timer) : () => timerApi.startTimer(timer)}>
+        {timer.activeSession ? <TimerOffIcon /> : <TimerIcon />}
+        {formatMessage({ id: timer.activeSession ? "timer.context-menu.pause" : "timer.context-menu.start" })}
       </ContextMenuItem>
       <ContextMenuItem onClick={() => setIsEditing(true)}>
         <PencilIcon />
         {formatMessage({ id: "timer.context-menu.edit" })}
       </ContextMenuItem>
-      <ContextMenuItem onClick={() => timerApi.resetTimer(timer)} disabled={currentTime === 0}>
+      <ContextMenuItem onClick={() => timerApi.resetTimer(timer)} disabled={totalElapsedTime === 0}>
         <TimerResetIcon />
         {formatMessage({ id: "timer.context-menu.reset" })}
       </ContextMenuItem>

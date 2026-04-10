@@ -13,6 +13,13 @@
   "timer.context-menu.delete": "Timer löschen",
   "timer.context-menu.add-timer": "Timer hinzufügen",
   "timer.unnamed-timer": "Unbenannter Timer",
+  "timer.modal.remove-session.title": "Timer-Sitzung entfernen",
+  "timer.modal.remove-session.current": "Aktueller Timer",
+  "timer.modal.remove-session.result": "Neuer Timer",
+  "timer.modal.remove-session.cancel": "Abbrechen",
+  "timer.modal.remove-session.submit": "Entfernen",
+  "timer.sessions.show-more": "{count} weitere anzeigen",
+  "timer.sessions.show-less": "Weniger anzeigen",
 
   "issues.search": "Suchen... (#123, Thema, ...)",
   "issues.search.search-in-project": "In <badge>{projectName}</badge> suchen",

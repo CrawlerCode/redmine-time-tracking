@@ -3,6 +3,7 @@ import { TimerCounter, TimerCounterSkeleton } from "./TimerCounter";
 import { TimerDoneButton, TimerDoneButtonSkeleton } from "./TimerDoneButton";
 import { TimerNameField, TimerNameFieldSkeleton } from "./TimerNameField";
 import { TimerRoot } from "./TimerRoot";
+import { TimerSessions } from "./TimerSessions";
 import { TimerToggleButton, TimerToggleButtonSkeleton } from "./TimerToggleButton";
 import { TimerWrapper, TimerWrapperCard } from "./TimerWrapper";
 
@@ -15,6 +16,7 @@ export const TimerComponents = {
   Counter: TimerCounter,
   ToggleButton: TimerToggleButton,
   DoneButton: TimerDoneButton,
+  Sessions: TimerSessions,
   Skeleton: {
     NameField: TimerNameFieldSkeleton,
     Counter: TimerCounterSkeleton,

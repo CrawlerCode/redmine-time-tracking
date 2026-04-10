@@ -1,5 +1,5 @@
 import { TIssue } from "@/api/redmine/types";
-import { calculateElapsedTime, Timer, TimerApi, useTimerApi } from "@/hooks/useTimers";
+import { calculateTimerTotalElapsedTime, Timer, TimerApi, useTimerApi } from "@/hooks/useTimers";
 import { createContext, PropsWithChildren, use, useEffect, useEffectEvent, useState } from "react";
 import { useInterval } from "usehooks-ts";
 
@@ -7,7 +7,7 @@ type TimerContextType = {
   timer: Timer;
   timerApi: TimerApi;
   issue?: TIssue;
-  currentTime: number;
+  totalElapsedTime: number;
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -22,12 +22,12 @@ type TimerRootProps = PropsWithChildren & {
 export const TimerRoot = ({ timer, issue, children }: TimerRootProps) => {
   const timerApi = useTimerApi();
 
-  const [currentTime, setCurrentTime] = useState(() => calculateElapsedTime(timer));
+  const [totalElapsedTime, setTotalElapsedTime] = useState(() => calculateTimerTotalElapsedTime(timer));
 
-  const updateTimer = useEffectEvent(() => setCurrentTime(calculateElapsedTime(timer)));
-  useEffect(() => updateTimer(), [timer.elapsedTime]);
+  const updateTimer = useEffectEvent(() => setTotalElapsedTime(calculateTimerTotalElapsedTime(timer)));
+  useEffect(() => updateTimer(), [timer.elapsedTime, timer.activeSession]);
 
-  useInterval(() => setCurrentTime(calculateElapsedTime(timer)), timer.isActive ? 1000 : null);
+  useInterval(() => setTotalElapsedTime(calculateTimerTotalElapsedTime(timer)), timer.activeSession ? 1000 : null);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -37,7 +37,7 @@ export const TimerRoot = ({ timer, issue, children }: TimerRootProps) => {
         timer,
         timerApi,
         issue,
-        currentTime,
+        totalElapsedTime,
         isEditing,
         setIsEditing,
       }}

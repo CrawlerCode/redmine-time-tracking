@@ -42,6 +42,7 @@ export const ProjectTimersGroup = ({ projectGroup, className, ...props }: Projec
                 <TimerComponents.ToggleButton />
                 <TimerComponents.DoneButton canLogTime={issue ? hasProjectPermission(issue.project.id, "log_time") : false} />
               </TimerComponents.Wrapper>
+              <TimerComponents.Sessions />
             </ToggleableCard>
           </TimerComponents.ContextMenu>
         </TimerComponents.Root>
