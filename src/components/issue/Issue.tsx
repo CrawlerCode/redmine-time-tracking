@@ -8,8 +8,9 @@ import { useState } from "react";
 import { useIntl } from "react-intl";
 import { TIssue } from "../../api/redmine/types";
 import { LocalIssue } from "../../hooks/useLocalIssues";
-import { Timer, useTimerApi } from "../../hooks/useTimers";
+import { Timer } from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
+import { useTimerApi } from "../../provider/TimerApiProvider";
 import { clsxm } from "../../utils/clsxm";
 import HelpTooltip from "../general/HelpTooltip";
 import { ToggleableCard } from "../general/ToggleableCard";
@@ -39,7 +40,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers }: PropTy
   const [areTimersExpanded, setAreTimersExpanded] = useState(false);
 
   return (
-    <IssueContextMenu issue={issue} localIssue={localIssue} primaryTimer={primaryTimer} timerApi={timerApi} assignedToMe={assignedToMe}>
+    <IssueContextMenu issue={issue} localIssue={localIssue} primaryTimer={primaryTimer} assignedToMe={assignedToMe}>
       <ToggleableCard
         role="listitem"
         data-type="issue"

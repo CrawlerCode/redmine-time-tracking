@@ -19,8 +19,9 @@ import { useIntl } from "react-intl";
 import { toast } from "sonner";
 import { TIssue } from "../../api/redmine/types";
 import { LocalIssue } from "../../hooks/useLocalIssues";
-import { calculateTimerTotalElapsedTime, Timer, TimerApi } from "../../hooks/useTimers";
+import { calculateTimerTotalElapsedTime, Timer } from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
+import { useTimerApi } from "../../provider/TimerApiProvider";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";
 import AddIssueNotesModal from "./AddIssueNotesModal";
 import EditIssueModal from "./EditIssueModal";
@@ -29,7 +30,6 @@ type PropTypes = {
   issue: TIssue;
   localIssue: LocalIssue;
   primaryTimer: Timer;
-  timerApi: TimerApi;
   assignedToMe: boolean;
 };
 
@@ -52,9 +52,10 @@ export const IssueContextMenu = ({ children, ...props }: PropTypes & { children:
   );
 };
 
-const IssueContextMenuItems = ({ issue, localIssue, primaryTimer, timerApi, assignedToMe, onEdit, onAddNotes }: PropTypes & { onEdit: () => void; onAddNotes: () => void }) => {
+const IssueContextMenuItems = ({ issue, localIssue, primaryTimer, assignedToMe, onEdit, onAddNotes }: PropTypes & { onEdit: () => void; onAddNotes: () => void }) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
+  const timerApi = useTimerApi();
 
   const { data: me } = useRedmineCurrentUser();
 

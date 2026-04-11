@@ -1,6 +1,7 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { calculateActiveSessionElapsedTime } from "@/hooks/useTimers";
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { formatTimer } from "@/utils/date";
 import clsx from "clsx";
 import { isToday } from "date-fns";
@@ -28,7 +29,7 @@ export const TimerSessions = () => {
       <div className="flex flex-col gap-y-0.5">
         {visibleSessions.map((session) => (
           <div key={session.id} className="text-muted-foreground flex items-center gap-2">
-            <span className="grow">
+            <span className="grow truncate">
               {formatDateTimeRange(session.start, session.end, {
                 dateStyle: isToday(session.start) ? undefined : "short",
                 timeStyle: "medium",
@@ -70,7 +71,8 @@ const ActiveSessionElapsedTime = () => {
 
 const RemoveSessionDialog = ({ sessionId, onClose }: { sessionId: string; onClose: () => void }) => {
   const { formatDateTimeRange, formatMessage } = useIntl();
-  const { timer, timerApi, totalElapsedTime } = useTimerContext();
+  const timerApi = useTimerApi();
+  const { timer, totalElapsedTime } = useTimerContext();
 
   // eslint-disable-next-line react-hooks/purity
   const session = sessionId === "active" ? (timer.activeSession ? { id: "active", start: timer.activeSession.start, end: Date.now() } : undefined) : timer.sessions.find((s) => s.id === sessionId);

@@ -1,3 +1,4 @@
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { PencilIcon, TimerIcon, TimerOffIcon, TimerResetIcon, TrashIcon } from "lucide-react";
 import { ReactElement } from "react";
 import { useIntl } from "react-intl";
@@ -17,7 +18,8 @@ export const TimerContextMenu = ({ children }: { children: ReactElement }) => {
 
 const TimerContextMenuItems = () => {
   const { formatMessage } = useIntl();
-  const { timer, timerApi, totalElapsedTime, setIsEditing } = useTimerContext();
+  const timerApi = useTimerApi();
+  const { timer, totalElapsedTime, setIsEditing } = useTimerContext();
 
   return (
     <>

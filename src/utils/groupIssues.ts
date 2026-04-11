@@ -279,7 +279,7 @@ const buildTimerLookupMap = (timers: Timer[]) => {
   const timersByIssueId = new Map<number, boolean>();
   timers.forEach((timer) => {
     const existing = timersByIssueId.get(timer.issueId);
-    if (timer.activeSession || (timer.sessions.length > 0 && existing !== true)) {
+    if (timer.activeSession || (timer.elapsedTime > 0 && existing !== true)) {
       timersByIssueId.set(timer.issueId, !!timer.activeSession);
     }
   });

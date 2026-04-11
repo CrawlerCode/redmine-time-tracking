@@ -2,6 +2,7 @@ import HelpTooltip from "@/components/general/HelpTooltip";
 import CreateTimeEntryModal from "@/components/time-entry/CreateTimeEntryModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSettings } from "@/provider/SettingsProvider";
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { roundMillisecondsToInterval } from "@/utils/date";
 import { BadgeCheckIcon } from "lucide-react";
 import { useState } from "react";
@@ -12,7 +13,8 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
-  const { timer, timerApi, issue, totalElapsedTime } = useTimerContext();
+  const timerApi = useTimerApi();
+  const { timer, issue, totalElapsedTime } = useTimerContext();
 
   const isDisabled = !canLogTime || !issue;
   const [createTimeEntryHours, setCreateTimeEntryHours] = useState<number | undefined>(undefined);

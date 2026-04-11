@@ -1,5 +1,6 @@
 import HelpTooltip from "@/components/general/HelpTooltip";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { TimerIcon, TimerOffIcon } from "lucide-react";
 import { useIntl } from "react-intl";
 import { useTimerContext } from "./TimerRoot";
@@ -7,7 +8,8 @@ import { useTimerContext } from "./TimerRoot";
 export const TimerToggleButton = () => {
   const { formatMessage } = useIntl();
 
-  const { timer, timerApi } = useTimerContext();
+  const timerApi = useTimerApi();
+  const { timer } = useTimerContext();
 
   if (!timer.activeSession) {
     return (

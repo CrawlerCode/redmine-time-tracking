@@ -1,10 +1,12 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { useIntl } from "react-intl";
 import { useTimerContext } from "./TimerRoot";
 
 export const TimerNameField = () => {
   const { formatMessage } = useIntl();
-  const { timer, timerApi } = useTimerContext();
+  const timerApi = useTimerApi();
+  const { timer } = useTimerContext();
 
   return (
     <input

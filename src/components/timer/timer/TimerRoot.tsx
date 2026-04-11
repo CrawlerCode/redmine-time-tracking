@@ -1,11 +1,10 @@
 import { TIssue } from "@/api/redmine/types";
-import { calculateTimerTotalElapsedTime, Timer, TimerApi, useTimerApi } from "@/hooks/useTimers";
+import { calculateTimerTotalElapsedTime, Timer } from "@/hooks/useTimers";
 import { createContext, PropsWithChildren, use, useEffect, useEffectEvent, useState } from "react";
 import { useInterval } from "usehooks-ts";
 
 type TimerContextType = {
   timer: Timer;
-  timerApi: TimerApi;
   issue?: TIssue;
   totalElapsedTime: number;
   isEditing: boolean;
@@ -20,8 +19,6 @@ type TimerRootProps = PropsWithChildren & {
 };
 
 export const TimerRoot = ({ timer, issue, children }: TimerRootProps) => {
-  const timerApi = useTimerApi();
-
   const [totalElapsedTime, setTotalElapsedTime] = useState(() => calculateTimerTotalElapsedTime(timer));
 
   const updateTimer = useEffectEvent(() => setTotalElapsedTime(calculateTimerTotalElapsedTime(timer)));
@@ -35,7 +32,6 @@ export const TimerRoot = ({ timer, issue, children }: TimerRootProps) => {
     <TimerContext
       value={{
         timer,
-        timerApi,
         issue,
         totalElapsedTime,
         isEditing,

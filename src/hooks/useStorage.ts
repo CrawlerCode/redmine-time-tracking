@@ -58,9 +58,10 @@ export const useStorage = <T>(name: string, defaultValue: T) => {
   return {
     isPending: query.isPending,
     data: query.data ?? defaultValue,
-    setData: async (data: T) => {
-      queryClient.setQueryData(["storage", name], data, { updatedAt: Date.now() });
-      await setStorage(name, data);
+    setData: async (updater: T | ((prev: T) => T)) => {
+      const next = typeof updater === "function" ? (updater as (prev: T) => T)(queryClient.getQueryData<T>(["storage", name]) ?? defaultValue) : updater;
+      queryClient.setQueryData(["storage", name], next, { updatedAt: Date.now() });
+      await setStorage(name, next);
     },
   };
 };
@@ -87,9 +88,10 @@ export const useSuspenseStorage = <T>(name: string, defaultValue: T) => {
 
   return {
     data: query.data,
-    setData: async (data: T) => {
-      queryClient.setQueryData(["storage", name], data, { updatedAt: Date.now() });
-      await setStorage(name, data);
+    setData: async (updater: T | ((prev: T) => T)) => {
+      const next = typeof updater === "function" ? (updater as (prev: T) => T)(queryClient.getQueryData<T>(["storage", name]) ?? defaultValue) : updater;
+      queryClient.setQueryData(["storage", name], next, { updatedAt: Date.now() });
+      await setStorage(name, next);
     },
   };
 };

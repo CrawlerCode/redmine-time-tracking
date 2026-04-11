@@ -1,5 +1,6 @@
 import HelpTooltip from "@/components/general/HelpTooltip";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { formatTimer } from "@/utils/date";
 import clsx from "clsx";
 import { FocusEvent, useState } from "react";
@@ -33,7 +34,8 @@ export const TimerCounter = () => {
 export const EditTimer = () => {
   const { formatMessage } = useIntl();
 
-  const { timer, timerApi, totalElapsedTime, setIsEditing } = useTimerContext();
+  const timerApi = useTimerApi();
+  const { timer, totalElapsedTime, setIsEditing } = useTimerContext();
 
   const [h, setH] = useState(() => Math.floor(totalElapsedTime / 1000 / 60 / 60).toString());
   const [m, setM] = useState(() => to2Digit(Math.floor((totalElapsedTime / 1000 / 60) % 60)));

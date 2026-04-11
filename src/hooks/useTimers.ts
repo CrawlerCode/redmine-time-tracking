@@ -18,38 +18,13 @@ const _defaultTimers: Record<string, Timer> = {};
 export const calculateActiveSessionElapsedTime = (timer: Timer) => (timer.activeSession ? Date.now() - timer.activeSession.start : 0);
 export const calculateTimerTotalElapsedTime = (timer: Timer) => timer.elapsedTime + calculateActiveSessionElapsedTime(timer);
 
-const startTimerSession = (timer: Timer): Timer => ({
-  ...timer,
-  activeSession: { start: Date.now() },
-});
-
-const stopTimerSession = (timer: Timer): Timer => {
-  if (!timer.activeSession) return timer;
-  const activeSession = { start: timer.activeSession.start, end: Date.now() };
-  const duration = activeSession.end - activeSession.start;
-  return {
-    ...timer,
-    activeSession: undefined,
-    ...(duration > 1000 && {
-      elapsedTime: timer.elapsedTime + duration,
-      sessions: [...timer.sessions, { id: crypto.randomUUID(), ...activeSession }],
-    }),
-  };
-};
-
-export const newTimer = (timer: Pick<Timer, "issueId"> & Partial<Timer>): Timer => ({
+const newTimer = (timer: Pick<Timer, "issueId"> & Partial<Timer>): Timer => ({
   id: crypto.randomUUID(),
   elapsedTime: 0,
   activeSession: undefined,
   sessions: [],
   ...timer,
 });
-
-const stopAllTimers = (all: Record<string, Timer>): Record<string, Timer> =>
-  Object.entries(all).reduce<Record<string, Timer>>((res, [id, timer]) => {
-    if (timer.activeSession) res[id] = stopTimerSession(timer);
-    return res;
-  }, all);
 
 /**
  * Hook to get timers
@@ -86,60 +61,87 @@ const useTimers = () => {
   };
 };
 
+const startTimerSession = (timer: Timer): Timer => ({
+  ...timer,
+  activeSession: { start: Date.now() },
+});
+
+const stopTimerSession = (timer: Timer): Timer => {
+  if (!timer.activeSession) return timer;
+  const activeSession = { start: timer.activeSession.start, end: Date.now() };
+  const duration = activeSession.end - activeSession.start;
+  return {
+    ...timer,
+    activeSession: undefined,
+    ...(duration > 1000 && {
+      elapsedTime: timer.elapsedTime + duration,
+      sessions: [...timer.sessions, { id: crypto.randomUUID(), ...activeSession }],
+    }),
+  };
+};
+
+const stopAllTimers = (all: Record<string, Timer>): Record<string, Timer> =>
+  Object.entries(all).reduce<Record<string, Timer>>((res, [id, timer]) => {
+    res[id] = timer.activeSession ? stopTimerSession(timer) : timer;
+    return res;
+  }, {});
+
 /**
  * Hook to get timer API functions such as start, pause, reset, etc.
  */
-export const useTimerApi = () => {
+export const useTimerApiActions = () => {
   const { settings } = useSettings();
-  const { data, setData } = useSuspenseStorage<Record<string, Timer>>(TIMERS_KEY, _defaultTimers);
+  const { setData } = useSuspenseStorage<Record<string, Timer>>(TIMERS_KEY, _defaultTimers);
 
   const withAutoPauseSessions = (all: Record<string, Timer>) => (settings.features.autoPauseOnSwitch ? stopAllTimers(all) : all);
 
   return {
     startTimer: async (timer: Timer) => {
-      await setData({ ...withAutoPauseSessions(data), [timer.id]: startTimerSession(timer) });
+      await setData((prev) => ({ ...withAutoPauseSessions(prev), [timer.id]: startTimerSession(timer) }));
     },
 
     pauseTimer: async (timer: Timer) => {
-      await setData({ ...data, [timer.id]: stopTimerSession(timer) });
+      await setData((prev) => ({ ...prev, [timer.id]: stopTimerSession(timer) }));
     },
 
     toggleTimer: async (timer: Timer) => {
       if (timer.activeSession) {
-        await setData({ ...data, [timer.id]: stopTimerSession(timer) });
+        await setData((prev) => ({ ...prev, [timer.id]: stopTimerSession(timer) }));
       } else {
-        await setData({ ...withAutoPauseSessions(data), [timer.id]: startTimerSession(timer) });
+        await setData((prev) => ({ ...withAutoPauseSessions(prev), [timer.id]: startTimerSession(timer) }));
       }
     },
 
     resetTimer: async (timer: Timer) => {
-      await setData({ ...data, [timer.id]: { ...timer, elapsedTime: 0, activeSession: undefined, sessions: [] } });
+      await setData((prev) => ({ ...prev, [timer.id]: { ...timer, elapsedTime: 0, activeSession: undefined, sessions: [] } }));
     },
 
     deleteTimer: async (timer: Timer) => {
-      const next = { ...data };
-      delete next[timer.id];
-      await setData(next);
+      await setData((prev) => {
+        const next = { ...prev };
+        delete next[timer.id];
+        return next;
+      });
     },
 
     setTotalElapsedTime: async (timer: Timer, totalElapsedTime: number) => {
-      await setData({
-        ...data,
+      await setData((prev) => ({
+        ...prev,
         [timer.id]: {
           ...timer,
           ...(timer.activeSession && startTimerSession(stopTimerSession(timer))),
           elapsedTime: totalElapsedTime,
         },
-      });
+      }));
     },
 
     setName: async (timer: Timer, name: string) => {
-      await setData({ ...data, [timer.id]: { ...timer, name } });
+      await setData((prev) => ({ ...prev, [timer.id]: { ...timer, name } }));
     },
 
     addTimer: async (issueId: number) => {
       const timer = newTimer({ issueId });
-      await setData({ ...data, [timer.id]: timer });
+      await setData((prev) => ({ ...prev, [timer.id]: timer }));
     },
 
     addTimers: async (timers: (Pick<Timer, "issueId"> & Partial<Timer>)[]) => {
@@ -148,32 +150,32 @@ export const useTimerApi = () => {
         acc[t.id] = t;
         return acc;
       }, {});
-      await setData({ ...data, ...additions });
+      await setData((prev) => ({ ...prev, ...additions }));
     },
 
     removeTimerSession: async (timer: Timer, sessionId: string) => {
       if (sessionId === "active" && timer.activeSession) {
-        await setData({
-          ...data,
+        await setData((prev) => ({
+          ...prev,
           [timer.id]: {
             ...timer,
             activeSession: undefined,
           },
-        });
+        }));
         return;
       }
 
       const session = timer.sessions.find((s) => s.id === sessionId);
       if (!session) return;
 
-      await setData({
-        ...data,
+      await setData((prev) => ({
+        ...prev,
         [timer.id]: {
           ...timer,
           elapsedTime: Math.max(0, timer.elapsedTime - (session.end - session.start)),
           sessions: timer.sessions.filter((s) => s.id !== sessionId),
         },
-      });
+      }));
     },
   };
 };
@@ -212,7 +214,5 @@ export const runTimersMigration = async (
 
   await setStorage(TIMERS_KEY, newTimers);
 };
-
-export type TimerApi = ReturnType<typeof useTimerApi>;
 
 export default useTimers;
