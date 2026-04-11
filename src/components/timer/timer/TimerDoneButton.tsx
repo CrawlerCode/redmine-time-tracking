@@ -2,6 +2,7 @@ import HelpTooltip from "@/components/general/HelpTooltip";
 import CreateTimeEntryModal from "@/components/time-entry/CreateTimeEntryModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSettings } from "@/provider/SettingsProvider";
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { roundMillisecondsToInterval } from "@/utils/date";
 import { BadgeCheckIcon } from "lucide-react";
 import { useState } from "react";
@@ -12,7 +13,8 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
   const { formatMessage } = useIntl();
   const { settings } = useSettings();
 
-  const { timer, issue, currentTime } = useTimerContext();
+  const timerApi = useTimerApi();
+  const { timer, issue, totalElapsedTime } = useTimerContext();
 
   const isDisabled = !canLogTime || !issue;
   const [createTimeEntryHours, setCreateTimeEntryHours] = useState<number | undefined>(undefined);
@@ -27,7 +29,7 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
           data-disabled={isDisabled}
           onClick={() => {
             if (isDisabled) return;
-            const time = settings.features.roundToInterval ? roundMillisecondsToInterval(currentTime, settings.features.roundingInterval, settings.features.roundingMode) : currentTime;
+            const time = settings.features.roundToInterval ? roundMillisecondsToInterval(totalElapsedTime, settings.features.roundingInterval, settings.features.roundingMode) : totalElapsedTime;
             const hours = Number((time / 1000 / 60 / 60).toFixed(2));
             setCreateTimeEntryHours(hours);
           }}
@@ -46,7 +48,7 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
           onClose={() => setCreateTimeEntryHours(undefined)}
           onSuccess={() => {
             setCreateTimeEntryHours(undefined);
-            timer.deleteTimer();
+            timerApi.deleteTimer(timer);
           }}
         />
       )}

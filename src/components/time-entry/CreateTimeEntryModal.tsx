@@ -4,7 +4,7 @@ import { useRedmineProjectTimeEntryActivities } from "@/api/redmine/hooks/useRed
 import { redmineIssuesQueries } from "@/api/redmine/queries/issues";
 import { redmineTimeEntriesQueries } from "@/api/redmine/queries/timeEntries";
 import { usePersistentComments } from "@/hooks/usePersistentComments";
-import { TimerController } from "@/hooks/useTimers";
+import { Timer } from "@/hooks/useTimers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { startOfDay } from "date-fns";
 import { useIntl } from "react-intl";
@@ -24,7 +24,7 @@ import UserField from "./form/fields/UserField";
 import TimeEntryPreview from "./TimeEntryPreview";
 
 type PropTypes = {
-  timer: TimerController;
+  timer: Timer;
   issue: TIssue;
   initialValues: Partial<TCreateTimeEntryForm>;
   onClose: () => void;

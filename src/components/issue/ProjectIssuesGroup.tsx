@@ -7,6 +7,7 @@ import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { clsxm } from "@/utils/clsxm";
 import { ProjectIssuesGroup as ProjectIssuesGroupType } from "@/utils/groupIssues";
+import { randomElement } from "@/utils/random";
 import clsx from "clsx";
 import { PinIcon, PlusIcon, SearchIcon, SquareChartGanttIcon, SquareMousePointerIcon, TimerIcon } from "lucide-react";
 import { ComponentProps, Fragment, useState } from "react";
@@ -18,7 +19,6 @@ import { Badge } from "../ui/badge";
 import CreateIssueModal from "./CreateIssueModal";
 import Issue, { IssueSkeleton } from "./Issue";
 import { useIssueSearch } from "./IssueSearch";
-import { randomElement } from "@/utils/random";
 
 interface ProjectIssuesGroupProps extends ComponentProps<"div"> {
   projectGroup: ProjectIssuesGroupType;
@@ -47,7 +47,6 @@ export const ProjectIssuesGroup = ({ projectGroup, localIssues, timers, classNam
               priorityType={getPriorityType(issue)}
               assignedToMe={me ? me.id === issue.assigned_to?.id : true}
               timers={timers.getTimersByIssue(issue.id)}
-              onAddTimer={() => timers.addTimer(issue.id)}
             />
           ))}
         </Fragment>

@@ -1,10 +1,11 @@
 import { useRedmineIssuePriorities } from "@/api/redmine/hooks/useRedmineIssuePriorities";
 import { ToggleableCard } from "@/components/general/ToggleableCard";
 import { IssueTitle, IssueTitleSkeleton } from "@/components/issue/IssueTitle";
-import Timer from "@/components/timer/timer";
+import { TimerComponents } from "@/components/timer/timer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { clsxm } from "@/utils/clsxm";
 import { ProjectTimersGroup as ProjectTimersGroupType } from "@/utils/groupTimers";
 import { randomElement } from "@/utils/random";
@@ -21,6 +22,8 @@ interface ProjectTimersGroupProps extends ComponentProps<"div"> {
 export const ProjectTimersGroup = ({ projectGroup, className, ...props }: ProjectTimersGroupProps) => {
   const { settings } = useSettings();
 
+  const timerApi = useTimerApi();
+
   const { hasProjectPermission } = usePermissions();
 
   const { getPriorityType } = useRedmineIssuePriorities({ enabled: settings.style.showIssuesPriority });
@@ -29,19 +32,20 @@ export const ProjectTimersGroup = ({ projectGroup, className, ...props }: Projec
     <div {...props} className={clsxm("flex flex-col gap-y-2", className)}>
       <TimerProject type={projectGroup.type} project={projectGroup.project} />
       {projectGroup.items.map(({ timer, issue }) => (
-        <Timer.Root key={timer.id} timer={timer} issue={issue}>
-          <Timer.ContextMenu>
-            <ToggleableCard role="listitem" data-type="timer-card" className="flex flex-col gap-1" onToggle={() => timer.toggleTimer()}>
+        <TimerComponents.Root key={timer.id} timer={timer} issue={issue}>
+          <TimerComponents.ContextMenu>
+            <ToggleableCard role="listitem" data-type="timer-card" className="flex flex-col gap-1" onToggle={() => timerApi.toggleTimer(timer)}>
               {issue ? <IssueTitle issue={issue} priorityType={getPriorityType(issue)} /> : <h1 className="truncate text-gray-500 line-through">#{timer.issueId}</h1>}
-              <Timer.Wrapper>
-                <Timer.NameField />
-                <Timer.Counter />
-                <Timer.ToggleButton />
-                <Timer.DoneButton canLogTime={issue ? hasProjectPermission(issue.project.id, "log_time") : false} />
-              </Timer.Wrapper>
+              <TimerComponents.Wrapper>
+                <TimerComponents.NameField />
+                <TimerComponents.Counter />
+                <TimerComponents.ToggleButton />
+                <TimerComponents.DoneButton canLogTime={issue ? hasProjectPermission(issue.project.id, "log_time") : false} />
+              </TimerComponents.Wrapper>
+              <TimerComponents.Sessions />
             </ToggleableCard>
-          </Timer.ContextMenu>
-        </Timer.Root>
+          </TimerComponents.ContextMenu>
+        </TimerComponents.Root>
       ))}
     </div>
   );
@@ -78,12 +82,13 @@ export const ProjectTimersGroupSkeleton = ({ groups }: { groups: number[] }) => 
       {groups.map((key) => (
         <ToggleableCard key={key} className="flex flex-col gap-1">
           <IssueTitleSkeleton />
-          <Timer.Wrapper>
-            <Timer.Skeleton.NameField />
-            <Timer.Skeleton.Counter />
-            <Timer.Skeleton.ToggleButton />
-            <Timer.Skeleton.DoneButton />
-          </Timer.Wrapper>
+          <TimerComponents.Wrapper>
+            <TimerComponents.Skeleton.NameField />
+            <TimerComponents.Skeleton.Counter />
+            <TimerComponents.Skeleton.ToggleButton />
+            <TimerComponents.Skeleton.DoneButton />
+          </TimerComponents.Wrapper>
+          <TimerComponents.Skeleton.Sessions />
         </ToggleableCard>
       ))}
     </div>

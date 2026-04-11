@@ -1,9 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { useIntl } from "react-intl";
 import { useTimerContext } from "./TimerRoot";
 
 export const TimerNameField = () => {
   const { formatMessage } = useIntl();
+  const timerApi = useTimerApi();
   const { timer } = useTimerContext();
 
   return (
@@ -16,7 +18,7 @@ export const TimerNameField = () => {
       onKeyDown={(e) => {
         e.stopPropagation();
       }}
-      onChange={(e) => timer.setName(e.target.value)}
+      onChange={(e) => timerApi.setName(timer, e.target.value)}
     />
   );
 };

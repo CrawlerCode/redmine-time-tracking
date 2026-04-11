@@ -1,243 +1,184 @@
 import { TIssue } from "@/api/redmine/types";
 import { TimerSearchContext } from "@/components/timer/TimerSearch";
-import { useMemo } from "react";
 import { useSettings } from "../provider/SettingsProvider";
 import { getStorage, setStorage, useSuspenseStorage } from "./useStorage";
 
-type TimerInfo = {
+export type Timer = {
   id: string;
   issueId: number;
   name?: string;
-  isActive: boolean;
-  startTime?: number;
   elapsedTime: number;
+  activeSession?: { start: number };
+  sessions: { id: string; start: number; end: number }[];
 };
 
-export type TimerController = TimerInfo & {
-  getElapsedTime: () => number;
-  startTimer: () => void;
-  pauseTimer: () => void;
-  toggleTimer: () => void;
-  resetTimer: () => void;
-  deleteTimer: () => void;
-  setElapsedTime: (time: number) => void;
-  setName: (name: string) => void;
-};
+const TIMERS_KEY = "timers";
+const _defaultTimers: Record<string, Timer> = {};
 
-const _defaultTimers: Record<string, TimerInfo> = {};
+export const calculateActiveSessionElapsedTime = (timer: Timer) => (timer.activeSession ? Date.now() - timer.activeSession.start : 0);
+export const calculateTimerTotalElapsedTime = (timer: Timer) => timer.elapsedTime + calculateActiveSessionElapsedTime(timer);
+
+const newTimer = (timer: Pick<Timer, "issueId"> & Partial<Timer>): Timer => ({
+  id: crypto.randomUUID(),
+  elapsedTime: 0,
+  activeSession: undefined,
+  sessions: [],
+  ...timer,
+});
 
 /**
- * Hook for managing timers
+ * Hook to get timers
  */
 const useTimers = () => {
+  const { data } = useSuspenseStorage<Record<string, Timer>>(TIMERS_KEY, _defaultTimers);
+
+  const timersArray = Object.values(data);
+
+  return {
+    getIssuesIds: () => Array.from(new Set(timersArray.map((t) => t.issueId))),
+
+    getActiveTimerCount: () => timersArray.reduce((count, t) => count + (t.activeSession ? 1 : 0), 0),
+
+    getAllTimers: () => timersArray,
+
+    getTimersByIssue: (issueId: number) => {
+      const timers = timersArray.filter((t) => t.issueId === issueId);
+      if (timers.length === 0) timers.push(newTimer({ issueId }));
+      return timers.sort((a, b) => (a.activeSession ? -1 : 0) - (b.activeSession ? -1 : 0) || calculateTimerTotalElapsedTime(b) - calculateTimerTotalElapsedTime(a));
+    },
+
+    searchTimers: (search: TimerSearchContext, issues?: TIssue[]) => {
+      let timers = timersArray;
+      if (search.isSearching && search.query) {
+        timers = timers.filter((timer) => {
+          if (timer.name && new RegExp(search.query, "i").test(timer.name)) return true;
+          const issue = issues?.find((issue) => issue.id === timer.issueId);
+          return issue ? new RegExp(search.query, "i").test(`#${issue.id} ${issue.subject}`) : new RegExp(search.query, "i").test(`#${timer.issueId}`);
+        });
+      }
+      return timers;
+    },
+  };
+};
+
+const startTimerSession = (timer: Timer): Timer => ({
+  ...timer,
+  activeSession: { start: Date.now() },
+});
+
+const stopTimerSession = (timer: Timer): Timer => {
+  if (!timer.activeSession) return timer;
+  const activeSession = { start: timer.activeSession.start, end: Date.now() };
+  const duration = activeSession.end - activeSession.start;
+  return {
+    ...timer,
+    activeSession: undefined,
+    ...(duration > 1000 && {
+      elapsedTime: timer.elapsedTime + duration,
+      sessions: [...timer.sessions, { id: crypto.randomUUID(), ...activeSession }],
+    }),
+  };
+};
+
+const stopAllTimers = (all: Record<string, Timer>): Record<string, Timer> =>
+  Object.entries(all).reduce<Record<string, Timer>>((res, [id, timer]) => {
+    res[id] = timer.activeSession ? stopTimerSession(timer) : timer;
+    return res;
+  }, {});
+
+/**
+ * Hook to get timer API functions such as start, pause, reset, etc.
+ */
+export const useTimerApiActions = () => {
   const { settings } = useSettings();
+  const { setData } = useSuspenseStorage<Record<string, Timer>>(TIMERS_KEY, _defaultTimers);
 
-  const { data: timerInfos, setData: saveTimerInfos } = useSuspenseStorage<Record<string, TimerInfo>>("timers", _defaultTimers);
-  const timerInfosArray = useMemo(() => Object.values(timerInfos), [timerInfos]);
+  const withAutoPauseSessions = (all: Record<string, Timer>) => (settings.features.autoPauseOnSwitch ? stopAllTimers(all) : all);
 
-  return useMemo(() => {
-    /**
-     * Function to get a TimerController for a specific timer
-     */
-    const getTimerController = (timerInfo: TimerInfo): TimerController => {
-      const updateTimerInfo = (updatedInfo: Partial<TimerInfo>) =>
-        saveTimerInfos({
-          ...timerInfos,
-          [timerInfo.id]: {
-            ...timerInfo,
-            ...updatedInfo,
+  return {
+    startTimer: async (timer: Timer) => {
+      await setData((prev) => ({ ...withAutoPauseSessions(prev), [timer.id]: startTimerSession(timer) }));
+    },
+
+    pauseTimer: async (timer: Timer) => {
+      await setData((prev) => ({ ...prev, [timer.id]: stopTimerSession(timer) }));
+    },
+
+    toggleTimer: async (timer: Timer) => {
+      if (timer.activeSession) {
+        await setData((prev) => ({ ...prev, [timer.id]: stopTimerSession(timer) }));
+      } else {
+        await setData((prev) => ({ ...withAutoPauseSessions(prev), [timer.id]: startTimerSession(timer) }));
+      }
+    },
+
+    resetTimer: async (timer: Timer) => {
+      await setData((prev) => ({ ...prev, [timer.id]: { ...timer, elapsedTime: 0, activeSession: undefined, sessions: [] } }));
+    },
+
+    deleteTimer: async (timer: Timer) => {
+      await setData((prev) => {
+        const next = { ...prev };
+        delete next[timer.id];
+        return next;
+      });
+    },
+
+    setTotalElapsedTime: async (timer: Timer, totalElapsedTime: number) => {
+      await setData((prev) => ({
+        ...prev,
+        [timer.id]: {
+          ...timer,
+          ...(timer.activeSession && startTimerSession(stopTimerSession(timer))),
+          elapsedTime: totalElapsedTime,
+        },
+      }));
+    },
+
+    setName: async (timer: Timer, name: string) => {
+      await setData((prev) => ({ ...prev, [timer.id]: { ...timer, name } }));
+    },
+
+    addTimer: async (issueId: number) => {
+      const timer = newTimer({ issueId });
+      await setData((prev) => ({ ...prev, [timer.id]: timer }));
+    },
+
+    addTimers: async (timers: (Pick<Timer, "issueId"> & Partial<Timer>)[]) => {
+      const additions = timers.reduce<Record<string, Timer>>((acc, timer) => {
+        const t = newTimer(timer);
+        acc[t.id] = t;
+        return acc;
+      }, {});
+      await setData((prev) => ({ ...prev, ...additions }));
+    },
+
+    removeTimerSession: async (timer: Timer, sessionId: string) => {
+      if (sessionId === "active" && timer.activeSession) {
+        await setData((prev) => ({
+          ...prev,
+          [timer.id]: {
+            ...timer,
+            activeSession: undefined,
           },
-        });
+        }));
+        return;
+      }
 
-      return {
-        ...timerInfo,
-        /**
-         * Get the elapsed time for the timer
-         */
-        getElapsedTime: () => calculateElapsedTime(timerInfo),
-        /**
-         * Start the timer
-         */
-        startTimer: () => {
-          saveTimerInfos({
-            ...(settings.features.autoPauseOnSwitch
-              ? Object.entries(timerInfos).reduce((res: Record<string, TimerInfo>, [id, timerInfo]) => {
-                  if (timerInfo.isActive) {
-                    res[id] = toPausedTimer(timerInfo);
-                  }
-                  return res;
-                }, timerInfos)
-              : timerInfos),
-            [timerInfo.id]: toStartedTimer(timerInfo),
-          });
+      const session = timer.sessions.find((s) => s.id === sessionId);
+      if (!session) return;
+
+      await setData((prev) => ({
+        ...prev,
+        [timer.id]: {
+          ...timer,
+          elapsedTime: Math.max(0, timer.elapsedTime - (session.end - session.start)),
+          sessions: timer.sessions.filter((s) => s.id !== sessionId),
         },
-        /**
-         * Pause the timer
-         */
-        pauseTimer: () => {
-          updateTimerInfo(toPausedTimer(timerInfo));
-        },
-        /**
-         * Toggle the timer between active and paused states
-         */
-        toggleTimer: () => {
-          if (timerInfo.isActive) {
-            updateTimerInfo(toPausedTimer(timerInfo));
-          } else {
-            saveTimerInfos({
-              ...(settings.features.autoPauseOnSwitch
-                ? Object.entries(timerInfos).reduce((res: Record<string, TimerInfo>, [id, timerInfo]) => {
-                    if (timerInfo.isActive) {
-                      res[id] = toPausedTimer(timerInfo);
-                    }
-                    return res;
-                  }, timerInfos)
-                : timerInfos),
-              [timerInfo.id]: toStartedTimer(timerInfo),
-            });
-          }
-        },
-        /**
-         * Reset the timer to its initial state
-         */
-        resetTimer: () => {
-          updateTimerInfo({
-            isActive: false,
-            startTime: undefined,
-            elapsedTime: 0,
-          });
-        },
-        /**
-         * Delete the timer
-         */
-        deleteTimer: () => {
-          const newTimerInfos = { ...timerInfos };
-          delete newTimerInfos[timerInfo.id];
-          saveTimerInfos(newTimerInfos);
-        },
-        /**
-         * Overwrite the elapsed time of the timer
-         */
-        setElapsedTime: (time: number) => {
-          updateTimerInfo({
-            elapsedTime: time,
-            ...(timerInfo.isActive ? { startTime: new Date().getTime() } : {}),
-          });
-        },
-        /**
-         * Set the name of the timer
-         */
-        setName: (name: string) => {
-          updateTimerInfo({ name });
-        },
-      };
-    };
-
-    return {
-      /**
-       * Get all timer issue ids
-       */
-      getIssuesIds: () => Array.from(new Set(timerInfosArray.map((timerInfo) => timerInfo.issueId))),
-      /**
-       * Get active timer count
-       */
-      getActiveTimerCount: () => timerInfosArray.reduce((count, timerInfo) => count + (timerInfo.isActive ? 1 : 0), 0),
-      /**
-       * Get all timers
-       */
-      getAllTimers: () => timerInfosArray.map(getTimerController),
-      /**
-       * Get all timers for a specific issue (sorted by active state and elapsed time)
-       */
-      getTimersByIssue: (issueId: number) => {
-        const timers = timerInfosArray.filter((timerInfo) => timerInfo.issueId === issueId);
-
-        if (timers.length === 0) {
-          timers.push(newTimer({ issueId }));
-        }
-
-        return timers.map(getTimerController).sort((a, b) => (a.isActive ? -1 : 0) - (b.isActive ? -1 : 0) || b.getElapsedTime() - a.getElapsedTime());
-      },
-      /**
-       * Search timers by name
-       */
-      searchTimers: (search: TimerSearchContext, issues?: TIssue[]) => {
-        let timers = timerInfosArray;
-
-        // local search
-        if (search.isSearching && search.query) {
-          timers = timers.filter((timer) => {
-            // Match by timer name
-            if (timer.name && new RegExp(search.query, "i").test(timer.name)) {
-              return true;
-            }
-
-            // Match by issue
-            const issue = issues?.find((issue) => issue.id === timer.issueId);
-            if (issue ? new RegExp(search.query, "i").test(`#${issue.id} ${issue.subject}`) : new RegExp(search.query, "i").test(`#${timer.issueId}`)) {
-              return true;
-            }
-
-            return false;
-          });
-        }
-
-        return timers.map(getTimerController);
-      },
-      /**
-       * Add a new timer
-       */
-      addTimer: (issueId: number) => {
-        const timer = newTimer({
-          issueId,
-        });
-        saveTimerInfos({
-          ...timerInfos,
-          [timer.id]: timer,
-        });
-      },
-      /**
-       * Add multiple timers
-       */
-      addTimers(timers: (Pick<TimerInfo, "issueId"> & Partial<TimerInfo>)[]) {
-        const newTimers = timers.reduce(
-          (acc, timer) => {
-            const newTime = newTimer(timer);
-            acc[newTime.id] = newTime;
-            return acc;
-          },
-          {} as Record<string, TimerInfo>
-        );
-        saveTimerInfos({ ...timerInfos, ...newTimers });
-      },
-    };
-  }, [timerInfos, saveTimerInfos, timerInfosArray, settings.features.autoPauseOnSwitch]);
+      }));
+    },
+  };
 };
-
-const calculateElapsedTime = (timerInfo: TimerInfo) => {
-  return timerInfo.elapsedTime + (timerInfo.startTime ? new Date().getTime() - timerInfo.startTime : 0);
-};
-
-const toStartedTimer = (timerInfo: TimerInfo): TimerInfo => ({
-  ...timerInfo,
-  isActive: true,
-  startTime: new Date().getTime(),
-});
-
-const toPausedTimer = (timerInfo: TimerInfo): TimerInfo => ({
-  ...timerInfo,
-  isActive: false,
-  startTime: undefined,
-  elapsedTime: calculateElapsedTime(timerInfo),
-});
-
-const newTimer = (timerInfo: Pick<TimerInfo, "issueId"> & Partial<TimerInfo>): TimerInfo => ({
-  id: crypto.randomUUID(),
-  isActive: false,
-  startTime: undefined,
-  elapsedTime: 0,
-  ...timerInfo,
-});
 
 /**
  * Migrate legacy issue data from "issues" storage to "timers" storage
@@ -252,26 +193,26 @@ export const runTimersMigration = async (
     }
   >
 ) => {
-  const timerInfos = await getStorage<Record<string, TimerInfo>>("timers", _defaultTimers);
+  const timers = await getStorage<Record<string, Timer>>(TIMERS_KEY, _defaultTimers);
 
-  const newTimerInfos = Object.entries(legacyIssues)
+  const newTimers = Object.entries(legacyIssues)
     .filter(([_, issue]) => issue.start || issue.time)
     .map(
       ([id, issue]) =>
         ({
           issueId: Number(id),
-          isActive: issue.active,
-          startTime: issue.start,
           elapsedTime: issue.time,
-        }) satisfies Omit<TimerInfo, "id">
+          activeSession: issue.active && issue.start ? { start: issue.start } : undefined,
+          sessions: [],
+        }) satisfies Omit<Timer, "id">
     )
     .reduce((acc, timer) => {
-      const newTime = newTimer(timer);
-      acc[newTime.id] = newTime;
+      const t = newTimer(timer);
+      acc[t.id] = t;
       return acc;
-    }, timerInfos);
+    }, timers);
 
-  await setStorage("timers", newTimerInfos);
+  await setStorage(TIMERS_KEY, newTimers);
 };
 
 export default useTimers;

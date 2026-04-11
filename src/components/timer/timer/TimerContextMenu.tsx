@@ -1,3 +1,4 @@
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { PencilIcon, TimerIcon, TimerOffIcon, TimerResetIcon, TrashIcon } from "lucide-react";
 import { ReactElement } from "react";
 import { useIntl } from "react-intl";
@@ -17,23 +18,24 @@ export const TimerContextMenu = ({ children }: { children: ReactElement }) => {
 
 const TimerContextMenuItems = () => {
   const { formatMessage } = useIntl();
-  const { timer, setIsEditing } = useTimerContext();
+  const timerApi = useTimerApi();
+  const { timer, totalElapsedTime, setIsEditing } = useTimerContext();
 
   return (
     <>
-      <ContextMenuItem onClick={timer.isActive ? timer.pauseTimer : timer.startTimer}>
-        {timer.isActive ? <TimerOffIcon /> : <TimerIcon />}
-        {formatMessage({ id: timer.isActive ? "timer.context-menu.pause" : "timer.context-menu.start" })}
+      <ContextMenuItem onClick={timer.activeSession ? () => timerApi.pauseTimer(timer) : () => timerApi.startTimer(timer)}>
+        {timer.activeSession ? <TimerOffIcon /> : <TimerIcon />}
+        {formatMessage({ id: timer.activeSession ? "timer.context-menu.pause" : "timer.context-menu.start" })}
       </ContextMenuItem>
       <ContextMenuItem onClick={() => setIsEditing(true)}>
         <PencilIcon />
         {formatMessage({ id: "timer.context-menu.edit" })}
       </ContextMenuItem>
-      <ContextMenuItem onClick={timer.resetTimer} disabled={timer.getElapsedTime() === 0}>
+      <ContextMenuItem onClick={() => timerApi.resetTimer(timer)} disabled={totalElapsedTime === 0}>
         <TimerResetIcon />
         {formatMessage({ id: "timer.context-menu.reset" })}
       </ContextMenuItem>
-      <ContextMenuItem onClick={timer.deleteTimer}>
+      <ContextMenuItem onClick={() => timerApi.deleteTimer(timer)}>
         <TrashIcon />
         {formatMessage({ id: "timer.context-menu.delete" })}
       </ContextMenuItem>

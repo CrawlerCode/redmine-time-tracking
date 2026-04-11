@@ -1,5 +1,6 @@
 import HelpTooltip from "@/components/general/HelpTooltip";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { formatTimer } from "@/utils/date";
 import clsx from "clsx";
 import { FocusEvent, useState } from "react";
@@ -12,7 +13,7 @@ import { useTimerContext } from "./TimerRoot";
 export const TimerCounter = () => {
   const { formatMessage } = useIntl();
 
-  const { timer, currentTime, isEditing, setIsEditing } = useTimerContext();
+  const { timer, totalElapsedTime, isEditing, setIsEditing } = useTimerContext();
 
   if (isEditing) {
     return <EditTimer />;
@@ -21,10 +22,10 @@ export const TimerCounter = () => {
   return (
     <HelpTooltip message={formatMessage({ id: "issues.timer.action.edit.tooltip" })}>
       <span
-        className={clsx("-my-1 max-w-30 shrink-0 truncate text-lg", currentTime > 0 ? "text-yellow-500" : "text-muted-foreground", timer.isActive && "font-bold")}
+        className={clsx("text-muted-foreground -my-1 max-w-30 shrink-0 truncate text-lg", { "font-bold": !!timer.activeSession, "text-yellow-500": totalElapsedTime > 0 })}
         onDoubleClick={() => setIsEditing(true)}
       >
-        {formatTimer(currentTime)}
+        {formatTimer(totalElapsedTime)}
       </span>
     </HelpTooltip>
   );
@@ -33,16 +34,17 @@ export const TimerCounter = () => {
 export const EditTimer = () => {
   const { formatMessage } = useIntl();
 
-  const { timer, currentTime, setIsEditing } = useTimerContext();
+  const timerApi = useTimerApi();
+  const { timer, totalElapsedTime, setIsEditing } = useTimerContext();
 
-  const [h, setH] = useState(() => Math.floor(currentTime / 1000 / 60 / 60).toString());
-  const [m, setM] = useState(() => to2Digit(Math.floor((currentTime / 1000 / 60) % 60)));
-  const [s, setS] = useState(() => to2Digit(Math.floor((currentTime / 1000) % 60)));
+  const [h, setH] = useState(() => Math.floor(totalElapsedTime / 1000 / 60 / 60).toString());
+  const [m, setM] = useState(() => to2Digit(Math.floor((totalElapsedTime / 1000 / 60) % 60)));
+  const [s, setS] = useState(() => to2Digit(Math.floor((totalElapsedTime / 1000) % 60)));
   const updatedTime = (Number(h) * 60 * 60 + Number(m) * 60 + Number(s)) * 1000;
 
   const onOverrideTime = () => {
     setIsEditing(false);
-    timer.setElapsedTime(updatedTime);
+    timerApi.setTotalElapsedTime(timer, updatedTime);
   };
 
   const [confirmCancelModal, setConfirmCancelModal] = useState(false);
@@ -58,7 +60,7 @@ export const EditTimer = () => {
           type="number"
           value={h}
           min={0}
-          className={clsx("h-8 appearance-none p-0 text-center", currentTime > 0 ? "text-yellow-500" : "text-muted-foreground", {
+          className={clsx("h-8 appearance-none p-0 text-center", totalElapsedTime > 0 ? "text-yellow-500" : "text-muted-foreground", {
             "w-4": h.length === 1,
             "w-6": h.length === 2,
             "w-8": h.length >= 3,
@@ -95,7 +97,7 @@ export const EditTimer = () => {
           value={m}
           min={0}
           max={59}
-          className={clsx("h-8 w-6 appearance-none p-0 text-center", currentTime > 0 ? "text-yellow-500" : "text-muted-foreground")}
+          className={clsx("h-8 w-6 appearance-none p-0 text-center", totalElapsedTime > 0 ? "text-yellow-500" : "text-muted-foreground")}
           onChange={(e) => {
             const { value, min, max } = e.target;
             setM(to2Digit(Math.max(Number(min), Math.min(Number(max), Number(value)))));
@@ -123,7 +125,7 @@ export const EditTimer = () => {
           value={s}
           min={0}
           max={59}
-          className={clsx("h-8 w-6 appearance-none p-0 text-center", currentTime > 0 ? "text-yellow-500" : "text-muted-foreground")}
+          className={clsx("h-8 w-6 appearance-none p-0 text-center", totalElapsedTime > 0 ? "text-yellow-500" : "text-muted-foreground")}
           onChange={(e) => {
             const { value, min, max } = e.target;
             setS(to2Digit(Math.max(Number(min), Math.min(Number(max), Number(value)))));

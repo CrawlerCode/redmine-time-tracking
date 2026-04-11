@@ -1,27 +1,30 @@
 import { TIssue } from "@/api/redmine/types";
-import { TimerController } from "@/hooks/useTimers";
+import { calculateTimerTotalElapsedTime, Timer } from "@/hooks/useTimers";
 import { createContext, PropsWithChildren, use, useEffect, useEffectEvent, useState } from "react";
 import { useInterval } from "usehooks-ts";
 
 type TimerContextType = {
-  timer: TimerController;
+  timer: Timer;
   issue?: TIssue;
-  currentTime: number;
+  totalElapsedTime: number;
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const TimerContext = createContext<TimerContextType | undefined>(undefined);
 
-type TimerRootProps = PropsWithChildren & Pick<TimerContextType, "timer" | "issue">;
+type TimerRootProps = PropsWithChildren & {
+  timer: Timer;
+  issue?: TIssue;
+};
 
 export const TimerRoot = ({ timer, issue, children }: TimerRootProps) => {
-  const [currentTime, setCurrentTime] = useState(() => timer.getElapsedTime());
+  const [totalElapsedTime, setTotalElapsedTime] = useState(() => calculateTimerTotalElapsedTime(timer));
 
-  const updateTimer = useEffectEvent(() => setCurrentTime(timer.getElapsedTime()));
-  useEffect(() => updateTimer(), [timer.elapsedTime]);
+  const updateTimer = useEffectEvent(() => setTotalElapsedTime(calculateTimerTotalElapsedTime(timer)));
+  useEffect(() => updateTimer(), [timer.elapsedTime, timer.activeSession]);
 
-  useInterval(() => setCurrentTime(timer.getElapsedTime()), timer.isActive ? 1000 : null);
+  useInterval(() => setTotalElapsedTime(calculateTimerTotalElapsedTime(timer)), timer.activeSession ? 1000 : null);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -30,7 +33,7 @@ export const TimerRoot = ({ timer, issue, children }: TimerRootProps) => {
       value={{
         timer,
         issue,
-        currentTime,
+        totalElapsedTime,
         isEditing,
         setIsEditing,
       }}
@@ -43,7 +46,7 @@ export const TimerRoot = ({ timer, issue, children }: TimerRootProps) => {
 export const useTimerContext = () => {
   const context = use(TimerContext);
   if (!context) {
-    throw new Error("useTimerContext must be used within a Timer.Root component");
+    throw new Error("useTimerContext must be used within a TimerComponents.Root component");
   }
   return context;
 };

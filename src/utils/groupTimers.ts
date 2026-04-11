@@ -1,8 +1,8 @@
 import { TIssue, TReference } from "@/api/redmine/types";
-import { TimerController } from "@/hooks/useTimers";
+import { Timer } from "@/hooks/useTimers";
 
 type TimerItem = {
-  timer: TimerController;
+  timer: Timer;
   issue: TIssue | undefined;
 };
 
@@ -32,7 +32,7 @@ export type ProjectTimersGroup = {
  * @param issues - The list of issues associated with the timers
  * @returns An array of grouped timers by project
  */
-export const groupTimers = (timers: TimerController[], issues: TIssue[]): ProjectTimersGroup[] => {
+export const groupTimers = (timers: Timer[], issues: TIssue[]): ProjectTimersGroup[] => {
   const reversedTimers = timers.toReversed(); // Show the most recent timers first
 
   // Combine timers with their associated issues

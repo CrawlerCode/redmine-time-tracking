@@ -1,8 +1,8 @@
 import { useRedmineIssue } from "@/api/redmine/hooks/useRedmineIssue";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import useRedmineUrl from "../../hooks/useRedmineUrl";
-import useTimers from "../../hooks/useTimers";
-import Timer from "./timer";
+import useTimers, { calculateTimerTotalElapsedTime } from "../../hooks/useTimers";
+import { TimerComponents } from "./timer";
 
 type PropTypes = {
   issueId: number;
@@ -20,18 +20,18 @@ const CurrentIssueTimerInner = ({ issueId }: PropTypes) => {
   const issueTimers = timers.getTimersByIssue(issue.id);
   const primaryTimer = issueTimers[0]!;
 
-  if (!canLogTime && primaryTimer.getElapsedTime() === 0) return;
+  if (!canLogTime && calculateTimerTotalElapsedTime(primaryTimer) === 0) return;
 
   return (
-    <Timer.Root timer={primaryTimer} issue={issue}>
-      <Timer.ContextMenu>
-        <Timer.WrapperCard>
-          <Timer.Counter />
-          <Timer.ToggleButton />
-          <Timer.DoneButton canLogTime={canLogTime} />
-        </Timer.WrapperCard>
-      </Timer.ContextMenu>
-    </Timer.Root>
+    <TimerComponents.Root timer={primaryTimer} issue={issue}>
+      <TimerComponents.ContextMenu>
+        <TimerComponents.WrapperCard>
+          <TimerComponents.Counter />
+          <TimerComponents.ToggleButton />
+          <TimerComponents.DoneButton canLogTime={canLogTime} />
+        </TimerComponents.WrapperCard>
+      </TimerComponents.ContextMenu>
+    </TimerComponents.Root>
   );
 };
 

@@ -4,6 +4,7 @@ import IntlProvider from "./IntlProvider";
 import QueryClientProvider from "./QueryClientProvider";
 import RedmineApiProvider from "./RedmineApiProvider";
 import { SettingsProvider } from "./SettingsProvider";
+import { TimerApiProvider } from "./TimerApiProvider";
 
 const Providers = ({ children }: PropsWithChildren) => {
   return (
@@ -11,7 +12,9 @@ const Providers = ({ children }: PropsWithChildren) => {
       <SettingsProvider>
         <RedmineApiProvider>
           <IntlProvider>
-            <TooltipProvider>{children}</TooltipProvider>
+            <TimerApiProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </TimerApiProvider>
           </IntlProvider>
         </RedmineApiProvider>
       </SettingsProvider>

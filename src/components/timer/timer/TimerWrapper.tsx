@@ -1,4 +1,5 @@
 import { ToggleableCard } from "@/components/general/ToggleableCard";
+import { useTimerApi } from "@/provider/TimerApiProvider";
 import { clsxm } from "@/utils/clsxm";
 import clsx from "clsx";
 import { ComponentProps } from "react";
@@ -13,7 +14,8 @@ export const TimerWrapper = ({ className, children, ...props }: ComponentProps<"
 };
 
 export const TimerWrapperCard = ({ className, ...props }: ComponentProps<typeof TimerWrapper>) => {
+  const timerApi = useTimerApi();
   const { timer } = useTimerContext();
 
-  return <ToggleableCard as={TimerWrapper} {...props} className={clsx("px-1.5", className)} onToggle={() => timer.toggleTimer()} />;
+  return <ToggleableCard as={TimerWrapper} {...props} className={clsx("px-1.5", className)} onToggle={() => timerApi.toggleTimer(timer)} />;
 };
