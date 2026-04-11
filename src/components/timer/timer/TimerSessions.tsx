@@ -1,12 +1,14 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { calculateActiveSessionElapsedTime } from "@/hooks/useTimers";
 import { useTimerApi } from "@/provider/TimerApiProvider";
 import { formatTimer } from "@/utils/date";
+import { randomInt } from "@/utils/random";
 import clsx from "clsx";
 import { isToday } from "date-fns";
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useIntl } from "react-intl";
 import { useInterval } from "usehooks-ts";
 import { useTimerContext } from "./TimerRoot";
@@ -121,5 +123,23 @@ const RemoveSessionDialog = ({ sessionId, onClose }: { sessionId: string; onClos
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+};
+
+export const TimerSessionsSkeleton = () => {
+  const sessions = useMemo(() => [...Array(randomInt(1, 3)).keys()], []);
+
+  return (
+    <div className="flex flex-col gap-y-0.5">
+      {sessions.map((key) => (
+        <div key={key} className="flex items-center gap-2">
+          <div className="grow">
+            <Skeleton className="h-5 w-44" />
+          </div>
+          <Skeleton className="h-5 w-12" />
+          <Skeleton className="h-6 w-6" />
+        </div>
+      ))}
+    </div>
   );
 };

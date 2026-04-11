@@ -88,6 +88,7 @@ export const ProjectTimersGroupSkeleton = ({ groups }: { groups: number[] }) => 
             <TimerComponents.Skeleton.ToggleButton />
             <TimerComponents.Skeleton.DoneButton />
           </TimerComponents.Wrapper>
+          <TimerComponents.Skeleton.Sessions />
         </ToggleableCard>
       ))}
     </div>
