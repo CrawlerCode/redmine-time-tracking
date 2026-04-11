@@ -135,7 +135,7 @@ export const useTimerApiActions = () => {
       }));
     },
 
-    setName: async (timer: Timer, name: string) => {
+    setName: async (timer: Timer, name?: string) => {
       await setData((prev) => ({ ...prev, [timer.id]: { ...timer, name } }));
     },
 
