@@ -1,4 +1,5 @@
 import { MissingRedmineConfigError } from "@/api/redmine/MissingRedmineConfigError";
+import { RedmineAuthenticationError } from "@/api/redmine/RedmineAuthenticationError";
 import { getErrorMessage } from "@/utils/error";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { MutationCache, QueryCache, QueryClient, useIsRestoring } from "@tanstack/react-query";
@@ -45,6 +46,7 @@ export const queryClient = new QueryClient({
 
       // Skip if Redmine URL is not configured
       if (error instanceof MissingRedmineConfigError) return;
+      if (error instanceof RedmineAuthenticationError) return;
 
       if (!isAxiosError(error)) {
         toast.error(

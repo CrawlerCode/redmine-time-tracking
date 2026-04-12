@@ -13,19 +13,47 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
       .string(formatMessage?.({ id: "settings.redmine.url.validation.required" }))
       .nonempty(formatMessage?.({ id: "settings.redmine.url.validation.required" }))
       .regex(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?[\w\-/]*\/?$/, formatMessage?.({ id: "settings.redmine.url.validation.valid-url" })),
-    redmineApiKey: z.string().nonempty(formatMessage?.({ id: "settings.redmine.api-key.validation.required" })),
+    /**
+     * @deprecated Use `auth.apiKey` instead.
+     */
+    redmineApiKey: z.string().optional(),
+    auth: z.object({
+      method: z.enum(["apiKey", "oauth2"]),
+      apiKey: z.string().optional(),
+      oauth2: z
+        .object({
+          clientId: z.string(),
+          clientSecret: z.string(),
+          accessToken: z.string().optional(),
+          refreshToken: z.string().optional(),
+          expiresAt: z.number().optional(),
+        })
+        .optional(),
+    }),
     features: z.object({
       autoPauseOnSwitch: z.boolean(),
-      roundTimeNearestQuarterHour: z.boolean().optional(), // ! Legacy
-      roundToNearestInterval: z.boolean().optional(), // ! Legacy
+      /**
+       * @deprecated Use `roundToInterval` with `roundingMode: "nearest"` and `roundingInterval: 15` instead.
+       */
+      roundTimeNearestQuarterHour: z.boolean().optional(),
+      /**
+       * @deprecated Use `roundToInterval` with `roundingMode: "nearest"` instead.
+       */
+      roundToNearestInterval: z.boolean().optional(),
       roundToInterval: z.boolean(),
       roundingMode: z.enum(["down", "nearest", "up"]),
       roundingInterval: z
         .int(formatMessage?.({ id: "settings.features.rounding-interval.validation.required" }))
         .min(1, formatMessage?.({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
         .max(60, formatMessage?.({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
-      addNotes: z.boolean().optional(), // ! Legacy
-      cacheComments: z.boolean().optional(), // ! Legacy
+      /**
+       * @deprecated This setting has no effect and will be removed in a future version.
+       */
+      addNotes: z.boolean().optional(),
+      /**
+       * @deprecated Use `persistentComments` instead.
+       */
+      cacheComments: z.boolean().optional(),
       persistentComments: z.boolean(),
       showCurrentIssueTimer: z.boolean(),
     }),
@@ -52,7 +80,14 @@ export type Settings = z.infer<ReturnType<typeof settingsSchema>>;
 const defaultSettings: Settings = {
   language: "browser",
   redmineURL: "",
-  redmineApiKey: "",
+  auth: {
+    method: "apiKey",
+    apiKey: "",
+    oauth2: {
+      clientId: "",
+      clientSecret: "",
+    },
+  },
   features: {
     autoPauseOnSwitch: true,
     roundToInterval: false,
@@ -107,6 +142,13 @@ export const runSettingsMigration = async () => {
   if (typeof settings.style.showIssuesPriority === "boolean") {
     settings.style.showIssuePriority = settings.style.showIssuesPriority;
     settings.style.showIssuesPriority = undefined;
+  }
+
+  if (settings.redmineApiKey) {
+    settings.auth = {
+      method: "apiKey",
+      apiKey: settings.redmineApiKey,
+    };
   }
 
   if (JSON.stringify(settings) !== JSON.stringify(settingsData)) {

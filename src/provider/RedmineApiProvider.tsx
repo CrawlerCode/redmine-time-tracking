@@ -7,7 +7,7 @@ const RedmineApiContext = createContext<RedmineApiClient | null>(null);
 const RedmineApiProvider = ({ children }: { children: ReactNode }) => {
   const { settings } = useSettings();
 
-  return <RedmineApiContext value={new RedmineApiClient(settings.redmineURL, settings.redmineApiKey)}>{children}</RedmineApiContext>;
+  return <RedmineApiContext value={new RedmineApiClient(settings.redmineURL, settings.auth)}>{children}</RedmineApiContext>;
 };
 
 export const useRedmineApi = () => use(RedmineApiContext)!;
