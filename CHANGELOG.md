@@ -1,3 +1,27 @@
+## [2.0.0-beta.6](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2026-04-12)
+
+### 🚀 Features
+
+* **timers:** Add timer sessions ([#69](https://github.com/CrawlerCode/redmine-time-tracking/issues/69)) ([#71](https://github.com/CrawlerCode/redmine-time-tracking/issues/71)) ([ed42990](https://github.com/CrawlerCode/redmine-time-tracking/commit/ed42990c135ec1c3a577ed372d31bf8715804005))
+
+### 🩹 Fixes
+
+* **timer:** Fix timer name cursor focus ([dee98ec](https://github.com/CrawlerCode/redmine-time-tracking/commit/dee98ecabeaa2caccc83949f740dd5eae4d37d82))
+
+### 🏡 Chore
+
+* **deps:** Update npm dependencies ([e966f7e](https://github.com/CrawlerCode/redmine-time-tracking/commit/e966f7e6803f335260b7a3d68fd0023a79fe6ad3))
+* **security:** Set pnpm minimum release age to 1 days ([0d595c2](https://github.com/CrawlerCode/redmine-time-tracking/commit/0d595c2ab4e2206d9b6b5b58632a46844aca3580))
+
+### 📖 Documentation
+
+* Update store screenshots ([cd60ec7](https://github.com/CrawlerCode/redmine-time-tracking/commit/cd60ec707cc67fc87f6c31011ef61dc558967758))
+
+### 📦 Builds
+
+* **deps-dev:** bump vite from 8.0.3 to 8.0.5 ([#70](https://github.com/CrawlerCode/redmine-time-tracking/issues/70)) ([aed8cdc](https://github.com/CrawlerCode/redmine-time-tracking/commit/aed8cdccb08246745788943193cd755266d59888))
+* **deps:** bump axios from 1.14.0 to 1.15.0 ([#72](https://github.com/CrawlerCode/redmine-time-tracking/issues/72)) ([057ad2c](https://github.com/CrawlerCode/redmine-time-tracking/commit/057ad2c4c63912b58ee747d68e2e3429eb00a508))
+
 ## [2.0.0-beta.5](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2026-03-30)
 
 ### 🩹 Fixes
