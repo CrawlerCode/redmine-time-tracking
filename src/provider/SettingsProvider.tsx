@@ -33,8 +33,10 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
       displaySearchAlways: z.boolean(),
       stickyScroll: z.boolean(),
       groupIssuesByVersion: z.boolean(),
-      showIssuesPriority: z.boolean(),
       sortIssuesByPriority: z.boolean(),
+      showIssuesPriority: z.boolean().optional(), // ! Legacy
+      showIssuePriority: z.boolean(),
+      showIssueStatus: z.boolean(),
       showSessions: z.boolean(),
       pinTrackedIssues: z.boolean(),
       pinActiveTabIssue: z.boolean(),
@@ -62,8 +64,9 @@ const defaultSettings: Settings = {
     displaySearchAlways: false,
     stickyScroll: true,
     groupIssuesByVersion: true,
-    showIssuesPriority: true,
     sortIssuesByPriority: true,
+    showIssuePriority: true,
+    showIssueStatus: true,
     showSessions: true,
     pinTrackedIssues: false,
     pinActiveTabIssue: true,
@@ -97,6 +100,11 @@ export const runSettingsMigration = async () => {
 
   if (typeof settings.features.addNotes === "boolean") {
     settings.features.addNotes = undefined;
+  }
+
+  if (typeof settings.style.showIssuesPriority === "boolean") {
+    settings.style.showIssuePriority = settings.style.showIssuesPriority;
+    settings.style.showIssuesPriority = undefined;
   }
 
   if (JSON.stringify(settings) !== JSON.stringify(settingsData)) {

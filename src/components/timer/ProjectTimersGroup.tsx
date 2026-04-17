@@ -26,7 +26,7 @@ export const ProjectTimersGroup = ({ projectGroup, className, ...props }: Projec
 
   const { hasProjectPermission } = usePermissions();
 
-  const { getPriorityType } = useRedmineIssuePriorities({ enabled: settings.style.showIssuesPriority });
+  const { getPriorityType } = useRedmineIssuePriorities({ enabled: settings.style.showIssuePriority });
 
   return (
     <div {...props} className={clsxm("flex flex-col gap-y-2", className)}>
