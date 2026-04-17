@@ -126,6 +126,9 @@
   "time.modal.edit-time-entry.title": "Modifier une entrée de temps",
   "time.modal.edit-time-entry.submit": "Enregistrer",
   "time.modal.edit-time-entry.success": "Time entry successfully updated",
+  "time.stats.title": "Stats",
+  "time.stats.description": "Overview of your time entries",
+  "time.stats.not-enough-data": "Not enough data to display the chart",
 
   "settings.general": "Général",
   "settings.general.language": "Langue",
