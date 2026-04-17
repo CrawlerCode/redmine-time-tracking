@@ -42,7 +42,7 @@ export const ProjectTimersGroup = ({ projectGroup, className, ...props }: Projec
                 <TimerComponents.ToggleButton />
                 <TimerComponents.DoneButton canLogTime={issue ? hasProjectPermission(issue.project.id, "log_time") : false} />
               </TimerComponents.Wrapper>
-              <TimerComponents.Sessions />
+              {settings.style.showSessions && <TimerComponents.Sessions />}
             </ToggleableCard>
           </TimerComponents.ContextMenu>
         </TimerComponents.Root>
@@ -73,24 +73,28 @@ const TimerProject = ({ project, type }: { project?: TReference; type: ProjectTi
   );
 };
 
-export const ProjectTimersGroupSkeleton = ({ groups }: { groups: number[] }) => (
-  <div className="flex flex-col gap-y-2">
-    <div className="flex items-center gap-x-1 py-1">
-      <Skeleton className={clsx("h-5.5", randomElement(["w-32", "w-40", "w-60"]))} />
-    </div>
+export const ProjectTimersGroupSkeleton = ({ groups }: { groups: number[] }) => {
+  const { settings } = useSettings();
+
+  return (
     <div className="flex flex-col gap-y-2">
-      {groups.map((key) => (
-        <ToggleableCard key={key} className="flex flex-col gap-1">
-          <IssueTitleSkeleton />
-          <TimerComponents.Wrapper>
-            <TimerComponents.Skeleton.NameField />
-            <TimerComponents.Skeleton.Counter />
-            <TimerComponents.Skeleton.ToggleButton />
-            <TimerComponents.Skeleton.DoneButton />
-          </TimerComponents.Wrapper>
-          <TimerComponents.Skeleton.Sessions />
-        </ToggleableCard>
-      ))}
+      <div className="flex items-center gap-x-1 py-1">
+        <Skeleton className={clsx("h-5.5", randomElement(["w-32", "w-40", "w-60"]))} />
+      </div>
+      <div className="flex flex-col gap-y-2">
+        {groups.map((key) => (
+          <ToggleableCard key={key} className="flex flex-col gap-1">
+            <IssueTitleSkeleton />
+            <TimerComponents.Wrapper>
+              <TimerComponents.Skeleton.NameField />
+              <TimerComponents.Skeleton.Counter />
+              <TimerComponents.Skeleton.ToggleButton />
+              <TimerComponents.Skeleton.DoneButton />
+            </TimerComponents.Wrapper>
+            {settings.style.showSessions && <TimerComponents.Skeleton.Sessions />}
+          </ToggleableCard>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};

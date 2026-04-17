@@ -170,6 +170,7 @@
   "settings.style.group-issues-by-version.title": "Grouper les tickets par version cible",
   "settings.style.show-issues-priority.title": "Afficher la priorité des tickets",
   "settings.style.sort-issues-by-priority.title": "Trier les tickets par priorité",
+  "settings.style.show-sessions.title": "Show timer sessions",
   "settings.style.pin-tracked-issues.title": "Épingler les tickets suivis en haut",
   "settings.style.pin-active-tab-issue.title": "Épingler le ticket de l'onglet actif en haut",
   "settings.style.fullscreen-sidebar-scrollspy.title": "Fullscreen sidebar (experimental)",

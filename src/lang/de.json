@@ -170,6 +170,7 @@
   "settings.style.group-issues-by-version.title": "Tickets nach Zielversion gruppieren",
   "settings.style.show-issues-priority.title": "Tickets Priorität anzeigen",
   "settings.style.sort-issues-by-priority.title": "Tickets nach Priorität sortieren",
+  "settings.style.show-sessions.title": "Timer-Sitzungen anzeigen",
   "settings.style.pin-tracked-issues.title": "Aktive Tickets oben anheften",
   "settings.style.pin-active-tab-issue.title": "Ticket des aktiven Tabs oben anheften",
   "settings.style.fullscreen-sidebar-scrollspy.title": "Vollbild Seitenleiste (experimentell)",

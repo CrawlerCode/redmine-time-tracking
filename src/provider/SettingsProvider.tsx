@@ -35,6 +35,7 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
       groupIssuesByVersion: z.boolean(),
       showIssuesPriority: z.boolean(),
       sortIssuesByPriority: z.boolean(),
+      showSessions: z.boolean(),
       pinTrackedIssues: z.boolean(),
       pinActiveTabIssue: z.boolean(),
       fullscreenSidebarScrollspy: z.boolean(), // ! Experimental
@@ -63,6 +64,7 @@ const defaultSettings: Settings = {
     groupIssuesByVersion: true,
     showIssuesPriority: true,
     sortIssuesByPriority: true,
+    showSessions: true,
     pinTrackedIssues: false,
     pinActiveTabIssue: true,
     fullscreenSidebarScrollspy: false,

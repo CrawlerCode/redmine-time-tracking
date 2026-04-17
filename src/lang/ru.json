@@ -170,6 +170,7 @@
   "settings.style.group-issues-by-version.title": "Группировать задачи по target version",
   "settings.style.show-issues-priority.title": "Показывать приоритет задач",
   "settings.style.sort-issues-by-priority.title": "Сортировать задачи по приоритету",
+  "settings.style.show-sessions.title": "Show timer sessions",
   "settings.style.pin-tracked-issues.title": "Pin tracked issues to the top",
   "settings.style.pin-active-tab-issue.title": "Pin issue of active tab to the top",
   "settings.style.fullscreen-sidebar-scrollspy.title": "Fullscreen sidebar (experimental)",

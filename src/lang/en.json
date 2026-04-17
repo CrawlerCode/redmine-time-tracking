@@ -170,6 +170,7 @@
   "settings.style.group-issues-by-version.title": "Group issues by target version",
   "settings.style.show-issues-priority.title": "Show issues priority",
   "settings.style.sort-issues-by-priority.title": "Sort issues by priority",
+  "settings.style.show-sessions.title": "Show timer sessions",
   "settings.style.pin-tracked-issues.title": "Pin tracked issues to the top",
   "settings.style.pin-active-tab-issue.title": "Pin issue of active tab to the top",
   "settings.style.fullscreen-sidebar-scrollspy.title": "Fullscreen sidebar (experimental)",
