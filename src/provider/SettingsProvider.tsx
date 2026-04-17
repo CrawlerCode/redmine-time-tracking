@@ -36,6 +36,7 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
       sortIssuesByPriority: z.boolean(),
       showIssuesPriority: z.boolean().optional(), // ! Legacy
       showIssuePriority: z.boolean(),
+      showIssueDoneRatio: z.boolean(),
       showIssueStatus: z.boolean(),
       showSessions: z.boolean(),
       pinTrackedIssues: z.boolean(),
@@ -66,6 +67,7 @@ const defaultSettings: Settings = {
     groupIssuesByVersion: true,
     sortIssuesByPriority: true,
     showIssuePriority: true,
+    showIssueDoneRatio: true,
     showIssueStatus: true,
     showSessions: true,
     pinTrackedIssues: false,

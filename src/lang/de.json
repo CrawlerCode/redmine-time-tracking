@@ -170,6 +170,7 @@
   "settings.style.group-issues-by-version.title": "Tickets nach Zielversion gruppieren",
   "settings.style.sort-issues-by-priority.title": "Tickets nach Priorität sortieren",
   "settings.style.show-issue-priority.title": "Ticket Priorität anzeigen",
+  "settings.style.show-issue-done-ratio.title": "Ticket Fortschritt anzeigen",
   "settings.style.show-issue-status.title": "Ticket Status anzeigen",
   "settings.style.show-sessions.title": "Timer-Sitzungen anzeigen",
   "settings.style.pin-tracked-issues.title": "Aktive Tickets oben anheften",

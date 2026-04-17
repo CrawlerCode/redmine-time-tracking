@@ -170,6 +170,7 @@
   "settings.style.group-issues-by-version.title": "Group issues by target version",
   "settings.style.sort-issues-by-priority.title": "Sort issues by priority",
   "settings.style.show-issue-priority.title": "Show issue priority",
+  "settings.style.show-issue-done-ratio.title": "Show issue done ratio",
   "settings.style.show-issue-status.title": "Show issue status",
   "settings.style.show-sessions.title": "Show timer sessions",
   "settings.style.pin-tracked-issues.title": "Pin tracked issues to the top",

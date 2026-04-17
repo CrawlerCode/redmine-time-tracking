@@ -170,6 +170,7 @@
   "settings.style.group-issues-by-version.title": "Группировать задачи по target version",
   "settings.style.sort-issues-by-priority.title": "Сортировать задачи по приоритету",
   "settings.style.show-issue-priority.title": "Показывать приоритет задач",
+  "settings.style.show-issue-done-ratio.title": "Show issue done ratio",
   "settings.style.show-issue-status.title": "Show issue status",
   "settings.style.show-sessions.title": "Show timer sessions",
   "settings.style.pin-tracked-issues.title": "Pin tracked issues to the top",
