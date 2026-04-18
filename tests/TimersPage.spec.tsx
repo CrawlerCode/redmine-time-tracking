@@ -3,6 +3,8 @@ import { expect, test } from "./fixtures/extension";
 test.beforeEach(async ({ page, issuesPage }) => {
   await issuesPage.waitForIssuesToLoad();
 
+  await page.clock.setSystemTime(new Date(process.env.TESTING_FREEZE_TIME!));
+
   // Start some timers
   await issuesPage.triggerTimerAction(0, "start");
   await page.clock.fastForward("01:33:07");

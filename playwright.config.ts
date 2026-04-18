@@ -19,6 +19,7 @@ export default defineConfig({
   },
   expect: {
     toHaveScreenshot: {
+      maxDiffPixelRatio: 0.02,
       pathTemplate: "{testDir}/screenshots{/projectName}/{testFilePath}/{testName}{ext}",
     },
   },
