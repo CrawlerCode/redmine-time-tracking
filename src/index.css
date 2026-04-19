@@ -184,4 +184,8 @@
     background-color: var(--color-primary);
     border-radius: 3px;
   }
+
+  .recharts-wrapper * {
+    outline: none;
+  }
 }

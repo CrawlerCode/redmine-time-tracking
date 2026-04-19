@@ -126,6 +126,9 @@
   "time.modal.edit-time-entry.title": "Aufgewendete Zeit bearbeiten",
   "time.modal.edit-time-entry.submit": "Speichern",
   "time.modal.edit-time-entry.success": "Zeitaufwand erfolgreich aktualisiert",
+  "time.stats.title": "Statistiken",
+  "time.stats.description": "Übersicht Ihrer Zeiteinträge",
+  "time.stats.not-enough-data": "Nicht genügend Daten, um das Diagramm anzuzeigen",
 
   "settings.general": "Allgemein",
   "settings.general.language": "Sprache",

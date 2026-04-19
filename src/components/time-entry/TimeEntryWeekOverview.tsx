@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { addDays, format, formatISO, isFuture, isWeekend } from "date-fns";
+import { addDays, format, formatISO, isFuture, isWeekend, parseISO } from "date-fns";
 import { ClockIcon } from "lucide-react";
 import { useIntl } from "react-intl";
 import { TTimeEntry } from "../../api/redmine/types";
@@ -11,8 +11,7 @@ import TimeEntry from "./TimeEntry";
 
 type PropTypes = {
   startOfWeek: Date;
-  groupedTimeEntries: Map<string, GroupedTimeEntries>;
-  maxDayHours: number;
+  entries: TTimeEntry[];
 };
 
 export type GroupedTimeEntries = {
@@ -21,9 +20,28 @@ export type GroupedTimeEntries = {
   hours: number;
 };
 
-export const TimeEntryWeekOverview = ({ startOfWeek, groupedTimeEntries, maxDayHours }: PropTypes) => {
+export const TimeEntryWeekOverview = ({ startOfWeek, entries }: PropTypes) => {
   const { formatDate } = useIntl();
   const formatHours = useFormatHours();
+
+  const groupedTimeEntries = entries.reduce<Map<string, GroupedTimeEntries>>((map, entry) => {
+    const date = entry.spent_on;
+    if (!map.has(date)) {
+      map.set(date, {
+        date: parseISO(date),
+        entries: [],
+        hours: 0,
+      });
+    }
+    map.get(date)!.entries.push(entry);
+    map.get(date)!.hours += entry.hours;
+    return map;
+  }, new Map());
+
+  const maxDayHours = Math.max(
+    groupedTimeEntries.values().reduce((max, { hours }) => Math.max(max, hours), 0),
+    8
+  );
 
   const days = Array(7)
     .fill(startOfWeek)
