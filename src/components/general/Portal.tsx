@@ -12,6 +12,7 @@ export function Portal({ container, children }: PortalProps) {
   const [portalNode, setPortalNode] = useState<PortalNode>(null);
 
   const updateNode = useEffectEvent(() => setPortalNode(typeof container === "function" ? container() : container));
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useLayoutEffect(() => updateNode(), []);
 
   if (!portalNode) return null;
