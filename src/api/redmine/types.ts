@@ -58,9 +58,17 @@ export type TCreateIssue = {
   done_ratio?: number | null;
 };
 
+export type TUploadAttachment = {
+  token: string;
+  filename: string;
+  content_type?: string;
+  description?: string;
+};
+
 export type TUpdateIssue = Partial<TCreateIssue> & {
   notes?: string | null;
   private_notes?: boolean;
+  uploads?: TUploadAttachment[];
 };
 
 export type TIssuePriority = {
@@ -85,6 +93,13 @@ export type TSearchResult = {
   type: "issue" | "issue-closed" | "project" | string;
   url: string;
   description: string;
+};
+
+export type TUploadResponse = {
+  upload: {
+    id: number;
+    token: string;
+  };
 };
 
 // Projects

@@ -2,8 +2,12 @@
 import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser";
 import { useRedmineIssueAllowedStatuses } from "@/api/redmine/hooks/useRedmineIssueAllowedStatuses";
 import { useRedmineProject } from "@/api/redmine/hooks/useRedmineProject";
+import UploadsField from "@/components/issue/form/fields/UploadsField";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Form, FormGrid } from "@/components/ui/form";
+import { useRedmineApi } from "@/provider/RedmineApiProvider";
+import { useSettings } from "@/provider/SettingsProvider";
+import { useMutation } from "@tanstack/react-query";
 import { parseISO } from "date-fns";
 import { useIntl } from "react-intl";
 import { z } from "zod";
@@ -46,6 +50,7 @@ const createOrEditIssueFormSchema = ({ formatMessage }: { formatMessage: ReturnT
       due_date: z.date().nullable(),
       estimated_hours: z.number().nullable(),
       done_ratio: z.int().min(0).max(100),
+      uploads: z.array(z.object({ token: z.string(), filename: z.string(), content_type: z.string().optional(), description: z.string().optional() })),
     })
     .check((ctx) => {
       if (ctx.value.start_date && ctx.value.due_date && ctx.value.start_date > ctx.value.due_date) {
@@ -61,6 +66,7 @@ const createOrEditIssueFormSchema = ({ formatMessage }: { formatMessage: ReturnT
 type TCreateOrEditIssueForm = z.infer<ReturnType<typeof createOrEditIssueFormSchema>>;
 
 export const IssueForm = (props: PropTypes) => {
+  const { settings } = useSettings();
   const { formatMessage } = useIntl();
 
   const projectId = props.action === "create" ? props.projectId : props.issue.project.id;
@@ -72,6 +78,11 @@ export const IssueForm = (props: PropTypes) => {
   const issueAllowedStatuses = useRedmineIssueAllowedStatuses(props.action === "edit" ? props.issue.id : 0, {
     enabled: props.action === "edit",
     staleTime: 0,
+  });
+
+  const redmineApi = useRedmineApi();
+  const uploadAttachmentMutation = useMutation({
+    mutationFn: (file: File) => redmineApi.uploadAttachment(file),
   });
 
   const form = useAppForm({
@@ -91,6 +102,7 @@ export const IssueForm = (props: PropTypes) => {
             due_date: null,
             estimated_hours: null,
             done_ratio: 0,
+            uploads: [],
           } satisfies Partial<TCreateOrEditIssueForm> as TCreateOrEditIssueForm)
         : ({
             project_id: props.issue.project.id,
@@ -106,6 +118,7 @@ export const IssueForm = (props: PropTypes) => {
             due_date: props.issue.due_date ? parseISO(props.issue.due_date) : null,
             estimated_hours: props.issue.estimated_hours ?? null,
             done_ratio: props.issue.done_ratio,
+            uploads: [],
           } satisfies TCreateOrEditIssueForm as TCreateOrEditIssueForm),
     validators: {
       onChange: createOrEditIssueFormSchema({ formatMessage }),
@@ -192,12 +205,29 @@ export const IssueForm = (props: PropTypes) => {
               />
 
               {(hasTrackerNoEnabledFields || selectedTracker?.enabled_standard_fields?.includes("description")) && (
-                <form.AppField
-                  name="description"
-                  children={(field) => (
-                    <field.TextareaField title={formatMessage({ id: "issues.issue.field.description" })} placeholder={formatMessage({ id: "issues.issue.field.description" })} rows={1} />
-                  )}
-                />
+                <>
+                  <form.AppField
+                    name="description"
+                    children={(field) =>
+                      settings.redmine.settings.textFormatting === "common_mark" ? (
+                        <field.RedmineMdEditorField
+                          title={formatMessage({ id: "issues.issue.field.description" })}
+                          textareaProps={{ placeholder: formatMessage({ id: "issues.issue.field.description" }) }}
+                          onUploadImage={async (file) => {
+                            const { id: _, url, ...attachment } = await uploadAttachmentMutation.mutateAsync(file);
+                            form.pushFieldValue("uploads", attachment);
+                            if (settings.redmine.settings.textFormatting !== "none") {
+                              return { url, alt: attachment.filename };
+                            }
+                          }}
+                        />
+                      ) : (
+                        <field.TextareaField title={formatMessage({ id: "issues.issue.field.description" })} placeholder={formatMessage({ id: "issues.issue.field.description" })} rows={1} />
+                      )
+                    }
+                  />
+                  <form.AppField name="uploads" children={() => <UploadsField />} />
+                </>
               )}
 
               <FormGrid className="col-span-1">

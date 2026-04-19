@@ -19,6 +19,8 @@ import {
   TTimeEntryActivity,
   TUpdateIssue,
   TUpdateTimeEntry,
+  TUploadAttachment,
+  TUploadResponse,
   TUser,
   TVersion,
 } from "./types";
@@ -44,6 +46,9 @@ export class RedmineApiClient {
     });
     this.instance.interceptors.response.use(
       (response) => {
+        if (response.config.headers?.["Accept"] === "text/html") {
+          return response;
+        }
         const contentType = response.headers["content-type"];
         if (contentType && !contentType.startsWith("application/json")) {
           throw new Error(`Invalid content-type '${contentType}'. Expected 'application/json'`);
@@ -294,5 +299,39 @@ export class RedmineApiClient {
 
   async getCurrentUser(): Promise<TUser> {
     return this.instance.get("/users/current.json?include=memberships").then((res) => res.data.user);
+  }
+
+  // Attachments
+  async uploadAttachment(file: File): Promise<TUploadAttachment & { id: number; url: string }> {
+    const arrayBuffer = await file.arrayBuffer();
+    const response = await this.instance.post<TUploadResponse>(`/uploads.json?filename=${encodeURIComponent(file.name)}`, arrayBuffer, {
+      headers: { "Content-Type": "application/octet-stream" },
+    });
+    return {
+      id: response.data.upload.id,
+      token: response.data.upload.token,
+      filename: file.name,
+      content_type: file.type,
+      url: `${this.instance.defaults.baseURL}/attachments/download/${response.data.upload.id}/${encodeURIComponent(file.name)}`,
+    };
+  }
+
+  async removeAttachment(id: number): Promise<void> {
+    await this.instance.delete(`/attachments/${id}.json`);
+  }
+
+  // Other
+  async detectTextFormatting(): Promise<"none" | "common_mark" | "textile" | undefined> {
+    const resp = await this.instance.get<string>("/", {
+      headers: { Accept: "text/html" },
+    });
+    // available since Redmine 6.0.0
+    const match = String(resp.data).match(/data-text-formatting="(common_mark|textile|)"/);
+    if (match) {
+      if (match[1] === "") {
+        return "none";
+      }
+      return match[1] as "common_mark" | "textile";
+    }
   }
 }

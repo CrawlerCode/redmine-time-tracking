@@ -42,6 +42,7 @@
     "@tanstack/react-query-devtools": "^5.99.0",
     "@tanstack/react-query-persist-client": "^5.99.0",
     "@tanstack/react-router": "^1.168.22",
+    "@uiw/react-md-editor": "^4.1.0",
     "axios": "^1.15.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

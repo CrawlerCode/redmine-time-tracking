@@ -185,3 +185,31 @@
     border-radius: 3px;
   }
 }
+
+.wmde-markdown,
+.wmde-markdown-var {
+  --color-canvas-default: transparent;
+  --color-border-default: var(--color-input);
+  --color-fg-default: var(--color-foreground);
+  --color-neutral-muted: var(--color-muted);
+  --color-accent-fg: var(--color-primary);
+  --color-danger-fg: var(--color-destructive);
+  --color-border-muted: var(--color-border);
+  --color-canvas-subtle: var(--color-muted);
+  --md-editor-font-family: var(--font-sans);
+  border-radius: var(--radius) !important;
+}
+
+.w-md-editor-toolbar-child {
+  background-color: var(--color-popover);
+}
+
+.w-md-editor-toolbar li > button {
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-color-scheme: dark) {
+  .w-md-editor {
+    --color-canvas-default: color-mix(in oklab, var(--color-input) 30%, transparent);
+  }
+}
