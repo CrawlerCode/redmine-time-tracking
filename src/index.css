@@ -214,3 +214,21 @@
     --color-canvas-default: color-mix(in oklab, var(--color-input) 30%, transparent);
   }
 }
+
+.w-md-editor-preview {
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  ul ul {
+    list-style: circle;
+  }
+
+  ul ul ul {
+    list-style: square;
+  }
+}
