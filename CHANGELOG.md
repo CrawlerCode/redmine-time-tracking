@@ -1,3 +1,31 @@
+## [2.0.0-beta.7](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2026-04-19)
+
+### 🚀 Features
+
+* Add issue status badge ([6c5e447](https://github.com/CrawlerCode/redmine-time-tracking/commit/6c5e447c919b35168e0eda61fe5644a6723865d1))
+* Add side panel entrypoint ([3731d5d](https://github.com/CrawlerCode/redmine-time-tracking/commit/3731d5da1c18806e921699b99c669ae662316cd5))
+* **settings:** Add option to show/hide issue done ratio ([bc9b6c3](https://github.com/CrawlerCode/redmine-time-tracking/commit/bc9b6c3c597ff1dca6ebdaa06dc31aba45e07762))
+* **settings:** Add option to show/hide timer sessions ([6022751](https://github.com/CrawlerCode/redmine-time-tracking/commit/602275185fbad50d34cfe1406089842d1ae0cfee))
+
+### 🩹 Fixes
+
+* Fix install listener registration ([8b9b125](https://github.com/CrawlerCode/redmine-time-tracking/commit/8b9b125d37d3360afceabc045e45613001d845f2))
+* **ui:** Fix dark mode for firefox options and sidepanel ([ba6b406](https://github.com/CrawlerCode/redmine-time-tracking/commit/ba6b4065eac518c3b2d4724ceefee7aa3dd57b3a))
+
+### 🏡 Chore
+
+* **deps:** Update npm dependencies ([0132802](https://github.com/CrawlerCode/redmine-time-tracking/commit/01328027f5e027e959165645351d0ea9c39c9c99))
+* **deps:** Update npm dependencies ([b0256f0](https://github.com/CrawlerCode/redmine-time-tracking/commit/b0256f06df6f97353708d2aba7a81bc1eff3d347))
+* **lint:** Fix htmlhint errors ([07604c3](https://github.com/CrawlerCode/redmine-time-tracking/commit/07604c351d4645489529c65e861bd259d1ae81b8))
+
+### 📖 Documentation
+
+* Update store screenshots ([702a2c4](https://github.com/CrawlerCode/redmine-time-tracking/commit/702a2c4de603b8cf913aae2bd361112c963558fa))
+
+### 🧪 Tests
+
+* Fix flaky time drift tests ([cadd015](https://github.com/CrawlerCode/redmine-time-tracking/commit/cadd01521f55b272046d575a0d9e96d198442b32))
+
 ## [2.0.0-beta.6](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2026-04-12)
 
 ### 🚀 Features
