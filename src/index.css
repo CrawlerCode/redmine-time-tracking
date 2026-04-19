@@ -197,6 +197,7 @@
   --color-border-muted: var(--color-border);
   --color-canvas-subtle: var(--color-muted);
   --md-editor-font-family: var(--font-sans);
+
   border-radius: var(--radius) !important;
 }
 
