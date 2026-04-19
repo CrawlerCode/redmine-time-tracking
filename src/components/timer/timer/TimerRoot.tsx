@@ -22,6 +22,7 @@ export const TimerRoot = ({ timer, issue, children }: TimerRootProps) => {
   const [totalElapsedTime, setTotalElapsedTime] = useState(() => calculateTimerTotalElapsedTime(timer));
 
   const updateTimer = useEffectEvent(() => setTotalElapsedTime(calculateTimerTotalElapsedTime(timer)));
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => updateTimer(), [timer.elapsedTime, timer.activeSession]);
 
   useInterval(() => setTotalElapsedTime(calculateTimerTotalElapsedTime(timer)), timer.activeSession ? 1000 : null);
