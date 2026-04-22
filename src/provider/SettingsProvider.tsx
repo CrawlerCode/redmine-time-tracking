@@ -24,9 +24,6 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
         .object({
           clientId: z.string(),
           clientSecret: z.string(),
-          accessToken: z.string().optional(),
-          refreshToken: z.string().optional(),
-          expiresAt: z.number().optional(),
         })
         .optional(),
     }),

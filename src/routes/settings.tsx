@@ -8,6 +8,8 @@ import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle }
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { useRedmineApi } from "@/provider/RedmineApiProvider";
+import { getErrorMessage } from "@/utils/error";
 import { useStore as useFormStore } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -296,9 +298,10 @@ const RedmineServerSection = withForm({
     onChange: settingsSchema(),
   },
   render: function Render({ form }) {
-    const { formatMessage, formatDate, formatTime } = useIntl();
+    const { formatMessage } = useIntl();
 
     const [editRedmineInstance, setEditRedmineInstance] = useState(!form.state.values.redmineURL);
+    const defaultRedmineApi = useRedmineApi();
     const [redmineApiClient, setRedmineApiClient] = useState<RedmineApiClient | undefined>(undefined);
     const redmineConnection = useTestRedmineConnection(redmineApiClient);
 
@@ -497,13 +500,9 @@ const RedmineServerSection = withForm({
                               variant="outline"
                               onClick={async () => {
                                 try {
-                                  const client = new RedmineApiClient(form.state.values.redmineURL, form.state.values.auth);
-                                  const result = await client.startOAuth2Authorization();
-                                  form.setFieldValue("auth.oauth2.accessToken", result.accessToken);
-                                  form.setFieldValue("auth.oauth2.refreshToken", result.refreshToken);
-                                  form.setFieldValue("auth.oauth2.expiresAt", result.expiresAt);
+                                  await (redmineApiClient ?? defaultRedmineApi).startOAuth2Authorization();
                                 } catch (error) {
-                                  toast.error(formatMessage({ id: "settings.redmine.oauth2.authorization-failed" }, { error: error instanceof Error ? error.message : String(error) }));
+                                  toast.error(formatMessage({ id: "settings.redmine.oauth2.authorization-failed" }, { error: getErrorMessage(error) }));
                                 }
                                 setRedmineApiClient(new RedmineApiClient(form.state.values.redmineURL, form.state.values.auth));
                               }}
@@ -530,17 +529,6 @@ const RedmineServerSection = withForm({
                           }
                         )}
                       </ItemDescription>
-                      {form.state.values.auth.method === "oauth2" && form.state.values.auth.oauth2?.expiresAt && (
-                        <ItemDescription className="text-muted-foreground">
-                          {formatMessage(
-                            { id: "settings.redmine.oauth2.token-expires" },
-                            {
-                              date: formatDate(form.state.values.auth.oauth2.expiresAt, { dateStyle: "medium" }),
-                              time: formatTime(form.state.values.auth.oauth2.expiresAt, { timeStyle: "short" }),
-                            }
-                          )}
-                        </ItemDescription>
-                      )}
                     </>
                   ) : undefined}
                 </ItemContent>

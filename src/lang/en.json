@@ -150,7 +150,6 @@
   "settings.redmine.oauth2.setup.description": "To use OAuth2, you need to register an <link>OAuth2 application</link> in Redmine. This requires administrator permissions.",
   "settings.redmine.oauth2.setup.application-name": "Name",
   "settings.redmine.oauth2.setup.redirect-uri": "Redirect URI",
-  "settings.redmine.oauth2.token-expires": "Token expires on {date} at {time}",
   "settings.redmine.oauth2.authorize": "Authorize with OAuth2",
   "settings.redmine.oauth2.authorization-failed": "OAuth2 authorization failed: {error}",
   "settings.redmine.connecting": "Connecting...",
