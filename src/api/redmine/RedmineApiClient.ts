@@ -14,7 +14,8 @@ import {
   TIssueStatus,
   TIssueTracker,
   TMembership,
-  TOAuthTokenResponse,
+  TOAuth2Scope,
+  TOAuth2TokenResponse,
   TPaginatedResponse,
   TProject,
   TReference,
@@ -31,16 +32,17 @@ import {
 type OAuth2Tokens = {
   accessToken: string;
   refreshToken: string;
+  scope: string;
   expiresAt: number;
 };
 
 export class RedmineApiClient {
   public id = crypto.randomUUID();
   private instance: AxiosInstance;
-  private auth?: Settings["auth"];
+  private auth: Settings["auth"];
   private oauth2Tokens?: OAuth2Tokens;
 
-  constructor(redmineURL: string, auth?: Settings["auth"]) {
+  constructor(redmineURL: string, auth: Settings["auth"]) {
     this.auth = auth;
 
     this.instance = axios.create({
@@ -336,8 +338,8 @@ export class RedmineApiClient {
     return this.instance.get("/users/current.json?include=memberships").then((res) => res.data.user);
   }
 
-  // Auth
-  private getOAuth2AuthorizeUrl({ redirectUri, scope }: { redirectUri: string; scope: string }): string {
+  // OAuth2 authentication
+  private getOAuth2AuthorizeUrl({ redirectUri, scope }: { redirectUri: string; scope: TOAuth2Scope[] }): string {
     if (!this.auth?.oauth2?.clientId) {
       throw new RedmineAuthenticationError("OAuth2 Client ID is required to get authorize URL");
     }
@@ -346,7 +348,7 @@ export class RedmineApiClient {
       client_id: this.auth.oauth2.clientId,
       redirect_uri: redirectUri,
       response_type: "code",
-      scope,
+      scope: scope.join(" "),
     })}`;
   }
 
@@ -356,7 +358,7 @@ export class RedmineApiClient {
     }
 
     return this.instance
-      .post<TOAuthTokenResponse>("/oauth/token", {
+      .post<TOAuth2TokenResponse>("/oauth/token", {
         grant_type: "authorization_code",
         code,
         redirect_uri: redirectUri,
@@ -375,7 +377,7 @@ export class RedmineApiClient {
     }
 
     const tokens = await this.instance
-      .post<TOAuthTokenResponse>("/oauth/token", {
+      .post<TOAuth2TokenResponse>("/oauth/token", {
         grant_type: "refresh_token",
         refresh_token: this.oauth2Tokens.refreshToken,
         client_id: this.auth.oauth2.clientId,
@@ -387,6 +389,7 @@ export class RedmineApiClient {
     this.oauth2Tokens = {
       accessToken: tokens.access_token,
       refreshToken: tokens.refresh_token,
+      scope: tokens.scope,
       expiresAt: (tokens.created_at + tokens.expires_in) * 1000,
     };
     await setStorage("oauth2-tokens", this.oauth2Tokens);
@@ -396,7 +399,16 @@ export class RedmineApiClient {
     const redirectUri = browser.identity.getRedirectURL();
     const authorizeUrl = this.getOAuth2AuthorizeUrl({
       redirectUri,
-      scope: "view_project search_project view_members view_issues view_time_entries",
+      scope: [
+        // Default scopes
+        "view_project",
+        "search_project",
+        "view_members",
+        // Scopes enabled in settings
+        ...(Object.entries(this.auth.oauth2?.scopes || {})
+          .filter(([, enabled]) => enabled)
+          .map(([s]) => s) as TOAuth2Scope[]),
+      ],
     });
 
     // Authorize and get the code
@@ -430,8 +442,13 @@ export class RedmineApiClient {
     this.oauth2Tokens = {
       accessToken: tokenResponse.access_token,
       refreshToken: tokenResponse.refresh_token,
+      scope: tokenResponse.scope,
       expiresAt: (tokenResponse.created_at + tokenResponse.expires_in) * 1000,
     };
     await setStorage("oauth2-tokens", this.oauth2Tokens);
+  }
+
+  getOAuth2TokenScopes() {
+    return this.auth?.method === "oauth2" && this.oauth2Tokens ? (this.oauth2Tokens.scope.split(" ") as TOAuth2Scope[]) : [];
   }
 }

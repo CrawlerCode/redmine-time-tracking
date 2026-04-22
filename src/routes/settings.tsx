@@ -2,10 +2,11 @@
 import { useTestRedmineConnection } from "@/api/redmine/hooks/useTestRedmineConnection";
 import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { RedmineAuthenticationError } from "@/api/redmine/RedmineAuthenticationError";
+import { TOAuth2Scope } from "@/api/redmine/types";
 import { Portal } from "@/components/general/Portal";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { useRedmineApi } from "@/provider/RedmineApiProvider";
@@ -18,6 +19,7 @@ import {
   ArrowDownIcon,
   ArrowDownUpIcon,
   ArrowUpIcon,
+  AsteriskIcon,
   BugIcon,
   ChevronRightIcon,
   CopyIcon,
@@ -32,7 +34,7 @@ import {
   Wand2Icon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useIntl } from "react-intl";
+import { MessageDescriptor, useIntl } from "react-intl";
 import { toast } from "sonner";
 import { browser } from "wxt/browser";
 import { Form } from "../components/ui/form";
@@ -292,6 +294,19 @@ function PageComponent() {
   );
 }
 
+const OAUTH2_SCOPES = [
+  { scope: "view_issues" as const, label: "settings.redmine.oauth2.scopes.view_issues", required: true },
+  { scope: "add_issues" as const, label: "settings.redmine.oauth2.scopes.add_issues", required: false },
+  { scope: "edit_issues" as const, label: "settings.redmine.oauth2.scopes.edit_issues", required: false },
+  { scope: "edit_own_issues" as const, label: "settings.redmine.oauth2.scopes.edit_own_issues", required: false },
+  { scope: "add_issue_notes" as const, label: "settings.redmine.oauth2.scopes.add_issue_notes", required: false },
+  { scope: "set_notes_private" as const, label: "settings.redmine.oauth2.scopes.set_notes_private", required: false },
+  { scope: "view_time_entries" as const, label: "settings.redmine.oauth2.scopes.view_time_entries", required: true },
+  { scope: "log_time" as const, label: "settings.redmine.oauth2.scopes.log_time", required: true },
+  { scope: "edit_own_time_entries" as const, label: "settings.redmine.oauth2.scopes.edit_own_time_entries", required: false },
+  { scope: "log_time_for_other_users" as const, label: "settings.redmine.oauth2.scopes.log_time_for_other_users", required: false },
+] satisfies { scope: TOAuth2Scope; label: NonNullable<MessageDescriptor["id"]>; required: boolean }[];
+
 const RedmineServerSection = withForm({
   defaultValues: {} as Settings,
   validators: {
@@ -466,6 +481,21 @@ const RedmineServerSection = withForm({
                           />
                         )}
                       />
+
+                      <FieldSet>
+                        <FieldLegend>
+                          <span className="inline-flex gap-0.5">
+                            {formatMessage({ id: "settings.redmine.oauth2.scopes" })}
+                            <AsteriskIcon className="size-3.5 text-red-600" />
+                          </span>
+                        </FieldLegend>
+                        <FieldDescription>{formatMessage({ id: "settings.redmine.oauth2.scopes.description" })}</FieldDescription>
+                        <FieldGroup data-slot="checkbox-group">
+                          {OAUTH2_SCOPES.map(({ scope, label, required }) => (
+                            <form.AppField key={scope} name={`auth.oauth2.scopes.${scope}`} children={(field) => <field.CheckboxField title={formatMessage({ id: label })} disabled={required} />} />
+                          ))}
+                        </FieldGroup>
+                      </FieldSet>
                     </>
                   )
                 }

@@ -24,6 +24,18 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
         .object({
           clientId: z.string(),
           clientSecret: z.string(),
+          scopes: z.object({
+            view_issues: z.boolean(),
+            add_issues: z.boolean(),
+            edit_issues: z.boolean(),
+            edit_own_issues: z.boolean(),
+            add_issue_notes: z.boolean(),
+            set_notes_private: z.boolean(),
+            view_time_entries: z.boolean(),
+            log_time: z.boolean(),
+            edit_own_time_entries: z.boolean(),
+            log_time_for_other_users: z.boolean(),
+          }),
         })
         .optional(),
     }),
@@ -83,6 +95,18 @@ const defaultSettings: Settings = {
     oauth2: {
       clientId: "",
       clientSecret: "",
+      scopes: {
+        view_issues: true, // Always enabled
+        add_issues: false,
+        edit_issues: false,
+        edit_own_issues: false,
+        add_issue_notes: true,
+        set_notes_private: false,
+        view_time_entries: true, // Always enabled
+        log_time: true, // Always enabled
+        edit_own_time_entries: true,
+        log_time_for_other_users: false,
+      },
     },
   },
   features: {
