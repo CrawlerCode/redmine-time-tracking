@@ -87,11 +87,12 @@ const AddIssueNotesModal = ({ issue, onClose, onSuccess }: PropTypes) => {
                     required
                     autoFocus
                     hideToolbar={settings.redmine.settings.textFormatting === "none"}
+                    uploads={form.state.values.uploads}
                     onUploadImage={async (file) => {
-                      const { id: _, url, ...attachment } = await uploadAttachmentMutation.mutateAsync(file);
+                      const attachment = await uploadAttachmentMutation.mutateAsync(file);
                       form.pushFieldValue("uploads", attachment);
                       if (settings.redmine.settings.textFormatting !== "none") {
-                        return { url, alt: attachment.filename };
+                        return { url: attachment.filename, alt: attachment.filename };
                       }
                     }}
                   />

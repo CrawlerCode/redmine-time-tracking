@@ -1,5 +1,7 @@
+import { TAttachment, TUploadAttachment } from "@/api/redmine/types";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { useFieldContext } from "@/hooks/useAppForm";
+import { useSettings } from "@/provider/SettingsProvider";
 import MDEditor, { commands } from "@uiw/react-md-editor";
 import {
   BoldIcon,
@@ -27,14 +29,17 @@ import { useIntl } from "react-intl";
 
 type RedmineTextEditorFieldProps = Omit<ComponentProps<typeof MDEditor>, "id" | "value" | "onChange" | "onBlur"> & {
   required?: boolean;
+  attachments?: TAttachment[];
+  uploads?: TUploadAttachment[];
   onUploadImage?: (file: File) => Promise<{ url: string; alt?: string } | void>;
 };
 
-export const RedmineMdEditorField = ({ title, required, className, onUploadImage, ...props }: RedmineTextEditorFieldProps) => {
+export const RedmineMdEditorField = ({ title, required, className, attachments, uploads, onUploadImage, ...props }: RedmineTextEditorFieldProps) => {
   const { state, handleChange, handleBlur } = useFieldContext<string | null>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
 
+  const { settings } = useSettings();
   const { formatMessage } = useIntl();
 
   const [preview, setPreview] = useState<"edit" | "preview">("edit");
@@ -202,6 +207,22 @@ export const RedmineMdEditorField = ({ title, required, className, onUploadImage
               console.error("Image upload failed", error);
             }
           }
+        }}
+        previewOptions={{
+          urlTransform: (url) => {
+            if (!url.startsWith("http")) {
+              const attachment = attachments?.find((att) => att.filename === url);
+              if (attachment) {
+                return attachment.content_url;
+              }
+              const upload = uploads?.find((up) => up.filename === url);
+              const { uploadId } = upload?.token.match(/^(?<uploadId>\d+)\..*$/)?.groups || {};
+              if (upload && uploadId) {
+                return `${settings.redmineURL}/attachments/download/${uploadId}/${upload.filename}`;
+              }
+            }
+            return url;
+          },
         }}
       />
       {isInvalid && <FieldError errors={state.meta.errors} />}

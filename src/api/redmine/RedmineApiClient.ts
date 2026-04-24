@@ -142,7 +142,7 @@ export class RedmineApiClient {
   }
 
   async getIssue(id: number): Promise<TIssue> {
-    return this.instance.get(`/issues/${id}.json?include=allowed_statuses`).then((res) => res.data.issue);
+    return this.instance.get(`/issues/${id}.json?include=allowed_statuses,attachments`).then((res) => res.data.issue);
   }
 
   async createIssue(issue: TCreateIssue) {
@@ -302,17 +302,15 @@ export class RedmineApiClient {
   }
 
   // Attachments
-  async uploadAttachment(file: File): Promise<TUploadAttachment & { id: number; url: string }> {
+  async uploadAttachment(file: File): Promise<TUploadAttachment> {
     const arrayBuffer = await file.arrayBuffer();
     const response = await this.instance.post<TUploadResponse>(`/uploads.json?filename=${encodeURIComponent(file.name)}`, arrayBuffer, {
       headers: { "Content-Type": "application/octet-stream" },
     });
     return {
-      id: response.data.upload.id,
       token: response.data.upload.token,
       filename: file.name,
       content_type: file.type,
-      url: `${this.instance.defaults.baseURL}/attachments/download/${response.data.upload.id}/${encodeURIComponent(file.name)}`,
     };
   }
 

@@ -213,11 +213,13 @@ export const IssueForm = (props: PropTypes) => {
                         <field.RedmineMdEditorField
                           title={formatMessage({ id: "issues.issue.field.description" })}
                           textareaProps={{ placeholder: formatMessage({ id: "issues.issue.field.description" }) }}
+                          attachments={props.action === "edit" ? props.issue.attachments : undefined}
+                          uploads={form.state.values.uploads}
                           onUploadImage={async (file) => {
-                            const { id: _, url, ...attachment } = await uploadAttachmentMutation.mutateAsync(file);
+                            const attachment = await uploadAttachmentMutation.mutateAsync(file);
                             form.pushFieldValue("uploads", attachment);
                             if (settings.redmine.settings.textFormatting !== "none") {
-                              return { url, alt: attachment.filename };
+                              return { url: attachment.filename, alt: attachment.filename };
                             }
                           }}
                         />

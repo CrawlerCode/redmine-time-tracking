@@ -38,6 +38,7 @@ export type TIssue = {
   closed_on?: string;
   allowed_statuses?: TIssueStatus[]; // available since Redmine 5.0.0
   custom_fields?: TCustomFieldValue[];
+  attachments?: TAttachment[]; // available since Redmine 3.4.0
 };
 
 export type TCreateIssue = {
@@ -56,13 +57,7 @@ export type TCreateIssue = {
   due_date?: Date | null;
   estimated_hours?: number | null;
   done_ratio?: number | null;
-};
-
-export type TUploadAttachment = {
-  token: string;
-  filename: string;
-  content_type?: string;
-  description?: string;
+  uploads?: TUploadAttachment[];
 };
 
 export type TUpdateIssue = Partial<TCreateIssue> & {
@@ -100,6 +95,25 @@ export type TUploadResponse = {
     id: number;
     token: string;
   };
+};
+
+export type TUploadAttachment = {
+  token: string;
+  filename: string;
+  content_type?: string;
+  description?: string;
+};
+
+export type TAttachment = {
+  id: number;
+  filename: string;
+  description: string;
+  content_type: string;
+  filesize: number;
+  content_url: string;
+  thumbnail_url: string;
+  created_on: string;
+  author: TReference;
 };
 
 // Projects

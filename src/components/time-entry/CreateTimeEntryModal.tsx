@@ -258,11 +258,12 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
                                   placeholder: formatMessage({ id: "issues.issue.field.notes" }),
                                 }}
                                 hideToolbar={settings.redmine.settings.textFormatting === "none"}
+                                uploads={form.state.values.issue.uploads}
                                 onUploadImage={async (file) => {
-                                  const { id: _, url, ...attachment } = await uploadAttachmentMutation.mutateAsync(file);
+                                  const attachment = await uploadAttachmentMutation.mutateAsync(file);
                                   form.pushFieldValue("issue.uploads", attachment);
                                   if (settings.redmine.settings.textFormatting !== "none") {
-                                    return { url, alt: attachment.filename };
+                                    return { url: attachment.filename, alt: attachment.filename };
                                   }
                                 }}
                               />
