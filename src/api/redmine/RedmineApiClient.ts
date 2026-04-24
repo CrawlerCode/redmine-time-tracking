@@ -1,5 +1,5 @@
 import { RedmineAuthenticationError } from "@/api/redmine/RedmineAuthenticationError";
-import { getStorage, setStorage } from "@/hooks/useStorage";
+import { getStorage, removeStorage, setStorage } from "@/hooks/useStorage";
 import { Settings } from "@/provider/SettingsProvider";
 import axios, { AxiosInstance, isAxiosError } from "axios";
 import { formatISO } from "date-fns";
@@ -39,10 +39,10 @@ type OAuth2Tokens = {
 export class RedmineApiClient {
   public id = crypto.randomUUID();
   private instance: AxiosInstance;
-  private auth: Settings["auth"];
+  private auth: Settings["redmine"]["auth"];
   private oauth2Tokens?: OAuth2Tokens;
 
-  constructor(redmineURL: string, auth: Settings["auth"]) {
+  constructor(redmineURL: string, auth: Settings["redmine"]["auth"]) {
     this.auth = auth;
 
     this.instance = axios.create({
@@ -340,7 +340,10 @@ export class RedmineApiClient {
 
   // OAuth2 authentication
   private getOAuth2AuthorizeUrl({ redirectUri, scope }: { redirectUri: string; scope: TOAuth2Scope[] }): string {
-    if (!this.auth?.oauth2?.clientId) {
+    if (this.auth.method !== "oauth2") {
+      throw new RedmineAuthenticationError("OAuth2 authentication method is not enabled");
+    }
+    if (!this.auth.oauth2.clientId) {
       throw new RedmineAuthenticationError("OAuth2 Client ID is required to get authorize URL");
     }
 
@@ -353,7 +356,10 @@ export class RedmineApiClient {
   }
 
   private async getOAuth2AccessToken({ code, redirectUri }: { code: string; redirectUri: string }) {
-    if (!this.auth?.oauth2?.clientId || !this.auth?.oauth2?.clientSecret) {
+    if (this.auth.method !== "oauth2") {
+      throw new RedmineAuthenticationError("OAuth2 authentication method is not enabled");
+    }
+    if (!this.auth.oauth2.clientId || !this.auth.oauth2.clientSecret) {
       throw new RedmineAuthenticationError("OAuth2 Client ID and Client Secret are required to get access token");
     }
 
@@ -369,7 +375,10 @@ export class RedmineApiClient {
   }
 
   private async refreshOAuth2AccessToken() {
-    if (!this.auth?.oauth2?.clientId || !this.auth?.oauth2?.clientSecret) {
+    if (this.auth.method !== "oauth2") {
+      throw new RedmineAuthenticationError("OAuth2 authentication method is not enabled");
+    }
+    if (!this.auth.oauth2.clientId || !this.auth.oauth2.clientSecret) {
       throw new RedmineAuthenticationError("OAuth2 Client ID and Client Secret are required to refresh access token");
     }
     if (!this.oauth2Tokens?.refreshToken) {
@@ -396,6 +405,10 @@ export class RedmineApiClient {
   }
 
   async startOAuth2Authorization() {
+    if (this.auth.method !== "oauth2") {
+      throw new RedmineAuthenticationError("OAuth2 authentication method is not enabled");
+    }
+
     const redirectUri = browser.identity.getRedirectURL();
     const authorizeUrl = this.getOAuth2AuthorizeUrl({
       redirectUri,
@@ -405,7 +418,7 @@ export class RedmineApiClient {
         "search_project",
         "view_members",
         // Scopes enabled in settings
-        ...(Object.entries(this.auth.oauth2?.scopes || {})
+        ...(Object.entries(this.auth.oauth2.scopes || {})
           .filter(([, enabled]) => enabled)
           .map(([s]) => s) as TOAuth2Scope[]),
       ],
@@ -448,7 +461,12 @@ export class RedmineApiClient {
     await setStorage("oauth2-tokens", this.oauth2Tokens);
   }
 
+  async clearOAuth2Tokens() {
+    this.oauth2Tokens = undefined;
+    await removeStorage("oauth2-tokens");
+  }
+
   getOAuth2TokenScopes() {
-    return this.auth?.method === "oauth2" && this.oauth2Tokens ? (this.oauth2Tokens.scope.split(" ") as TOAuth2Scope[]) : [];
+    return this.auth.method === "oauth2" && this.oauth2Tokens ? (this.oauth2Tokens.scope.split(" ") as TOAuth2Scope[]) : [];
   }
 }

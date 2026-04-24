@@ -42,8 +42,8 @@ const PermissionProvider = ({ children }: { children: ReactNode }) => {
   const getProjectRoles = (projectId: number): TRole[] => projectRolesMap.get(projectId) ?? [];
   const hasOAuth2Scope = (scope: TOAuth2Scope): boolean => tokenScopes.includes(scope);
   const hasProjectPermission = (projectId: number, permission: TPermission): boolean =>
-    (me?.admin && settings.auth.method === "apiKey") ||
-    (getProjectRoles(projectId).some((r) => r.permissions.includes(permission)) && (settings.auth.method === "apiKey" || hasOAuth2Scope(permission))) ||
+    (me?.admin && settings.redmine.auth.method === "apiKey") ||
+    (getProjectRoles(projectId).some((r) => r.permissions.includes(permission)) && (settings.redmine.auth.method === "apiKey" || hasOAuth2Scope(permission))) ||
     false;
 
   return (

@@ -9,7 +9,6 @@ import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle }
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
-import { useRedmineApi } from "@/provider/RedmineApiProvider";
 import { getErrorMessage } from "@/utils/error";
 import { useStore as useFormStore } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
@@ -33,7 +32,7 @@ import {
   UserIcon,
   Wand2Icon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { MessageDescriptor, useIntl } from "react-intl";
 import { toast } from "sonner";
 import { browser } from "wxt/browser";
@@ -295,16 +294,16 @@ function PageComponent() {
 }
 
 const OAUTH2_SCOPES = [
-  { scope: "view_issues" as const, label: "settings.redmine.oauth2.scopes.view_issues", required: true },
-  { scope: "add_issues" as const, label: "settings.redmine.oauth2.scopes.add_issues", required: false },
-  { scope: "edit_issues" as const, label: "settings.redmine.oauth2.scopes.edit_issues", required: false },
-  { scope: "edit_own_issues" as const, label: "settings.redmine.oauth2.scopes.edit_own_issues", required: false },
-  { scope: "add_issue_notes" as const, label: "settings.redmine.oauth2.scopes.add_issue_notes", required: false },
-  { scope: "set_notes_private" as const, label: "settings.redmine.oauth2.scopes.set_notes_private", required: false },
-  { scope: "view_time_entries" as const, label: "settings.redmine.oauth2.scopes.view_time_entries", required: true },
-  { scope: "log_time" as const, label: "settings.redmine.oauth2.scopes.log_time", required: true },
-  { scope: "edit_own_time_entries" as const, label: "settings.redmine.oauth2.scopes.edit_own_time_entries", required: false },
-  { scope: "log_time_for_other_users" as const, label: "settings.redmine.oauth2.scopes.log_time_for_other_users", required: false },
+  { scope: "view_issues" as const, label: "settings.redmine.auth.oauth2.scopes.view_issues", required: true },
+  { scope: "add_issues" as const, label: "settings.redmine.auth.oauth2.scopes.add_issues", required: false },
+  { scope: "edit_issues" as const, label: "settings.redmine.auth.oauth2.scopes.edit_issues", required: false },
+  { scope: "edit_own_issues" as const, label: "settings.redmine.auth.oauth2.scopes.edit_own_issues", required: false },
+  { scope: "add_issue_notes" as const, label: "settings.redmine.auth.oauth2.scopes.add_issue_notes", required: false },
+  { scope: "set_notes_private" as const, label: "settings.redmine.auth.oauth2.scopes.set_notes_private", required: false },
+  { scope: "view_time_entries" as const, label: "settings.redmine.auth.oauth2.scopes.view_time_entries", required: true },
+  { scope: "log_time" as const, label: "settings.redmine.auth.oauth2.scopes.log_time", required: true },
+  { scope: "edit_own_time_entries" as const, label: "settings.redmine.auth.oauth2.scopes.edit_own_time_entries", required: false },
+  { scope: "log_time_for_other_users" as const, label: "settings.redmine.auth.oauth2.scopes.log_time_for_other_users", required: false },
 ] satisfies { scope: TOAuth2Scope; label: NonNullable<MessageDescriptor["id"]>; required: boolean }[];
 
 const RedmineServerSection = withForm({
@@ -316,15 +315,14 @@ const RedmineServerSection = withForm({
     const { formatMessage } = useIntl();
 
     const [editRedmineInstance, setEditRedmineInstance] = useState(!form.state.values.redmineURL);
-    const defaultRedmineApi = useRedmineApi();
-    const [redmineApiClient, setRedmineApiClient] = useState<RedmineApiClient | undefined>(undefined);
-    const redmineConnection = useTestRedmineConnection(redmineApiClient);
+    const redmineConnection = useTestRedmineConnection();
 
     const isSubmitted = useFormStore(form.store, (state) => state.isSubmitted);
+    const resetRedmineApiClient = useEffectEvent(() => redmineConnection.setRedmineApiClient(undefined));
     useEffect(() => {
       if (isSubmitted) {
         setEditRedmineInstance(false);
-        setRedmineApiClient(undefined);
+        resetRedmineApiClient();
       }
     }, [isSubmitted]);
 
@@ -338,21 +336,19 @@ const RedmineServerSection = withForm({
           <CardAction>
             {editRedmineInstance ? (
               <form.Subscribe
-                selector={(state) => {
-                  const { redmineURL, auth } = state.values;
-                  const urlOk = !!redmineURL && !state.errorMap.onChange?.redmineURL;
-                  return {
-                    isValid: urlOk && ((auth.method === "apiKey" && !!auth.apiKey) || (auth.method === "oauth2" && !!auth.oauth2?.clientId && !!auth.oauth2?.clientSecret)),
-                  };
-                }}
-                children={({ isValid }) => (
+                selector={(state) => ({
+                  isUrlValid: !state.errorMap.onChange?.redmineURL,
+                  isAuthValid: !Object.keys(state.errorMap.onChange || {}).some((key) => key.startsWith("redmine.auth")),
+                })}
+                children={({ isUrlValid, isAuthValid }) => (
                   <Button
                     type="button"
                     size="xs"
                     variant="outline"
-                    disabled={!isValid}
-                    onClick={() => {
-                      setRedmineApiClient(new RedmineApiClient(form.state.values.redmineURL, form.state.values.auth));
+                    disabled={!isUrlValid || !isAuthValid}
+                    onClick={async () => {
+                      await redmineConnection.redmineApiClient.clearOAuth2Tokens();
+                      redmineConnection.setRedmineApiClient(new RedmineApiClient(form.state.values.redmineURL, form.state.values.redmine.auth));
                       setEditRedmineInstance(false);
                     }}
                   >
@@ -377,14 +373,14 @@ const RedmineServerSection = withForm({
               />
 
               <form.AppField
-                name="auth.method"
+                name="redmine.auth.method"
                 children={(field) => (
                   <field.ToggleGroupField
-                    title={formatMessage({ id: "settings.redmine.auth-method" })}
+                    title={formatMessage({ id: "settings.redmine.auth.method" })}
                     required
                     items={[
-                      { value: "apiKey", label: formatMessage({ id: "settings.redmine.auth-method.api-key" }) },
-                      { value: "oauth2", label: formatMessage({ id: "settings.redmine.auth-method.oauth2" }) },
+                      { value: "apiKey", label: formatMessage({ id: "settings.redmine.auth.method.api-key" }) },
+                      { value: "oauth2", label: formatMessage({ id: "settings.redmine.auth.method.oauth2" }) },
                     ]}
                   />
                 )}
@@ -392,55 +388,61 @@ const RedmineServerSection = withForm({
 
               <form.Subscribe
                 selector={(state) => ({
-                  method: state.values.auth.method,
+                  isUrlValid: !state.errorMap.onChange?.redmineURL,
                   redmineURL: state.values.redmineURL,
-                  urlError: state.errorMap.onChange?.redmineURL,
+                  method: state.values.redmine.auth.method,
                   oauth2Name: browser.runtime.getManifest().name,
                   oauth2RedirectURL: browser.identity.getRedirectURL(),
                 })}
-                children={({ method, redmineURL, urlError, oauth2Name, oauth2RedirectURL }) =>
-                  method === "apiKey" ? (
-                    <form.AppField
-                      name="auth.apiKey"
-                      children={(field) => (
-                        <field.TextField type="password" title={formatMessage({ id: "settings.redmine.api-key" })} placeholder={formatMessage({ id: "settings.redmine.api-key" })} required>
-                          {!field.state.value && redmineURL && !urlError && (
-                            <FieldDescription className="font-semibold">
-                              {formatMessage(
-                                { id: "settings.redmine.api-key.hint" },
-                                {
-                                  link: (children) => (
-                                    <a href={`${redmineURL}/my/account`} target="_blank" tabIndex={-1} rel="noreferrer" className="font-bold">
-                                      {children}
-                                    </a>
-                                  ),
-                                }
-                              )}
-                            </FieldDescription>
-                          )}
-                        </field.TextField>
-                      )}
-                    />
-                  ) : (
-                    <>
-                      {redmineURL && !urlError && (
+                children={({ isUrlValid, redmineURL, method, oauth2Name, oauth2RedirectURL }) => (
+                  <>
+                    {method === "apiKey" && (
+                      <form.AppField
+                        name="redmine.auth.apiKey"
+                        children={(field) => (
+                          <field.TextField type="password" title={formatMessage({ id: "settings.redmine.auth.api-key" })} placeholder={formatMessage({ id: "settings.redmine.auth.api-key" })} required>
+                            {isUrlValid && (
+                              <FieldDescription className="font-semibold">
+                                {formatMessage(
+                                  { id: "settings.redmine.auth.api-key.hint" },
+                                  {
+                                    link: (children) => (
+                                      <a href={`${redmineURL}/my/account`} target="_blank" tabIndex={-1} rel="noreferrer" className="font-bold">
+                                        {children}
+                                      </a>
+                                    ),
+                                  }
+                                )}
+                              </FieldDescription>
+                            )}
+                          </field.TextField>
+                        )}
+                      />
+                    )}
+
+                    {method === "oauth2" && (
+                      <>
                         <Item variant="outline">
                           <ItemContent>
-                            <ItemTitle>{formatMessage({ id: "settings.redmine.oauth2.setup" })}</ItemTitle>
+                            <ItemTitle>{formatMessage({ id: "settings.redmine.auth.oauth2.setup" })}</ItemTitle>
                             <ItemDescription className="line-clamp-none">
                               {formatMessage(
-                                { id: "settings.redmine.oauth2.setup.description" },
+                                { id: "settings.redmine.auth.oauth2.setup.description" },
                                 {
-                                  link: (children) => (
-                                    <a href={`${redmineURL}/oauth/applications/new`} target="_blank" tabIndex={-1} rel="noreferrer">
-                                      {children}
-                                    </a>
-                                  ),
+                                  link: (children) =>
+                                    isUrlValid ? (
+                                      <a href={`${redmineURL}/oauth/applications/new`} target="_blank" tabIndex={-1} rel="noreferrer">
+                                        {children}
+                                      </a>
+                                    ) : (
+                                      children
+                                    ),
+                                  strong: (children) => <strong>{children}</strong>,
                                 }
                               )}
                             </ItemDescription>
                             <Field orientation="horizontal">
-                              <FieldLabel className="w-34 truncate">{formatMessage({ id: "settings.redmine.oauth2.setup.application-name" })}</FieldLabel>
+                              <FieldLabel className="w-34 truncate">{formatMessage({ id: "settings.redmine.auth.oauth2.setup.application-name" })}</FieldLabel>
                               <InputGroup>
                                 <InputGroupInput readOnly value={oauth2Name} />
                                 <InputGroupAddon align="inline-end">
@@ -451,7 +453,7 @@ const RedmineServerSection = withForm({
                               </InputGroup>
                             </Field>
                             <Field orientation="horizontal">
-                              <FieldLabel className="w-34 truncate">{formatMessage({ id: "settings.redmine.oauth2.setup.redirect-uri" })}</FieldLabel>
+                              <FieldLabel className="w-34 truncate">{formatMessage({ id: "settings.redmine.auth.oauth2.setup.redirect-uri" })}</FieldLabel>
                               <InputGroup>
                                 <InputGroupInput readOnly value={oauth2RedirectURL} />
                                 <InputGroupAddon align="inline-end">
@@ -463,42 +465,51 @@ const RedmineServerSection = withForm({
                             </Field>
                           </ItemContent>
                         </Item>
-                      )}
-                      <form.AppField
-                        name="auth.oauth2.clientId"
-                        children={(field) => (
-                          <field.TextField title={formatMessage({ id: "settings.redmine.oauth2.client-id" })} placeholder={formatMessage({ id: "settings.redmine.oauth2.client-id" })} required />
-                        )}
-                      />
-                      <form.AppField
-                        name="auth.oauth2.clientSecret"
-                        children={(field) => (
-                          <field.TextField
-                            type="password"
-                            title={formatMessage({ id: "settings.redmine.oauth2.client-secret" })}
-                            placeholder={formatMessage({ id: "settings.redmine.oauth2.client-secret" })}
-                            required
-                          />
-                        )}
-                      />
 
-                      <FieldSet>
-                        <FieldLegend>
-                          <span className="inline-flex gap-0.5">
-                            {formatMessage({ id: "settings.redmine.oauth2.scopes" })}
-                            <AsteriskIcon className="size-3.5 text-red-600" />
-                          </span>
-                        </FieldLegend>
-                        <FieldDescription>{formatMessage({ id: "settings.redmine.oauth2.scopes.description" })}</FieldDescription>
-                        <FieldGroup data-slot="checkbox-group">
-                          {OAUTH2_SCOPES.map(({ scope, label, required }) => (
-                            <form.AppField key={scope} name={`auth.oauth2.scopes.${scope}`} children={(field) => <field.CheckboxField title={formatMessage({ id: label })} disabled={required} />} />
-                          ))}
-                        </FieldGroup>
-                      </FieldSet>
-                    </>
-                  )
-                }
+                        <form.AppField
+                          name="redmine.auth.oauth2.clientId"
+                          children={(field) => (
+                            <field.TextField
+                              title={formatMessage({ id: "settings.redmine.auth.oauth2.client-id" })}
+                              placeholder={formatMessage({ id: "settings.redmine.auth.oauth2.client-id" })}
+                              required
+                            />
+                          )}
+                        />
+                        <form.AppField
+                          name="redmine.auth.oauth2.clientSecret"
+                          children={(field) => (
+                            <field.TextField
+                              type="password"
+                              title={formatMessage({ id: "settings.redmine.auth.oauth2.client-secret" })}
+                              placeholder={formatMessage({ id: "settings.redmine.auth.oauth2.client-secret" })}
+                              required
+                            />
+                          )}
+                        />
+
+                        <FieldSet>
+                          <FieldLegend>
+                            <span className="inline-flex gap-0.5">
+                              {formatMessage({ id: "settings.redmine.auth.oauth2.scopes" })}
+                              <AsteriskIcon className="size-3.5 text-red-600" />
+                            </span>
+                          </FieldLegend>
+                          <FieldDescription>{formatMessage({ id: "settings.redmine.auth.oauth2.scopes.description" })}</FieldDescription>
+                          <FieldGroup data-slot="checkbox-group">
+                            {OAUTH2_SCOPES.map(({ scope, label, required }) => (
+                              <form.AppField
+                                key={scope}
+                                name={`redmine.auth.oauth2.scopes.${scope}`}
+                                children={(field) => <field.CheckboxField title={formatMessage({ id: label })} disabled={required} />}
+                              />
+                            ))}
+                          </FieldGroup>
+                        </FieldSet>
+                      </>
+                    )}
+                  </>
+                )}
               />
             </FieldGroup>
           ) : (
@@ -525,19 +536,19 @@ const RedmineServerSection = withForm({
                       {redmineConnection.error && (
                         <>
                           <ItemDescription className="text-destructive/80">{redmineConnection.error.message}</ItemDescription>
-                          {redmineConnection.error instanceof RedmineAuthenticationError && form.state.values.auth.method === "oauth2" && (
+                          {redmineConnection.error instanceof RedmineAuthenticationError && form.state.values.redmine.auth.method === "oauth2" && (
                             <Button
                               variant="outline"
                               onClick={async () => {
                                 try {
-                                  await (redmineApiClient ?? defaultRedmineApi).startOAuth2Authorization();
+                                  await redmineConnection.redmineApiClient.startOAuth2Authorization();
+                                  await redmineConnection.refresh();
                                 } catch (error) {
-                                  toast.error(formatMessage({ id: "settings.redmine.oauth2.authorization-failed" }, { error: getErrorMessage(error) }));
+                                  toast.error(formatMessage({ id: "settings.redmine.auth.oauth2.authorization-failed" }, { error: getErrorMessage(error) }));
                                 }
-                                setRedmineApiClient(new RedmineApiClient(form.state.values.redmineURL, form.state.values.auth));
                               }}
                             >
-                              {formatMessage({ id: "settings.redmine.oauth2.authorize" })}
+                              {formatMessage({ id: "settings.redmine.auth.oauth2.authorize" })}
                             </Button>
                           )}
                         </>
