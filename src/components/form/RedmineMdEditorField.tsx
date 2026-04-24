@@ -209,6 +209,9 @@ export const RedmineMdEditorField = ({ title, required, className, attachments, 
           }
         }}
         previewOptions={{
+          /**
+           * Transform attachment or upload filename to actual preview URL
+           */
           urlTransform: (url) => {
             if (!url.startsWith("http")) {
               const attachment = attachments?.find((att) => att.filename === url);
@@ -222,6 +225,26 @@ export const RedmineMdEditorField = ({ title, required, className, attachments, 
               }
             }
             return url;
+          },
+          /**
+           * Transform issue references like #123 or ##123 to links to the corresponding Redmine issue
+           */
+          rehypeRewrite: (node, _i, parent) => {
+            if (node.type !== "text" || !parent || (parent.type === "element" && parent.tagName === "a")) return;
+            const parts = node.value.split(/((?:^|(?<=\s))##?\d+(?=$|[\s,.\-!]))/);
+            if (parts.length === 1) return;
+            parent.children = parts.map((part) => {
+              const match = part.match(/^##?(\d+)$/);
+              if (match) {
+                return {
+                  type: "element",
+                  tagName: "a",
+                  properties: { href: `${settings.redmineURL}/issues/${match[1]}`, target: "_blank" },
+                  children: [{ type: "text", value: part }],
+                } as const;
+              }
+              return { type: "text", value: part } as const;
+            });
           },
         }}
       />
