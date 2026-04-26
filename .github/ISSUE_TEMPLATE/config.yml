@@ -1,8 +1,9 @@
+---
 blank_issues_enabled: false
 contact_links:
-  - name: Feature request / Ideas
+  - name: ✨ Feature request
     url: https://github.com/CrawlerCode/redmine-time-tracking/discussions/new?category=feature-request-ideas
-    about: Share ideas for new features
-  - name: Ask a question
+    about: Discuss early ideas and product direction
+  - name: ❓ Ask a question
     url: https://github.com/CrawlerCode/redmine-time-tracking/discussions/new?category=q-a
-    about: Ask questions
+    about: Ask usage questions and get help

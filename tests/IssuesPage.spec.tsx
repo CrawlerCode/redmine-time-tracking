@@ -1,75 +1,105 @@
-import { test } from "../fixtures/chromeExtension";
-import { createScreenshot } from "../screenshots/screenshot";
+import { expect, test } from "./fixtures/extension";
 
-test("Start timer", async ({ issuesPage: page, locale, colorScheme }) => {
-  // Wait for the first issue to be rendered
-  await page.waitForSelector("[role=listitem][data-type='issue']");
+test("Issues page", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
 
-  // Start one of the first 3 timers
-  const issues = await page.$$("[role=listitem][data-type='issue']");
-  const issue = issues[Math.min(Math.floor(Math.random() * 3), issues.length - 1)];
-  await (await issue.$("[data-type='start-timer']"))?.click();
-
-  // Wait random time
-  await page.waitForTimeout(Math.floor(Math.random() * 1000 * 5));
-
-  // Take a screenshot
-  createScreenshot("issues", page, locale!, colorScheme!);
+  await expect(page).toHaveScreenshot();
 });
 
-test("Search by text", async ({ issuesPage: page, locale, colorScheme }) => {
-  // Wait for the first issue to be rendered
-  await page.waitForSelector("[role=listitem][data-type='issue']");
+test("Start timer", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
 
-  // Activate search
-  await page.keyboard.down("Control");
-  await page.keyboard.press("KeyF");
-  await page.keyboard.up("Control");
+  await issuesPage.triggerTimerAction(0, "start");
 
-  // Search for "dynamic"
-  await page.fill("input[type=search]", "dynamic");
+  await page.clock.fastForward("01:33:07");
+  await page.waitForTimeout(100);
 
-  // Wait for the first issue to be rendered
-  await page.waitForSelector("[role=listitem][data-type='issue']");
-
-  // Take a screenshot
-  createScreenshot("issues-search", page, locale!, colorScheme!);
+  await expect(page).toHaveScreenshot();
 });
 
-test("Add spent time", async ({ issuesPage: page, locale, colorScheme }) => {
-  // Click on the first issue done-timer button to add spent time
-  await page.click('[role="button"][data-type="done-timer"]');
+test("Pause timer", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
 
-  // Wait for modal
-  await page.waitForSelector("role=dialog");
+  await issuesPage.triggerTimerAction(2, "start");
 
-  // Fill form
-  await page.fill('input[name="hours"]', (1 + Math.random() * 3).toFixed(2));
-  await page.fill('input[name="comments"]', "Added new feature");
+  await page.clock.fastForward("42:00");
 
-  // Focus on submit button
-  await page.focus('button[type="submit"]');
+  await issuesPage.triggerTimerAction(2, "pause");
 
-  // Take a screenshot
-  createScreenshot("issues-add-spent-time", page, locale!, colorScheme!);
-
-  // Submit form
-  await page.click('button[type="submit"]');
-
-  // Wait for modal to close
-  await page.waitForSelector("role=dialog", { state: "detached" });
+  await expect(page).toHaveScreenshot();
 });
 
-test("Open issue context menu", async ({ issuesPage: page, locale, colorScheme }) => {
-  // Open context menu on the first issue
-  await page.click("[role=listitem][data-type='issue']", {
-    button: "right",
-    position: { x: 80, y: 15 },
-  });
+test("Search issues", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
 
-  // Wait for context menu
-  await page.waitForSelector("role=menu");
+  await issuesPage.searchIssues("account");
 
-  // Take a screenshot
-  createScreenshot("issues-context-menu", page, locale!, colorScheme!);
+  await expect(page).toHaveScreenshot();
+});
+
+test("Add spent time", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
+
+  await issuesPage.triggerTimerAction(0, "done");
+
+  await issuesPage.fillSpentTimeForm();
+
+  await expect(page).toHaveScreenshot();
+
+  //await page.click('button[type="submit"]');
+  //await page.waitForSelector("[role=dialog]", { state: "detached" });
+});
+
+test("Open issue context menu", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
+
+  await page.click("[role=listitem][data-type='issue']", { button: "right", position: { x: 70, y: 20 } });
+
+  await page.waitForSelector("[data-slot=context-menu-content]", { state: "visible" });
+
+  await expect(page).toHaveScreenshot();
+});
+
+test("Open filter", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
+
+  // Open filter popover
+  await page.click('[data-slot="popover-trigger"]');
+  await page.waitForSelector('[data-slot="popover-content"]', { state: "visible" });
+
+  // Select first project
+  await page.click('[data-slot="combobox-chips"]');
+  await page.click('[role="option"][data-slot="combobox-item"]');
+  await page.keyboard.press("Escape");
+  await page.waitForSelector('[data-slot="combobox-list"]', { state: "detached" });
+
+  await expect(page).toHaveScreenshot();
+});
+
+test("Create issue", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
+
+  await page.click("button[data-action='create-issue']");
+  await page.waitForSelector("[role=dialog]");
+
+  await issuesPage.fillIssueForm();
+
+  await issuesPage.dismissAlertAndScrollDialogToTop();
+
+  await expect(page).toHaveScreenshot();
+});
+
+test("Edit issue", async ({ page, issuesPage }) => {
+  await issuesPage.waitForIssuesToLoad();
+
+  // Open context menu and click "Edit"
+  await page.click("[role=listitem][data-type='issue']", { button: "right", position: { x: 70, y: 20 } });
+  await page.waitForSelector("[data-slot=context-menu-content]", { state: "visible" });
+  await page.locator("[data-slot=context-menu-content] [data-slot=context-menu-item]").nth(2).click();
+
+  await page.waitForSelector("[role=dialog]");
+
+  await issuesPage.dismissAlertAndScrollDialogToTop();
+
+  await expect(page).toHaveScreenshot();
 });

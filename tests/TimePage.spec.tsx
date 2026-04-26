@@ -1,10 +1,16 @@
-import { test } from "../fixtures/chromeExtension";
-import { createScreenshot } from "../screenshots/screenshot";
+import { expect, test } from "./fixtures/extension";
 
-test("Render page", async ({ timePage: page, locale, colorScheme }) => {
-  // Wait for the first time entry to be rendered
-  await page.waitForSelector("[data-type='time-entry']");
+test("Time page", async ({ page, timePage }) => {
+  await timePage.waitForTimeEntriesToLoad();
 
-  // Take a screenshot
-  createScreenshot("time", page, locale!, colorScheme!);
+  await expect(page).toHaveScreenshot();
+});
+
+test("Open time entry context menu", async ({ page, timePage }) => {
+  await timePage.waitForTimeEntriesToLoad();
+
+  await page.click("[data-type='time-entry']", { button: "right" });
+  await page.waitForSelector("[data-slot=context-menu-content]", { state: "visible" });
+
+  await expect(page).toHaveScreenshot();
 });

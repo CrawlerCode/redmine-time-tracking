@@ -1,79 +1,187 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+:root {
+  --background: oklch(98.5% 0.005 255deg);
+  --foreground: oklch(25% 0.015 260deg);
+  --card: oklch(100% 0 0deg);
+  --card-foreground: oklch(25% 0.015 260deg);
+  --popover: oklch(100% 0 0deg);
+  --popover-foreground: oklch(25% 0.015 260deg);
+  --primary: oklch(62.31% 0.188 259.8145deg);
+  --primary-foreground: oklch(100% 0 0deg);
+  --secondary: oklch(96.7% 0.0029 264.5419deg);
+  --secondary-foreground: oklch(44.61% 0.0263 256.8018deg);
+  --muted: oklch(93.5% 0.006 255deg);
+  --muted-foreground: oklch(52% 0.025 260deg);
+  --accent: oklch(95.14% 0.025 236.8242deg);
+  --accent-foreground: oklch(37.91% 0.1378 265.5222deg);
+  --destructive: oklch(63.68% 0.2078 25.3313deg);
+  --destructive-foreground: oklch(100% 0 0deg);
+  --border: oklch(90% 0.01 260deg);
+  --input: oklch(90% 0.01 260deg);
+  --ring: oklch(62.31% 0.188 259.8145deg);
+  --chart-1: oklch(62.31% 0.188 259.8145deg);
+  --chart-2: oklch(54.61% 0.2152 262.8809deg);
+  --chart-3: oklch(48.82% 0.2172 264.3763deg);
+  --chart-4: oklch(42.44% 0.1809 265.6377deg);
+  --chart-5: oklch(37.91% 0.1378 265.5222deg);
+  --sidebar: oklch(98.46% 0.0017 247.8389deg);
+  --sidebar-foreground: oklch(32.11% 0 0deg);
+  --sidebar-primary: oklch(62.31% 0.188 259.8145deg);
+  --sidebar-primary-foreground: oklch(100% 0 0deg);
+  --sidebar-accent: oklch(95.14% 0.025 236.8242deg);
+  --sidebar-accent-foreground: oklch(37.91% 0.1378 265.5222deg);
+  --sidebar-border: oklch(92.76% 0.0058 264.5313deg);
+  --sidebar-ring: oklch(62.31% 0.188 259.8145deg);
+  --priority-lowest-bg: #add7f3;
+  --priority-lowest-text: #559;
+  --priority-medium-high-bg: #fcc;
+  --priority-medium-high-text: #900;
+  --priority-high-bg: #ffb4b4;
+  --priority-high-text: #900;
+  --font-sans: inter, sans-serif;
+  --font-serif: source serif 4, serif;
+  --font-mono: jetbrains mono, monospace;
+  --radius: 0.6rem;
+  --spacing: 0.225rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: oklch(20.46% 0 0deg);
+    --foreground: oklch(92.19% 0 0deg);
+    --card: oklch(24.5% 0 0deg);
+    --card-foreground: oklch(92.19% 0 0deg);
+    --popover: oklch(23.75% 0 0deg);
+    --popover-foreground: oklch(92.19% 0 0deg);
+    --primary: oklch(62.31% 0.188 259.8145deg);
+    --primary-foreground: oklch(100% 0 0deg);
+    --secondary: oklch(26.86% 0 0deg);
+    --secondary-foreground: oklch(92.19% 0 0deg);
+    --muted: oklch(30% 0 0deg);
+    --muted-foreground: oklch(71.55% 0 0deg);
+    --accent: oklch(37.91% 0.1378 265.5222deg);
+    --accent-foreground: oklch(88.23% 0.0571 254.1284deg);
+    --destructive: oklch(63.68% 0.2078 25.3313deg);
+    --destructive-foreground: oklch(100% 0 0deg);
+    --border: oklch(37.15% 0 0deg);
+    --input: oklch(37.15% 0 0deg);
+    --ring: oklch(62.31% 0.188 259.8145deg);
+    --chart-1: oklch(71.37% 0.1434 254.624deg);
+    --chart-2: oklch(62.31% 0.188 259.8145deg);
+    --chart-3: oklch(54.61% 0.2152 262.8809deg);
+    --chart-4: oklch(48.82% 0.2172 264.3763deg);
+    --chart-5: oklch(42.44% 0.1809 265.6377deg);
+    --sidebar: oklch(20.46% 0 0deg);
+    --sidebar-foreground: oklch(92.19% 0 0deg);
+    --sidebar-primary: oklch(62.31% 0.188 259.8145deg);
+    --sidebar-primary-foreground: oklch(100% 0 0deg);
+    --sidebar-accent: oklch(37.91% 0.1378 265.5222deg);
+    --sidebar-accent-foreground: oklch(88.23% 0.0571 254.1284deg);
+    --sidebar-border: oklch(37.15% 0 0deg);
+    --sidebar-ring: oklch(62.31% 0.188 259.8145deg);
+    --priority-lowest-bg: oklch(59.63% 0.1977 266.62deg / 40%);
+    --priority-lowest-text: #9393ed;
+    --priority-medium-high-bg: oklch(71.32% 0.1731 22.48deg / 40%);
+    --priority-medium-high-text: #fa7070;
+    --priority-high-bg: oklch(67.63% 0.2115 24.81deg / 40%);
+    --priority-high-text: #fa7070;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-priority-lowest-bg: var(--priority-lowest-bg);
+  --color-priority-lowest-text: var(--priority-lowest-text);
+  --color-priority-medium-high-bg: var(--priority-medium-high-bg);
+  --color-priority-medium-high-text: var(--priority-medium-high-text);
+  --color-priority-high-bg: var(--priority-high-bg);
+  --color-priority-high-text: var(--priority-high-text);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* stylelint-disable nesting-selector-no-missing-scoping-root */
+@utility appearance-none {
+  &input[type="number"]::-webkit-inner-spin-button {
+    appearance: none;
+  }
+
+  &input[type="number"]::-webkit-outer-spin-button {
+    appearance: none;
+  }
+
+  &input[type="number"] {
+    appearance: textfield;
+  }
+
+  &input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    cursor: pointer;
+    width: 2px;
+  }
+
+  &input[type="range"]::-moz-range-thumb {
+    cursor: pointer;
+    width: 2px;
+  }
+}
+/* stylelint-enable nesting-selector-no-missing-scoping-root */
 
 @layer base {
-  :root,
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body,
   :host {
-    --color-primary: theme("colors.blue.800");
-    --color-primary-hover: theme("colors.blue.700");
-    --color-primary-disabled: theme("colors.blue.400");
-    --color-primary-focus: theme("colors.blue.400");
-
-    --color-background: theme("colors.white");
-    --color-background-hover: theme("colors.gray.100");
-    --color-background-inner: theme("colors.gray.200");
-
-    --color-text: theme("colors.gray.900");
-
-    --color-text-disabled: theme("colors.gray.300");
-
-    --color-field-bg: theme("colors.gray.100");
-    --color-field-inner: theme("colors.gray.200");
-    --color-field-border: theme("colors.gray.300");
-    --color-field-placeholder: theme("colors.gray.500");
-    --color-field-disabled: theme("colors.gray.200");
-  }
-  @media (prefers-color-scheme: dark) {
-    :root,
-    :host {
-      --color-primary: theme("colors.blue.700");
-      --color-primary-hover: theme("colors.blue.800");
-      --color-primary-disabled: theme("colors.blue.500");
-      --color-primary-focus: theme("colors.blue.800");
-
-      --color-background: theme("colors.dark.800");
-      --color-background-hover: theme("colors.dark.700");
-      --color-background-inner: theme("colors.dark.600");
-
-      --color-text: theme("colors.white");
-      --color-text-disabled: theme("colors.gray.500");
-
-      --color-field-bg: theme("colors.dark.900");
-      --color-field-inner: theme("colors.dark.800");
-      --color-field-border: theme("colors.dark.600");
-      --color-field-placeholder: theme("colors.gray.500");
-      --color-field-disabled: theme("colors.dark.700");
-    }
-  }
-}
-
-@layer utilities {
-  input[type="number"].appearance-none::-webkit-inner-spin-button,
-  input[type="number"].appearance-none::-webkit-outer-spin-button {
-    appearance: none;
-  }
-  input[type="number"].appearance-none {
-    -moz-appearance: textfield;
+    @apply text-foreground;
   }
 
-  input[name="done_ratio"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    cursor: pointer;
-    width: 2px;
+  ::-webkit-scrollbar {
+    width: 5px;
   }
-  input[name="done_ratio"]::-moz-range-thumb {
-    cursor: pointer;
-    width: 2px;
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border-radius: 3px;
   }
-}
-
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-primary);
-  border-radius: 3px;
 }

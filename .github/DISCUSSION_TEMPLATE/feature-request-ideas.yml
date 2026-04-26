@@ -1,7 +1,32 @@
+---
+labels: ["enhancement"]
 body:
-  - type: textarea
+  - type: markdown
     attributes:
-      label: Describe the feature you'd like
-      description: A clear and concise description of what you want to happen
+      value: |
+        Thanks for sharing an idea 🙌
+        Clear context helps me evaluate and prioritize requests faster.
+  - type: textarea
+    id: problem
+    attributes:
+      label: "🤔 Problem to solve"
+      description: What problem or frustration are you trying to solve?
+      placeholder: I often need to...
     validations:
       required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: "💡 Proposed solution"
+      description: What would you like to happen?
+      placeholder: Add an option to...
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: "📎 Additional context"
+      description: Add mockups, screenshots, links, or examples.
+      placeholder: Any extra context...
+    validations:
+      required: false

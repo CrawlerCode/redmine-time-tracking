@@ -1,0 +1,42 @@
+---
+name: Lint
+
+on:
+  pull_request: null
+
+permissions: {}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      statuses: write
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: super-linter
+        uses: super-linter/super-linter/slim@v8.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IGNORE_GITIGNORED_FILES: true
+          STRIP_DEFAULT_WORKSPACE_FOR_REGEX: true
+          FILTER_REGEX_EXCLUDE: ^(CHANGELOG\.md|pnpm-lock\.yaml)$
+          VALIDATE_BIOME_FORMAT: false # Prettier is used instead
+          VALIDATE_BIOME_LINT: false # Prettier is used instead
+          VALIDATE_JSCPD: false # TODO: Enable this linter in the future to detect code duplication

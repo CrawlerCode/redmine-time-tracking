@@ -1,0 +1,46 @@
+---
+name: Publish Pre-Release
+
+on:
+  release:
+    types:
+      - prereleased
+
+permissions: {}
+
+jobs:
+  publish-chrome-pre-release:
+    name: Publish Pre-Release to Chrome Web Store
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build:chrome:pre-release
+
+      - run: gh release upload "${RELEASE_TAG}" "$(ls .output/*-chrome.zip)"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+
+      - run: |
+          pnpm wxt submit \
+            --chrome-zip .output/*-chrome.zip
+        env:
+          CHROME_EXTENSION_ID: adgcdimdkkaddeopcabokepmaihfhklb
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}

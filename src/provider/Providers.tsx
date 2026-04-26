@@ -1,21 +1,24 @@
-import { ReactNode } from "react";
-import { HashRouter } from "react-router-dom";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { PropsWithChildren } from "react";
 import IntlProvider from "./IntlProvider";
 import QueryClientProvider from "./QueryClientProvider";
 import RedmineApiProvider from "./RedmineApiProvider";
-import SettingsProvider from "./SettingsProvider";
+import { SettingsProvider } from "./SettingsProvider";
+import { TimerApiProvider } from "./TimerApiProvider";
 
-const Providers = ({ children }: { children: ReactNode }) => {
+const Providers = ({ children }: PropsWithChildren) => {
   return (
-    <HashRouter>
+    <QueryClientProvider>
       <SettingsProvider>
         <RedmineApiProvider>
-          <QueryClientProvider>
-            <IntlProvider>{children}</IntlProvider>
-          </QueryClientProvider>
+          <IntlProvider>
+            <TimerApiProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </TimerApiProvider>
+          </IntlProvider>
         </RedmineApiProvider>
       </SettingsProvider>
-    </HashRouter>
+    </QueryClientProvider>
   );
 };
 

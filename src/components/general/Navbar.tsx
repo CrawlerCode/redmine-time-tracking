@@ -1,6 +1,6 @@
-import clsx from "clsx";
+import { Link, useLocation } from "@tanstack/react-router";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "../ui/navigation-menu";
 
 type NavItem = {
   href: string;
@@ -16,26 +16,18 @@ const Navbar = ({ navigation }: PropTypes) => {
   const location = useLocation();
 
   return (
-    <nav className="fixed top-0 w-full border-b-2 border-primary bg-background p-1">
-      <ul className="-mb-px flex flex-wrap gap-x-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
+    <NavigationMenu className="border-primary max-w-screen border-b p-1.5">
+      <NavigationMenuList className="justify-start">
         {navigation.map((item) => (
-          <li key={item.href}>
-            <Link
-              to={item.href}
-              className={clsx(
-                "inline-flex items-center gap-x-1 rounded-t-lg p-2",
-                location.pathname === item.href ? "text-primary" : "hover:text-gray-600 dark:hover:text-gray-300",
-                "select-none focus:outline-none"
-              )}
-              tabIndex={-1}
-            >
+          <NavigationMenuItem key={item.href}>
+            <NavigationMenuLink render={<Link to={item.href} />} data-active={location.pathname === item.href}>
               {item.icon}
-              {item.name}
-            </Link>
-          </li>
+              <span className="truncate max-[21rem]:max-w-[3rem]">{item.name}</span>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
         ))}
-      </ul>
-    </nav>
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 };
 

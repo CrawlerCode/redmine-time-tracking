@@ -1,33 +1,53 @@
 import deepmerge from "deepmerge";
 import { ReactNode, createContext, use } from "react";
-import useStorage, { getStorage } from "../hooks/useStorage";
+import { useIntl } from "react-intl";
+import { browser } from "wxt/browser";
+import { z } from "zod";
+import { getStorage, setStorage, useStorage } from "../hooks/useStorage";
+import { LANGUAGES } from "./IntlProvider";
 
-export type Settings = {
-  language: string;
-  redmineURL: string;
-  redmineApiKey: string;
-  features: {
-    autoPauseOnSwitch: boolean;
-    extendedSearch: boolean;
-    roundTimeNearestQuarterHour?: boolean;
-    roundToNearestInterval: boolean;
-    roundingInterval: number;
-    cacheComments: boolean;
-    addNotes: boolean;
-    showCurrentIssueTimer: boolean;
-  };
-  style: {
-    displaySearchAlways: boolean;
-    stickyScroll: boolean;
-    groupIssuesByVersion: boolean;
-    showIssuesPriority: boolean;
-    sortIssuesByPriority: boolean;
-    pinTrackedIssues: boolean;
-    pinActiveTabIssue: boolean;
-    showTooltips: boolean;
-    timeFormat: "decimal" | "minutes";
-  };
-};
+export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<typeof useIntl>["formatMessage"] } = {}) =>
+  z.object({
+    language: z.enum(["browser", ...LANGUAGES]),
+    redmineURL: z
+      .string(formatMessage?.({ id: "settings.redmine.url.validation.required" }))
+      .nonempty(formatMessage?.({ id: "settings.redmine.url.validation.required" }))
+      .regex(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?[\w\-/]*\/?$/, formatMessage?.({ id: "settings.redmine.url.validation.valid-url" })),
+    redmineApiKey: z.string().nonempty(formatMessage?.({ id: "settings.redmine.api-key.validation.required" })),
+    features: z.object({
+      autoPauseOnSwitch: z.boolean(),
+      roundTimeNearestQuarterHour: z.boolean().optional(), // ! Legacy
+      roundToNearestInterval: z.boolean().optional(), // ! Legacy
+      roundToInterval: z.boolean(),
+      roundingMode: z.enum(["down", "nearest", "up"]),
+      roundingInterval: z
+        .int(formatMessage?.({ id: "settings.features.rounding-interval.validation.required" }))
+        .min(1, formatMessage?.({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
+        .max(60, formatMessage?.({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
+      addNotes: z.boolean().optional(), // ! Legacy
+      cacheComments: z.boolean().optional(), // ! Legacy
+      persistentComments: z.boolean(),
+      showCurrentIssueTimer: z.boolean(),
+    }),
+    style: z.object({
+      displaySearchAlways: z.boolean(),
+      stickyScroll: z.boolean(),
+      groupIssuesByVersion: z.boolean(),
+      sortIssuesByPriority: z.boolean(),
+      showIssuesPriority: z.boolean().optional(), // ! Legacy
+      showIssuePriority: z.boolean(),
+      showIssueDoneRatio: z.boolean(),
+      showIssueStatus: z.boolean(),
+      showSessions: z.boolean(),
+      pinTrackedIssues: z.boolean(),
+      pinActiveTabIssue: z.boolean(),
+      fullscreenSidebarScrollspy: z.boolean(), // ! Experimental
+      showTooltips: z.boolean(),
+      timeFormat: z.enum(["decimal", "minutes"]),
+    }),
+  });
+
+export type Settings = z.infer<ReturnType<typeof settingsSchema>>;
 
 const defaultSettings: Settings = {
   language: "browser",
@@ -35,59 +55,92 @@ const defaultSettings: Settings = {
   redmineApiKey: "",
   features: {
     autoPauseOnSwitch: true,
-    extendedSearch: true,
-    roundToNearestInterval: false,
+    roundToInterval: false,
+    roundingMode: "nearest",
     roundingInterval: 15,
-    cacheComments: true,
-    addNotes: false,
+    persistentComments: true,
     showCurrentIssueTimer: true,
   },
   style: {
     displaySearchAlways: false,
     stickyScroll: true,
     groupIssuesByVersion: true,
-    showIssuesPriority: true,
     sortIssuesByPriority: true,
+    showIssuePriority: true,
+    showIssueDoneRatio: true,
+    showIssueStatus: true,
+    showSessions: true,
     pinTrackedIssues: false,
     pinActiveTabIssue: true,
+    fullscreenSidebarScrollspy: false,
     showTooltips: true,
     timeFormat: "decimal",
   },
 };
 
+export const runSettingsMigration = async () => {
+  const settingsData = await getStorage<Partial<Settings>>("settings", defaultSettings);
+  const settings = deepmerge<Settings>(defaultSettings, settingsData);
+
+  if (settings.features.roundTimeNearestQuarterHour === true) {
+    settings.features.roundToInterval = true;
+    settings.features.roundingMode = "nearest";
+    settings.features.roundingInterval = 15;
+    settings.features.roundTimeNearestQuarterHour = undefined;
+  }
+
+  if (settings.features.roundToNearestInterval === true) {
+    settings.features.roundToInterval = true;
+    settings.features.roundingMode = "nearest";
+    settings.features.roundToNearestInterval = undefined;
+  }
+
+  if (typeof settings.features.cacheComments === "boolean") {
+    settings.features.persistentComments = settings.features.cacheComments;
+    settings.features.cacheComments = undefined;
+  }
+
+  if (typeof settings.features.addNotes === "boolean") {
+    settings.features.addNotes = undefined;
+  }
+
+  if (typeof settings.style.showIssuesPriority === "boolean") {
+    settings.style.showIssuePriority = settings.style.showIssuesPriority;
+    settings.style.showIssuesPriority = undefined;
+  }
+
+  if (JSON.stringify(settings) !== JSON.stringify(settingsData)) {
+    await setStorage("settings", settings);
+  }
+};
+
 export const getSettings = async () => {
-  const data = await getStorage<Partial<Settings>>("settings", defaultSettings);
-  return deepmerge<Settings>(defaultSettings, data);
+  const settingsData = await getStorage<Partial<Settings>>("settings", defaultSettings);
+  return deepmerge<Settings>(defaultSettings, settingsData);
 };
 
 const SettingsContext = createContext({
   settings: defaultSettings,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setSettings: (_data: Settings) => undefined,
+  setSettings: (_data: Settings) => Promise.resolve(),
 });
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-  const { data, setData } = useStorage<Partial<Settings>>("settings", defaultSettings);
+  const { isPending, data: settingsData, setData: setSettingsData } = useStorage<Partial<Settings>>("settings", defaultSettings);
+  const settings = deepmerge<Settings>(defaultSettings, settingsData);
 
-  // Migrate old settings TODO: Remove in future
-  if (data?.features?.roundTimeNearestQuarterHour === true) {
-    data.features.roundTimeNearestQuarterHour = undefined;
-    data.features.roundToNearestInterval = true;
-    data.features.roundingInterval = 15;
-    setData(data);
-  }
+  if (isPending) return null;
 
   return (
     <SettingsContext
       value={{
-        settings: deepmerge<Settings>(defaultSettings, data),
-        setSettings: (newData: Settings) => {
-          setData(newData);
-          if (newData.redmineURL !== data.redmineURL) {
-            chrome.runtime.sendMessage("settings-changed:redmineURL");
+        settings: settings,
+        setSettings: async (newSettings: Settings) => {
+          await setSettingsData(newSettings);
+          if (newSettings.redmineURL !== settings.redmineURL) {
+            browser.runtime.sendMessage("settings-changed:redmineURL");
           }
-          if (newData.features.showCurrentIssueTimer !== data.features?.showCurrentIssueTimer) {
-            chrome.runtime.sendMessage("settings-changed:showCurrentIssueTimer");
+          if (newSettings.features.showCurrentIssueTimer !== settings.features.showCurrentIssueTimer) {
+            browser.runtime.sendMessage("settings-changed:showCurrentIssueTimer");
           }
         },
       }}
@@ -98,5 +151,3 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useSettings = () => use(SettingsContext);
-
-export default SettingsProvider;

@@ -1,0 +1,36 @@
+---
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT_RELEASE }}

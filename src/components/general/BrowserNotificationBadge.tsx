@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { browser } from "wxt/browser";
 
 type PropTypes = {
   text: string;
@@ -7,12 +8,12 @@ type PropTypes = {
 
 const BrowserNotificationBadge = ({ text, backgroundColor }: PropTypes) => {
   useEffect(() => {
-    if (!chrome.action) return; // Not available in content scripts
+    if (!browser.action) return; // Not available in content scripts
 
-    chrome.action.setBadgeText({
+    browser.action.setBadgeText({
       text: text,
     });
-    chrome.action.setBadgeBackgroundColor({ color: backgroundColor });
+    browser.action.setBadgeBackgroundColor({ color: backgroundColor });
   }, [text, backgroundColor]);
 
   return null;

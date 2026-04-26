@@ -1,7 +1,8 @@
-import { faWarning } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useStorage } from "@/hooks/useStorage";
+import { TriangleAlertIcon } from "lucide-react";
 import { FormattedMessage } from "react-intl";
-import useStorage from "../../hooks/useStorage";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Button } from "../ui/button";
 
 type PropTypes = {
   name: string;
@@ -9,18 +10,21 @@ type PropTypes = {
 };
 
 function DismissibleWarning({ name, children }: PropTypes) {
-  const { data: hideWarning, setData, isLoading } = useStorage<boolean>(`hideWarning.${name}`, false);
+  const { isPending, data: hideWarning, setData } = useStorage<boolean>(`hideWarning.${name}`, false);
 
-  if (hideWarning || isLoading) return null;
+  if (isPending || hideWarning) return null;
 
   return (
-    <p className="rounded-lg border border-gray-200 p-1 dark:border-gray-700" role="alert">
-      <FontAwesomeIcon icon={faWarning} className="mr-1 text-yellow-500 dark:text-yellow-400" />
-      <span className="mr-1">{children}</span>
-      <button type="button" className="text-blue-500 underline dark:text-blue-400" onClick={() => setData(true)}>
+    <Alert>
+      <TriangleAlertIcon />
+      <AlertTitle>
+        <FormattedMessage id="dismissible-warning.title" />
+      </AlertTitle>
+      <AlertDescription>{children}</AlertDescription>
+      <Button type="button" variant="outline" size="sm" onClick={() => setData(true)} className="absolute top-1 right-1">
         <FormattedMessage id="dismissible-warning.dont-show-again" />
-      </button>
-    </p>
+      </Button>
+    </Alert>
   );
 }
 

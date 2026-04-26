@@ -1,0 +1,71 @@
+services:
+  redmine-e2e-tests:
+    container_name: redmine-e2e-tests
+    image: redmine:6
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "9999:3000"
+    volumes:
+      - ./data/e2e-tests/sqlite:/usr/src/redmine/sqlite
+      - ./themes:/usr/src/redmine/themes:ro
+
+  redmine-v6:
+    container_name: redmine-v6
+    image: redmine:6
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "3006:3000"
+    volumes:
+      - ./data/v6/files:/usr/src/redmine/files
+      - ./data/v6/sqlite:/usr/src/redmine/sqlite
+      - ./themes:/usr/src/redmine/themes:ro
+
+  redmine-v5:
+    container_name: redmine-v5
+    image: redmine:5
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "3005:3000"
+    volumes:
+      - ./data/v5/files:/usr/src/redmine/files
+      - ./data/v5/sqlite:/usr/src/redmine/sqlite
+      - ./themes:/usr/src/redmine/public/themes:ro
+
+  redmine-v4:
+    container_name: redmine-v4
+    image: redmine:4
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "3004:3000"
+    volumes:
+      - ./data/v4/files:/usr/src/redmine/files
+      - ./data/v4/sqlite:/usr/src/redmine/sqlite
+      - ./themes:/usr/src/redmine/public/themes:ro
+
+  redmine-v3:
+    container_name: redmine-v3
+    image: redmine:3
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./data/v3/files:/usr/src/redmine/files
+      - ./data/v3/sqlite:/usr/src/redmine/sqlite
+      - ./themes:/usr/src/redmine/public/themes:ro
+
+  redmine-v2:
+    container_name: redmine-v2
+    image: redmine:2
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./data/v2/files:/usr/src/redmine/files
+      - ./data/v2/sqlite:/usr/src/redmine/sqlite
+      - ./themes:/usr/src/redmine/public/themes:ro

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { browser } from "wxt/browser";
 import { useSettings } from "../provider/SettingsProvider";
 
 function useActiveRedmineTab() {
@@ -17,10 +18,9 @@ function useActiveRedmineTab() {
   useEffect(() => {
     const onActivated = () => {
       (async () => {
-        const tabs = await chrome.tabs.query({ active: true, lastFocusedWindow: true, url: `${settings.redmineURL}/*` });
+        const tabs = await browser.tabs.query({ active: true, lastFocusedWindow: true, url: `${settings.redmineURL}/*` });
         const currentTab = tabs[0];
         if (currentTab?.url) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const [_, issueId] = currentTab.url.match(new RegExp(`^${settings.redmineURL}/issues/(\\d+)(\\?.*)?(#.*)?$`)) || [];
           if (issueId) {
             setCurrentUrl({ url: currentTab.url, data: { type: "issue", id: Number(issueId) } });
@@ -37,8 +37,8 @@ function useActiveRedmineTab() {
     onActivated();
 
     // Listen to tab change
-    chrome.tabs.onActivated.addListener(onActivated);
-    return () => chrome.tabs.onActivated.removeListener(onActivated);
+    browser.tabs.onActivated.addListener(onActivated);
+    return () => browser.tabs.onActivated.removeListener(onActivated);
   }, [settings.redmineURL]);
 
   return currentUrl;

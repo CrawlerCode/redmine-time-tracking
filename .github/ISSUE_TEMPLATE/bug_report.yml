@@ -1,41 +1,58 @@
-name: Report an issue
-description: Create a report to help us improve
-labels: ["bug"]
+---
+name: "🐞 Report a bug"
+description: Help me fix bugs faster with a clear report
+labels: ["bug", "status: needs-triage"]
 body:
-  - type: checkboxes
+  - type: markdown
     attributes:
-      label: Browser
-      description: In which browser(s) did you encounter the issue?
-      options:
-        - label: Chrome
-        - label: Firefox
+      value: |
+        Thanks for reporting this 🙌
+        Please share as much detail as you can so I can reproduce the issue and ship a fix quickly.
+  - type: input
+    id: operating-system
+    attributes:
+      label: "💻 Operating system"
+      description: Which operating system are you using?
+      placeholder: Windows 11
+    validations:
+      required: false
+  - type: input
+    id: browser
+    attributes:
+      label: "🌐 Browser and version"
+      description: Which browser and version are you using?
+      placeholder: Chrome 144.0.0.0
     validations:
       required: true
   - type: input
+    id: extension-version
     attributes:
-      label: Extension version
-      description: What version of the extension are you using?
-      placeholder: 1.0.0
+      label: "🧩 Extension version"
+      description: Which extension version are you currently using?
+      placeholder: 2.0.0
     validations:
       required: true
   - type: input
+    id: redmine-version
     attributes:
-      label: Redmine version
-      description: What version of Redmine are you using?
-      placeholder: 5.1.2.stable
+      label: "🧱 Redmine version"
+      description: If known, what Redmine version are you using?
+      placeholder: 6.0.0.stable
     validations:
       required: false
   - type: textarea
+    id: bug-description
     attributes:
-      label: Describe the bug
-      description: A clear and concise description of what the bug is.
-      placeholder: A clear and concise description of what the bug is
+      label: "🐛 Bug description"
+      description: What is going wrong?
+      placeholder: Briefly describe the issue and its impact
     validations:
       required: true
   - type: textarea
+    id: steps-to-reproduce
     attributes:
-      label: To Reproduce
-      description: Steps to reproduce the behavior.
+      label: "🧪 Steps to reproduce"
+      description: Share exact steps so I can reproduce it.
       placeholder: |
         1. Go to '...'
         2. Click on '....'
@@ -44,9 +61,10 @@ body:
     validations:
       required: true
   - type: textarea
+    id: additional-context
     attributes:
-      label: Additional context / Screenshots
-      description: Add any other context about the problem here. If applicable, add screenshots to help explain your problem.
-      placeholder: Add other context here (e.g. screenshots, logs, etc.)
+      label: "📎 Additional context / screenshots"
+      description: Add anything else that may help (screenshots, logs, console errors, related links).
+      placeholder: Paste logs, screenshots, or extra details here
     validations:
       required: false
