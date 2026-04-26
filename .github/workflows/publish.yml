@@ -1,5 +1,5 @@
 ---
-name: Publish
+name: Publish Release
 
 on:
   release:
@@ -35,6 +35,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
+
       - run: |
           pnpm wxt submit \
             --chrome-zip .output/*-chrome.zip
@@ -76,6 +77,6 @@ jobs:
             --firefox-zip .output/*-firefox.zip \
             --firefox-sources-zip .output/*-sources.zip
         env:
-          FIREFOX_EXTENSION_ID: "{ea2ad5bc-e458-414d-8565-5cfe9f7cf0c2}"
+          FIREFOX_EXTENSION_ID: 2867093
           FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
           FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
