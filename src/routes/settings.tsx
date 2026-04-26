@@ -4,8 +4,9 @@ import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { Portal } from "@/components/general/Portal";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FieldDescription, FieldGroup } from "@/components/ui/field";
+import { FieldDescription, FieldGroup, FieldLegend, FieldSet } from "@/components/ui/field";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { useRedmineApi } from "@/provider/RedmineApiProvider";
 import { useStore as useFormStore } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -26,7 +27,7 @@ import {
   UserIcon,
   Wand2Icon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { useIntl } from "react-intl";
 import { toast } from "sonner";
 import { browser } from "wxt/browser";
@@ -296,9 +297,11 @@ const RedmineServerSection = withForm({
     const { formatMessage } = useIntl();
 
     const [editRedmineInstance, setEditRedmineInstance] = useState(!form.state.values.redmineURL);
+
     const [redmineApiClient, setRedmineApiClient] = useState<RedmineApiClient | undefined>(undefined);
     const redmineConnection = useTestRedmineConnection(redmineApiClient);
 
+    // Reset when form is submitted
     const isSubmitted = useFormStore(form.store, (state) => state.isSubmitted);
     useEffect(() => {
       if (isSubmitted) {
@@ -306,6 +309,18 @@ const RedmineServerSection = withForm({
         setRedmineApiClient(undefined);
       }
     }, [isSubmitted]);
+
+    // Detect Redmine configuration (e.g. text formatting) after successful connection
+    const defaultRedmineApi = useRedmineApi();
+    const detectRedmineConfig = useEffectEvent(async () => {
+      const detectedTextFormatting = await (redmineApiClient ?? defaultRedmineApi).detectTextFormatting();
+      if (detectedTextFormatting) {
+        form.setFieldValue("redmine.settings.textFormatting", detectedTextFormatting);
+      }
+    });
+    useEffect(() => {
+      if (redmineApiClient && redmineConnection.data) detectRedmineConfig();
+    }, [redmineApiClient, redmineConnection.data]);
 
     return (
       <Card size="sm">
@@ -428,6 +443,33 @@ const RedmineServerSection = withForm({
                   ) : undefined}
                 </ItemContent>
               </Item>
+              <FieldSet>
+                <FieldLegend className="flex w-full items-center justify-between gap-2">
+                  {formatMessage({ id: "settings.redmine.settings" })}
+                  <Button variant="outline" size="xs" onClick={detectRedmineConfig}>
+                    {formatMessage({ id: "settings.redmine.settings.detect" })}
+                  </Button>
+                </FieldLegend>
+                <FieldDescription>{formatMessage({ id: "settings.redmine.settings.description" })}</FieldDescription>
+                <FieldGroup>
+                  <form.AppField
+                    name="redmine.settings.textFormatting"
+                    children={(field) => (
+                      <field.ToggleGroupField
+                        title={formatMessage({ id: "settings.redmine.settings.text-formatting.title" })}
+                        required
+                        items={[
+                          { value: "none", label: formatMessage({ id: "settings.redmine.settings.text-formatting.none" }) },
+                          { value: "common_mark", label: formatMessage({ id: "settings.redmine.settings.text-formatting.common_mark" }) },
+                          { value: "textile", label: formatMessage({ id: "settings.redmine.settings.text-formatting.textile" }) },
+                        ]}
+                        orientation="horizontal"
+                        className="justify-between"
+                      />
+                    )}
+                  />
+                </FieldGroup>
+              </FieldSet>
             </ItemGroup>
           )}
         </CardContent>

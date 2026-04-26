@@ -3,8 +3,10 @@ import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser
 import { useRedmineProjectTimeEntryActivities } from "@/api/redmine/hooks/useRedmineProjectTimeEntryActivities";
 import { redmineIssuesQueries } from "@/api/redmine/queries/issues";
 import { redmineTimeEntriesQueries } from "@/api/redmine/queries/timeEntries";
+import UploadsField from "@/components/issue/form/fields/UploadsField";
 import { usePersistentComments } from "@/hooks/usePersistentComments";
 import { Timer } from "@/hooks/useTimers";
+import { markdownToTextile } from "@/utils/markdownToTextile";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { startOfDay } from "date-fns";
 import { useIntl } from "react-intl";
@@ -46,6 +48,7 @@ const createTimeEntryFormSchema = ({ formatMessage }: { formatMessage?: ReturnTy
       done_ratio: z.number().min(0).max(100),
       _add_notes: z.boolean(),
       notes: z.string().nullable(),
+      uploads: z.array(z.object({ token: z.string(), filename: z.string(), content_type: z.string().optional(), description: z.string().optional() })),
     }),
   });
 
@@ -82,6 +85,10 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
     },
   });
 
+  const uploadAttachmentMutation = useMutation({
+    mutationFn: (file: File) => redmineApi.uploadAttachment(file),
+  });
+
   const persistentComments = usePersistentComments({
     identifier: timer.id,
     enabled: settings.features.persistentComments,
@@ -99,6 +106,7 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
         done_ratio: issue.done_ratio,
         _add_notes: false,
         notes: null,
+        uploads: [],
       },
       ...initialValues,
       ...(persistentComments.isEnabled &&
@@ -114,11 +122,14 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
 
       // Update issue done_ratio and notes
       const updatedDoneRatio = updateIssue.done_ratio !== issue.done_ratio ? updateIssue.done_ratio : undefined;
-      const addNotes = updateIssue._add_notes && updateIssue.notes ? updateIssue.notes : undefined;
-      if (updatedDoneRatio !== undefined || addNotes) {
+      const notes = updateIssue._add_notes && updateIssue.notes ? updateIssue.notes : undefined;
+      if (updatedDoneRatio !== undefined || notes) {
         await updateIssueMutation.mutateAsync({
           done_ratio: updatedDoneRatio,
-          notes: addNotes,
+          ...(notes && {
+            notes: settings.redmine.settings.textFormatting === "textile" ? markdownToTextile(notes) : notes,
+          }),
+          uploads: updateIssue.uploads,
         });
       }
 
@@ -239,7 +250,26 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
                       <FormFieldset legend={formatMessage({ id: "issues.issue.field.notes" })}>
                         <FormGrid>
                           <form.AppField name="issue._add_notes" children={(field) => <field.SwitchField title={formatMessage({ id: "issues.modal.add-spent-time.add-notes" })} />} />
-                          <form.AppField name="issue.notes" children={(field) => <field.TextareaField placeholder={formatMessage({ id: "issues.issue.field.notes" })} />} />
+                          <form.AppField
+                            name="issue.notes"
+                            children={(field) => (
+                              <field.RedmineMdEditorField
+                                textareaProps={{
+                                  placeholder: formatMessage({ id: "issues.issue.field.notes" }),
+                                }}
+                                hideToolbar={settings.redmine.settings.textFormatting === "none"}
+                                uploads={form.state.values.issue.uploads}
+                                onUploadImage={async (file) => {
+                                  const attachment = await uploadAttachmentMutation.mutateAsync(file);
+                                  form.pushFieldValue("issue.uploads", attachment);
+                                  if (settings.redmine.settings.textFormatting !== "none") {
+                                    return { url: attachment.filename, alt: attachment.filename };
+                                  }
+                                }}
+                              />
+                            )}
+                          />
+                          <form.AppField name="issue.uploads" children={() => <UploadsField />} />
                         </FormGrid>
                       </FormFieldset>
                     )
