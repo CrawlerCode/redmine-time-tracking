@@ -1,3 +1,17 @@
+## [2.0.1](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0...v2.0.1) (2026-04-27)
+
+### 🩹 Fixes
+
+* **ui:** Fix broken layout shift on checkbox/switch label click ([5d12808](https://github.com/CrawlerCode/redmine-time-tracking/commit/5d12808476321d95848917cf6d3124eee04df97d))
+
+### 📦 Builds
+
+* **deps:** Update npm dependencies ([5715726](https://github.com/CrawlerCode/redmine-time-tracking/commit/5715726f8ea821e4ad5aa6637cbecfa5016c2bc8))
+
+### ⚡CI
+
+* Fix firefox publishing ([d3da423](https://github.com/CrawlerCode/redmine-time-tracking/commit/d3da4235cbb95599795ebcf8994628c3132cdefe))
+
 ## [2.0.0](https://github.com/CrawlerCode/redmine-time-tracking/compare/v1.21.2...v2.0.0) (2026-04-26)
 
 ### ⚠ BREAKING CHANGES
