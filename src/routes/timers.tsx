@@ -11,7 +11,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SquareChartGanttIcon } from "lucide-react";
 import { useDeferredValue, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
-import { useMediaQuery } from "usehooks-ts";
+import { useMediaQuery } from "@mantine/hooks";
 import TimersBadge from "../components/timer/TimersBadge";
 import useTimers from "../hooks/useTimers";
 

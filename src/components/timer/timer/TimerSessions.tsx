@@ -5,12 +5,12 @@ import { calculateActiveSessionElapsedTime } from "@/hooks/useTimers";
 import { useTimerApi } from "@/provider/TimerApiProvider";
 import { formatTimer } from "@/utils/date";
 import { randomInt } from "@/utils/random";
+import { useInterval } from "@mantine/hooks";
 import clsx from "clsx";
 import { isToday } from "date-fns";
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
-import { useInterval } from "usehooks-ts";
 import { useTimerContext } from "./TimerRoot";
 
 export const TimerSessions = () => {
@@ -66,7 +66,10 @@ const ActiveSessionElapsedTime = () => {
   const { timer } = useTimerContext();
 
   const [elapsedTime, setElapsedTime] = useState(() => calculateActiveSessionElapsedTime(timer));
-  useInterval(() => setElapsedTime(calculateActiveSessionElapsedTime(timer)), timer.activeSession ? 1000 : null);
+
+  const interval = useInterval(() => setElapsedTime(calculateActiveSessionElapsedTime(timer)), 1000);
+  const manageInterval = useEffectEvent((active: boolean) => (active ? interval.start() : interval.stop()));
+  useEffect(() => manageInterval(!!timer.activeSession), [timer.activeSession]);
 
   return formatTimer(elapsedTime);
 };

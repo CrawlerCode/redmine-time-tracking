@@ -9,7 +9,7 @@ import { createContext, PropsWithChildren, use, useEffect, useRef, useState } fr
 import { useIntl } from "react-intl";
 import { z } from "zod";
 import { TIssue, TReference } from "../../api/redmine/types";
-import useDebounce from "../../hooks/useDebounce";
+import { useDebouncedValue } from "@mantine/hooks";
 import useHotKey from "../../hooks/useHotkey";
 import { useSettings } from "../../provider/SettingsProvider";
 import { Badge } from "../ui/badge";
@@ -65,7 +65,7 @@ const IssueSearchProvider = ({ children }: PropsWithChildren) => {
 
   const [isSearchOpen, setIsSearchOpen] = useState(settings.style.displaySearchAlways);
   const [query, setQuery] = useState("");
-  const debouncedQuery = useDebounce(query, 300);
+  const [debouncedQuery] = useDebouncedValue(query, 300);
   const [inProject, setInProject] = useState<TReference | undefined>(undefined);
   const [focusTrigger, setFocusTrigger] = useState(0);
 
