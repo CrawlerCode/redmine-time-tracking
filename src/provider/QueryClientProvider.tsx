@@ -56,6 +56,7 @@ export const queryClient = new QueryClient({
           />,
           {
             description: getErrorMessage(error),
+            closeButton: true,
             duration: 1000 * 60, // 1 minute
           }
         );
@@ -69,7 +70,6 @@ export const queryClient = new QueryClient({
 
       toast.error(<FormattedMessage id="general.error.api-error" />, {
         id: "api-error",
-        dismissible: false,
         description: Object.entries(
           failedQueries.reduce((errors: Record<string, number>, q) => {
             const message = getErrorMessage(q.state.error);
@@ -90,6 +90,7 @@ export const queryClient = new QueryClient({
             });
           },
         },
+        closeButton: true,
         duration: 1000 * 60, // 1 minute
       });
     },
@@ -113,6 +114,7 @@ export const queryClient = new QueryClient({
       );
       toast.error(title, {
         description: getErrorMessage(error),
+        closeButton: true,
         duration: 1000 * 60 * 5, // 5 minutes
       });
     },
