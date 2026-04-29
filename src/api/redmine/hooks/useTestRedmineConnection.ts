@@ -1,9 +1,11 @@
 import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useRedmineApi } from "../../../provider/RedmineApiProvider";
 
-export const useTestRedmineConnection = (customRedmineApiClient?: RedmineApiClient) => {
+export const useTestRedmineConnection = () => {
   const defaultRedmineApi = useRedmineApi();
+  const [customRedmineApiClient, setRedmineApiClient] = useState<RedmineApiClient | undefined>(undefined);
   const redmineApiClient = customRedmineApiClient ?? defaultRedmineApi;
 
   const myUserQuery = useQuery({
@@ -22,5 +24,8 @@ export const useTestRedmineConnection = (customRedmineApiClient?: RedmineApiClie
     isLoading: myUserQuery.isLoading,
     isError: myUserQuery.isError,
     error: myUserQuery.error,
+    refresh: myUserQuery.refetch,
+    redmineApiClient,
+    setRedmineApiClient,
   };
 };

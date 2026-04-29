@@ -1,5 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import { redmineIssuesQueries } from "@/api/redmine/queries/issues";
+import { usePermissions } from "@/provider/PermissionsProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useIntl } from "react-intl";
 import { z } from "zod";
@@ -29,6 +30,8 @@ const AddIssueNotesModal = ({ issue, onClose, onSuccess }: PropTypes) => {
 
   const redmineApi = useRedmineApi();
   const queryClient = useQueryClient();
+
+  const { hasProjectPermission } = usePermissions();
 
   const updateIssueMutation = useMutation({
     mutationFn: (data: TUpdateIssue) => redmineApi.updateIssue(issue.id, data),
@@ -69,7 +72,9 @@ const AddIssueNotesModal = ({ issue, onClose, onSuccess }: PropTypes) => {
                 )}
               />
 
-              <form.AppField name="private_notes" children={(field) => <field.SwitchField title={formatMessage({ id: "issues.issue.field.private-notes" })} />} />
+              {hasProjectPermission(issue.project.id, "set_notes_private") && (
+                <form.AppField name="private_notes" children={(field) => <field.SwitchField title={formatMessage({ id: "issues.issue.field.private-notes" })} />} />
+              )}
             </FormGrid>
             <DialogFooter>
               <form.AppForm>
