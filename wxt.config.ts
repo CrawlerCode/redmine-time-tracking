@@ -5,6 +5,27 @@ import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig } from "wxt";
 import pkg from "./package.json";
 
+/**
+ * Replace lodash's legacy `Function('return this')()` global lookup with `globalThis`.
+ *
+ * lodash uses this expression as a fallback when `global`/`self`/etc. are not
+ * available. In a Firefox MV3 content script the addon runs in an isolated
+ * world whose realm differs from the page's, so `self.Object === Object` is
+ * `false` and the fallback is taken. The expression is then blocked by the
+ * extension's default MV3 CSP (`script-src 'self'`), which throws
+ * `EvalError: call to Function() blocked by CSP` and prevents the content
+ * script from mounting. See https://github.com/CrawlerCode/redmine-time-tracking/issues/80
+ */
+const fixFirefoxCspGlobalThisFallback = () => ({
+  name: "fix-firefox-csp-globalthis-fallback",
+  enforce: "post" as const,
+  transform(code: string, id: string) {
+    if (!id.includes("lodash")) return null;
+    if (!/Function\(\s*(['"`])return this\1\s*\)\s*\(\s*\)/.test(code)) return null;
+    return code.replace(/Function\(\s*(['"`])return this\1\s*\)\s*\(\s*\)/g, "globalThis");
+  },
+});
+
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   srcDir: "src",
@@ -20,6 +41,7 @@ export default defineConfig({
         presets: [reactCompilerPreset()],
       } as Parameters<typeof babel>[0]),
       tailwindcss(),
+      fixFirefoxCspGlobalThisFallback(),
     ],
   }),
   manifest: ({ browser, mode }) => ({
