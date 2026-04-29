@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.1...v2.0.2) (2026-04-29)
+
+### 🩹 Fixes
+
+* Replace usehooks-ts by @mantine/hooks to solve CSP error ([#80](https://github.com/CrawlerCode/redmine-time-tracking/issues/80)) ([ea8dbff](https://github.com/CrawlerCode/redmine-time-tracking/commit/ea8dbffc302d2fa8a5b4286046514c5489f06f48))
+* **ui:** Add close button for error toasts ([#82](https://github.com/CrawlerCode/redmine-time-tracking/issues/82)) ([1f5d3a0](https://github.com/CrawlerCode/redmine-time-tracking/commit/1f5d3a035132b3eb460b36b1e04963ab89a7521a))
+
 ## [2.0.1](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.0...v2.0.1) (2026-04-27)
 
 ### 🩹 Fixes
