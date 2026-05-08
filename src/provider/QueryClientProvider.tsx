@@ -2,9 +2,10 @@ import { MissingRedmineConfigError } from "@/api/redmine/MissingRedmineConfigErr
 import { getErrorMessage } from "@/utils/error";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { MutationCache, QueryCache, QueryClient, useIsRestoring } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { PersistQueryClientOptions, PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { isAxiosError } from "axios";
-import { lazy, PropsWithChildren, Suspense, useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import { toast } from "sonner";
 import { browser } from "wxt/browser";
@@ -150,12 +151,6 @@ const QueryClientRestoringGate = ({ children }: PropsWithChildren) => {
   return isRestoring ? null : children;
 };
 
-const ReactQueryDevtoolsProduction = lazy(() =>
-  import("@tanstack/react-query-devtools/build/modern/production.js").then((d) => ({
-    default: d.ReactQueryDevtools,
-  }))
-);
-
 const QueryClientDevtools = () => {
   const { data: showDevtools, setData: setShowDevtools } = useStorage("tanstackQueryDevtools", false);
 
@@ -167,11 +162,7 @@ const QueryClientDevtools = () => {
 
   if (!showDevtools) return null;
 
-  return (
-    <Suspense fallback={null}>
-      <ReactQueryDevtoolsProduction />
-    </Suspense>
-  );
+  return <ReactQueryDevtools />;
 };
 
 export default QueryClientProvider;
