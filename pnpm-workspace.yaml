@@ -1,8 +1,6 @@
-ignoredBuiltDependencies:
-  - msw
-  - spawn-sync
+allowBuilds:
+  esbuild: true
+  msw: false
+  sharp: true
+  spawn-sync: false
 minimumReleaseAge: 1440
-onlyBuiltDependencies:
-  - "@tailwindcss/oxide"
-  - esbuild
-  - sharp

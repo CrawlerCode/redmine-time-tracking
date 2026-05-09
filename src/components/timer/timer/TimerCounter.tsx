@@ -22,7 +22,7 @@ export const TimerCounter = () => {
   return (
     <HelpTooltip message={formatMessage({ id: "issues.timer.action.edit.tooltip" })}>
       <span
-        className={clsx("text-muted-foreground -my-1 max-w-30 shrink-0 truncate text-lg", { "font-bold": !!timer.activeSession, "text-yellow-500": totalElapsedTime > 0 })}
+        className={clsx("text-muted-foreground -my-1 max-w-30 truncate text-lg", { "font-bold": !!timer.activeSession, "text-yellow-500": totalElapsedTime > 0 })}
         onDoubleClick={() => setIsEditing(true)}
       >
         {formatTimer(totalElapsedTime)}
