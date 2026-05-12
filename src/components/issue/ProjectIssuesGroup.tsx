@@ -30,7 +30,7 @@ export const ProjectIssuesGroup = ({ projectGroup, localIssues, timers, classNam
   const { settings } = useSettings();
 
   const { data: me } = useRedmineCurrentUser();
-  const { getPriorityType } = useRedmineIssuePriorities({ enabled: settings.style.showIssuesPriority });
+  const { getPriorityType } = useRedmineIssuePriorities({ enabled: settings.style.showIssuePriority });
 
   return (
     <div {...props} className={clsxm("flex flex-col gap-y-2", className)}>

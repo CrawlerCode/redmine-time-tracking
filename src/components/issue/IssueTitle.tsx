@@ -21,7 +21,7 @@ export const IssueTitle = ({ issue, priorityType, className, ...props }: PropTyp
       {...props}
       className={clsxm(
         "truncate",
-        settings.style.showIssuesPriority && {
+        settings.style.showIssuePriority && {
           "text-priority-lowest-text": priorityType === "lowest",
           "text-priority-medium-high-text": priorityType === "medium-high",
           "text-priority-high-text font-bold": priorityType === "high" || priorityType === "highest",

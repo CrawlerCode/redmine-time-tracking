@@ -8,6 +8,16 @@ export default defineBackground({
   type: "module",
   main: () => {
     (async () => {
+      browser.runtime.onInstalled.addListener(({ reason }) => {
+        if (reason === browser.runtime.OnInstalledReason.INSTALL) {
+          // Open options page on install
+          browser.runtime.openOptionsPage();
+
+          // Open discussion page on uninstall to collect feedback
+          browser.runtime.setUninstallURL("https://github.com/CrawlerCode/redmine-time-tracking/discussions");
+        }
+      });
+
       // Run settings migration on startup
       await runSettingsMigration();
 
@@ -30,16 +40,6 @@ export default defineBackground({
         await runLocalIssuesMigration(legacyIssues);
         await removeStorage("issues");
       }
-
-      browser.runtime.onInstalled.addListener(({ reason }) => {
-        if (reason === browser.runtime.OnInstalledReason.INSTALL) {
-          // Open options page on install
-          browser.runtime.openOptionsPage();
-
-          // Open discussion page on uninstall to collect feedback
-          browser.runtime.setUninstallURL("https://github.com/CrawlerCode/redmine-time-tracking/discussions");
-        }
-      });
 
       const registerContentScripts = async () => {
         // Unregister existing content script

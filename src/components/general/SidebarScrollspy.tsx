@@ -57,7 +57,7 @@ export function SidebarScrollspy({ groups, classNames, children }: SidebarScroll
           </TabsList>
         </Tabs>
       </aside>
-      <section ref={scrollContainerRef} className={clsxm("flex-1 overflow-y-auto", classNames?.section)}>
+      <section ref={scrollContainerRef} className={clsxm("flex-1 overflow-x-hidden overflow-y-auto", classNames?.section)}>
         {children?.({ getGroupProps })}
       </section>
     </div>
@@ -70,7 +70,7 @@ export const OptionalSidebarScrollspy = ({ enabled, ...props }: SidebarScrollspy
     <SidebarScrollspy {...props} />
   ) : (
     <div className={clsxm("flex min-h-0", props.classNames?.root)}>
-      <section className={clsxm("flex-1 overflow-y-auto", props.classNames?.section)}>{props.children?.({ getGroupProps: dummyGetGroupProps })}</section>
+      <section className={clsxm("flex-1 overflow-x-hidden overflow-y-auto", props.classNames?.section)}>{props.children?.({ getGroupProps: dummyGetGroupProps })}</section>
     </div>
   );
 };
