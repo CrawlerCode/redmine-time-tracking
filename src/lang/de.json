@@ -129,6 +129,10 @@
   "time.stats.title": "Statistiken",
   "time.stats.description": "Übersicht Ihrer Zeiteinträge",
   "time.stats.not-enough-data": "Nicht genügend Daten, um das Diagramm anzuzeigen",
+  "time.overview.title": "Übersicht",
+  "time.overview.description": "Aufschlüsselung Ihrer erfassten Stunden",
+  "time.overview.show-more": "{count} weitere anzeigen",
+  "time.overview.show-less": "Weniger anzeigen",
 
   "settings.general": "Allgemein",
   "settings.general.language": "Sprache",

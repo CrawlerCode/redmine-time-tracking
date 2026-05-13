@@ -129,6 +129,10 @@
   "time.stats.title": "Stats",
   "time.stats.description": "Overview of your time entries",
   "time.stats.not-enough-data": "Not enough data to display the chart",
+  "time.overview.title": "Overview",
+  "time.overview.description": "Breakdown of your tracked hours",
+  "time.overview.show-more": "Show {count} more",
+  "time.overview.show-less": "Show less",
 
   "settings.general": "Основное",
   "settings.general.language": "Язык",

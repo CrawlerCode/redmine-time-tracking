@@ -6,7 +6,11 @@ import { Label, Pie, PieChart } from "recharts";
 
 const CHART_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 
-export const TimeByProjectChart = ({ entries }: { entries: TTimeEntry[] }) => {
+type PropTypes = {
+  entries: TTimeEntry[];
+};
+
+export const TimeByProjectChart = ({ entries }: PropTypes) => {
   const { formatMessage } = useIntl();
   const formatHours = useFormatHours();
 

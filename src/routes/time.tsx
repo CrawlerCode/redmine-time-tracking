@@ -1,9 +1,8 @@
-import { useSuspenseRedmineTimeEntries } from "@/api/redmine/hooks/useRedmineTimeEntries";
+import { TimeEntryOverview, TimeEntryOverviewSkeleton } from "@/components/time-entry/TimeEntryOverview";
+import { TimeEntryRangePicker, TimeEntryRangePickerSkeleton } from "@/components/time-entry/TimeEntryRangePicker";
 import { TimeEntryStatsCard, TimeEntryStatsCardSkeleton } from "@/components/time-entry/TimeEntryStatsCard";
-import { TimeEntryWeekOverview, TimeEntryWeekOverviewSkeleton } from "@/components/time-entry/TimeEntryWeekOverview";
 import PermissionProvider from "@/provider/PermissionsProvider";
 import { createFileRoute } from "@tanstack/react-router";
-import { isMonday, previousMonday, startOfDay, subWeeks } from "date-fns";
 
 export const Route = createFileRoute("/time")({
   component: PageComponent,
@@ -11,23 +10,17 @@ export const Route = createFileRoute("/time")({
 });
 
 function PageComponent() {
-  const today = startOfDay(new Date());
-  const startOfThisWeek = isMonday(today) ? today : previousMonday(today);
-  const startOfPreviousWeek = subWeeks(startOfThisWeek, 1);
-
-  const entriesQuery = useSuspenseRedmineTimeEntries({
-    userId: "me",
-    from: startOfPreviousWeek,
-    to: today,
-  });
-
   return (
     <PermissionProvider>
       <div className="flex flex-col gap-3 sm:gap-4">
-        <TimeEntryWeekOverview entries={entriesQuery.data} startOfWeek={startOfThisWeek} />
-        <TimeEntryWeekOverview entries={entriesQuery.data} startOfWeek={startOfPreviousWeek} />
-
-        <TimeEntryStatsCard />
+        <TimeEntryRangePicker>
+          {({ entries, from, to }) => (
+            <>
+              <TimeEntryOverview entries={entries} from={from} to={to} />
+              <TimeEntryStatsCard entries={entries} />
+            </>
+          )}
+        </TimeEntryRangePicker>
       </div>
     </PermissionProvider>
   );
@@ -36,9 +29,8 @@ function PageComponent() {
 const PageSkeleton = () => {
   return (
     <div className="flex flex-col gap-3 sm:gap-4">
-      <TimeEntryWeekOverviewSkeleton />
-      <TimeEntryWeekOverviewSkeleton />
-
+      <TimeEntryRangePickerSkeleton />
+      <TimeEntryOverviewSkeleton />
       <TimeEntryStatsCardSkeleton />
     </div>
   );

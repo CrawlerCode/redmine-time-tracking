@@ -10,11 +10,11 @@ import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart } from "r
 
 const CHART_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 
-type Props = {
+type PropTypes = {
   entries: TTimeEntry[];
 };
 
-export const TimeByActivityChart = ({ entries }: Props) => {
+export const TimeByActivityChart = ({ entries }: PropTypes) => {
   const { formatMessage } = useIntl();
   const formatHours = useFormatHours();
 
