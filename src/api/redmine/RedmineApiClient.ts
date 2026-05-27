@@ -1,6 +1,10 @@
-import axios, { AxiosInstance } from "axios";
+import { RedmineAuthenticationError } from "@/api/redmine/RedmineAuthenticationError";
+import { getStorage, removeStorage, setStorage } from "@/hooks/useStorage";
+import { Settings } from "@/provider/SettingsProvider";
+import axios, { AxiosInstance, isAxiosError } from "axios";
 import { formatISO } from "date-fns";
 import qs from "qs";
+import { browser } from "wxt/browser";
 import { MissingRedmineConfigError } from "./MissingRedmineConfigError";
 import {
   TCreateIssue,
@@ -10,6 +14,8 @@ import {
   TIssueStatus,
   TIssueTracker,
   TMembership,
+  TOAuth2Scope,
+  TOAuth2TokenResponse,
   TPaginatedResponse,
   TProject,
   TReference,
@@ -23,25 +29,57 @@ import {
   TVersion,
 } from "./types";
 
-export class RedmineApiClient {
-  private instance: AxiosInstance;
-  public id = crypto.randomUUID();
+type OAuth2Tokens = {
+  accessToken: string;
+  refreshToken: string;
+  scope: string;
+  expiresAt: number;
+};
 
-  constructor(redmineURL: string, redmineApiKey: string) {
+export class RedmineApiClient {
+  public id = crypto.randomUUID();
+  private instance: AxiosInstance;
+  private auth: Settings["redmine"]["auth"];
+  private oauth2Tokens?: OAuth2Tokens;
+
+  constructor(redmineURL: string, auth: Settings["redmine"]["auth"]) {
+    this.auth = auth;
+
     this.instance = axios.create({
       baseURL: redmineURL,
       headers: {
-        "X-Redmine-API-Key": redmineApiKey,
+        ...(auth?.method === "apiKey" && { "X-Redmine-API-Key": auth.apiKey }),
+        ...(auth?.method === "oauth2" && { Authorization: `Bearer ${this.oauth2Tokens?.accessToken ?? "loading"}` }),
         "Cache-Control": "no-cache, no-store, max-age=0",
         Expires: "0",
       },
     });
-    this.instance.interceptors.request.use((config) => {
+
+    this.instance.interceptors.request.use(async (config) => {
       if (!config.baseURL) {
         throw new MissingRedmineConfigError();
       }
+
+      if (auth?.method === "oauth2" && config.url !== "/oauth/token") {
+        // Load tokens from storage if not already loaded
+        if (!this.oauth2Tokens) {
+          this.oauth2Tokens = await getStorage<OAuth2Tokens | undefined>("oauth2-tokens", undefined);
+          if (!this.oauth2Tokens) {
+            throw new RedmineAuthenticationError("Authorization required");
+          }
+        }
+
+        // Refresh the access token if it's about to expire soon
+        if (this.oauth2Tokens.expiresAt && Date.now() >= this.oauth2Tokens.expiresAt - 3 * 60 * 1000) {
+          await this.refreshOAuth2AccessToken();
+        }
+
+        config.headers.Authorization = `Bearer ${this.oauth2Tokens.accessToken}`;
+      }
+
       return config;
     });
+
     this.instance.interceptors.response.use(
       (response) => {
         const contentType = response.headers["content-type"];
@@ -51,11 +89,15 @@ export class RedmineApiClient {
         return response;
       },
       (error) => {
-        if (error.response?.status === 401) {
-          throw new Error("Unauthorized");
-        }
-        if (error.response?.status === 403) {
-          throw new Error("Forbidden");
+        if (isAxiosError(error)) {
+          if (error.response?.status === 401) {
+            const message = error.response.headers["www-authenticate"]?.match(/error_description="([^"]+)"/)?.[1];
+            throw new RedmineAuthenticationError(message);
+          }
+
+          if (error.response?.status === 403) {
+            throw new Error("Forbidden");
+          }
         }
         return Promise.reject(error);
       }
@@ -294,5 +336,137 @@ export class RedmineApiClient {
 
   async getCurrentUser(): Promise<TUser> {
     return this.instance.get("/users/current.json?include=memberships").then((res) => res.data.user);
+  }
+
+  // OAuth2 authentication
+  private getOAuth2AuthorizeUrl({ redirectUri, scope }: { redirectUri: string; scope: TOAuth2Scope[] }): string {
+    if (this.auth.method !== "oauth2") {
+      throw new RedmineAuthenticationError("OAuth2 authentication method is not enabled");
+    }
+    if (!this.auth.oauth2.clientId) {
+      throw new RedmineAuthenticationError("OAuth2 Client ID is required to get authorize URL");
+    }
+
+    return `${this.instance.defaults.baseURL}/oauth/authorize?${qs.stringify({
+      client_id: this.auth.oauth2.clientId,
+      redirect_uri: redirectUri,
+      response_type: "code",
+      scope: scope.join(" "),
+    })}`;
+  }
+
+  private async getOAuth2AccessToken({ code, redirectUri }: { code: string; redirectUri: string }) {
+    if (this.auth.method !== "oauth2") {
+      throw new RedmineAuthenticationError("OAuth2 authentication method is not enabled");
+    }
+    if (!this.auth.oauth2.clientId || !this.auth.oauth2.clientSecret) {
+      throw new RedmineAuthenticationError("OAuth2 Client ID and Client Secret are required to get access token");
+    }
+
+    return this.instance
+      .post<TOAuth2TokenResponse>("/oauth/token", {
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: redirectUri,
+        client_id: this.auth.oauth2.clientId,
+        client_secret: this.auth.oauth2.clientSecret,
+      })
+      .then((res) => res.data);
+  }
+
+  private async refreshOAuth2AccessToken() {
+    if (this.auth.method !== "oauth2") {
+      throw new RedmineAuthenticationError("OAuth2 authentication method is not enabled");
+    }
+    if (!this.auth.oauth2.clientId || !this.auth.oauth2.clientSecret) {
+      throw new RedmineAuthenticationError("OAuth2 Client ID and Client Secret are required to refresh access token");
+    }
+    if (!this.oauth2Tokens?.refreshToken) {
+      throw new RedmineAuthenticationError("Refresh token is missing. Please re-authorize your Redmine account.");
+    }
+
+    const tokens = await this.instance
+      .post<TOAuth2TokenResponse>("/oauth/token", {
+        grant_type: "refresh_token",
+        refresh_token: this.oauth2Tokens.refreshToken,
+        client_id: this.auth.oauth2.clientId,
+        client_secret: this.auth.oauth2.clientSecret,
+      })
+      .then((res) => res.data);
+
+    // Store the new tokens
+    this.oauth2Tokens = {
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token,
+      scope: tokens.scope,
+      expiresAt: (tokens.created_at + tokens.expires_in) * 1000,
+    };
+    await setStorage("oauth2-tokens", this.oauth2Tokens);
+  }
+
+  async startOAuth2Authorization() {
+    if (this.auth.method !== "oauth2") {
+      throw new RedmineAuthenticationError("OAuth2 authentication method is not enabled");
+    }
+
+    const redirectUri = browser.identity.getRedirectURL();
+    const authorizeUrl = this.getOAuth2AuthorizeUrl({
+      redirectUri,
+      scope: [
+        // Default scopes
+        "view_project",
+        "search_project",
+        "view_members",
+        // Scopes enabled in settings
+        ...(Object.entries(this.auth.oauth2.scopes || {})
+          .filter(([, enabled]) => enabled)
+          .map(([s]) => s) as TOAuth2Scope[]),
+      ],
+    });
+
+    // Authorize and get the code
+    const redirectURLString = await browser.identity.launchWebAuthFlow({
+      interactive: true,
+      url: authorizeUrl,
+    });
+    if (!redirectURLString) {
+      throw new RedmineAuthenticationError("No redirect URL received");
+    }
+    const redirectURL = new URL(redirectURLString);
+    if (redirectURL.searchParams.get("error")) {
+      if (redirectURL.searchParams.get("error") === "access_denied") {
+        throw new RedmineAuthenticationError("Authorization was denied. Please allow access to connect your Redmine account.");
+      }
+      const errorDescription = redirectURL.searchParams.get("error_description") || "Unknown error";
+      throw new RedmineAuthenticationError(`Authorization error: ${errorDescription}`);
+    }
+    const code = redirectURL.searchParams.get("code");
+    if (!code) {
+      throw new RedmineAuthenticationError("Authorization code is missing in the redirect URL");
+    }
+
+    // Exchange the code for tokens
+    const tokenResponse = await this.getOAuth2AccessToken({
+      code,
+      redirectUri,
+    });
+
+    // Store the tokens
+    this.oauth2Tokens = {
+      accessToken: tokenResponse.access_token,
+      refreshToken: tokenResponse.refresh_token,
+      scope: tokenResponse.scope,
+      expiresAt: (tokenResponse.created_at + tokenResponse.expires_in) * 1000,
+    };
+    await setStorage("oauth2-tokens", this.oauth2Tokens);
+  }
+
+  async clearOAuth2Tokens() {
+    this.oauth2Tokens = undefined;
+    await removeStorage("oauth2-tokens");
+  }
+
+  getOAuth2TokenScopes() {
+    return this.auth.method === "oauth2" && this.oauth2Tokens ? (this.oauth2Tokens.scope.split(" ") as TOAuth2Scope[]) : [];
   }
 }

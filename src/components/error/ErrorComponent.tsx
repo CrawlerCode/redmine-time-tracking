@@ -1,4 +1,5 @@
 import { MissingRedmineConfigError } from "@/api/redmine/MissingRedmineConfigError";
+import { RedmineAuthenticationError } from "@/api/redmine/RedmineAuthenticationError";
 import { getErrorMessage } from "@/utils/error";
 import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorComponentProps } from "@tanstack/react-router";
@@ -20,7 +21,9 @@ export function ErrorComponent({ error, reset: resetPage }: ErrorComponentProps)
           ? formatMessage({ id: "general.error.api-error" })
           : error instanceof MissingRedmineConfigError
             ? formatMessage({ id: "general.error.missing-redmine-configuration" })
-            : formatMessage({ id: "general.error.unknown-error" }, { name: error.name })}
+            : error instanceof RedmineAuthenticationError
+              ? formatMessage({ id: "general.error.redmine-authentication-error" })
+              : formatMessage({ id: "general.error.unknown-error" }, { name: error.name })}
       </AlertTitle>
       {!(error instanceof MissingRedmineConfigError) && (
         <AlertDescription>

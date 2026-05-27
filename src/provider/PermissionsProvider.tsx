@@ -3,18 +3,22 @@ import { useRedminePaginatedInfiniteQuery } from "@/api/redmine/hooks/useRedmine
 import { redmineProjectsQuery } from "@/api/redmine/queries/projects";
 import { redmineRoleQuery } from "@/api/redmine/queries/roles";
 import { useRedmineApi } from "@/provider/RedmineApiProvider";
+import { useSettings } from "@/provider/SettingsProvider";
 import { combineAggregateQueries } from "@/utils/query";
 import { useQueries } from "@tanstack/react-query";
 import { ReactNode, createContext, use } from "react";
-import { TProject, TRole, TUser } from "../api/redmine/types";
+import { TOAuth2Scope, TPermission, TProject, TRole, TUser } from "../api/redmine/types";
 
 type PermissionContextType = {
-  hasProjectPermission: (projectId: number, permission: TRole["permissions"][number]) => boolean;
+  getProjectRoles: (projectId: number) => TRole[];
+  hasProjectPermission: (projectId: number, permission: TPermission) => boolean;
+  hasOAuth2Scope: (scope: TOAuth2Scope) => boolean;
 };
 
 const PermissionContext = createContext<PermissionContextType | null>(null);
 
 const PermissionProvider = ({ children }: { children: ReactNode }) => {
+  const { settings } = useSettings();
   const redmineApi = useRedmineApi();
 
   const { data: me } = useRedmineCurrentUser();
@@ -33,14 +37,21 @@ const PermissionProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const projectRolesMap = buildProjectRolesMap({ user: me, roles: rolesQuery.data, projects: projectsQuery.data });
+  const tokenScopes = redmineApi.getOAuth2TokenScopes();
 
-  const hasProjectPermission = (projectId: number, permission: TRole["permissions"][number]): boolean =>
-    me?.admin || projectRolesMap.get(projectId)?.some((r) => r.permissions.includes(permission)) || false;
+  const getProjectRoles = (projectId: number): TRole[] => projectRolesMap.get(projectId) ?? [];
+  const hasOAuth2Scope = (scope: TOAuth2Scope): boolean => tokenScopes.includes(scope);
+  const hasProjectPermission = (projectId: number, permission: TPermission): boolean =>
+    (me?.admin && settings.redmine.auth.method === "apiKey") ||
+    (getProjectRoles(projectId).some((r) => r.permissions.includes(permission)) && (settings.redmine.auth.method === "apiKey" || hasOAuth2Scope(permission))) ||
+    false;
 
   return (
     <PermissionContext
       value={{
+        getProjectRoles,
         hasProjectPermission,
+        hasOAuth2Scope,
       }}
     >
       {children}

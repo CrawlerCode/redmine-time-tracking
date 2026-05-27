@@ -69,6 +69,7 @@ At least **Redmine version `3.0` or higher** required. Recommended version `5.0`
 
 | Feature                                                                           | Unsupported Redmine version |
 | --------------------------------------------------------------------------------- | --------------------------- |
+| OAuth2 authentication method                                                      | `< 6.1.0`                   |
 | Show only **enabled** issue field for selected tracker when _creating new issues_ | `< 5.0.0`                   |
 | Show only **allowed statuses** when _updating issue_                              | `< 5.0.0`                   |
 | Show spent vs estimated hours                                                     | `< 5.0.0`                   |

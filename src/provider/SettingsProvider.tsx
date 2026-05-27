@@ -13,19 +13,61 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
       .string(formatMessage?.({ id: "settings.redmine.url.validation.required" }))
       .nonempty(formatMessage?.({ id: "settings.redmine.url.validation.required" }))
       .regex(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?[\w\-/]*\/?$/, formatMessage?.({ id: "settings.redmine.url.validation.valid-url" })),
-    redmineApiKey: z.string().nonempty(formatMessage?.({ id: "settings.redmine.api-key.validation.required" })),
+    /**
+     * @deprecated Use `auth.apiKey` instead.
+     */
+    redmineApiKey: z.string().optional(),
+    redmine: z.object({
+      auth: z.discriminatedUnion("method", [
+        z.object({
+          method: z.literal("apiKey"),
+          apiKey: z.string().nonempty(formatMessage?.({ id: "settings.redmine.auth.api-key.validation.required" })),
+        }),
+        z.object({
+          method: z.literal("oauth2"),
+          oauth2: z.object({
+            clientId: z.string().nonempty(formatMessage?.({ id: "settings.redmine.auth.oauth2.client-id.validation.required" })),
+            clientSecret: z.string().nonempty(formatMessage?.({ id: "settings.redmine.auth.oauth2.client-secret.validation.required" })),
+            scopes: z.object({
+              view_issues: z.boolean(),
+              add_issues: z.boolean(),
+              edit_issues: z.boolean(),
+              edit_own_issues: z.boolean(),
+              add_issue_notes: z.boolean(),
+              set_notes_private: z.boolean(),
+              view_time_entries: z.boolean(),
+              log_time: z.boolean(),
+              edit_own_time_entries: z.boolean(),
+              log_time_for_other_users: z.boolean(),
+            }),
+          }),
+        }),
+      ]),
+    }),
     features: z.object({
       autoPauseOnSwitch: z.boolean(),
-      roundTimeNearestQuarterHour: z.boolean().optional(), // ! Legacy
-      roundToNearestInterval: z.boolean().optional(), // ! Legacy
+      /**
+       * @deprecated Use `roundToInterval` with `roundingMode: "nearest"` and `roundingInterval: 15` instead.
+       */
+      roundTimeNearestQuarterHour: z.boolean().optional(),
+      /**
+       * @deprecated Use `roundToInterval` with `roundingMode: "nearest"` instead.
+       */
+      roundToNearestInterval: z.boolean().optional(),
       roundToInterval: z.boolean(),
       roundingMode: z.enum(["down", "nearest", "up"]),
       roundingInterval: z
         .int(formatMessage?.({ id: "settings.features.rounding-interval.validation.required" }))
         .min(1, formatMessage?.({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
         .max(60, formatMessage?.({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
-      addNotes: z.boolean().optional(), // ! Legacy
-      cacheComments: z.boolean().optional(), // ! Legacy
+      /**
+       * @deprecated This setting has no effect and will be removed in a future version.
+       */
+      addNotes: z.boolean().optional(),
+      /**
+       * @deprecated Use `persistentComments` instead.
+       */
+      cacheComments: z.boolean().optional(),
       persistentComments: z.boolean(),
       showCurrentIssueTimer: z.boolean(),
     }),
@@ -52,7 +94,28 @@ export type Settings = z.infer<ReturnType<typeof settingsSchema>>;
 const defaultSettings: Settings = {
   language: "browser",
   redmineURL: "",
-  redmineApiKey: "",
+  redmine: {
+    auth: {
+      method: "apiKey" as "apiKey" | "oauth2",
+      apiKey: "",
+      oauth2: {
+        clientId: "",
+        clientSecret: "",
+        scopes: {
+          view_issues: true, // Always enabled
+          add_issues: false,
+          edit_issues: false,
+          edit_own_issues: false,
+          add_issue_notes: true,
+          set_notes_private: false,
+          view_time_entries: true, // Always enabled
+          log_time: true, // Always enabled
+          edit_own_time_entries: true,
+          log_time_for_other_users: false,
+        },
+      },
+    },
+  },
   features: {
     autoPauseOnSwitch: true,
     roundToInterval: false,
@@ -107,6 +170,15 @@ export const runSettingsMigration = async () => {
   if (typeof settings.style.showIssuesPriority === "boolean") {
     settings.style.showIssuePriority = settings.style.showIssuesPriority;
     settings.style.showIssuesPriority = undefined;
+  }
+
+  if (settings.redmineApiKey) {
+    settings.redmine.auth = {
+      ...settings.redmine.auth,
+      method: "apiKey",
+      apiKey: settings.redmineApiKey,
+    };
+    delete settings.redmineApiKey;
   }
 
   if (JSON.stringify(settings) !== JSON.stringify(settingsData)) {

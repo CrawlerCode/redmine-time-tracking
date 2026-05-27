@@ -32,8 +32,6 @@ export default defineConfig({
       "128": "/icon/128.png",
     },
     homepage_url: "https://github.com/CrawlerCode/redmine-time-tracking",
-    permissions: ["storage", "tabs", "activeTab", "scripting"],
-    host_permissions: ["http://*/*", "https://*/*"],
     ...(browser === "chrome" && {
       key:
         mode === "release"
@@ -52,6 +50,8 @@ export default defineConfig({
         },
       },
     }),
+    permissions: ["storage", "tabs", "activeTab", "scripting", "identity"],
+    host_permissions: ["http://*/*", "https://*/*"],
   }),
   hooks: {
     "build:manifestGenerated": (wxt, manifest) => {
