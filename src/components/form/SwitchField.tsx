@@ -17,7 +17,9 @@ export const SwitchField = ({ title, description, info, position = "start", clas
 
   return (
     <Field data-invalid={isInvalid} orientation="horizontal" className={className}>
-      {position === "start" && <Switch {...props} id={id} name={name} checked={state.value} onCheckedChange={(checked) => handleChange(checked)} onBlur={handleBlur} />}
+      {position === "start" && (
+        <Switch {...props} id={id} name={name} checked={state.value} onCheckedChange={(checked) => handleChange(checked)} onBlur={handleBlur} nativeButton render={<button />} />
+      )}
       <FieldContent>
         <span className="flex items-center gap-2">
           <FieldLabel required={props.required} htmlFor={id}>

@@ -13,7 +13,7 @@ import { randomInt } from "@/utils/random";
 import { createFileRoute } from "@tanstack/react-router";
 import { useDeferredValue, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
-import { useMediaQuery } from "usehooks-ts";
+import { useMediaQuery } from "@mantine/hooks";
 import useRedmineIssuesSearch from "../api/redmine/hooks/useRedmineIssuesSearch";
 import Filter, { filterIssues, useFilter } from "../components/issue/Filter";
 import IssueSearch, { filterIssuesByLocalSearch, useIssueSearch } from "../components/issue/IssueSearch";

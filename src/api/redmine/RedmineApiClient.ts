@@ -50,7 +50,7 @@ export class RedmineApiClient {
           return response;
         }
         const contentType = response.headers["content-type"];
-        if (contentType && !contentType.startsWith("application/json")) {
+        if (contentType && typeof contentType === "string" && !contentType.startsWith("application/json")) {
           throw new Error(`Invalid content-type '${contentType}'. Expected 'application/json'`);
         }
         return response;

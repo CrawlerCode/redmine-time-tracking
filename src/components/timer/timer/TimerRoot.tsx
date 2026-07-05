@@ -1,7 +1,7 @@
 import { TIssue } from "@/api/redmine/types";
 import { calculateTimerTotalElapsedTime, Timer } from "@/hooks/useTimers";
+import { useInterval } from "@mantine/hooks";
 import { createContext, PropsWithChildren, use, useEffect, useEffectEvent, useState } from "react";
-import { useInterval } from "usehooks-ts";
 
 type TimerContextType = {
   timer: Timer;
@@ -25,7 +25,9 @@ export const TimerRoot = ({ timer, issue, children }: TimerRootProps) => {
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => updateTimer(), [timer.elapsedTime, timer.activeSession]);
 
-  useInterval(() => setTotalElapsedTime(calculateTimerTotalElapsedTime(timer)), timer.activeSession ? 1000 : null);
+  const interval = useInterval(() => setTotalElapsedTime(calculateTimerTotalElapsedTime(timer)), 1000);
+  const manageInterval = useEffectEvent((active: boolean) => (active ? interval.start() : interval.stop()));
+  useEffect(() => manageInterval(!!timer.activeSession), [timer.activeSession]);
 
   const [isEditing, setIsEditing] = useState(false);
 

@@ -2,9 +2,10 @@ import { MissingRedmineConfigError } from "@/api/redmine/MissingRedmineConfigErr
 import { getErrorMessage } from "@/utils/error";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { MutationCache, QueryCache, QueryClient, useIsRestoring } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { PersistQueryClientOptions, PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { isAxiosError } from "axios";
-import { lazy, PropsWithChildren, Suspense, useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import { toast } from "sonner";
 import { browser } from "wxt/browser";
@@ -56,6 +57,7 @@ export const queryClient = new QueryClient({
           />,
           {
             description: getErrorMessage(error),
+            closeButton: true,
             duration: 1000 * 60, // 1 minute
           }
         );
@@ -69,7 +71,6 @@ export const queryClient = new QueryClient({
 
       toast.error(<FormattedMessage id="general.error.api-error" />, {
         id: "api-error",
-        dismissible: false,
         description: Object.entries(
           failedQueries.reduce((errors: Record<string, number>, q) => {
             const message = getErrorMessage(q.state.error);
@@ -90,6 +91,7 @@ export const queryClient = new QueryClient({
             });
           },
         },
+        closeButton: true,
         duration: 1000 * 60, // 1 minute
       });
     },
@@ -113,6 +115,7 @@ export const queryClient = new QueryClient({
       );
       toast.error(title, {
         description: getErrorMessage(error),
+        closeButton: true,
         duration: 1000 * 60 * 5, // 5 minutes
       });
     },
@@ -148,12 +151,6 @@ const QueryClientRestoringGate = ({ children }: PropsWithChildren) => {
   return isRestoring ? null : children;
 };
 
-const ReactQueryDevtoolsProduction = lazy(() =>
-  import("@tanstack/react-query-devtools/build/modern/production.js").then((d) => ({
-    default: d.ReactQueryDevtools,
-  }))
-);
-
 const QueryClientDevtools = () => {
   const { data: showDevtools, setData: setShowDevtools } = useStorage("tanstackQueryDevtools", false);
 
@@ -165,11 +162,7 @@ const QueryClientDevtools = () => {
 
   if (!showDevtools) return null;
 
-  return (
-    <Suspense fallback={null}>
-      <ReactQueryDevtoolsProduction />
-    </Suspense>
-  );
+  return <ReactQueryDevtools />;
 };
 
 export default QueryClientProvider;

@@ -64,22 +64,22 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers }: PropTy
           })}
         />
         <div className="flex items-start justify-between gap-x-2">
-          <div className="mt-0.5 flex min-h-5.5 items-center gap-x-2">
+          <div className="mt-0.5 flex min-h-5.5 min-w-0 flex-1 items-center gap-x-2">
             {settings.style.showIssueDoneRatio && (
-              <div className="bg-muted w-20 overflow-hidden rounded-sm">
+              <div className="bg-muted w-20 shrink-0 overflow-hidden rounded-sm">
                 <div className="text-foreground bg-green-600/80 p-1 text-center text-xs leading-none font-medium select-none dark:bg-green-600/60" style={{ width: `${issue.done_ratio}%` }}>
                   {issue.done_ratio}%
                 </div>
               </div>
             )}
             {settings.style.showIssueStatus && (
-              <Badge variant="outline" className="max-w-20 justify-start">
+              <Badge variant="outline" className="shrink justify-start">
                 {issue.status.name}
               </Badge>
             )}
           </div>
           {canLogTime && !areTimersExpanded && (
-            <div>
+            <div className="shrink-0">
               <TimerComponents.Root timer={primaryTimer} issue={issue}>
                 <TimerComponents.Wrapper>
                   <TimerComponents.Counter />
@@ -135,11 +135,11 @@ export const IssueSkeleton = () => {
     <ToggleableCard className="flex flex-col gap-1">
       <IssueTitleSkeleton />
       <div className="flex items-start justify-between gap-x-2">
-        <div className="mt-0.5 flex min-h-5.5 items-center gap-x-2">
+        <div className="mt-0.5 flex min-h-5.5 min-w-0 flex-1 items-center gap-x-2">
           {settings.style.showIssueDoneRatio && <Skeleton className="h-5.5 w-20 rounded-sm" />}
           {settings.style.showIssueStatus && <Skeleton className="h-5 w-14 rounded-4xl" />}
         </div>
-        <div className="ms-auto">
+        <div className="shrink-0">
           <TimerComponents.Wrapper>
             <TimerComponents.Skeleton.Counter />
             <TimerComponents.Skeleton.ToggleButton />
