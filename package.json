@@ -1,7 +1,7 @@
 {
   "name": "redmine-time-tracking",
   "description": "Start-stop timer for Redmine",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": {
     "name": "CrawlerCode",
     "email": "crawlercode@outlook.de"
@@ -104,5 +104,17 @@
     "vite": "^8.0.11",
     "wxt": "^0.20.25"
   },
-  "packageManager": "pnpm@11.0.9"
+  "packageManager": "pnpm@11.4.0",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.4.0",
+      "onFail": "error"
+    }
+  }
 }

@@ -1,3 +1,18 @@
+## [2.0.3](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.2...v2.0.3) (2026-05-09)
+
+### 🩹 Fixes
+
+* **ui:** Fix overflow issue timer ([#86](https://github.com/CrawlerCode/redmine-time-tracking/issues/86)) ([19c692e](https://github.com/CrawlerCode/redmine-time-tracking/commit/19c692e4f4ec3c920e8bae72aeba24cb67a89877))
+
+### 🏡 Chore
+
+* Remove tanstack query devtools in production build ([1d056a2](https://github.com/CrawlerCode/redmine-time-tracking/commit/1d056a226387053cfb7bcbde24081612ef1c24b3))
+
+### 📦 Builds
+
+* **deps:** Update npm dependencies ([9f7291e](https://github.com/CrawlerCode/redmine-time-tracking/commit/9f7291e6b444c042bc5f321892ef7a5459d09d40))
+* **deps:** Update pnpm to v11 ([c4b3f6c](https://github.com/CrawlerCode/redmine-time-tracking/commit/c4b3f6cca35d9321b261159ee5e183465077706f))
+
 ## [2.0.2](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.1...v2.0.2) (2026-04-29)
 
 ### 🩹 Fixes
