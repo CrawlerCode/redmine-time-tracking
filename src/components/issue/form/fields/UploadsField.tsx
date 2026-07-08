@@ -1,10 +1,10 @@
 import { TUploadAttachment } from "@/api/redmine/types";
-import { Button } from "@/components/ui/button";
+import { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentMedia, AttachmentTitle } from "@/components/ui/attachment";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { useFieldContext } from "@/hooks/useAppForm";
 import { useRedmineApi } from "@/provider/RedmineApiProvider";
 import { useMutation } from "@tanstack/react-query";
-import { PaperclipIcon, Trash2Icon } from "lucide-react";
+import { FileIcon, XIcon } from "lucide-react";
 import { useIntl } from "react-intl";
 
 const UploadsField = () => {
@@ -22,26 +22,29 @@ const UploadsField = () => {
   return (
     <Field>
       <FieldLabel>{formatMessage({ id: "issues.issue.field.uploads" })}</FieldLabel>
-      <div className="flex flex-col gap-0.5">
+      <div className="flex flex-col gap-1">
         {state.value?.map((upload, index) => (
-          <div key={upload.token} className="flex items-center gap-2">
-            <PaperclipIcon className="text-muted-foreground size-4 shrink-0" />
-            <span className="flex-1 truncate">{upload.filename}</span>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              onClick={async () => {
-                const { uploadId } = upload.token.match(/^(?<uploadId>\d+)\..*$/)?.groups || {};
-                if (uploadId) {
-                  await removeAttachmentMutation.mutateAsync(Number(uploadId));
-                }
-                removeValue(index);
-              }}
-            >
-              <Trash2Icon />
-            </Button>
-          </div>
+          <Attachment key={upload.token} size="xs" className="w-full">
+            <AttachmentMedia>
+              <FileIcon />
+            </AttachmentMedia>
+            <AttachmentContent>
+              <AttachmentTitle>{upload.filename}</AttachmentTitle>
+            </AttachmentContent>
+            <AttachmentActions>
+              <AttachmentAction
+                onClick={async () => {
+                  const { uploadId } = upload.token.match(/^(?<uploadId>\d+)\..*$/)?.groups || {};
+                  if (uploadId) {
+                    await removeAttachmentMutation.mutateAsync(Number(uploadId));
+                  }
+                  removeValue(index);
+                }}
+              >
+                <XIcon />
+              </AttachmentAction>
+            </AttachmentActions>
+          </Attachment>
         ))}
       </div>
     </Field>
