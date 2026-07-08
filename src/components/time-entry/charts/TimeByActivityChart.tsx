@@ -46,7 +46,7 @@ export const TimeByActivityChart = ({ entries }: PropTypes) => {
         <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-70">
           <RadarChart data={chartData}>
             <PolarGrid />
-            <PolarAngleAxis dataKey="project" tick={{ fontSize: 10 }} />
+            <PolarAngleAxis dataKey="project" tick={false} />
             <PolarRadiusAxis axisLine={false} tick={false} domain={[0, "dataMax"]} />
             <ChartTooltip
               content={
