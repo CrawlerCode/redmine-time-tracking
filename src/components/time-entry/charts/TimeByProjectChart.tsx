@@ -21,8 +21,8 @@ export const TimeByProjectChart = ({ entries }: PropTypes) => {
   }
 
   const chartData = Array.from(projectMap.entries())
-    .map(([project, hours], i) => ({ project, hours, fill: CHART_COLORS[i % CHART_COLORS.length] }))
-    .sort((a, b) => b.hours - a.hours);
+    .sort((a, b) => b[1] - a[1])
+    .map(([project, hours], i) => ({ project, hours, stroke: CHART_COLORS[i % CHART_COLORS.length], fill: `url(#chart-pattern-${(i % CHART_COLORS.length) + 1})` }));
 
   const chartConfig = Object.fromEntries(chartData.map(({ project }) => [project, { label: project }])) satisfies ChartConfig;
 
@@ -36,7 +36,7 @@ export const TimeByProjectChart = ({ entries }: PropTypes) => {
                 <ChartTooltipContent
                   formatter={(value, _name, item) => (
                     <>
-                      <div className="h-2.5 w-2.5 shrink-0 rounded-[2px]" style={{ backgroundColor: item.color }} />
+                      <div className="h-2.5 w-2.5 shrink-0 rounded-[2px]" style={{ backgroundColor: item.payload.stroke }} />
                       <div className="flex flex-1 items-center justify-between gap-1 leading-none">
                         <span className="text-muted-foreground">{item.name}</span>
                         <span className="text-foreground font-mono font-medium text-nowrap tabular-nums">{formatHours(Number(value))}</span>
@@ -46,7 +46,16 @@ export const TimeByProjectChart = ({ entries }: PropTypes) => {
                 />
               }
             />
-            <Pie nameKey="project" dataKey="hours" innerRadius="45%" startAngle={90} endAngle={-270} />
+            <Pie nameKey="project" dataKey="hours" innerRadius="45%" cornerRadius={3} paddingAngle={3} startAngle={90} endAngle={-270}>
+              <defs>
+                {CHART_COLORS.map((color, i) => (
+                  <pattern key={i} id={`chart-pattern-${i + 1}`} patternUnits="userSpaceOnUse" width="5" height="5">
+                    <rect width="5" height="5" fill={color} opacity="0.4" />
+                    <circle cx="2.5" cy="2.5" r="1" fill={color} opacity="0.8" />
+                  </pattern>
+                ))}
+              </defs>
+            </Pie>
             <Label
               content={({ viewBox }) => {
                 if (viewBox && "cx" in viewBox && "cy" in viewBox) {

@@ -30,7 +30,7 @@ export const TimeEntryStatsCard = ({ entries }: PropTypes) => {
               </div>
             </>
           ) : (
-            <div className="flex h-120 items-center justify-center sm:h-70 md:col-span-2">
+            <div className="flex h-122 items-center justify-center sm:h-70 md:col-span-2">
               <span className="text-muted-foreground">{formatMessage({ id: "time.stats.not-enough-data" })}</span>
             </div>
           )}
