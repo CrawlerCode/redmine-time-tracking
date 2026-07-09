@@ -1,5 +1,4 @@
-import { TimeByActivityChart } from "@/components/time-entry/charts/TimeByActivityChart";
-import { TimeByProjectChart } from "@/components/time-entry/charts/TimeByProjectChart";
+import { TimeByProjectChart, TimeByProjectChartSkeleton } from "@/components/time-entry/TimeByProjectChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIntl } from "react-intl";
@@ -19,22 +18,7 @@ export const TimeEntryStatsCard = ({ entries }: PropTypes) => {
         <CardDescription>{formatMessage({ id: "time.stats.description" })}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid items-center gap-2 sm:gap-4 md:grid-cols-2">
-          {entries.length > 0 ? (
-            <>
-              <div>
-                <TimeByProjectChart entries={entries} />
-              </div>
-              <div>
-                <TimeByActivityChart entries={entries} />
-              </div>
-            </>
-          ) : (
-            <div className="flex h-122 items-center justify-center sm:h-70 md:col-span-2">
-              <span className="text-muted-foreground">{formatMessage({ id: "time.stats.not-enough-data" })}</span>
-            </div>
-          )}
-        </div>
+        <TimeByProjectChart entries={entries} />
       </CardContent>
     </Card>
   );
@@ -52,10 +36,7 @@ export const TimeEntryStatsCardSkeleton = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid items-center gap-2 sm:gap-4 md:grid-cols-2">
-          <div className="h-50" />
-          <div className="h-70" />
-        </div>
+        <TimeByProjectChartSkeleton />
       </CardContent>
     </Card>
   );
