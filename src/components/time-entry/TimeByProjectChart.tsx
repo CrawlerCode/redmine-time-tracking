@@ -84,7 +84,7 @@ export const TimeByProjectChart = ({ entries }: PropTypes) => {
         </ChartContainer>
       ) : (
         <div className="flex h-60 items-center justify-center">
-          <span className="text-muted-foreground">{formatMessage({ id: "time.stats.not-enough-data" })}</span>
+          <span className="text-muted-foreground animate-in fade-in-0 duration-3000">{formatMessage({ id: "time.stats.not-enough-data" })}</span>
         </div>
       )}
     </>
