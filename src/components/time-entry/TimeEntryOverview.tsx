@@ -79,13 +79,13 @@ export const TimeEntryOverview = ({ from, to, entries }: PropTypes) => {
               })}
             >
               <span
-                className={clsx("text-muted-foreground w-7 truncate text-xs", {
+                className={clsx("w-7 truncate text-xs text-muted-foreground", {
                   "w-19": isMoreThanOneWeek,
                 })}
               >
                 {isMoreThanOneWeek ? `${formatDate(date, { month: "2-digit", day: "2-digit" })} (${format(date, "EEE")})` : format(date, "EEE")}
               </span>
-              <span className="text-muted-foreground w-17 truncate text-end text-xs font-semibold">{isDisabled ? "–" : formatHours(roundHours(hours))}</span>
+              <span className="w-17 truncate text-end text-xs font-semibold text-muted-foreground">{isDisabled ? "–" : formatHours(roundHours(hours))}</span>
               <div className="grow">
                 <TimeEntry entries={entries} maxDayHours={maxDayHours} withContextMenu />
               </div>
@@ -93,7 +93,7 @@ export const TimeEntryOverview = ({ from, to, entries }: PropTypes) => {
           );
         })}
         {hiddenCount > 0 && (
-          <button type="button" tabIndex={-1} className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-1 text-xs" onClick={() => setExpanded((v) => !v)}>
+          <button type="button" tabIndex={-1} className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground hover:text-foreground" onClick={() => setExpanded((v) => !v)}>
             {expanded ? <ChevronUpIcon className="size-3" /> : <ChevronDownIcon className="size-3" />}
             <span>{expanded ? formatMessage({ id: "time.overview.show-less" }) : formatMessage({ id: "time.overview.show-more" }, { count: hiddenCount })}</span>
           </button>
@@ -110,8 +110,8 @@ export const TimeEntryOverviewSkeleton = () => {
         <CardTitle>
           <Skeleton className="h-5.5 w-24" />
         </CardTitle>
-        <CardDescription>
-          <Skeleton className="h-5 w-56 max-sm:hidden" />
+        <CardDescription className="max-sm:hidden">
+          <Skeleton className="h-5 w-56" />
         </CardDescription>
         <CardAction>
           <Skeleton className="h-5 w-12" />

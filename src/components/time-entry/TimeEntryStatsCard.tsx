@@ -15,7 +15,7 @@ export const TimeEntryStatsCard = ({ entries }: PropTypes) => {
     <Card>
       <CardHeader>
         <CardTitle>{formatMessage({ id: "time.stats.title" })}</CardTitle>
-        <CardDescription>{formatMessage({ id: "time.stats.description" })}</CardDescription>
+        <CardDescription className="max-sm:hidden">{formatMessage({ id: "time.stats.description" })}</CardDescription>
       </CardHeader>
       <CardContent>
         <TimeByProjectChart entries={entries} />
@@ -31,7 +31,7 @@ export const TimeEntryStatsCardSkeleton = () => {
         <CardTitle>
           <Skeleton className="h-5.5 w-28" />
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="max-sm:hidden">
           <Skeleton className="h-5 w-56" />
         </CardDescription>
       </CardHeader>

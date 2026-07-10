@@ -23,6 +23,7 @@ import {
 } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { ReactNode } from "react";
+import { useIntl } from "react-intl";
 import z from "zod";
 import { TTimeEntry } from "../../api/redmine/types";
 
@@ -37,6 +38,8 @@ type PropTypes = {
 };
 
 export const TimeEntryRangePicker = ({ children }: PropTypes) => {
+  const { formatMessage } = useIntl();
+
   const today = startOfDay(new Date());
   const startOfThisWeek = isMonday(today) ? today : previousMonday(today);
   const endOfThisWeek = addDays(startOfThisWeek, 6);
@@ -106,8 +109,8 @@ export const TimeEntryRangePicker = ({ children }: PropTypes) => {
                 mode="range"
                 required
                 presets={[
-                  { label: "This week", value: { from: startOfThisWeek, to: endOfThisWeek } },
-                  { label: "This month", value: { from: startOfThisMonth, to: endOfThisMonth } },
+                  { label: formatMessage({ id: "time.range-picker.preset.this-week" }), value: { from: startOfThisWeek, to: endOfThisWeek } },
+                  { label: formatMessage({ id: "time.range-picker.preset.this-month" }), value: { from: startOfThisMonth, to: endOfThisMonth } },
                 ]}
               />
             )}
