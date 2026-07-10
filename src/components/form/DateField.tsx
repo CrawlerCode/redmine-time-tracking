@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { clsx } from "clsx";
 import { XIcon } from "lucide-react";
 import { ComponentProps, useEffect, useId, useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -16,9 +16,10 @@ type DateFieldProps = Omit<ComponentProps<typeof Calendar>, "mode" | "selected" 
   required?: boolean;
   disabled?: boolean;
   disabledDates?: ComponentProps<typeof Calendar>["disabled"];
+  presets?: { label: string; value: Date | Date[] | DateRange }[];
 };
 
-export const DateField = ({ title, disabled, placeholder, mode = "single", className, disabledDates, ...props }: DateFieldProps) => {
+export const DateField = ({ title, disabled, placeholder, mode = "single", className, disabledDates, presets, ...props }: DateFieldProps) => {
   const { name, state, handleChange, handleBlur } = useFieldContext<null | Date | Date[] | DateRange>();
   const isInvalid = !state.meta.isValid && state.meta.isTouched;
   const id = useId();
@@ -35,9 +36,11 @@ export const DateField = ({ title, disabled, placeholder, mode = "single", class
 
   return (
     <Field data-invalid={isInvalid} className={className}>
-      <FieldLabel required={props.required} htmlFor={id} className="truncate">
-        {title}
-      </FieldLabel>
+      {title && (
+        <FieldLabel required={props.required} htmlFor={id} className="truncate">
+          {title}
+        </FieldLabel>
+      )}
       <Popover modal open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           render={
@@ -48,7 +51,7 @@ export const DateField = ({ title, disabled, placeholder, mode = "single", class
               disabled={disabled}
               onBlur={handleBlur}
               aria-invalid={isInvalid}
-              className={cn("hover:text-foreground relative w-full justify-start truncate text-left text-base font-normal", {
+              className={clsx("relative w-full justify-start truncate text-left text-base font-normal hover:text-foreground", {
                 "text-muted-foreground": !state.value,
               })}
             />
@@ -71,6 +74,23 @@ export const DateField = ({ title, disabled, placeholder, mode = "single", class
             }}
             locale={calendarLocale}
           />
+          {presets && (
+            <div className="flex flex-col gap-2 border-t p-2">
+              {presets.map((preset) => (
+                <Button
+                  key={preset.label}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    handleChange(preset.value);
+                    setOpen(false);
+                  }}
+                >
+                  {preset.label}
+                </Button>
+              ))}
+            </div>
+          )}
         </PopoverContent>
       </Popover>
       {isInvalid && <FieldError errors={state.meta.errors} />}
