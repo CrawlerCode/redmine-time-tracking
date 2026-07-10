@@ -33,11 +33,14 @@ export const TimeByProjectChart = ({ entries }: PropTypes) => {
 
   const totalHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
 
+  const usedActivityIds = new Set(entries.map((entry) => entry.activity.id));
+  const usedActivities = activities?.filter((activity) => usedActivityIds.has(activity.id));
+
   const chartData = Object.entries(projectActivityMap)
     .map(([project, activityHours]) => ({
       project,
       hours: Object.values(activityHours).reduce((sum, h) => sum + h, 0),
-      activities: activities?.reduce<Record<string, number>>((acc, activity) => ({ ...acc, [activity.name]: activityHours[activity.id] ?? 0 }), {}),
+      activities: usedActivities?.map((activity) => ({ name: activity.name, hours: activityHours[activity.id] ?? 0 })),
     }))
     .sort((a, b) => b.hours - a.hours)
     .map((data, i) => ({ ...data, stroke: CHART_COLORS[i % CHART_COLORS.length], fill: `url(#chart-pattern-${(i % CHART_COLORS.length) + 1})` }));
@@ -104,17 +107,21 @@ function ChartTooltipContent({ payload }: React.ComponentProps<typeof Tooltip> &
       <div className="grid gap-1.5">
         {item.payload.activities && (
           <>
-            {Object.entries(item.payload.activities as Record<string, number>).map(([activity, hours]) => (
-              <div key={activity} className="flex w-full flex-wrap items-center gap-2">
+            {(item.payload.activities as { name: string; hours: number }[]).map(({ name, hours }) => (
+              <div key={name} className="flex w-full flex-wrap items-center gap-2">
                 <div className="size-2.5 shrink-0 rounded-[2px]" style={{ backgroundColor: item.payload.stroke }} />
                 <div className="flex flex-1 items-center justify-between gap-1 leading-none">
-                  <span className="text-muted-foreground">{activity}</span>
+                  <span className="text-muted-foreground">{name}</span>
                   <span className="font-mono font-medium text-nowrap text-foreground tabular-nums">{formatHours(hours)}</span>
                 </div>
               </div>
             ))}
-            <Separator className="mt-0.5" />
-            <div className="ml-auto flex items-baseline gap-0.5 font-mono font-extrabold text-foreground tabular-nums">{formatHours(item.payload.hours)}</div>
+            {item.payload.activities.length > 1 && (
+              <>
+                <Separator className="mt-0.5" />
+                <div className="ml-auto flex items-baseline gap-0.5 font-mono font-extrabold text-foreground tabular-nums">{formatHours(item.payload.hours)}</div>
+              </>
+            )}
           </>
         )}
       </div>
