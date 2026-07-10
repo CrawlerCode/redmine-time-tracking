@@ -230,5 +230,7 @@
   "editor.command.table": "Tabelle",
   "editor.command.image": "Bild",
   "editor.command.edit": "Bearbeiten",
-  "editor.command.preview": "Vorschau"
+  "editor.command.preview": "Vorschau",
+  "editor.command.fullscreen": "Vollbild",
+  "editor.command.fullscreen-exit": "Vollbild beenden"
 }

@@ -230,5 +230,7 @@
   "editor.command.table": "Table",
   "editor.command.image": "Image",
   "editor.command.edit": "Edit",
-  "editor.command.preview": "Preview"
+  "editor.command.preview": "Preview",
+  "editor.command.fullscreen": "Fullscreen",
+  "editor.command.fullscreen-exit": "Exit fullscreen"
 }
