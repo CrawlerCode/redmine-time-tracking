@@ -47,10 +47,10 @@ export const TimeByProjectChart = ({ entries }: PropTypes) => {
   return (
     <>
       {chartData.length > 0 ? (
-        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-60">
+        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-50">
           <PieChart data={chartData}>
             <ChartTooltip content={<ChartTooltipContent />} isAnimationActive={false} />
-            <Pie nameKey="project" dataKey="hours" innerRadius="50%" outerRadius="90%" cornerRadius={3} paddingAngle={3} startAngle={90} endAngle={-270} />
+            <Pie nameKey="project" dataKey="hours" innerRadius="50%" outerRadius="95%" cornerRadius={3} paddingAngle={3} startAngle={90} endAngle={-270} />
 
             <defs>
               {CHART_COLORS.map((color, i) => (
@@ -68,9 +68,9 @@ export const TimeByProjectChart = ({ entries }: PropTypes) => {
                       <tspan
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        className={clsx("fill-foreground font-bold", {
-                          "text-2xl": totalHours < 100,
-                          "text-xl": totalHours >= 100,
+                        className={clsx("animate-in fill-foreground font-bold duration-3000 fade-in-0", {
+                          "text-xl": totalHours < 100,
+                          "text-base": totalHours >= 100,
                         })}
                       >
                         {formatHours(totalHours)}
@@ -83,8 +83,8 @@ export const TimeByProjectChart = ({ entries }: PropTypes) => {
           </PieChart>
         </ChartContainer>
       ) : (
-        <div className="flex h-60 items-center justify-center">
-          <span className="text-muted-foreground animate-in fade-in-0 duration-3000">{formatMessage({ id: "time.stats.not-enough-data" })}</span>
+        <div className="flex h-50 items-center justify-center">
+          <span className="animate-in text-muted-foreground duration-3000 fade-in-0">{formatMessage({ id: "time.stats.not-enough-data" })}</span>
         </div>
       )}
     </>
@@ -99,22 +99,22 @@ function ChartTooltipContent({ payload }: React.ComponentProps<typeof Tooltip> &
   if (!item) return null;
 
   return (
-    <div className="border-border/50 bg-background grid min-w-40 items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl">
+    <div className="grid min-w-40 items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl">
       <div className="font-medium">{item.name}</div>
       <div className="grid gap-1.5">
         {item.payload.activities && (
           <>
             {Object.entries(item.payload.activities as Record<string, number>).map(([activity, hours]) => (
               <div key={activity} className="flex w-full flex-wrap items-center gap-2">
-                <div className="h-2.5 w-2.5 shrink-0 rounded-[2px]" style={{ backgroundColor: item.payload.stroke }} />
+                <div className="size-2.5 shrink-0 rounded-[2px]" style={{ backgroundColor: item.payload.stroke }} />
                 <div className="flex flex-1 items-center justify-between gap-1 leading-none">
                   <span className="text-muted-foreground">{activity}</span>
-                  <span className="text-foreground font-mono font-medium text-nowrap tabular-nums">{formatHours(hours)}</span>
+                  <span className="font-mono font-medium text-nowrap text-foreground tabular-nums">{formatHours(hours)}</span>
                 </div>
               </div>
             ))}
             <Separator className="mt-0.5" />
-            <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-extrabold tabular-nums">{formatHours(item.payload.hours)}</div>
+            <div className="ml-auto flex items-baseline gap-0.5 font-mono font-extrabold text-foreground tabular-nums">{formatHours(item.payload.hours)}</div>
           </>
         )}
       </div>
@@ -123,5 +123,5 @@ function ChartTooltipContent({ payload }: React.ComponentProps<typeof Tooltip> &
 }
 
 export const TimeByProjectChartSkeleton = () => {
-  return <div className="h-60" />;
+  return <div className="h-50" />;
 };

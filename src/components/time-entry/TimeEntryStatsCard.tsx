@@ -12,7 +12,7 @@ export const TimeEntryStatsCard = ({ entries }: PropTypes) => {
   const { formatMessage } = useIntl();
 
   return (
-    <Card>
+    <Card size="sm">
       <CardHeader>
         <CardTitle>{formatMessage({ id: "time.stats.title" })}</CardTitle>
         <CardDescription className="max-sm:hidden">{formatMessage({ id: "time.stats.description" })}</CardDescription>
@@ -26,7 +26,7 @@ export const TimeEntryStatsCard = ({ entries }: PropTypes) => {
 
 export const TimeEntryStatsCardSkeleton = () => {
   return (
-    <Card>
+    <Card size="sm">
       <CardHeader>
         <CardTitle>
           <Skeleton className="h-5.5 w-28" />
