@@ -201,7 +201,7 @@ export const RedmineMdEditorField = ({ title, required, className, attachments, 
             try {
               const upload = await onUploadImage(file);
               if (!upload) continue;
-              const imageMarkdown = `![${upload.alt}](${upload.url})`;
+              const imageMarkdown = `![${upload.alt}](${encodeURIComponent(upload.url)})`;
               handleChange((prev) => (prev ?? "") + imageMarkdown + " ");
             } catch (error) {
               console.error("Image upload failed", error);
@@ -214,6 +214,7 @@ export const RedmineMdEditorField = ({ title, required, className, attachments, 
            */
           urlTransform: (url) => {
             if (!url.startsWith("http")) {
+              url = decodeURIComponent(url);
               const attachment = attachments?.find((att) => att.filename === url);
               if (attachment) {
                 return attachment.content_url;

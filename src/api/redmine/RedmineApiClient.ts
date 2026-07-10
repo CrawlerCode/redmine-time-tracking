@@ -304,7 +304,7 @@ export class RedmineApiClient {
   // Attachments
   async uploadAttachment(file: File): Promise<TUploadAttachment> {
     const arrayBuffer = await file.arrayBuffer();
-    const response = await this.instance.post<TUploadResponse>(`/uploads.json?filename=${encodeURIComponent(file.name)}`, arrayBuffer, {
+    const response = await this.instance.post<TUploadResponse>(`/uploads.json?filename=${file.name}`, arrayBuffer, {
       headers: { "Content-Type": "application/octet-stream" },
     });
     return {
