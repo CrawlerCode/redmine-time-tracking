@@ -22,7 +22,7 @@ export const TimerCounter = () => {
   return (
     <HelpTooltip message={formatMessage({ id: "issues.timer.action.edit.tooltip" })}>
       <span
-        className={clsx("text-muted-foreground -my-1 max-w-30 truncate text-lg", { "font-bold": !!timer.activeSession, "text-yellow-500": totalElapsedTime > 0 })}
+        className={clsx("-my-1 max-w-30 truncate text-lg text-muted-foreground", { "font-bold": !!timer.activeSession, "text-yellow-500": totalElapsedTime > 0 })}
         onDoubleClick={() => setIsEditing(true)}
       >
         {formatTimer(totalElapsedTime)}
@@ -97,7 +97,7 @@ export const EditTimer = () => {
           value={m}
           min={0}
           max={59}
-          className={clsx("h-8 w-6 appearance-none p-0 text-center", totalElapsedTime > 0 ? "text-yellow-500" : "text-muted-foreground")}
+          className={clsx("h-8 appearance-none w-6 p-0 text-center", totalElapsedTime > 0 ? "text-yellow-500" : "text-muted-foreground")}
           onChange={(e) => {
             const { value, min, max } = e.target;
             setM(to2Digit(Math.max(Number(min), Math.min(Number(max), Number(value)))));
@@ -125,7 +125,7 @@ export const EditTimer = () => {
           value={s}
           min={0}
           max={59}
-          className={clsx("h-8 w-6 appearance-none p-0 text-center", totalElapsedTime > 0 ? "text-yellow-500" : "text-muted-foreground")}
+          className={clsx("h-8 appearance-none w-6 p-0 text-center", totalElapsedTime > 0 ? "text-yellow-500" : "text-muted-foreground")}
           onChange={(e) => {
             const { value, min, max } = e.target;
             setS(to2Digit(Math.max(Number(min), Math.min(Number(max), Number(value)))));

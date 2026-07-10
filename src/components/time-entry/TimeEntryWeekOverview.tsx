@@ -60,7 +60,7 @@ export const TimeEntryWeekOverview = ({ startOfWeek, groupedTimeEntries, maxDayH
           if (isWeekend(date) && entries.length === 0) return;
           return (
             <div key={date.toISOString()} className="flex items-center gap-x-1 py-1">
-              <span className="text-muted-foreground w-7 text-xs">{format(date, "EEE")}</span>
+              <span className="w-7 text-xs text-muted-foreground">{format(date, "EEE")}</span>
               <span className="w-17 truncate text-end text-xs font-semibold">{formatHours(roundHours(hours))}</span>
               <div className="grow">
                 <TimeEntry entries={entries} maxDayHours={maxDayHours} withContextMenu />

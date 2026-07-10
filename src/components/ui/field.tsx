@@ -52,7 +52,7 @@ function FieldLabel({ className, required, children, errors, ...props }: React.C
     <Label
       data-slot="field-label"
       className={cn(
-        "group/field-label peer/field-label has-data-checked:border-primary/30 has-data-checked:bg-primary/5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5",
+        "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
         "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
         className
       )}
@@ -80,9 +80,9 @@ function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="field-description"
       className={cn(
-        "text-muted-foreground text-left text-sm leading-normal font-normal group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-1.5",
+        "text-left text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-1.5",
         "last:mt-0 nth-last-2:-mt-1",
-        "[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
+        "[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
         className
       )}
       {...props}
@@ -101,7 +101,7 @@ function FieldSeparator({
     <div data-slot="field-separator" data-content={!!children} className={cn("relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2", className)} {...props}>
       <Separator className="absolute inset-0 top-1/2" />
       {children && (
-        <span className="bg-background text-muted-foreground relative mx-auto block w-fit px-2" data-slot="field-separator-content">
+        <span className="relative mx-auto block w-fit bg-background px-2 text-muted-foreground" data-slot="field-separator-content">
           {children}
         </span>
       )}
@@ -144,7 +144,7 @@ function FieldError({
   if (variant === "tooltip") {
     return (
       <Tooltip>
-        <TooltipTrigger delay={0} render={<InfoIcon className="text-destructive size-3.5 shrink-0" />} />
+        <TooltipTrigger delay={0} render={<InfoIcon className="size-3.5 shrink-0 text-destructive" />} />
         <TooltipContent className="max-w-64 text-wrap">
           <div role="alert" data-slot="field-error" className={cn("text-sm", className)} {...props}>
             {content}
@@ -155,7 +155,7 @@ function FieldError({
   }
 
   return (
-    <div role="alert" data-slot="field-error" className={cn("text-destructive text-sm font-normal", className)} {...props}>
+    <div role="alert" data-slot="field-error" className={cn("text-sm font-normal text-destructive", className)} {...props}>
       {content}
     </div>
   );
@@ -164,7 +164,7 @@ function FieldError({
 function FieldInfo({ className, children, ...props }: React.ComponentProps<typeof InfoIcon>) {
   return (
     <Tooltip>
-      <TooltipTrigger delay={0} render={<InfoIcon className={cn("text-muted-foreground size-3.5", className)} {...props} />} />
+      <TooltipTrigger delay={0} render={<InfoIcon className={cn("size-3.5 text-muted-foreground", className)} {...props} />} />
       <TooltipContent className="max-w-64 text-wrap">{children}</TooltipContent>
     </Tooltip>
   );

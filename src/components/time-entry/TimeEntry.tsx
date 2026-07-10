@@ -25,7 +25,7 @@ const TimeEntry = ({ entries, previewHours, maxDayHours = 24, withContextMenu = 
             <div
               role="cell"
               data-type="time-entry"
-              className="bg-primary h-4 rounded-sm"
+              className="h-4 rounded-sm bg-primary"
               style={{
                 width: `${(entry.hours / maxDayHours) * 100}%`,
               }}
@@ -50,7 +50,7 @@ const TimeEntry = ({ entries, previewHours, maxDayHours = 24, withContextMenu = 
             delay={300}
             render={
               <div
-                className="bg-primary/60 h-3.5 rounded-sm"
+                className="h-3.5 rounded-sm bg-primary/60"
                 style={{
                   width: `${(previewHours / maxDayHours) * 100}%`,
                 }}
@@ -63,7 +63,7 @@ const TimeEntry = ({ entries, previewHours, maxDayHours = 24, withContextMenu = 
         </Tooltip>
       )}
       <div
-        className="bg-muted h-3 rounded-sm"
+        className="h-3 rounded-sm bg-muted"
         style={{
           width: `${((maxDayHours - sumHours - (previewHours ?? 0)) / maxDayHours) * 100}%`,
         }}

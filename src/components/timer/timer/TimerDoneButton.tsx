@@ -25,7 +25,7 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
         <BadgeCheckIcon
           role="button"
           data-action="timer-done"
-          className="text-primary size-6 shrink-0 cursor-pointer focus:outline-hidden data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50"
+          className="size-6 shrink-0 cursor-pointer text-primary focus:outline-hidden data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50"
           data-disabled={isDisabled}
           onClick={() => {
             if (isDisabled) return;

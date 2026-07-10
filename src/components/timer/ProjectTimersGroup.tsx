@@ -3,10 +3,10 @@ import { ToggleableCard } from "@/components/general/ToggleableCard";
 import { IssueTitle, IssueTitleSkeleton } from "@/components/issue/IssueTitle";
 import { TimerComponents } from "@/components/timer/timer";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { useTimerApi } from "@/provider/TimerApiProvider";
-import { clsxm } from "@/utils/clsxm";
 import { ProjectTimersGroup as ProjectTimersGroupType } from "@/utils/groupTimers";
 import { randomElement } from "@/utils/random";
 import clsx from "clsx";
@@ -29,7 +29,7 @@ export const ProjectTimersGroup = ({ projectGroup, className, ...props }: Projec
   const { getPriorityType } = useRedmineIssuePriorities({ enabled: settings.style.showIssuePriority });
 
   return (
-    <div {...props} className={clsxm("flex flex-col gap-y-2", className)}>
+    <div {...props} className={cn("flex flex-col gap-y-2", className)}>
       <TimerProject type={projectGroup.type} project={projectGroup.project} />
       {projectGroup.items.map(({ timer, issue }) => (
         <TimerComponents.Root key={timer.id} timer={timer} issue={issue}>
@@ -57,7 +57,7 @@ const TimerProject = ({ project, type }: { project?: TReference; type: ProjectTi
   return (
     <div
       className={clsx("flex items-center gap-x-1 py-1", {
-        "bg-background shadow-background sticky top-0 z-5 shadow": settings.style.stickyScroll,
+        "sticky top-0 z-5 bg-background shadow shadow-background": settings.style.stickyScroll,
       })}
     >
       <SquareChartGanttIcon className="size-3.5 shrink-0" />

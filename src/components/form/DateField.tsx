@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { clsx } from "clsx";
 import { XIcon } from "lucide-react";
 import { ComponentProps, useEffect, useId, useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -48,7 +48,7 @@ export const DateField = ({ title, disabled, placeholder, mode = "single", class
               disabled={disabled}
               onBlur={handleBlur}
               aria-invalid={isInvalid}
-              className={cn("hover:text-foreground relative w-full justify-start truncate text-left text-base font-normal", {
+              className={clsx("relative w-full justify-start truncate text-left text-base font-normal hover:text-foreground", {
                 "text-muted-foreground": !state.value,
               })}
             />

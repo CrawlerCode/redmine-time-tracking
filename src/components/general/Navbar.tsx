@@ -16,7 +16,7 @@ const Navbar = ({ navigation }: PropTypes) => {
   const location = useLocation();
 
   return (
-    <NavigationMenu className="border-primary max-w-screen border-b p-1.5">
+    <NavigationMenu className="max-w-screen border-b border-primary p-1.5">
       <NavigationMenuList className="justify-start">
         {navigation.map((item) => (
           <NavigationMenuItem key={item.href}>
