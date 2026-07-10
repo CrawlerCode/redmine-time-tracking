@@ -31,7 +31,7 @@
     "lint:react-doctor": "pnpx react-doctor@latest -y --verbose .",
     "test": "playwright test",
     "test:update-snapshots": "playwright test --update-snapshots=changed",
-    "generate-store-screenshots": "tsx screenshots/generate-store-screenshots.ts",
+    "generate-store-screenshots": "node screenshots/generate-store-screenshots.ts",
     "release": "semantic-release"
   },
   "dependencies": {
