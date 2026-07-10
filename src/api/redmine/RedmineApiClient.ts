@@ -320,16 +320,28 @@ export class RedmineApiClient {
 
   // Other
   async detectTextFormatting(): Promise<"none" | "common_mark" | "textile" | undefined> {
-    const resp = await this.instance.get<string>("/", {
+    // available since Redmine 6.0.0
+    const indexPage = await this.instance.get<string>("/", {
       headers: { Accept: "text/html" },
     });
-    // available since Redmine 6.0.0
-    const match = String(resp.data).match(/data-text-formatting="(common_mark|textile|)"/);
-    if (match) {
-      if (match[1] === "") {
+    const matchFormatting = String(indexPage.data).match(/data-text-formatting="(common_mark|textile|)"/);
+    if (matchFormatting) {
+      if (matchFormatting[1] === "") {
         return "none";
       }
-      return match[1] as "common_mark" | "textile";
+      return matchFormatting[1] as "common_mark" | "textile";
+    }
+
+    // fallback for Redmine < 6.0.0
+    const newsPage = await this.instance.get<string>("/news", {
+      headers: { Accept: "text/html" },
+    });
+    const matchToolbar = String(newsPage.data).match(/javascripts\/jstoolbar\/(common_mark|markdown|textile).js/);
+    if (matchToolbar) {
+      if (matchToolbar[1] === "markdown") {
+        return "common_mark";
+      }
+      return matchToolbar[1] as "common_mark" | "textile";
     }
   }
 }
