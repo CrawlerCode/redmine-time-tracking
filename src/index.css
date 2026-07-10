@@ -23,10 +23,10 @@
   --input: oklch(90% 0.01 260deg);
   --ring: oklch(62.31% 0.188 259.8145deg);
   --chart-1: oklch(62.31% 0.188 259.8145deg);
-  --chart-2: oklch(54.61% 0.2152 262.8809deg);
-  --chart-3: oklch(48.82% 0.2172 264.3763deg);
-  --chart-4: oklch(42.44% 0.1809 265.6377deg);
-  --chart-5: oklch(37.91% 0.1378 265.5222deg);
+  --chart-2: oklch(70% 0.16 245deg);
+  --chart-3: oklch(56% 0.19 252deg);
+  --chart-4: oklch(48% 0.17 232deg);
+  --chart-5: oklch(43% 0.14 240deg);
   --sidebar: oklch(98.46% 0.0017 247.8389deg);
   --sidebar-foreground: oklch(32.11% 0 0deg);
   --sidebar-primary: oklch(62.31% 0.188 259.8145deg);
@@ -69,11 +69,11 @@
     --border: oklch(37.15% 0 0deg);
     --input: oklch(37.15% 0 0deg);
     --ring: oklch(62.31% 0.188 259.8145deg);
-    --chart-1: oklch(71.37% 0.1434 254.624deg);
-    --chart-2: oklch(62.31% 0.188 259.8145deg);
-    --chart-3: oklch(54.61% 0.2152 262.8809deg);
-    --chart-4: oklch(48.82% 0.2172 264.3763deg);
-    --chart-5: oklch(42.44% 0.1809 265.6377deg);
+    --chart-1: oklch(74% 0.16 245deg);
+    --chart-2: oklch(67% 0.2 260deg);
+    --chart-3: oklch(62% 0.2 252deg);
+    --chart-4: oklch(79% 0.12 232deg);
+    --chart-5: oklch(71% 0.13 240deg);
     --sidebar: oklch(20.46% 0 0deg);
     --sidebar-foreground: oklch(92.19% 0 0deg);
     --sidebar-primary: oklch(62.31% 0.188 259.8145deg);
@@ -183,5 +183,9 @@
   ::-webkit-scrollbar-thumb {
     background-color: var(--color-primary);
     border-radius: 3px;
+  }
+
+  .recharts-wrapper * {
+    outline: none;
   }
 }
