@@ -14,6 +14,11 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
       .nonempty(formatMessage?.({ id: "settings.redmine.url.validation.required" }))
       .regex(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?[\w\-/]*\/?$/, formatMessage?.({ id: "settings.redmine.url.validation.valid-url" })),
     redmineApiKey: z.string().nonempty(formatMessage?.({ id: "settings.redmine.api-key.validation.required" })),
+    redmine: z.object({
+      settings: z.object({
+        textFormatting: z.enum(["none", "common_mark", "textile"]),
+      }),
+    }),
     features: z.object({
       autoPauseOnSwitch: z.boolean(),
       roundTimeNearestQuarterHour: z.boolean().optional(), // ! Legacy
@@ -53,6 +58,11 @@ const defaultSettings: Settings = {
   language: "browser",
   redmineURL: "",
   redmineApiKey: "",
+  redmine: {
+    settings: {
+      textFormatting: "none",
+    },
+  },
   features: {
     autoPauseOnSwitch: true,
     roundToInterval: false,

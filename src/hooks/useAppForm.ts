@@ -2,6 +2,7 @@ import { CheckboxField } from "@/components/form/CheckboxField";
 import { ComboboxField } from "@/components/form/ComboboxField";
 import { DateField } from "@/components/form/DateField";
 import { HoursField } from "@/components/form/HoursField";
+import { RedmineMdEditorField } from "@/components/form/RedmineMdEditorField";
 import { SelectField } from "@/components/form/SelectField";
 import { SubmitButton } from "@/components/form/SubmitButton";
 import { SwitchField } from "@/components/form/SwitchField";
@@ -25,6 +26,7 @@ export const { useAppForm, withForm } = createFormHook({
     ComboboxField,
     ToggleGroupField,
     HoursField,
+    RedmineMdEditorField,
   },
   formComponents: {
     SubmitButton,
