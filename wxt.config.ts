@@ -33,10 +33,8 @@ export default defineConfig({
             if (fileName === "content-scripts/content.js") {
               const chunk = bundle[fileName];
               if (chunk?.type === "chunk") {
-                chunk.code = chunk.code
-                  .split("")
-                  .map((ch) => (ch.charCodeAt(0) <= 0x7f ? ch : "\\u" + ("0000" + ch.charCodeAt(0).toString(16)).slice(-4)))
-                  .join("");
+                // eslint-disable-next-line no-control-regex -- intentionally matches the full non-ASCII range, including control characters
+                chunk.code = chunk.code.replace(/[^\x00-\x7F]/g, (ch) => "\\u" + ch.charCodeAt(0).toString(16).padStart(4, "0"));
               }
             }
           }

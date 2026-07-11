@@ -120,15 +120,13 @@ const CreateTimeEntryModal = ({ timer, issue, initialValues, onClose, onSuccess 
     onSubmit: async ({ value: originalValue }) => {
       const { issue: updateIssue, ...value } = { ...originalValue };
 
-      // Update issue done_ratio and notes
+      // Update issue done_ratio, notes, and uploads
       const updatedDoneRatio = updateIssue.done_ratio !== issue.done_ratio ? updateIssue.done_ratio : undefined;
       const notes = updateIssue._add_notes && updateIssue.notes ? updateIssue.notes : undefined;
-      if (updatedDoneRatio !== undefined || notes) {
+      if (updatedDoneRatio !== undefined || notes || updateIssue.uploads.length > 0) {
         await updateIssueMutation.mutateAsync({
           done_ratio: updatedDoneRatio,
-          ...(notes && {
-            notes: settings.redmine.settings.textFormatting === "textile" ? markdownToTextile(notes) : notes,
-          }),
+          notes: notes && settings.redmine.settings.textFormatting === "textile" ? markdownToTextile(notes) : notes,
           uploads: updateIssue.uploads,
         });
       }
