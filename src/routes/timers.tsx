@@ -2,16 +2,17 @@ import { useSuspenseRedmineIssues } from "@/api/redmine/hooks/useRedmineIssues";
 import { OptionalSidebarScrollspy } from "@/components/general/SidebarScrollspy";
 import { ProjectTimersGroup, ProjectTimersGroupSkeleton } from "@/components/timer/ProjectTimersGroup";
 import TimerSearch, { useTimerSearch } from "@/components/timer/TimerSearch";
+import TimersOverview, { TimersOverviewSkeleton } from "@/components/timer/TimersOverview";
 import { Skeleton } from "@/components/ui/skeleton";
 import PermissionProvider from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
 import { groupTimers } from "@/utils/groupTimers";
 import { randomInt } from "@/utils/random";
+import { useMediaQuery } from "@mantine/hooks";
 import { createFileRoute } from "@tanstack/react-router";
 import { SquareChartGanttIcon } from "lucide-react";
 import { useDeferredValue, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
-import { useMediaQuery } from "@mantine/hooks";
 import TimersBadge from "../components/timer/TimersBadge";
 import useTimers from "../hooks/useTimers";
 
@@ -49,6 +50,8 @@ const TimersPage = () => {
   return (
     <PermissionProvider>
       <TimersBadge activeTimerCount={timers.getActiveTimerCount()} />
+
+      <TimersOverview timers={timers.getAllTimers()} issues={issues} className="mb-2 shrink-0 sm:mb-4" />
 
       <TimerSearch.Input className="mb-2 sm:mb-4" />
 
@@ -102,6 +105,8 @@ const PageSkeleton = () => {
 
   return (
     <>
+      <TimersOverviewSkeleton className="mb-2 shrink-0 sm:mb-4" />
+
       <TimerSearch.Skeleton.Input className="mb-2 sm:mb-4" />
 
       <OptionalSidebarScrollspy

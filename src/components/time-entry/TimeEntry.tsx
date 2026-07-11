@@ -1,4 +1,5 @@
 import { TimeEntryContextMenu } from "@/components/time-entry/TimeEntryContextMenu";
+import { clsx } from "clsx";
 import { Fragment } from "react";
 import { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
@@ -7,27 +8,42 @@ import TimeEntryTooltip from "./TimeEntryTooltip";
 
 type PropTypes = {
   entries: TTimeEntry[];
-  previewHours?: number;
-  maxDayHours?: number;
+  preview?: {
+    hours: number;
+    name?: string;
+  }[];
+  size?: "sm" | "md" | "lg";
   withContextMenu?: boolean;
 };
 
-const TimeEntry = ({ entries, previewHours, maxDayHours = 24, withContextMenu = false }: PropTypes) => {
+const TimeEntry = ({ entries, preview, size = "sm", withContextMenu = false }: PropTypes) => {
   const formatHours = useFormatHours();
 
   const sumHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
+  const sumPreviewHours = preview?.reduce((sum, p) => sum + p.hours, 0);
+  const maxHours = Math.max(8, sumHours + (sumPreviewHours ?? 0));
 
   return (
-    <div role="row" className="flex items-center gap-x-0.5">
+    <div
+      role="row"
+      className={clsx("flex items-center", {
+        "gap-x-0.5": size === "sm",
+        "gap-x-1": size === "md" || size === "lg",
+      })}
+    >
       {entries.map((entry) => {
         const entryElement = (
           <TimeEntryTooltip entry={entry}>
             <div
               role="cell"
               data-type="time-entry"
-              className="h-4 rounded-sm bg-primary"
+              className={clsx("min-w-1 bg-primary", {
+                "h-4 rounded-sm": size === "sm",
+                "h-6 rounded-md": size === "md",
+                "h-8 rounded-lg": size === "lg",
+              })}
               style={{
-                width: `${(entry.hours / maxDayHours) * 100}%`,
+                width: `${(entry.hours / maxHours) * 100}%`,
               }}
             />
           </TimeEntryTooltip>
@@ -44,28 +60,37 @@ const TimeEntry = ({ entries, previewHours, maxDayHours = 24, withContextMenu = 
           </Fragment>
         );
       })}
-      {!!previewHours && (
-        <Tooltip>
+      {preview?.map((p, index) => (
+        <Tooltip key={index}>
           <TooltipTrigger
             delay={300}
             render={
               <div
-                className="h-3.5 rounded-sm bg-primary/60"
+                className={clsx("min-w-1 bg-primary/60", {
+                  "h-3.5 rounded-sm": size === "sm",
+                  "h-5.5 rounded-md": size === "md",
+                  "h-7 rounded-lg": size === "lg",
+                })}
                 style={{
-                  width: `${(previewHours / maxDayHours) * 100}%`,
+                  width: `${(p.hours / maxHours) * 100}%`,
                 }}
               />
             }
           />
-          <TooltipContent>
-            <p className="text-sm font-semibold">{formatHours(previewHours)}</p>
+          <TooltipContent className="flex max-w-[17rem] flex-col items-start gap-y-3 truncate">
+            <p className="text-sm font-semibold">{formatHours(p.hours)}</p>
+            {p.name && <p className="truncate text-xs font-normal">{p.name}</p>}
           </TooltipContent>
         </Tooltip>
-      )}
+      ))}
       <div
-        className="h-3 rounded-sm bg-muted"
+        className={clsx("bg-muted", {
+          "h-3 rounded-sm": size === "sm",
+          "h-5 rounded-md": size === "md",
+          "h-7 rounded-lg": size === "lg",
+        })}
         style={{
-          width: `${((maxDayHours - sumHours - (previewHours ?? 0)) / maxDayHours) * 100}%`,
+          width: `${((maxHours - sumHours - (sumPreviewHours ?? 0)) / maxHours) * 100}%`,
         }}
       />
     </div>

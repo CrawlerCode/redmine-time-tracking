@@ -51,13 +51,13 @@ export const ProjectTimersGroup = ({ projectGroup, className, ...props }: Projec
   );
 };
 
-const TimerProject = ({ project, type }: { project?: TReference; type: ProjectTimersGroupType["type"] }) => {
+export const TimerProject = ({ project, type, forceNoSticky }: { project?: TReference; type: ProjectTimersGroupType["type"]; forceNoSticky?: boolean }) => {
   const { settings } = useSettings();
 
   return (
     <div
       className={clsx("flex items-center gap-x-1 py-1", {
-        "sticky top-0 z-5 bg-background shadow shadow-background": settings.style.stickyScroll,
+        "sticky top-0 z-5 bg-background shadow shadow-background": settings.style.stickyScroll && !forceNoSticky,
       })}
     >
       <SquareChartGanttIcon className="size-3.5 shrink-0" />
