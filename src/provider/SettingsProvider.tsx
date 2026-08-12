@@ -33,6 +33,7 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
       cacheComments: z.boolean().optional(), // ! Legacy
       persistentComments: z.boolean(),
       showCurrentIssueTimer: z.boolean(),
+      timersOverview: z.boolean(),
     }),
     style: z.object({
       displaySearchAlways: z.boolean(),
@@ -70,6 +71,7 @@ const defaultSettings: Settings = {
     roundingInterval: 15,
     persistentComments: true,
     showCurrentIssueTimer: true,
+    timersOverview: true,
   },
   style: {
     displaySearchAlways: false,

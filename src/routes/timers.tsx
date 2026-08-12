@@ -51,7 +51,7 @@ const TimersPage = () => {
     <PermissionProvider>
       <TimersBadge activeTimerCount={timers.getActiveTimerCount()} />
 
-      <TimersOverview timers={timers.getAllTimers()} issues={issues} className="mb-2 shrink-0 sm:mb-4" />
+      {settings.features.timersOverview && <TimersOverview timers={timers.getAllTimers()} issues={issues} className="mb-2 shrink-0 sm:mb-4" />}
 
       <TimerSearch.Input className="mb-2 sm:mb-4" />
 
@@ -105,7 +105,7 @@ const PageSkeleton = () => {
 
   return (
     <>
-      <TimersOverviewSkeleton className="mb-2 shrink-0 sm:mb-4" />
+      {settings.features.timersOverview && <TimersOverviewSkeleton className="mb-2 shrink-0 sm:mb-4" />}
 
       <TimerSearch.Skeleton.Input className="mb-2 sm:mb-4" />
 
