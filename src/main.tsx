@@ -1,3 +1,5 @@
+import "@/utils/dev-preview-browser-shim";
+
 import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { ErrorComponent } from "@/components/error/ErrorComponent";
 import { Layout } from "@/components/general/Layout";
