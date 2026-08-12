@@ -214,6 +214,12 @@ function PageComponent() {
                   />
                 )}
               />
+              <form.AppField
+                name="features.timersOverview"
+                children={(field) => (
+                  <field.SwitchField title={formatMessage({ id: "settings.features.timers-overview.title" })} description={formatMessage({ id: "settings.features.timers-overview.description" })} />
+                )}
+              />
             </FieldGroup>
           </CardContent>
         </Card>

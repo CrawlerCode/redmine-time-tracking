@@ -26,7 +26,7 @@ const TimeEntryPreview = ({ date, previewHours, className }: PropTypes) => {
     <div className={cn("flex items-center gap-x-1", className)}>
       <h3 className="max-w-20 truncate text-sm font-semibold">{formatHours(roundHours(sumHours))}</h3>
       <div className="grow">
-        <TimeEntry entries={timeEntries} previewHours={previewHours} maxDayHours={sumHours > 12 ? sumHours : 12} />
+        <TimeEntry entries={timeEntries} preview={[{ hours: previewHours }]} />
       </div>
     </div>
   );

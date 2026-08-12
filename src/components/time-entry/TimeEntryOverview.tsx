@@ -43,11 +43,6 @@ export const TimeEntryOverview = ({ from, to, entries }: PropTypes) => {
     (date: Date) => groupedByDate.get(formatISO(date, { representation: "date" })) ?? ({ date, entries: [], hours: 0 } satisfies GroupedTimeEntries)
   );
 
-  const maxDayHours = Math.max(
-    groupedByDate.values().reduce((max, { hours }) => Math.max(max, hours), 0),
-    8
-  );
-
   const totalHours = entries.reduce((sum, entry) => sum + entry.hours, 0);
 
   const isMoreThanOneWeek = !isSameWeek(from, to, { weekStartsOn: 1 });
@@ -87,7 +82,7 @@ export const TimeEntryOverview = ({ from, to, entries }: PropTypes) => {
               </span>
               <span className="w-17 truncate text-end text-xs font-semibold text-muted-foreground">{isDisabled ? "–" : formatHours(roundHours(hours))}</span>
               <div className="grow">
-                <TimeEntry entries={entries} maxDayHours={maxDayHours} withContextMenu />
+                <TimeEntry entries={entries} withContextMenu />
               </div>
             </div>
           );
