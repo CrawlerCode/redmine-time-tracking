@@ -40,7 +40,7 @@ function FormGrid({ className, cols = 1, ...props }: React.ComponentProps<"div">
 
 function FormFieldset({ className, legend, children, ...props }: React.ComponentProps<"fieldset"> & { legend?: React.ReactNode }) {
   return (
-    <fieldset data-slot="form-fieldset" className={cn("border-input rounded-md border p-2", className)} {...props}>
+    <fieldset data-slot="form-fieldset" className={cn("min-w-0 rounded-md border border-input p-2", className)} {...props}>
       {legend && <legend className="px-2 text-base font-semibold">{legend}</legend>}
       {children}
     </fieldset>

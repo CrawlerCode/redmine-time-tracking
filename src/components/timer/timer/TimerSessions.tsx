@@ -30,7 +30,7 @@ export const TimerSessions = () => {
     <>
       <div className="flex flex-col gap-y-0.5">
         {visibleSessions.map((session) => (
-          <div key={session.id} className="text-muted-foreground flex items-center gap-2">
+          <div key={session.id} className="flex items-center gap-2 text-muted-foreground">
             <span className="grow truncate">
               {formatDateTimeRange(session.start, session.end, {
                 dateStyle: isToday(session.start) ? undefined : "short",
@@ -50,7 +50,7 @@ export const TimerSessions = () => {
           </div>
         ))}
         {hiddenCount > 0 && (
-          <button type="button" tabIndex={-1} className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-1 text-xs" onClick={() => setExpanded((v) => !v)}>
+          <button type="button" tabIndex={-1} className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground hover:text-foreground" onClick={() => setExpanded((v) => !v)}>
             {expanded ? <ChevronUpIcon className="size-3" /> : <ChevronDownIcon className="size-3" />}
             <span>{expanded ? formatMessage({ id: "timer.sessions.show-less" }) : formatMessage({ id: "timer.sessions.show-more" }, { count: hiddenCount })}</span>
           </button>
@@ -93,13 +93,13 @@ const RemoveSessionDialog = ({ sessionId, onClose }: { sessionId: string; onClos
           <AlertDialogTitle>{formatMessage({ id: "timer.modal.remove-session.title" })}</AlertDialogTitle>
         </AlertDialogHeader>
 
-        <div className="bg-muted/40 border-border/60 space-y-2 rounded-md border px-3 py-2 text-sm">
+        <div className="space-y-2 rounded-md border border-border/60 bg-muted/40 px-3 py-2 text-sm">
           <div className="flex items-center justify-between gap-3">
             <span className="text-muted-foreground">{formatMessage({ id: "timer.modal.remove-session.current" })}</span>
             <span>{formatTimer(totalElapsedTime)}</span>
           </div>
           <div className="flex items-center justify-between gap-3">
-            <span className="text-muted-foreground/80 min-w-0 text-xs">
+            <span className="min-w-0 text-xs text-muted-foreground/80">
               {formatDateTimeRange(session.start, session.end, {
                 dateStyle: isToday(session.start) ? undefined : "short",
                 timeStyle: "medium",
@@ -107,7 +107,7 @@ const RemoveSessionDialog = ({ sessionId, onClose }: { sessionId: string; onClos
             </span>
             <span className="text-destructive">-{formatTimer(duration)}</span>
           </div>
-          <div className="border-border/60 flex items-center justify-between gap-3 border-t pt-2">
+          <div className="flex items-center justify-between gap-3 border-t border-border/60 pt-2">
             <span className="text-muted-foreground">{formatMessage({ id: "timer.modal.remove-session.result" })}</span>
             <span>{formatTimer(resultingTimer)}</span>
           </div>
@@ -140,7 +140,7 @@ export const TimerSessionsSkeleton = () => {
             <Skeleton className="h-5 w-44" />
           </div>
           <Skeleton className="h-5 w-12" />
-          <Skeleton className="h-6 w-6" />
+          <Skeleton className="size-6" />
         </div>
       ))}
     </div>

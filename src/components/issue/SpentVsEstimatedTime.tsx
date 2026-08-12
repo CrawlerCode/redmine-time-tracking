@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import clsx from "clsx";
 import { TIssue } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
@@ -13,7 +14,7 @@ const SpentVsEstimatedTime = ({ issue, previewHours, className, ...props }: Prop
   return (
     <>
       {issue.spent_hours != null && issue.estimated_hours != null && (
-        <span className={clsx("flex items-center gap-x-1 truncate", className)} {...props}>
+        <span className={cn("flex items-center gap-x-1 truncate", className)} {...props}>
           <span
             className={clsx("mb-0.5 truncate font-bold", {
               "text-orange-500 dark:text-orange-400": issue.spent_hours + previewHours > issue.estimated_hours,

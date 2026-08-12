@@ -20,6 +20,26 @@ export default defineConfig({
         presets: [reactCompilerPreset()],
       } as Parameters<typeof babel>[0]),
       tailwindcss(),
+      /**
+       * Workaround until rolldown/oxc supports ascii-only output
+       *
+       * @see https://github.com/wxt-dev/wxt/issues/353
+       * @see https://github.com/rolldown/rolldown/issues/8805
+       */
+      {
+        name: "vite-plugin-to-ascii",
+        generateBundle(_options, bundle) {
+          for (const fileName in bundle) {
+            if (fileName === "content-scripts/content.js") {
+              const chunk = bundle[fileName];
+              if (chunk?.type === "chunk") {
+                // eslint-disable-next-line no-control-regex -- intentionally matches the full non-ASCII range, including control characters
+                chunk.code = chunk.code.replace(/[^\x00-\x7F]/g, (ch) => "\\u" + ch.charCodeAt(0).toString(16).padStart(4, "0"));
+              }
+            }
+          }
+        },
+      },
     ],
   }),
   manifest: ({ browser, mode }) => ({
