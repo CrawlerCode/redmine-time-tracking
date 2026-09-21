@@ -1,3 +1,38 @@
+## [2.1.0-beta.1](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.3...v2.1.0-beta.1) (2026-09-21)
+
+### 🚀 Features
+
+* Add md text-editor and support for image upload ([#74](https://github.com/CrawlerCode/redmine-time-tracking/issues/74)) ([1b4e305](https://github.com/CrawlerCode/redmine-time-tracking/commit/1b4e305ea66e6e5a792840772010857810f58a52))
+* Add timer overview and multi submit timer modal ([#96](https://github.com/CrawlerCode/redmine-time-tracking/issues/96)) ([baa5429](https://github.com/CrawlerCode/redmine-time-tracking/commit/baa5429557972045ac48831288d7d4a112ece9b3))
+* **time:** Add time entry chart and allow dynamic date rage ([#73](https://github.com/CrawlerCode/redmine-time-tracking/issues/73)) ([c605b44](https://github.com/CrawlerCode/redmine-time-tracking/commit/c605b44dea6a67c39c30b71a1c95b55a64291dec))
+* **ui:** Improve UI consistency ([#100](https://github.com/CrawlerCode/redmine-time-tracking/issues/100)) ([2227bd4](https://github.com/CrawlerCode/redmine-time-tracking/commit/2227bd47ed524bbee5372c67f06e045f1e99c124))
+
+### 🩹 Fixes
+
+* Fix type errors ([d38c21d](https://github.com/CrawlerCode/redmine-time-tracking/commit/d38c21deb80cf5c749dd3b2a7633bb672e94bce9))
+* Prevent crash when project is undefined ([#93](https://github.com/CrawlerCode/redmine-time-tracking/issues/93)) ([089d39c](https://github.com/CrawlerCode/redmine-time-tracking/commit/089d39c7cbce5c5ec451638d5adaf0a8b28ad6ee))
+
+### 🏡 Chore
+
+* Add mise configuration, update pnpm & use node v24 ([#90](https://github.com/CrawlerCode/redmine-time-tracking/issues/90)) ([0b0a98e](https://github.com/CrawlerCode/redmine-time-tracking/commit/0b0a98eb9d1cdb1c0f1ce3f4caa340f243c22ea9))
+* Cleanup eslint config ([0cec2c5](https://github.com/CrawlerCode/redmine-time-tracking/commit/0cec2c54bce8f47f8b68c2560dbb5a2033b8a1e5))
+* **deps:** Update pnpm to v12 ([3d1542d](https://github.com/CrawlerCode/redmine-time-tracking/commit/3d1542d105305d3f75a42741ed0acb5140664f3f))
+* **dev:** Add Redmine 7 dev instance ([33baf7d](https://github.com/CrawlerCode/redmine-time-tracking/commit/33baf7deab0803e37b8d2dc467f0f9e5d5e8be00))
+* Enable eslint tailwindcss plugin ([8191d3f](https://github.com/CrawlerCode/redmine-time-tracking/commit/8191d3f1b88ae371762b3aa773e022dd9e4b3595))
+
+### 📖 Documentation
+
+* Fix pre-release version badge ([967a8ee](https://github.com/CrawlerCode/redmine-time-tracking/commit/967a8eee9b7c2f8b30318bd1d35e94f765798a77))
+
+### 📦 Builds
+
+* **deps:** Update npm dependencies and add typescript 7 ([c9e75b1](https://github.com/CrawlerCode/redmine-time-tracking/commit/c9e75b16352a26234d3a86719b500611374c06f3))
+* **deps:** Update npm dependencies and fix all issues ([0008923](https://github.com/CrawlerCode/redmine-time-tracking/commit/0008923472c666fadf8eb16f7b873156f55a0517))
+
+### ⚡CI
+
+* Change packageManager onFail behavior from download to warn ([cc6a2a0](https://github.com/CrawlerCode/redmine-time-tracking/commit/cc6a2a04f8f9b2860ddee3e055a0f123d74e5579))
+
 ## [2.0.3](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.2...v2.0.3) (2026-05-09)
 
 ### 🩹 Fixes
