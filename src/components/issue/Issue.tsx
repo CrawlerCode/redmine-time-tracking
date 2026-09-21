@@ -5,7 +5,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { clsx } from "clsx";
 import { PinIcon, UserIcon } from "lucide-react";
-import { useState } from "react";
 import { useIntl } from "react-intl";
 import { TIssue } from "../../api/redmine/types";
 import { LocalIssue } from "../../hooks/useLocalIssues";
@@ -37,7 +36,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers }: PropTy
 
   const primaryTimer = timers[0]!;
 
-  const [areTimersExpanded, setAreTimersExpanded] = useState(false);
+  const hasMultipleTimers = timers.length > 1;
 
   return (
     <IssueContextMenu issue={issue} localIssue={localIssue} primaryTimer={primaryTimer} assignedToMe={assignedToMe}>
@@ -45,7 +44,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers }: PropTy
         role="listitem"
         data-type="issue"
         className={clsx(
-          "relative flex flex-col gap-1",
+          "relative flex flex-col gap-1 p-1",
           settings.style.showIssuePriority && {
             "border-priority-lowest-bg ring-1 ring-priority-lowest-bg": priorityType === "lowest",
             "border-priority-medium-high-bg ring-1 ring-priority-medium-high-bg": priorityType === "medium-high",
@@ -62,13 +61,13 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers }: PropTy
             "me-10": localIssue.pinned && !assignedToMe,
           })}
         />
-        <div className="flex items-start justify-between gap-x-2">
-          <div className="mt-0.5 flex min-h-5.5 min-w-0 flex-1 items-center gap-x-2">
+
+        <div className="flex h-7 items-center justify-between gap-x-2">
+          <div className="flex min-h-5.5 min-w-0 flex-1 items-center gap-x-2">
             {settings.style.showIssueDoneRatio && (
-              <div className="w-20 shrink-0 overflow-hidden rounded-sm bg-muted">
-                <div className="bg-green-600/80 p-1 text-center text-xs leading-none font-medium text-foreground select-none dark:bg-green-600/60" style={{ width: `${issue.done_ratio}%` }}>
-                  {issue.done_ratio}%
-                </div>
+              <div className="relative h-5 w-20 shrink-0 overflow-hidden rounded-sm bg-muted">
+                <div className="absolute inset-y-0 left-0 bg-green-600/80 dark:bg-green-600/60" style={{ width: `${issue.done_ratio}%` }} />
+                <span className="relative flex h-full items-center justify-center text-xs leading-none font-medium text-foreground select-none">{issue.done_ratio}%</span>
               </div>
             )}
             {settings.style.showIssueStatus && (
@@ -77,39 +76,39 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers }: PropTy
               </Badge>
             )}
           </div>
-          {canLogTime && !areTimersExpanded && (
-            <div className="shrink-0">
-              <TimerComponents.Root timer={primaryTimer} issue={issue}>
-                <TimerComponents.Wrapper>
-                  <TimerComponents.Counter />
+
+          {canLogTime && !hasMultipleTimers && (
+            <TimerComponents.Root timer={primaryTimer} issue={issue}>
+              <TimerComponents.Wrapper>
+                <TimerComponents.Counter />
+                <TimerComponents.ButtonWrapper>
                   <TimerComponents.ToggleButton />
                   <TimerComponents.DoneButton canLogTime={canLogTime} />
-                </TimerComponents.Wrapper>
-              </TimerComponents.Root>
-              {timers.length > 1 && (
-                <button type="button" className="pl-3 text-xs text-muted-foreground" onClick={() => setAreTimersExpanded(true)}>
-                  {formatMessage({ id: "issues.timers.more-timers" }, { count: timers.length - 1 })}
-                </button>
-              )}
-            </div>
+                </TimerComponents.ButtonWrapper>
+              </TimerComponents.Wrapper>
+            </TimerComponents.Root>
           )}
         </div>
-        {canLogTime && areTimersExpanded && (
-          <div className="mt-1 flex flex-col gap-y-1">
+
+        {canLogTime && hasMultipleTimers && (
+          <div className="flex flex-col gap-y-1">
             {timers.map((timer) => (
               <TimerComponents.Root key={timer.id} timer={timer} issue={issue}>
                 <TimerComponents.ContextMenu>
                   <TimerComponents.WrapperCard>
                     <TimerComponents.NameField />
                     <TimerComponents.Counter />
-                    <TimerComponents.ToggleButton />
-                    <TimerComponents.DoneButton canLogTime={canLogTime} />
+                    <TimerComponents.ButtonWrapper>
+                      <TimerComponents.ToggleButton />
+                      <TimerComponents.DoneButton canLogTime={canLogTime} />
+                    </TimerComponents.ButtonWrapper>
                   </TimerComponents.WrapperCard>
                 </TimerComponents.ContextMenu>
               </TimerComponents.Root>
             ))}
           </div>
         )}
+
         <div className="absolute top-2 right-2 flex items-start justify-end gap-x-2">
           {localIssue.pinned && (
             <HelpTooltip message={formatMessage({ id: "issues.issue.pinned" })}>
@@ -131,20 +130,20 @@ export const IssueSkeleton = () => {
   const { settings } = useSettings();
 
   return (
-    <ToggleableCard className="flex flex-col gap-1">
+    <ToggleableCard className="flex flex-col gap-1 p-1">
       <IssueTitleSkeleton />
-      <div className="flex items-start justify-between gap-x-2">
-        <div className="mt-0.5 flex min-h-5.5 min-w-0 flex-1 items-center gap-x-2">
+      <div className="flex h-7 items-center justify-between gap-x-2">
+        <div className="flex min-h-5.5 min-w-0 flex-1 items-center gap-x-2">
           {settings.style.showIssueDoneRatio && <Skeleton className="h-5.5 w-20 rounded-sm" />}
           {settings.style.showIssueStatus && <Skeleton className="h-5 w-14 rounded-4xl" />}
         </div>
-        <div className="shrink-0">
-          <TimerComponents.Wrapper>
-            <TimerComponents.Skeleton.Counter />
+        <TimerComponents.Wrapper>
+          <TimerComponents.Skeleton.Counter />
+          <TimerComponents.ButtonWrapper>
             <TimerComponents.Skeleton.ToggleButton />
             <TimerComponents.Skeleton.DoneButton />
-          </TimerComponents.Wrapper>
-        </div>
+          </TimerComponents.ButtonWrapper>
+        </TimerComponents.Wrapper>
       </div>
     </ToggleableCard>
   );

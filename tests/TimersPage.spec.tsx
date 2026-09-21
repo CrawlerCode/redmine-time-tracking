@@ -46,7 +46,7 @@ test("Open done button", async ({ page, timersPage }) => {
   await timersPage.waitForTimersToLoad();
 
   // Click the done button on the first timer to open the create time entry form
-  await page.locator("[data-type='timer']").first().locator("[role='button'][data-action='timer-done']").click();
+  await page.locator("[data-type='timer']").first().locator("[data-action='timer-done']").click();
   await page.waitForSelector("[role=dialog]");
 
   await expect(page).toHaveScreenshot();

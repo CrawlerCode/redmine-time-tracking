@@ -32,8 +32,7 @@
   "timer.modal.remove-session.result": "New timer",
   "timer.modal.remove-session.cancel": "Cancel",
   "timer.modal.remove-session.submit": "Remove",
-  "timer.sessions.show-more": "Show {count} more",
-  "timer.sessions.show-less": "Show less",
+  "timer.sessions.summary": "{count, plural, one {# session} other {# sessions}}",
 
   "issues.search": "Search... (#123, Subject, ...)",
   "issues.search.search-in-project": "Search in <badge>{projectName}</badge>",
@@ -64,7 +63,6 @@
   "issues.id-copied-to-clipboard": "'#{issueId}' copied to clipboard",
   "issues.issue.pinned": "Issue is pinned at the top",
   "issues.issue.not-assigned-to-me": "Issue is not assigned to you",
-  "issues.timers.more-timers": "+{count} more timers",
   "issues.timer.action.edit.tooltip": "Double-click to edit",
   "issues.timer.action.start.tooltip": "Click to start timer",
   "issues.timer.action.pause.tooltip": "Click to pause timer",

@@ -3,7 +3,7 @@ import { useRedmineMultipleProjectTimeEntryActivities } from "@/api/redmine/hook
 import { redmineTimeEntriesQueries } from "@/api/redmine/queries/timeEntries";
 import { TCreateTimeEntry, TIssue } from "@/api/redmine/types";
 import ActivityField from "@/components/issue/form/fields/ActivityField";
-import { IssueTitle } from "@/components/issue/IssueTitle";
+import { IssueTitle, IssueTitleFallback } from "@/components/issue/IssueTitle";
 import { TimerProject } from "@/components/timer/ProjectTimersGroup";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -267,7 +267,7 @@ const SubmitTimersModal = ({ timers, issues, onClose }: PropTypes) => {
                   <FormFieldset key={item.timer.id} className="min-w-0 overflow-hidden opacity-50">
                     <div className="flex items-center gap-2">
                       <Checkbox checked={false} disabled />
-                      {item.issue ? <IssueTitle issue={item.issue} className="min-w-0 grow" /> : <h1 className="min-w-0 grow truncate text-gray-500 line-through">#{item.timer.issueId}</h1>}
+                      {item.issue ? <IssueTitle issue={item.issue} className="grow" /> : <IssueTitleFallback issueId={item.timer.issueId} className="grow" />}
                       <span className="shrink-0 text-xs text-muted-foreground">
                         <FormattedMessage id={`timers.modal.submit-timers.invalid.${item.reason}`} />
                       </span>

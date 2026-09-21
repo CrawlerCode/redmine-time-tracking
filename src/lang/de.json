@@ -32,8 +32,7 @@
   "timer.modal.remove-session.result": "Neuer Timer",
   "timer.modal.remove-session.cancel": "Abbrechen",
   "timer.modal.remove-session.submit": "Entfernen",
-  "timer.sessions.show-more": "{count} weitere anzeigen",
-  "timer.sessions.show-less": "Weniger anzeigen",
+  "timer.sessions.summary": "{count, plural, one {# Sitzung} other {# Sitzungen}}",
 
   "issues.search": "Suchen... (#123, Thema, ...)",
   "issues.search.search-in-project": "In <badge>{projectName}</badge> suchen",
@@ -64,7 +63,6 @@
   "issues.id-copied-to-clipboard": "'#{issueId}' in Zwischenablage kopieren",
   "issues.issue.pinned": "Ticket ist oben angeheftet",
   "issues.issue.not-assigned-to-me": "Ticket ist Ihnen nicht zugewiesen",
-  "issues.timers.more-timers": "+{count} weitere Timer",
   "issues.timer.action.edit.tooltip": "Doppelklicken zum Bearbeiten",
   "issues.timer.action.start.tooltip": "Klicken, um Timer zu starten",
   "issues.timer.action.pause.tooltip": "Klicken, um Timer zu pausieren",

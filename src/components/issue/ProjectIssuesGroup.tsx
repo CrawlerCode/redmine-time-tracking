@@ -60,13 +60,13 @@ const IssueProject = ({ project, type }: { project: TReference; type: ProjectIss
 
   return (
     <div
-      className={clsx("flex items-center gap-x-1 py-1", {
+      className={clsx("flex items-center gap-x-1.5 py-1 text-muted-foreground", {
         "sticky top-0 z-5 -mx-1 bg-background px-1 shadow shadow-background": settings.style.stickyScroll,
       })}
     >
       <ProjectGroupIcon type={type} />
       <ProjectTooltip projectId={project.id}>
-        <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="truncate text-sm hover:underline" rel="noreferrer">
+        <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="truncate text-xs font-medium tracking-wide uppercase hover:underline" rel="noreferrer">
           {project.name}
         </a>
       </ProjectTooltip>
@@ -128,7 +128,7 @@ const ProjectVersion = ({ version }: { version?: TVersion }) => {
   return (
     <div
       className={clsx({
-        "sticky top-7 z-5 -m-1 bg-background p-1 shadow shadow-background": settings.style.stickyScroll,
+        "sticky top-6.5 z-5 -m-1 bg-background p-1 shadow shadow-background": settings.style.stickyScroll,
       })}
     >
       {version ? (
@@ -150,7 +150,7 @@ const ProjectVersion = ({ version }: { version?: TVersion }) => {
 
 export const ProjectIssuesGroupSkeleton = ({ groups }: { groups: number[] }) => (
   <div className="flex flex-col gap-y-2">
-    <div className="flex items-center gap-x-1 py-1">
+    <div className="flex items-center gap-x-1.5 py-1">
       <Skeleton className={clsx("h-5.5", randomElement(["w-32", "w-40", "w-60"]))} />
       <span className="grow" />
       <div className="flex gap-x-2">

@@ -61,7 +61,7 @@ function FieldLabel({ className, required, children, errors, ...props }: React.C
       {required ? (
         <span className="inline-flex gap-0.5">
           {children}
-          {required && <AsteriskIcon className="size-3.5 text-red-600" />}
+          {required && <AsteriskIcon className="size-3.5 text-destructive" />}
         </span>
       ) : (
         children
