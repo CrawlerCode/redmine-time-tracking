@@ -1,4 +1,4 @@
 [tools]
 node = "24"
 "npm:corepack" = "latest"
-pnpm = "11"
+pnpm = "12"
