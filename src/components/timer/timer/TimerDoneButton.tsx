@@ -27,7 +27,7 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
           variant="ghost"
           size="icon-sm"
           data-action="timer-done"
-          className="text-primary hover:text-primary"
+          className="text-green-600 hover:text-green-600"
           disabled={isDisabled}
           onClick={() => {
             if (isDisabled) return;

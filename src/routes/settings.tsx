@@ -164,7 +164,7 @@ function PageComponent() {
                                 },
                                 {
                                   value: "up",
-                                  icon: <ArrowUpIcon className="text-green-700 max-[360px]:hidden dark:text-green-400" />,
+                                  icon: <ArrowUpIcon className="text-green-700 max-[360px]:hidden dark:text-green-600" />,
                                   label: formatMessage({ id: "settings.features.rounding-mode.up" }),
                                 },
                               ]}
