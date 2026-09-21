@@ -4,7 +4,7 @@ import Navbar from "@/components/general/Navbar";
 import { RouteContext } from "@/main";
 import { createPopOut } from "@/utils/popout";
 import { createRootRouteWithContext, HeadContent, Outlet } from "@tanstack/react-router";
-import { CalendarDaysIcon, ListIcon, SettingsIcon, SquareArrowOutUpRightIcon, TimerIcon } from "lucide-react";
+import { CalendarDaysIcon, ListChecksIcon, SettingsIcon, SquareArrowOutUpRightIcon, TimerIcon } from "lucide-react";
 import { useIntl } from "react-intl";
 import { browser } from "wxt/browser";
 
@@ -38,7 +38,7 @@ function RootLayout() {
             },
             {
               href: "/issues",
-              icon: <ListIcon />,
+              icon: <ListChecksIcon />,
               name: formatMessage({ id: "nav.tabs.issues" }),
             },
             {

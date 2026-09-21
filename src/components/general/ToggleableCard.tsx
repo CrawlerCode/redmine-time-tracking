@@ -11,7 +11,7 @@ export const ToggleableCard = ({ as = "div", className, onToggle, ...props }: Pr
   return (
     <Comp
       {...props}
-      className={cn("rounded-lg border border-foreground/10 bg-card p-1 text-card-foreground", "outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50", className)}
+      className={cn("rounded-lg border border-border bg-card text-card-foreground outline-none", "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50", className)}
       {...(!!onToggle && {
         tabIndex: 1,
         onKeyDown: (e) => {

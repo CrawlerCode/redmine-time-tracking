@@ -6,7 +6,7 @@ import { useTimerContext } from "./TimerRoot";
 
 export const TimerWrapper = ({ className, children, ...props }: ComponentProps<"div">) => {
   return (
-    <div {...props} role="listitem" data-type="timer" className={cn("flex items-center gap-x-3", className)}>
+    <div role="listitem" data-type="timer" {...props} className={cn("flex items-center gap-2", className)}>
       {children}
     </div>
   );
@@ -16,5 +16,5 @@ export const TimerWrapperCard = ({ className, ...props }: ComponentProps<typeof 
   const timerApi = useTimerApi();
   const { timer } = useTimerContext();
 
-  return <ToggleableCard as={TimerWrapper} {...props} className={cn("px-1.5", className)} onToggle={() => timerApi.toggleTimer(timer)} />;
+  return <ToggleableCard as={TimerWrapper} data-type="timer-card" {...props} className={cn("px-2 py-1", className)} onToggle={() => timerApi.toggleTimer(timer)} />;
 };

@@ -22,7 +22,10 @@ export const TimerCounter = () => {
   return (
     <HelpTooltip message={formatMessage({ id: "issues.timer.action.edit.tooltip" })}>
       <span
-        className={clsx("-my-1 max-w-30 truncate text-lg text-muted-foreground", { "font-bold": !!timer.activeSession, "text-yellow-500": totalElapsedTime > 0 })}
+        className={clsx("-my-1 max-w-30 shrink-0 truncate text-base text-muted-foreground", {
+          "font-semibold": !!timer.activeSession,
+          "text-yellow-500": totalElapsedTime > 0,
+        })}
         onDoubleClick={() => setIsEditing(true)}
       >
         {formatTimer(totalElapsedTime)}
@@ -172,5 +175,5 @@ const to2Digit = (val: number) => {
 };
 
 export const TimerCounterSkeleton = () => {
-  return <Skeleton className="h-5 w-16" />;
+  return <Skeleton className="h-6 w-16" />;
 };

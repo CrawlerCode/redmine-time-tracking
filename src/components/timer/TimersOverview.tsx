@@ -86,7 +86,7 @@ const TimersOverview = ({ timers, issues, className }: PropTypes) => {
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <div className="grid grid-cols-2 gap-2">
-            <Stat label={formatMessage({ id: "timers.overview.tracked" })} value={formatHours(roundHours(totalTimeEntriesHours))} classNames={{ dot: "bg-green-600 dark:bg-green-500" }} />
+            <Stat label={formatMessage({ id: "timers.overview.tracked" })} value={formatHours(roundHours(totalTimeEntriesHours))} classNames={{ dot: "bg-green-600" }} />
             <Stat
               label={formatMessage({ id: "timers.overview.timers" })}
               value={formatTimer(totalElapsedTime)}

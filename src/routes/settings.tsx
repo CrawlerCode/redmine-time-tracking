@@ -73,7 +73,7 @@ function PageComponent() {
       <div className="mx-auto grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <Card size="sm">
           <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
               <GlobeIcon className="size-4 text-muted-foreground" />
               {formatMessage({ id: "settings.general" })}
             </CardTitle>
@@ -118,7 +118,7 @@ function PageComponent() {
 
         <Card size="sm">
           <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
               <Wand2Icon className="size-4 text-muted-foreground" />
               {formatMessage({ id: "settings.features" })}
             </CardTitle>
@@ -164,7 +164,7 @@ function PageComponent() {
                                 },
                                 {
                                   value: "up",
-                                  icon: <ArrowUpIcon className="text-green-700 max-[360px]:hidden dark:text-green-400" />,
+                                  icon: <ArrowUpIcon className="text-green-700 max-[360px]:hidden dark:text-green-600" />,
                                   label: formatMessage({ id: "settings.features.rounding-mode.up" }),
                                 },
                               ]}
@@ -226,7 +226,7 @@ function PageComponent() {
 
         <Card size="sm">
           <CardHeader className="border-b">
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
               <PaletteIcon className="size-4 text-muted-foreground" />
               {formatMessage({ id: "settings.style" })}
             </CardTitle>
@@ -331,7 +331,7 @@ const RedmineServerSection = withForm({
     return (
       <Card size="sm">
         <CardHeader className="border-b">
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
             <ServerIcon className="size-4 text-muted-foreground" />
             {formatMessage({ id: "settings.redmine" })}
           </CardTitle>

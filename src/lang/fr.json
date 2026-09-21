@@ -32,8 +32,7 @@
   "timer.modal.remove-session.result": "New timer",
   "timer.modal.remove-session.cancel": "Cancel",
   "timer.modal.remove-session.submit": "Remove",
-  "timer.sessions.show-more": "Show {count} more",
-  "timer.sessions.show-less": "Show less",
+  "timer.sessions.summary": "{count, plural, one {# session} other {# sessions}}",
 
   "issues.search": "Rechercher... (#123, Sujet, ...)",
   "issues.search.search-in-project": "Rechercher dans <badge>{projectName}</badge>",
@@ -64,7 +63,6 @@
   "issues.id-copied-to-clipboard": "'#{issueId}' copié dans le presse-papier",
   "issues.issue.pinned": "Le ticket est épinglé en haut",
   "issues.issue.not-assigned-to-me": "Le ticket ne vous est pas attribué",
-  "issues.timers.more-timers": "+{count} more timers",
   "issues.timer.action.edit.tooltip": "Double-cliquez pour modifier",
   "issues.timer.action.start.tooltip": "Cliquez pour démarrer le minuteur",
   "issues.timer.action.pause.tooltip": "Cliquez pour mettre le minuteur en pause",

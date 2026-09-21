@@ -1,12 +1,8 @@
 import { useRedmineIssuePriorities } from "@/api/redmine/hooks/useRedmineIssuePriorities";
-import { ToggleableCard } from "@/components/general/ToggleableCard";
-import { IssueTitle, IssueTitleSkeleton } from "@/components/issue/IssueTitle";
 import { TimerComponents } from "@/components/timer/timer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
-import { useTimerApi } from "@/provider/TimerApiProvider";
 import { ProjectTimersGroup as ProjectTimersGroupType } from "@/utils/groupTimers";
 import { randomElement } from "@/utils/random";
 import clsx from "clsx";
@@ -22,10 +18,6 @@ interface ProjectTimersGroupProps extends ComponentProps<"div"> {
 export const ProjectTimersGroup = ({ projectGroup, className, ...props }: ProjectTimersGroupProps) => {
   const { settings } = useSettings();
 
-  const timerApi = useTimerApi();
-
-  const { hasProjectPermission } = usePermissions();
-
   const { getPriorityType } = useRedmineIssuePriorities({ enabled: settings.style.showIssuePriority });
 
   return (
@@ -34,16 +26,7 @@ export const ProjectTimersGroup = ({ projectGroup, className, ...props }: Projec
       {projectGroup.items.map(({ timer, issue }) => (
         <TimerComponents.Root key={timer.id} timer={timer} issue={issue}>
           <TimerComponents.ContextMenu>
-            <ToggleableCard role="listitem" data-type="timer-card" className="flex flex-col gap-1" onToggle={() => timerApi.toggleTimer(timer)}>
-              {issue ? <IssueTitle issue={issue} priorityType={getPriorityType(issue)} /> : <h1 className="truncate text-gray-500 line-through">#{timer.issueId}</h1>}
-              <TimerComponents.Wrapper>
-                <TimerComponents.NameField />
-                <TimerComponents.Counter />
-                <TimerComponents.ToggleButton />
-                <TimerComponents.DoneButton canLogTime={issue ? hasProjectPermission(issue.project.id, "log_time") : false} />
-              </TimerComponents.Wrapper>
-              {settings.style.showSessions && <TimerComponents.Sessions />}
-            </ToggleableCard>
+            <TimerComponents.Card priorityType={issue ? getPriorityType(issue) : undefined} />
           </TimerComponents.ContextMenu>
         </TimerComponents.Root>
       ))}
@@ -56,45 +39,36 @@ export const TimerProject = ({ project, type, forceNoSticky }: { project?: TRefe
 
   return (
     <div
-      className={clsx("flex items-center gap-x-1 py-1", {
+      className={clsx("flex items-center gap-x-1.5 py-1 text-muted-foreground", {
         "sticky top-0 z-5 bg-background shadow shadow-background": settings.style.stickyScroll && !forceNoSticky,
       })}
     >
       <SquareChartGanttIcon className="size-3.5 shrink-0" />
 
       {project && (
-        <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="truncate text-sm hover:underline" rel="noreferrer">
+        <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="truncate text-xs font-medium tracking-wide uppercase hover:underline" rel="noreferrer">
           {project.name}
         </a>
       )}
 
-      {type === "unknown-project" && <FormattedMessage id="timers.list.unknown-project-group" />}
+      {type === "unknown-project" && (
+        <span className="truncate text-xs font-medium tracking-wide uppercase">
+          <FormattedMessage id="timers.list.unknown-project-group" />
+        </span>
+      )}
     </div>
   );
 };
 
-export const ProjectTimersGroupSkeleton = ({ groups }: { groups: number[] }) => {
-  const { settings } = useSettings();
-
-  return (
+export const ProjectTimersGroupSkeleton = ({ groups }: { groups: number[] }) => (
+  <div className="flex flex-col gap-y-2">
+    <div className="flex items-center gap-x-1.5 py-1">
+      <Skeleton className={clsx("h-5.5", randomElement(["w-32", "w-40", "w-60"]))} />
+    </div>
     <div className="flex flex-col gap-y-2">
-      <div className="flex items-center gap-x-1 py-1">
-        <Skeleton className={clsx("h-5.5", randomElement(["w-32", "w-40", "w-60"]))} />
-      </div>
-      <div className="flex flex-col gap-y-2">
-        {groups.map((key) => (
-          <ToggleableCard key={key} className="flex flex-col gap-1">
-            <IssueTitleSkeleton />
-            <TimerComponents.Wrapper>
-              <TimerComponents.Skeleton.NameField />
-              <TimerComponents.Skeleton.Counter />
-              <TimerComponents.Skeleton.ToggleButton />
-              <TimerComponents.Skeleton.DoneButton />
-            </TimerComponents.Wrapper>
-            {settings.style.showSessions && <TimerComponents.Skeleton.Sessions />}
-          </ToggleableCard>
-        ))}
-      </div>
+      {groups.map((key) => (
+        <TimerComponents.Skeleton.Card key={key} />
+      ))}
     </div>
-  );
-};
+  </div>
+);

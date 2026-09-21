@@ -1,5 +1,6 @@
 import HelpTooltip from "@/components/general/HelpTooltip";
 import CreateTimeEntryModal from "@/components/time-entry/CreateTimeEntryModal";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSettings } from "@/provider/SettingsProvider";
 import { useTimerApi } from "@/provider/TimerApiProvider";
@@ -22,11 +23,12 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
   return (
     <>
       <HelpTooltip message={formatMessage({ id: "issues.timer.action.add-spent-time.tooltip" })}>
-        <BadgeCheckIcon
-          role="button"
+        <Button
+          variant="ghost"
+          size="icon-sm"
           data-action="timer-done"
-          className="size-6 shrink-0 cursor-pointer text-primary focus:outline-hidden data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50"
-          data-disabled={isDisabled}
+          className="text-green-600 hover:text-green-600"
+          disabled={isDisabled}
           onClick={() => {
             if (isDisabled) return;
             const time = settings.features.roundToInterval ? roundMillisecondsToInterval(totalElapsedTime, settings.features.roundingInterval, settings.features.roundingMode) : totalElapsedTime;
@@ -34,7 +36,9 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
             setCreateTimeEntryHours(hours);
           }}
           tabIndex={-1}
-        />
+        >
+          <BadgeCheckIcon />
+        </Button>
       </HelpTooltip>
 
       {createTimeEntryHours !== undefined && issue && (
@@ -56,4 +60,4 @@ export const TimerDoneButton = ({ canLogTime }: { canLogTime: boolean }) => {
   );
 };
 
-export const TimerDoneButtonSkeleton = () => <Skeleton className="size-6 rounded-lg" />;
+export const TimerDoneButtonSkeleton = () => <Skeleton className="size-6 rounded-md" />;
