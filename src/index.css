@@ -141,31 +141,30 @@
 
 /* stylelint-disable nesting-selector-no-missing-scoping-root */
 @utility appearance-none {
-  &input[type="number"]::-webkit-inner-spin-button {
-    appearance: none;
-  }
-
-  &input[type="number"]::-webkit-outer-spin-button {
-    appearance: none;
-  }
-
-  &input[type="number"] {
+  &[type="number"] {
     appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      appearance: none;
+    }
   }
 
-  &input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    cursor: pointer;
-    width: 2px;
-  }
+  &[type="range"] {
+    &::-webkit-slider-thumb {
+      appearance: none;
+      cursor: pointer;
+      width: 2px;
+    }
 
-  &input[type="range"]::-moz-range-thumb {
-    cursor: pointer;
-    width: 2px;
+    &::-moz-range-thumb {
+      cursor: pointer;
+      width: 2px;
+    }
   }
 }
-/* stylelint-enable nesting-selector-no-missing-scoping-root */
 
+/* stylelint-enable nesting-selector-no-missing-scoping-root */
 @layer base {
   * {
     @apply border-border outline-ring/50;

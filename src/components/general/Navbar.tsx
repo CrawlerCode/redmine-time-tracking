@@ -22,7 +22,7 @@ const Navbar = ({ navigation }: PropTypes) => {
           <NavigationMenuItem key={item.href}>
             <NavigationMenuLink render={<Link to={item.href} />} data-active={location.pathname === item.href}>
               {item.icon}
-              <span className="truncate max-[21rem]:max-w-[3rem]">{item.name}</span>
+              <span className="truncate max-[21rem]:max-w-12">{item.name}</span>
             </NavigationMenuLink>
           </NavigationMenuItem>
         ))}

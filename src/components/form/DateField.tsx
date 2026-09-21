@@ -137,7 +137,7 @@ const ClearButton = ({
       variant="ghost"
       size="icon-xs"
       tabIndex={-1}
-      className="absolute end-0"
+      className="absolute inset-e-0"
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();

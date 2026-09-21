@@ -77,7 +77,7 @@ const TimeEntry = ({ entries, preview, size = "sm", withContextMenu = false }: P
               />
             }
           />
-          <TooltipContent className="flex max-w-[17rem] flex-col items-start gap-y-3 truncate">
+          <TooltipContent className="flex max-w-68 flex-col items-start gap-y-3 truncate">
             <p className="text-sm font-semibold">{formatHours(p.hours)}</p>
             {p.name && <p className="truncate text-xs font-normal">{p.name}</p>}
           </TooltipContent>

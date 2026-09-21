@@ -12,7 +12,7 @@ export const VersionTooltip = ({ children, ...props }: PropTypes & { children: R
   return (
     <Tooltip>
       <TooltipTrigger delay={300} render={children} />
-      <TooltipContent className="flex max-w-[17rem] flex-col items-start gap-y-3 truncate">
+      <TooltipContent className="flex max-w-68 flex-col items-start gap-y-3 truncate">
         <VersionTooltipContent {...props} />
       </TooltipContent>
     </Tooltip>

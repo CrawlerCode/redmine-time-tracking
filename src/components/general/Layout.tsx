@@ -9,6 +9,7 @@ interface LayoutProps extends PropsWithChildren {
 export const Layout = ({ entrypoint, children }: LayoutProps) => {
   return (
     <div
+      // eslint-disable-next-line tailwindcss/no-unnecessary-arbitrary-value
       className={cn("mx-auto flex h-screen w-[320px] flex-col overflow-hidden", {
         "w-full min-w-[320px]": ["index", "sidepanel", "options"].includes(entrypoint),
         "h-[550px]": ["popup", "options"].includes(entrypoint),
