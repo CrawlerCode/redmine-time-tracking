@@ -16,17 +16,18 @@ jobs:
       statuses: write
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
+        with:
+          cache: true
 
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: "pnpm"
 
       - run: pnpm install --frozen-lockfile
 

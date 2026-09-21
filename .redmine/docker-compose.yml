@@ -10,6 +10,18 @@ services:
       - ./data/e2e-tests/sqlite:/usr/src/redmine/sqlite
       - ./themes:/usr/src/redmine/themes:ro
 
+  redmine-v7:
+    container_name: redmine-v7
+    image: redmine:7
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "3007:3000"
+    volumes:
+      - ./data/v7/files:/usr/src/redmine/files
+      - ./data/v7/sqlite:/usr/src/redmine/sqlite
+      - ./themes:/usr/src/redmine/themes:ro
+
   redmine-v6:
     container_name: redmine-v6
     image: redmine:6

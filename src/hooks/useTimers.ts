@@ -116,7 +116,7 @@ export const useTimerApiActions = () => {
       await setData((prev) => ({ ...prev, [timer.id]: { ...timer, elapsedTime: 0, activeSession: undefined, sessions: [] } }));
     },
 
-    deleteTimer: async (timer: Timer) => {
+    deleteTimer: async (timer: Pick<Timer, "id">) => {
       await setData((prev) => {
         const next = { ...prev };
         delete next[timer.id];

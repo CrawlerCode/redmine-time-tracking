@@ -1,4 +1,4 @@
-import { clsxm } from "@/utils/clsxm";
+import { cn } from "@/lib/utils";
 import { ComponentPropsWithRef, ReactNode, useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 
@@ -45,8 +45,8 @@ export function SidebarScrollspy({ groups, classNames, children }: SidebarScroll
   );
 
   return (
-    <div className={clsxm("flex min-h-0 flex-1", classNames?.root)}>
-      <aside className={clsxm("shrink-0 overflow-y-auto border-r", classNames?.sidebar)}>
+    <div className={cn("flex min-h-0 flex-1", classNames?.root)}>
+      <aside className={cn("shrink-0 overflow-y-auto border-r", classNames?.sidebar)}>
         <Tabs value={activeGroup} onValueChange={handleTabChange} orientation="vertical">
           <TabsList variant="line" className="w-full">
             {groups.map((group) => (
@@ -57,7 +57,7 @@ export function SidebarScrollspy({ groups, classNames, children }: SidebarScroll
           </TabsList>
         </Tabs>
       </aside>
-      <section ref={scrollContainerRef} className={clsxm("flex-1 overflow-x-hidden overflow-y-auto", classNames?.section)}>
+      <section ref={scrollContainerRef} className={cn("flex-1 overflow-x-hidden overflow-y-auto", classNames?.section)}>
         {children?.({ getGroupProps })}
       </section>
     </div>
@@ -69,8 +69,8 @@ export const OptionalSidebarScrollspy = ({ enabled, ...props }: SidebarScrollspy
   return enabled ? (
     <SidebarScrollspy {...props} />
   ) : (
-    <div className={clsxm("flex min-h-0", props.classNames?.root)}>
-      <section className={clsxm("flex-1 overflow-x-hidden overflow-y-auto", props.classNames?.section)}>{props.children?.({ getGroupProps: dummyGetGroupProps })}</section>
+    <div className={cn("flex min-h-0", props.classNames?.root)}>
+      <section className={cn("flex-1 overflow-x-hidden overflow-y-auto", props.classNames?.section)}>{props.children?.({ getGroupProps: dummyGetGroupProps })}</section>
     </div>
   );
 };

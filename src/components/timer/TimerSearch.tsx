@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { clsxm } from "@/utils/clsxm";
+import { cn } from "@/lib/utils";
 import { SearchIcon } from "lucide-react";
 import { createContext, PropsWithChildren, use, useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
@@ -111,7 +111,7 @@ const TimerSearchInputSkeleton = ({ className }: { className?: string }) => {
   if (!settings.style.displaySearchAlways) return null;
 
   return (
-    <div className={clsxm("flex flex-col gap-2", className)}>
+    <div className={cn("flex flex-col gap-2", className)}>
       <Skeleton className="h-8 w-full" />
     </div>
   );

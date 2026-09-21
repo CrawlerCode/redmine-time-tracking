@@ -63,7 +63,7 @@ const buildProjectRolesMap = ({ user, roles, projects }: { user?: TUser; roles: 
   const nonMemberRole = roles.find((r) => r.id === 1);
   if (nonMemberRole) {
     for (const project of projects ?? []) {
-      if (project.is_public && !result.has(project.id)) {
+      if (project?.is_public && !result.has(project.id)) {
         result.set(project.id, [nonMemberRole]);
       }
     }

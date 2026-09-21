@@ -3,13 +3,13 @@ import useRedmineIssuesSearch from "@/api/redmine/hooks/useRedmineIssuesSearch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAppForm } from "@/hooks/useAppForm";
 import { useSuspenseStorage } from "@/hooks/useStorage";
-import { clsxm } from "@/utils/clsxm";
+import { cn } from "@/lib/utils";
+import { useDebouncedValue } from "@mantine/hooks";
 import { ChevronRightIcon, CloudIcon, ListTreeIcon, MoreHorizontalIcon, SearchIcon, XIcon } from "lucide-react";
 import { createContext, PropsWithChildren, use, useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { z } from "zod";
 import { TIssue, TReference } from "../../api/redmine/types";
-import { useDebouncedValue } from "@mantine/hooks";
 import useHotKey from "../../hooks/useHotkey";
 import { useSettings } from "../../provider/SettingsProvider";
 import { Badge } from "../ui/badge";
@@ -162,7 +162,7 @@ const IssueSearchInput = ({ className }: { className?: string }) => {
   if (!ctx.isSearchOpen) return null;
 
   return (
-    <div className={clsxm("flex flex-col gap-2", className)}>
+    <div className={cn("flex flex-col gap-2", className)}>
       <Form onSubmit={settingsForm.handleSubmit}>
         <InputGroup>
           <InputGroupInput ref={searchRef} name="query" placeholder={formatMessage({ id: "issues.search" })} value={ctx.rawQuery} onChange={(e) => ctx.setRawQuery(e.target.value)} autoFocus />
@@ -275,7 +275,7 @@ const IssueSearchLoadMore = ({
   if (!(ctx.isSearching && ctx.settings.mode === "remote" && hasNextPage && !isLoading)) return null;
 
   return (
-    <div className={clsxm("flex justify-center", className)}>
+    <div className={cn("flex justify-center", className)}>
       <Button variant="outline" onClick={() => fetchNextPage()}>
         {formatMessage({ id: "issues.list.load-more" })}
       </Button>
@@ -318,7 +318,7 @@ const IssueSearchInputSkeleton = ({ className }: { className?: string }) => {
   if (!settings.style.displaySearchAlways) return null;
 
   return (
-    <div className={clsxm("flex flex-col gap-2", className)}>
+    <div className={cn("flex flex-col gap-2", className)}>
       <Skeleton className="h-8 w-full" />
     </div>
   );

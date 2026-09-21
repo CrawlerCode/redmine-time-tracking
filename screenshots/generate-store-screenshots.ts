@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import sharp from "sharp";
+import sharp, { type OverlayOptions } from "sharp";
 
 const LANGUAGES = ["en", "de", "fr", "ru"] as const;
 type Language = (typeof LANGUAGES)[number];
@@ -126,7 +126,7 @@ async function roundImage(inputPath: string, w: number, h: number, r: number): P
     .toBuffer();
 }
 
-async function addScreenshotWithBorder(composites: sharp.OverlayOptions[], image: Buffer, top: number, left: number, imgW: number, imgH: number) {
+async function addScreenshotWithBorder(composites: OverlayOptions[], image: Buffer, top: number, left: number, imgW: number, imgH: number) {
   const sw = 14;
   const expand = sw / 2;
   const glowSvg = Buffer.from(
@@ -168,7 +168,7 @@ async function generateSinglePopup(
 
   const hl = getHeadline(headline.titleKey, headline.subtitleKey, messages);
   const bg = Buffer.from(backgroundSvg(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT));
-  const composites: sharp.OverlayOptions[] = [];
+  const composites: OverlayOptions[] = [];
 
   const ppScale = 1.2;
   const ppW = Math.round(POPUP_WIDTH * ppScale);
@@ -216,7 +216,7 @@ async function generateDualPopup(
 
   const hl = getHeadline(headline.titleKey, headline.subtitleKey, messages);
   const bg = Buffer.from(backgroundSvg(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT));
-  const composites: sharp.OverlayOptions[] = [];
+  const composites: OverlayOptions[] = [];
 
   const ppScale = 0.95;
   const ppW = Math.round(POPUP_WIDTH * ppScale);
@@ -280,7 +280,7 @@ async function generatePromoImage(outputPath: string, locale: Language, messages
   const appName = messages["extName"]?.message ?? "Redmine Time Tracking";
 
   const bg = Buffer.from(backgroundSvg(cW, cH));
-  const composites: sharp.OverlayOptions[] = [];
+  const composites: OverlayOptions[] = [];
 
   const ppH = Math.round(cH * 0.82);
   const ppW = Math.round(ppH * (POPUP_WIDTH / POPUP_HEIGHT));

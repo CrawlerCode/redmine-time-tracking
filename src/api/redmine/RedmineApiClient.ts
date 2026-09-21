@@ -19,6 +19,8 @@ import {
   TTimeEntryActivity,
   TUpdateIssue,
   TUpdateTimeEntry,
+  TUploadAttachment,
+  TUploadResponse,
   TUser,
   TVersion,
 } from "./types";
@@ -44,6 +46,9 @@ export class RedmineApiClient {
     });
     this.instance.interceptors.response.use(
       (response) => {
+        if (response.config.headers?.["Accept"] === "text/html") {
+          return response;
+        }
         const contentType = response.headers["content-type"];
         if (contentType && typeof contentType === "string" && !contentType.startsWith("application/json")) {
           throw new Error(`Invalid content-type '${contentType}'. Expected 'application/json'`);
@@ -137,7 +142,7 @@ export class RedmineApiClient {
   }
 
   async getIssue(id: number): Promise<TIssue> {
-    return this.instance.get(`/issues/${id}.json?include=allowed_statuses`).then((res) => res.data.issue);
+    return this.instance.get(`/issues/${id}.json?include=allowed_statuses,attachments`).then((res) => res.data.issue);
   }
 
   async createIssue(issue: TCreateIssue) {
@@ -294,5 +299,49 @@ export class RedmineApiClient {
 
   async getCurrentUser(): Promise<TUser> {
     return this.instance.get("/users/current.json?include=memberships").then((res) => res.data.user);
+  }
+
+  // Attachments
+  async uploadAttachment(file: File): Promise<TUploadAttachment> {
+    const arrayBuffer = await file.arrayBuffer();
+    const response = await this.instance.post<TUploadResponse>(`/uploads.json?filename=${file.name}`, arrayBuffer, {
+      headers: { "Content-Type": "application/octet-stream" },
+    });
+    return {
+      token: response.data.upload.token,
+      filename: file.name,
+      content_type: file.type,
+    };
+  }
+
+  async removeAttachment(id: number): Promise<void> {
+    await this.instance.delete(`/attachments/${id}.json`);
+  }
+
+  // Other
+  async detectTextFormatting(): Promise<"none" | "common_mark" | "textile" | undefined> {
+    // available since Redmine 6.0.0
+    const indexPage = await this.instance.get<string>("/", {
+      headers: { Accept: "text/html" },
+    });
+    const matchFormatting = String(indexPage.data).match(/data-text-formatting="(common_mark|textile|)"/);
+    if (matchFormatting) {
+      if (matchFormatting[1] === "") {
+        return "none";
+      }
+      return matchFormatting[1] as "common_mark" | "textile";
+    }
+
+    // fallback for Redmine < 6.0.0
+    const newsPage = await this.instance.get<string>("/news", {
+      headers: { Accept: "text/html" },
+    });
+    const matchToolbar = String(newsPage.data).match(/javascripts\/jstoolbar\/(common_mark|markdown|textile).js/);
+    if (matchToolbar) {
+      if (matchToolbar[1] === "markdown") {
+        return "common_mark";
+      }
+      return matchToolbar[1] as "common_mark" | "textile";
+    }
   }
 }

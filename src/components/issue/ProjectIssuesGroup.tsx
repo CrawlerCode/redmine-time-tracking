@@ -3,9 +3,9 @@ import { useRedmineIssuePriorities } from "@/api/redmine/hooks/useRedmineIssuePr
 import { ProjectTooltip } from "@/components/issue/ProjectTooltip";
 import { VersionTooltip } from "@/components/issue/VersionTooltip";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { useSettings } from "@/provider/SettingsProvider";
-import { clsxm } from "@/utils/clsxm";
 import { ProjectIssuesGroup as ProjectIssuesGroupType } from "@/utils/groupIssues";
 import { randomElement } from "@/utils/random";
 import clsx from "clsx";
@@ -33,7 +33,7 @@ export const ProjectIssuesGroup = ({ projectGroup, localIssues, timers, classNam
   const { getPriorityType } = useRedmineIssuePriorities({ enabled: settings.style.showIssuePriority });
 
   return (
-    <div {...props} className={clsxm("flex flex-col gap-y-2", className)}>
+    <div {...props} className={cn("flex flex-col gap-y-2", className)}>
       <IssueProject type={projectGroup.type} project={projectGroup.project} />
       {projectGroup.groups.map((issueGroup) => (
         <Fragment key={issueGroup.key}>
@@ -60,13 +60,13 @@ const IssueProject = ({ project, type }: { project: TReference; type: ProjectIss
 
   return (
     <div
-      className={clsx("flex items-center gap-x-1 py-1", {
-        "bg-background shadow-background sticky top-0 z-5 -mx-1 px-1 shadow": settings.style.stickyScroll,
+      className={clsx("flex items-center gap-x-1.5 py-1 text-muted-foreground", {
+        "sticky top-0 z-5 -mx-1 bg-background px-1 shadow shadow-background": settings.style.stickyScroll,
       })}
     >
       <ProjectGroupIcon type={type} />
       <ProjectTooltip projectId={project.id}>
-        <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="truncate text-sm hover:underline" rel="noreferrer">
+        <a href={`${settings.redmineURL}/projects/${project.id}`} target="_blank" tabIndex={-1} className="truncate text-xs font-medium tracking-wide uppercase hover:underline" rel="noreferrer">
           {project.name}
         </a>
       </ProjectTooltip>
@@ -128,7 +128,7 @@ const ProjectVersion = ({ version }: { version?: TVersion }) => {
   return (
     <div
       className={clsx({
-        "bg-background shadow-background sticky top-7 z-5 -mx-1 -my-1 px-1 py-1 shadow": settings.style.stickyScroll,
+        "sticky top-6.5 z-5 -m-1 bg-background p-1 shadow shadow-background": settings.style.stickyScroll,
       })}
     >
       {version ? (
@@ -150,7 +150,7 @@ const ProjectVersion = ({ version }: { version?: TVersion }) => {
 
 export const ProjectIssuesGroupSkeleton = ({ groups }: { groups: number[] }) => (
   <div className="flex flex-col gap-y-2">
-    <div className="flex items-center gap-x-1 py-1">
+    <div className="flex items-center gap-x-1.5 py-1">
       <Skeleton className={clsx("h-5.5", randomElement(["w-32", "w-40", "w-60"]))} />
       <span className="grow" />
       <div className="flex gap-x-2">
