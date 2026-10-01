@@ -51,11 +51,12 @@
 - German
 - Russian (thanks [@ASM-Development](https://github.com/ASM-Development))
 - French (thanks [@S8N02000](https://github.com/S8N02000))
+- Portuguese (Brasil) (thanks [@RodrigoPerozin](https://github.com/RodrigoPerozin))
 
 > If you want to add more languages or extend existing ones, feel free to contribute. Just create a pull request with the desired changes. The language files are located under [src/lang](src/lang) and [public/\_locales](public/_locales).
 
 ## 🛠️ Requirements
-
+x
 Supported browsers:
 
 - **Chrome 122** or higher
