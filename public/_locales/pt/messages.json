@@ -1,0 +1,50 @@
+{
+  "extName": {
+    "message": "Redmine Time Tracking",
+    "description": "Nome da extensão"
+  },
+  "extDesc": {
+    "message": "Cronômetro com início e pausa para o Redmine",
+    "description": "Descrição da extensão"
+  },
+  "screenshotIssuesTitle": {
+    "message": "Acompanhe suas tarefas",
+    "description": "Título da captura de tela para a página de tarefas na loja"
+  },
+  "screenshotIssuesSubtitle": {
+    "message": "Visualize e gerencie todas as suas tarefas atribuídas no Redmine",
+    "description": "Subtítulo da captura de tela para a página de tarefas na loja"
+  },
+  "screenshotTimersTitle": {
+    "message": "Inicie e gerencie cronômetros",
+    "description": "Título da captura de tela para a página de cronômetros na loja"
+  },
+  "screenshotTimersSubtitle": {
+    "message": "Cronômetro com um clique para qualquer tarefa",
+    "description": "Subtítulo da captura de tela para a página de cronômetros na loja"
+  },
+  "screenshotTimeEntriesTitle": {
+    "message": "Revise os registros de tempo",
+    "description": "Título da captura de tela para registros de tempo na loja"
+  },
+  "screenshotTimeEntriesSubtitle": {
+    "message": "Visão geral semanal de todas as suas horas registradas",
+    "description": "Subtítulo da captura de tela para registros de tempo na loja"
+  },
+  "screenshotManageIssuesTitle": {
+    "message": "Crie e edite tarefas",
+    "description": "Título da captura de tela para gerenciamento de tarefas na loja"
+  },
+  "screenshotManageIssuesSubtitle": {
+    "message": "Crie novas tarefas e edite as existentes",
+    "description": "Subtítulo da captura de tela para gerenciamento de tarefas na loja"
+  },
+  "screenshotSettingsTitle": {
+    "message": "Configuração fácil",
+    "description": "Título da captura de tela para configurações na loja"
+  },
+  "screenshotSettingsSubtitle": {
+    "message": "Conecte-se a qualquer instância do Redmine e personalize para o seu fluxo de trabalho",
+    "description": "Subtítulo da captura de tela para configurações na loja"
+  }
+}
