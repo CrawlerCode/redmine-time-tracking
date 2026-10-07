@@ -9,25 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root"
-import { Route as TimersRouteImport } from "./routes/timers"
-import { Route as TimeRouteImport } from "./routes/time"
-import { Route as SettingsRouteImport } from "./routes/settings"
-import { Route as IssuesRouteImport } from "./routes/issues"
 import { Route as IndexRouteImport } from "./routes/index"
+import { Route as IssuesRouteImport } from "./routes/issues"
+import { Route as SettingsRouteImport } from "./routes/settings"
+import { Route as TimeRouteImport } from "./routes/time"
+import { Route as TimersRouteImport } from "./routes/timers"
 
-const TimersRoute = TimersRouteImport.update({
-  id: "/timers",
-  path: "/timers",
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TimeRoute = TimeRouteImport.update({
-  id: "/time",
-  path: "/time",
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: "/settings",
-  path: "/settings",
+const IndexRoute = IndexRouteImport.update({
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
 } as any)
 const IssuesRoute = IssuesRouteImport.update({
@@ -35,9 +25,19 @@ const IssuesRoute = IssuesRouteImport.update({
   path: "/issues",
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+const SettingsRoute = SettingsRouteImport.update({
+  id: "/settings",
+  path: "/settings",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimeRoute = TimeRouteImport.update({
+  id: "/time",
+  path: "/time",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimersRoute = TimersRouteImport.update({
+  id: "/timers",
+  path: "/timers",
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -81,25 +81,11 @@ export interface RootRouteChildren {
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/timers": {
-      id: "/timers"
-      path: "/timers"
-      fullPath: "/timers"
-      preLoaderRoute: typeof TimersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/time": {
-      id: "/time"
-      path: "/time"
-      fullPath: "/time"
-      preLoaderRoute: typeof TimeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/settings": {
-      id: "/settings"
-      path: "/settings"
-      fullPath: "/settings"
-      preLoaderRoute: typeof SettingsRouteImport
+    "/": {
+      id: "/"
+      path: "/"
+      fullPath: "/"
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     "/issues": {
@@ -109,11 +95,25 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof IssuesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    "/": {
-      id: "/"
-      path: "/"
-      fullPath: "/"
-      preLoaderRoute: typeof IndexRouteImport
+    "/settings": {
+      id: "/settings"
+      path: "/settings"
+      fullPath: "/settings"
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/time": {
+      id: "/time"
+      path: "/time"
+      fullPath: "/time"
+      preLoaderRoute: typeof TimeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/timers": {
+      id: "/timers"
+      path: "/timers"
+      fullPath: "/timers"
+      preLoaderRoute: typeof TimersRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

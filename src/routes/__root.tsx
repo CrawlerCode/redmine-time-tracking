@@ -4,7 +4,7 @@ import Navbar from "@/components/general/Navbar";
 import { RouteContext } from "@/main";
 import { createPopOut } from "@/utils/popout";
 import { createRootRouteWithContext, HeadContent, Outlet } from "@tanstack/react-router";
-import { CalendarDaysIcon, ListIcon, SettingsIcon, SquareArrowOutUpRightIcon, TimerIcon } from "lucide-react";
+import { CalendarDaysIcon, ListChecksIcon, SettingsIcon, SquareArrowOutUpRightIcon, TimerIcon } from "lucide-react";
 import { useIntl } from "react-intl";
 import { browser } from "wxt/browser";
 
@@ -38,7 +38,7 @@ function RootLayout() {
             },
             {
               href: "/issues",
-              icon: <ListIcon />,
+              icon: <ListChecksIcon />,
               name: formatMessage({ id: "nav.tabs.issues" }),
             },
             {
@@ -55,7 +55,7 @@ function RootLayout() {
         />
         {entrypoint === "popup" && (
           <SquareArrowOutUpRightIcon
-            className="bg-card border-border/50 hover:bg-muted hover:border-border absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full border p-1.5 transition-colors"
+            className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full border border-border/50 bg-card p-1.5 transition-colors hover:border-border hover:bg-muted"
             onClick={createPopOut}
           />
         )}
@@ -63,7 +63,7 @@ function RootLayout() {
       <main className="flex flex-1 flex-col overflow-y-auto p-2 sm:p-4">
         <Outlet />
       </main>
-      <footer id="footer" className="bg-muted/50 flex w-full justify-end border-t p-4 empty:hidden" />
+      <footer id="footer" className="flex w-full justify-end border-t bg-muted/50 p-4 empty:hidden" />
     </>
   );
 }

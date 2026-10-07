@@ -19,9 +19,9 @@ const DoneSliderField = ({ className, ...props }: Omit<ComponentProps<"input">, 
           step="10"
           type="range"
           className={clsx(
-            "h-5 w-20 cursor-pointer appearance-none overflow-hidden rounded-sm border-transparent",
-            "to-muted bg-linear-90 from-green-600/80 dark:from-green-600/60",
-            "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+            "h-5 appearance-none w-20 cursor-pointer overflow-hidden rounded-sm border-transparent",
+            "bg-linear-90 from-green-600/80 to-muted dark:from-green-600/60",
+            "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
           )}
           style={
             {
@@ -30,7 +30,7 @@ const DoneSliderField = ({ className, ...props }: Omit<ComponentProps<"input">, 
             } as React.CSSProperties
           }
         />
-        <p className="text-foreground pointer-events-none absolute top-1 left-1 text-xs leading-none font-medium select-none">{state.value}%</p>
+        <p className="pointer-events-none absolute top-1 left-1 text-xs leading-none font-medium text-foreground select-none">{state.value}%</p>
       </div>
     </Field>
   );
