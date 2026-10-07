@@ -10,22 +10,22 @@ import { useRedmineApi } from "@/provider/RedmineApiProvider";
 import { useStore as useFormStore } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { DE, FlagComponent, FR, GB, RU } from "country-flag-icons/react/3x2";
+import { DE, FlagComponent, FR, GB, PT, RU } from "country-flag-icons/react/3x2";
 import {
-  ArrowDownIcon,
-  ArrowDownUpIcon,
-  ArrowUpIcon,
-  BugIcon,
-  ChevronRightIcon,
-  ExternalLinkIcon,
-  GlobeIcon,
-  Loader2Icon,
-  PaletteIcon,
-  PencilIcon,
-  ServerIcon,
-  SignalIcon,
-  UserIcon,
-  Wand2Icon,
+    ArrowDownIcon,
+    ArrowDownUpIcon,
+    ArrowUpIcon,
+    BugIcon,
+    ChevronRightIcon,
+    ExternalLinkIcon,
+    GlobeIcon,
+    Loader2Icon,
+    PaletteIcon,
+    PencilIcon,
+    ServerIcon,
+    SignalIcon,
+    UserIcon,
+    Wand2Icon,
 } from "lucide-react";
 import { useEffect, useEffectEvent, useState } from "react";
 import { useIntl } from "react-intl";
@@ -46,6 +46,7 @@ const LANGUAGE_FLAGS: Record<(typeof LANGUAGES)[number], FlagComponent> = {
   de: DE,
   ru: RU,
   fr: FR,
+  pt: PT,
 };
 
 function PageComponent() {

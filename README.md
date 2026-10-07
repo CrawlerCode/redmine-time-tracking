@@ -56,7 +56,7 @@
 > If you want to add more languages or extend existing ones, feel free to contribute. Just create a pull request with the desired changes. The language files are located under [src/lang](src/lang) and [public/\_locales](public/_locales).
 
 ## 🛠️ Requirements
-x
+
 Supported browsers:
 
 - **Chrome 122** or higher
