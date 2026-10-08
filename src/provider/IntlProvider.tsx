@@ -5,7 +5,7 @@ import { z } from "zod";
 import messagesEN from "../lang/en.json";
 import { useSettings } from "./SettingsProvider";
 
-export const LANGUAGES = ["en", "de", "ru", "fr"] as const;
+export const LANGUAGES = ["en", "de", "ru", "fr", "pt"] as const;
 
 type Language = (typeof LANGUAGES)[number];
 
