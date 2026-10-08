@@ -2,6 +2,7 @@
 import { useTestRedmineConnection } from "@/api/redmine/hooks/useTestRedmineConnection";
 import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { Portal } from "@/components/general/Portal";
+import { IssueField } from "@/components/time-entry/form/fields/IssueField";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldDescription, FieldGroup, FieldLegend, FieldSet } from "@/components/ui/field";
@@ -219,6 +220,19 @@ function PageComponent() {
                 name="features.timersOverview"
                 children={(field) => (
                   <field.SwitchField title={formatMessage({ id: "settings.features.timers-overview.title" })} description={formatMessage({ id: "settings.features.timers-overview.description" })} />
+                )}
+              />
+              <form.AppField
+                name="features.fallbackIssue"
+                children={(field) => (
+                  <>
+                    <field.SwitchField title={formatMessage({ id: "settings.features.fallback-issue.title" })} description={formatMessage({ id: "settings.features.fallback-issue.description" })} />
+                    {field.state.value && (
+                      <div className="ml-11">
+                        <form.AppField name="features.fallbackIssueId" children={() => <IssueField title={formatMessage({ id: "settings.features.fallback-issue-id.title" })} required />} />
+                      </div>
+                    )}
+                  </>
                 )}
               />
             </FieldGroup>

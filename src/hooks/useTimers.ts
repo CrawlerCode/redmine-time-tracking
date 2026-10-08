@@ -95,32 +95,41 @@ export const useTimerApiActions = () => {
 
   const withAutoPauseSessions = (all: Record<string, Timer>) => (settings.features.autoPauseOnSwitch ? stopAllTimers(all) : all);
 
+  const withFallbackTimer = (all: Record<string, Timer>, stoppedTimer?: Timer) => {
+    const { fallbackIssue, fallbackIssueId } = settings.features;
+    if (!fallbackIssue || !fallbackIssueId || !stoppedTimer?.activeSession || stoppedTimer.issueId === fallbackIssueId) return all;
+    const timers = Object.values(all);
+    if (timers.some((t) => t.activeSession)) return all;
+    const fallbackTimer = timers.find((t) => t.issueId === fallbackIssueId && !t.name) ?? timers.find((t) => t.issueId === fallbackIssueId) ?? newTimer({ issueId: fallbackIssueId });
+    return { ...all, [fallbackTimer.id]: startTimerSession(fallbackTimer) };
+  };
+
   return {
     startTimer: async (timer: Timer) => {
       await setData((prev) => ({ ...withAutoPauseSessions(prev), [timer.id]: startTimerSession(timer) }));
     },
 
     pauseTimer: async (timer: Timer) => {
-      await setData((prev) => ({ ...prev, [timer.id]: stopTimerSession(timer) }));
+      await setData((prev) => withFallbackTimer({ ...prev, [timer.id]: stopTimerSession(timer) }, prev[timer.id]));
     },
 
     toggleTimer: async (timer: Timer) => {
       if (timer.activeSession) {
-        await setData((prev) => ({ ...prev, [timer.id]: stopTimerSession(timer) }));
+        await setData((prev) => withFallbackTimer({ ...prev, [timer.id]: stopTimerSession(timer) }, prev[timer.id]));
       } else {
         await setData((prev) => ({ ...withAutoPauseSessions(prev), [timer.id]: startTimerSession(timer) }));
       }
     },
 
     resetTimer: async (timer: Timer) => {
-      await setData((prev) => ({ ...prev, [timer.id]: { ...timer, elapsedTime: 0, activeSession: undefined, sessions: [] } }));
+      await setData((prev) => withFallbackTimer({ ...prev, [timer.id]: { ...timer, elapsedTime: 0, activeSession: undefined, sessions: [] } }, prev[timer.id]));
     },
 
     deleteTimer: async (timer: Pick<Timer, "id">) => {
       await setData((prev) => {
         const next = { ...prev };
         delete next[timer.id];
-        return next;
+        return withFallbackTimer(next, prev[timer.id]);
       });
     },
 
@@ -155,13 +164,18 @@ export const useTimerApiActions = () => {
 
     removeTimerSession: async (timer: Timer, sessionId: string) => {
       if (sessionId === "active" && timer.activeSession) {
-        await setData((prev) => ({
-          ...prev,
-          [timer.id]: {
-            ...timer,
-            activeSession: undefined,
-          },
-        }));
+        await setData((prev) =>
+          withFallbackTimer(
+            {
+              ...prev,
+              [timer.id]: {
+                ...timer,
+                activeSession: undefined,
+              },
+            },
+            prev[timer.id]
+          )
+        );
         return;
       }
 

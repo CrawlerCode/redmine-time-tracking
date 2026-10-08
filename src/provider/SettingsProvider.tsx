@@ -19,22 +19,32 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
         textFormatting: z.enum(["none", "common_mark", "textile"]),
       }),
     }),
-    features: z.object({
-      autoPauseOnSwitch: z.boolean(),
-      roundTimeNearestQuarterHour: z.boolean().optional(), // ! Legacy
-      roundToNearestInterval: z.boolean().optional(), // ! Legacy
-      roundToInterval: z.boolean(),
-      roundingMode: z.enum(["down", "nearest", "up"]),
-      roundingInterval: z
-        .int(formatMessage?.({ id: "settings.features.rounding-interval.validation.required" }))
-        .min(1, formatMessage?.({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
-        .max(60, formatMessage?.({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
-      addNotes: z.boolean().optional(), // ! Legacy
-      cacheComments: z.boolean().optional(), // ! Legacy
-      persistentComments: z.boolean(),
-      showCurrentIssueTimer: z.boolean(),
-      timersOverview: z.boolean(),
-    }),
+    features: z
+      .object({
+        autoPauseOnSwitch: z.boolean(),
+        roundTimeNearestQuarterHour: z.boolean().optional(), // ! Legacy
+        roundToNearestInterval: z.boolean().optional(), // ! Legacy
+        roundToInterval: z.boolean(),
+        roundingMode: z.enum(["down", "nearest", "up"]),
+        roundingInterval: z
+          .int(formatMessage?.({ id: "settings.features.rounding-interval.validation.required" }))
+          .min(1, formatMessage?.({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
+          .max(60, formatMessage?.({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
+        addNotes: z.boolean().optional(), // ! Legacy
+        cacheComments: z.boolean().optional(), // ! Legacy
+        persistentComments: z.boolean(),
+        showCurrentIssueTimer: z.boolean(),
+        timersOverview: z.boolean(),
+        fallbackIssue: z.boolean(),
+        fallbackIssueId: z
+          .int(formatMessage?.({ id: "settings.features.fallback-issue-id.validation.required" }))
+          .positive(formatMessage?.({ id: "settings.features.fallback-issue-id.validation.required" }))
+          .nullable(),
+      })
+      .refine((features) => !features.fallbackIssue || !!features.fallbackIssueId, {
+        path: ["fallbackIssueId"],
+        message: formatMessage?.({ id: "settings.features.fallback-issue-id.validation.required" }),
+      }),
     style: z.object({
       displaySearchAlways: z.boolean(),
       stickyScroll: z.boolean(),
@@ -72,6 +82,8 @@ const defaultSettings: Settings = {
     persistentComments: true,
     showCurrentIssueTimer: true,
     timersOverview: true,
+    fallbackIssue: false,
+    fallbackIssueId: null,
   },
   style: {
     displaySearchAlways: false,
