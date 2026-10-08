@@ -41,9 +41,13 @@ jobs:
             --chrome-zip .output/*-chrome-release.zip
         env:
           CHROME_EXTENSION_ID: ldcanhhkffokndenejhafhlkapflgcjg
-          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
-          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
-          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_API_VERSION: v2
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ secrets.CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL }}
+          CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY }}
+          CHROME_PUBLISH_TYPE: DEFAULT_PUBLISH
+          CHROME_SKIP_SUBMIT_REVIEW: false
+          CHROME_CANCEL_PENDING: true
 
   publish-firefox:
     name: Publish to Firefox Addon Store
