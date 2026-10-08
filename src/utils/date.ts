@@ -1,4 +1,4 @@
-import { Settings } from "@/provider/SettingsProvider";
+import type { Settings } from "@/provider/SettingsProvider";
 
 /**
  * Format milliseconds to timer format (H:MM:SS)

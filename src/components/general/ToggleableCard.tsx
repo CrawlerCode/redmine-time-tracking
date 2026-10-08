@@ -1,5 +1,5 @@
-import { clsxm } from "@/utils/clsxm";
-import { ComponentProps, JSXElementConstructor } from "react";
+import { cn } from "@/lib/utils";
+import type { ComponentProps, JSXElementConstructor } from "react";
 
 interface PropTypes extends ComponentProps<"div"> {
   as?: "div" | JSXElementConstructor<ComponentProps<"div">>;
@@ -11,11 +11,7 @@ export const ToggleableCard = ({ as = "div", className, onToggle, ...props }: Pr
   return (
     <Comp
       {...props}
-      className={clsxm(
-        "bg-card text-card-foreground border-foreground/10 rounded-lg border p-1",
-        "focus-visible:border-ring focus-visible:ring-ring/50 outline-none focus-visible:ring-[3px]",
-        className
-      )}
+      className={cn("rounded-lg border border-border bg-card text-card-foreground outline-none", "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50", className)}
       {...(!!onToggle && {
         tabIndex: 1,
         onKeyDown: (e) => {

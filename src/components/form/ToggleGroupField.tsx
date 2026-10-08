@@ -1,4 +1,4 @@
-import { ComponentProps, ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";

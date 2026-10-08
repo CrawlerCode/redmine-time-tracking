@@ -2,7 +2,7 @@ import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser
 import { useRedmineProjectMembers } from "@/api/redmine/hooks/useRedmineProjectMembers";
 import { ComboboxField } from "@/components/form/ComboboxField";
 import { groupMembers } from "@/utils/groupMembers";
-import { ComponentProps, useMemo, useState } from "react";
+import { type ComponentProps, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
 
 type Props = {

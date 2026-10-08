@@ -1,4 +1,4 @@
-import { ComponentProps, useId } from "react";
+import { type ComponentProps, useId } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { Checkbox } from "../ui/checkbox";
 import { Field, FieldContent, FieldDescription, FieldError, FieldLabel } from "../ui/field";

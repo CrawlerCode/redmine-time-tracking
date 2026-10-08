@@ -1,4 +1,4 @@
-import { ReactNode, useEffectEvent, useLayoutEffect, useState } from "react";
+import { type ReactNode, useEffectEvent, useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 type PortalNode = HTMLElement | ShadowRoot | null;

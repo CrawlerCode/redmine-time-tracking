@@ -1,7 +1,7 @@
 import { MissingRedmineConfigError } from "@/api/redmine/MissingRedmineConfigError";
 import { getErrorMessage } from "@/utils/error";
 import { useQueryErrorResetBoundary } from "@tanstack/react-query";
-import { ErrorComponentProps } from "@tanstack/react-router";
+import type { ErrorComponentProps } from "@tanstack/react-router";
 import { isAxiosError } from "axios";
 import { AlertCircleIcon } from "lucide-react";
 import { useIntl } from "react-intl";
@@ -20,7 +20,7 @@ export function ErrorComponent({ error, reset: resetPage }: ErrorComponentProps)
           ? formatMessage({ id: "general.error.api-error" })
           : error instanceof MissingRedmineConfigError
             ? formatMessage({ id: "general.error.missing-redmine-configuration" })
-            : formatMessage({ id: "general.error.unknown-error" }, { name: error.name })}
+            : formatMessage({ id: "general.error.unknown-error" }, { name: error instanceof Error ? error.name : "Unknown" })}
       </AlertTitle>
       {!(error instanceof MissingRedmineConfigError) && (
         <AlertDescription>

@@ -1,4 +1,4 @@
-import { ErrorComponentProps } from "@tanstack/react-router";
+import type { ErrorComponentProps } from "@tanstack/react-router";
 import { ErrorComponent } from "./ErrorComponent";
 
 export function GlobalErrorComponent(props: ErrorComponentProps) {

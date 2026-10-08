@@ -1,5 +1,5 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import IntlProvider from "./IntlProvider";
 import QueryClientProvider from "./QueryClientProvider";
 import RedmineApiProvider from "./RedmineApiProvider";

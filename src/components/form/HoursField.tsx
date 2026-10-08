@@ -1,4 +1,4 @@
-import { ComponentProps, useEffect, useEffectEvent, useId, useState } from "react";
+import { type ComponentProps, useEffect, useEffectEvent, useId, useState } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { useSettings } from "../../provider/SettingsProvider";
 import { Field, FieldError, FieldLabel } from "../ui/field";

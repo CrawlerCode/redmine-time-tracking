@@ -1,5 +1,5 @@
-import { Page } from "@playwright/test";
-import { RegisteredRouter, ValidateLinkOptions } from "@tanstack/react-router";
+import type { Page } from "@playwright/test";
+import type { RegisteredRouter, ValidateLinkOptions } from "@tanstack/react-router";
 import type { IssuesPage } from "./issues";
 import type { SettingsPage } from "./settings";
 import type { TimePage } from "./time";

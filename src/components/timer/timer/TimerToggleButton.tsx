@@ -1,7 +1,8 @@
 import HelpTooltip from "@/components/general/HelpTooltip";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTimerApi } from "@/provider/TimerApiProvider";
-import { TimerIcon, TimerOffIcon } from "lucide-react";
+import { PauseIcon, PlayIcon } from "lucide-react";
 import { useIntl } from "react-intl";
 import { useTimerContext } from "./TimerRoot";
 
@@ -11,31 +12,22 @@ export const TimerToggleButton = () => {
   const timerApi = useTimerApi();
   const { timer } = useTimerContext();
 
-  if (!timer.activeSession) {
-    return (
-      <HelpTooltip message={formatMessage({ id: "issues.timer.action.start.tooltip" })}>
-        <TimerIcon
-          role="button"
-          data-action="timer-start"
-          className="size-6 shrink-0 cursor-pointer text-green-700 focus:outline-hidden dark:text-green-600"
-          onClick={() => timerApi.startTimer(timer)}
-          tabIndex={-1}
-        />
-      </HelpTooltip>
-    );
-  } else {
-    return (
-      <HelpTooltip message={formatMessage({ id: "issues.timer.action.pause.tooltip" })}>
-        <TimerOffIcon
-          role="button"
-          data-action="timer-pause"
-          className="size-6 shrink-0 cursor-pointer text-red-600 focus:outline-hidden dark:text-red-500"
-          onClick={() => timerApi.pauseTimer(timer)}
-          tabIndex={-1}
-        />
-      </HelpTooltip>
-    );
-  }
+  const isRunning = !!timer.activeSession;
+
+  return (
+    <HelpTooltip message={formatMessage({ id: isRunning ? "issues.timer.action.pause.tooltip" : "issues.timer.action.start.tooltip" })}>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        data-action={isRunning ? "timer-pause" : "timer-start"}
+        className={isRunning ? "text-yellow-500 hover:text-yellow-500" : "text-muted-foreground hover:text-foreground"}
+        onClick={() => (isRunning ? timerApi.pauseTimer(timer) : timerApi.startTimer(timer))}
+        tabIndex={-1}
+      >
+        {isRunning ? <PauseIcon /> : <PlayIcon />}
+      </Button>
+    </HelpTooltip>
+  );
 };
 
-export const TimerToggleButtonSkeleton = () => <Skeleton className="size-6 rounded-lg" />;
+export const TimerToggleButtonSkeleton = () => <Skeleton className="size-6 rounded-md" />;

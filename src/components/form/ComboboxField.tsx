@@ -1,5 +1,5 @@
 import { Loader2Icon } from "lucide-react";
-import { ComponentProps, ReactNode, useId } from "react";
+import { type ComponentProps, type ReactNode, useId } from "react";
 import { useIntl } from "react-intl";
 import { useFieldContext } from "../../hooks/useAppForm";
 import {

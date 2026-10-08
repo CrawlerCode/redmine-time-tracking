@@ -1,4 +1,4 @@
-import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
+import type { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { useQuery } from "@tanstack/react-query";
 import { useRedmineApi } from "../../../provider/RedmineApiProvider";
 

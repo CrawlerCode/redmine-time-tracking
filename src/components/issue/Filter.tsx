@@ -1,11 +1,11 @@
 /* eslint-disable react/no-children-prop */
 import { useRedmineIssueStatuses } from "@/api/redmine/hooks/useRedmineIssueStatuses";
 import { useRedmineProjects } from "@/api/redmine/hooks/useRedmineProjects";
-import { TIssue } from "@/api/redmine/types";
+import type { TIssue } from "@/api/redmine/types";
 import { useAppForm } from "@/hooks/useAppForm";
 import deepmerge from "deepmerge";
 import { SlidersHorizontalIcon } from "lucide-react";
-import { createContext, PropsWithChildren, use } from "react";
+import { createContext, type PropsWithChildren, use } from "react";
 import { useIntl } from "react-intl";
 import { z } from "zod";
 import { useSuspenseStorage } from "../../hooks/useStorage";
@@ -63,7 +63,7 @@ const FilterButton = () => {
         <SlidersHorizontalIcon />
         {formatMessage({ id: "issues.filter" })}
       </PopoverTrigger>
-      <PopoverContent collisionPadding={10} className="w-[18.5rem]">
+      <PopoverContent collisionPadding={10} className="w-74">
         <FilterForm />
       </PopoverContent>
     </Popover>

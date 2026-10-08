@@ -17,30 +17,34 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
 
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm run build:chrome:pre-release
 
-      - run: gh release upload "${RELEASE_TAG}" "$(ls .output/*-chrome.zip)"
+      - run: gh release upload "${RELEASE_TAG}" "$(ls .output/*-chrome-pre-release.zip)"
         env:
           GITHUB_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
 
       - run: |
           pnpm wxt submit \
-            --chrome-zip .output/*-chrome.zip
+            --chrome-zip .output/*-chrome-pre-release.zip
         env:
           CHROME_EXTENSION_ID: adgcdimdkkaddeopcabokepmaihfhklb
-          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
-          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
-          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_API_VERSION: v2
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ secrets.CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL }}
+          CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY }}
+          CHROME_PUBLISH_TYPE: DEFAULT_PUBLISH
+          CHROME_SKIP_SUBMIT_REVIEW: false
+          CHROME_CANCEL_PENDING: true

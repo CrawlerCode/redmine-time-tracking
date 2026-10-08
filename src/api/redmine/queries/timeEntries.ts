@@ -1,6 +1,6 @@
 import { redminePaginatedInfiniteQueryOptions } from "@/api/redmine/hooks/useRedminePaginatedInfiniteQuery";
-import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
-import { InvalidateQueryFilters } from "@tanstack/react-query";
+import type { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
+import type { InvalidateQueryFilters } from "@tanstack/react-query";
 
 const STALE_TIME = 1000 * 60;
 const AUTO_REFRESH_INTERVAL = 1000 * 60 * 15;

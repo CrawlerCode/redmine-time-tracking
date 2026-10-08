@@ -1,5 +1,5 @@
 import { useSettings } from "@/provider/SettingsProvider";
-import { ReactElement, ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type PropTypes = {

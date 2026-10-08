@@ -1,8 +1,8 @@
 import { redmineProjectVersionsQuery } from "@/api/redmine/queries/projectVersions";
-import { useSuspenseQueries, UseSuspenseQueryResult } from "@tanstack/react-query";
+import { useSuspenseQueries, type UseSuspenseQueryResult } from "@tanstack/react-query";
 import { useDeferredValue } from "react";
 import { useRedmineApi } from "../../../provider/RedmineApiProvider";
-import { TVersion } from "../types";
+import type { TVersion } from "../types";
 
 type Options = {
   enabled?: boolean;

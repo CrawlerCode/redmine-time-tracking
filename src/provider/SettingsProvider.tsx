@@ -1,6 +1,6 @@
 import deepmerge from "deepmerge";
-import { ReactNode, createContext, use } from "react";
-import { useIntl } from "react-intl";
+import { type ReactNode, createContext, use } from "react";
+import type { useIntl } from "react-intl";
 import { browser } from "wxt/browser";
 import { z } from "zod";
 import { getStorage, setStorage, useStorage } from "../hooks/useStorage";
@@ -14,21 +14,37 @@ export const settingsSchema = ({ formatMessage }: { formatMessage?: ReturnType<t
       .nonempty(formatMessage?.({ id: "settings.redmine.url.validation.required" }))
       .regex(/^(http|https):\/\/[\w\-.]+(\.\w+)*(:[0-9]+)?[\w\-/]*\/?$/, formatMessage?.({ id: "settings.redmine.url.validation.valid-url" })),
     redmineApiKey: z.string().nonempty(formatMessage?.({ id: "settings.redmine.api-key.validation.required" })),
-    features: z.object({
-      autoPauseOnSwitch: z.boolean(),
-      roundTimeNearestQuarterHour: z.boolean().optional(), // ! Legacy
-      roundToNearestInterval: z.boolean().optional(), // ! Legacy
-      roundToInterval: z.boolean(),
-      roundingMode: z.enum(["down", "nearest", "up"]),
-      roundingInterval: z
-        .int(formatMessage?.({ id: "settings.features.rounding-interval.validation.required" }))
-        .min(1, formatMessage?.({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
-        .max(60, formatMessage?.({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
-      addNotes: z.boolean().optional(), // ! Legacy
-      cacheComments: z.boolean().optional(), // ! Legacy
-      persistentComments: z.boolean(),
-      showCurrentIssueTimer: z.boolean(),
+    redmine: z.object({
+      settings: z.object({
+        textFormatting: z.enum(["none", "common_mark", "textile"]),
+      }),
     }),
+    features: z
+      .object({
+        autoPauseOnSwitch: z.boolean(),
+        roundTimeNearestQuarterHour: z.boolean().optional(), // ! Legacy
+        roundToNearestInterval: z.boolean().optional(), // ! Legacy
+        roundToInterval: z.boolean(),
+        roundingMode: z.enum(["down", "nearest", "up"]),
+        roundingInterval: z
+          .int(formatMessage?.({ id: "settings.features.rounding-interval.validation.required" }))
+          .min(1, formatMessage?.({ id: "settings.features.rounding-interval.validation.greater-than-zero" }))
+          .max(60, formatMessage?.({ id: "settings.features.rounding-interval.validation.less-than-or-equals-sixty" })),
+        addNotes: z.boolean().optional(), // ! Legacy
+        cacheComments: z.boolean().optional(), // ! Legacy
+        persistentComments: z.boolean(),
+        showCurrentIssueTimer: z.boolean(),
+        timersOverview: z.boolean(),
+        fallbackIssue: z.boolean(),
+        fallbackIssueId: z
+          .int(formatMessage?.({ id: "settings.features.fallback-issue-id.validation.required" }))
+          .positive(formatMessage?.({ id: "settings.features.fallback-issue-id.validation.required" }))
+          .nullable(),
+      })
+      .refine((features) => !features.fallbackIssue || !!features.fallbackIssueId, {
+        path: ["fallbackIssueId"],
+        message: formatMessage?.({ id: "settings.features.fallback-issue-id.validation.required" }),
+      }),
     style: z.object({
       displaySearchAlways: z.boolean(),
       stickyScroll: z.boolean(),
@@ -53,6 +69,11 @@ const defaultSettings: Settings = {
   language: "browser",
   redmineURL: "",
   redmineApiKey: "",
+  redmine: {
+    settings: {
+      textFormatting: "none",
+    },
+  },
   features: {
     autoPauseOnSwitch: true,
     roundToInterval: false,
@@ -60,6 +81,9 @@ const defaultSettings: Settings = {
     roundingInterval: 15,
     persistentComments: true,
     showCurrentIssueTimer: true,
+    timersOverview: true,
+    fallbackIssue: false,
+    fallbackIssueId: null,
   },
   style: {
     displaySearchAlways: false,

@@ -27,8 +27,10 @@ const CurrentIssueTimerInner = ({ issueId }: PropTypes) => {
       <TimerComponents.ContextMenu>
         <TimerComponents.WrapperCard>
           <TimerComponents.Counter />
-          <TimerComponents.ToggleButton />
-          <TimerComponents.DoneButton canLogTime={canLogTime} />
+          <TimerComponents.ButtonWrapper>
+            <TimerComponents.ToggleButton />
+            <TimerComponents.DoneButton canLogTime={canLogTime} />
+          </TimerComponents.ButtonWrapper>
         </TimerComponents.WrapperCard>
       </TimerComponents.ContextMenu>
     </TimerComponents.Root>

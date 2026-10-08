@@ -1,5 +1,5 @@
-import { TIssue, TReference } from "@/api/redmine/types";
-import { Timer } from "@/hooks/useTimers";
+import type { TIssue, TReference } from "@/api/redmine/types";
+import type { Timer } from "@/hooks/useTimers";
 
 type TimerItem = {
   timer: Timer;

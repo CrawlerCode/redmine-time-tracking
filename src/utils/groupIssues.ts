@@ -1,7 +1,7 @@
-import { TIssue, TIssuePriority, TReference, TVersion } from "@/api/redmine/types";
-import { LocalIssueData } from "@/hooks/useLocalIssues";
-import { Timer } from "@/hooks/useTimers";
-import { Settings } from "@/provider/SettingsProvider";
+import type { TIssue, TIssuePriority, TReference, TVersion } from "@/api/redmine/types";
+import type { LocalIssueData } from "@/hooks/useLocalIssues";
+import type { Timer } from "@/hooks/useTimers";
+import type { Settings } from "@/provider/SettingsProvider";
 
 export type ProjectIssuesGroup = {
   /**

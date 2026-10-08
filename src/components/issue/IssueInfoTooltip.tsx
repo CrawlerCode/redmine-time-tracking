@@ -1,7 +1,7 @@
 import { parseISO } from "date-fns";
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 import { useIntl } from "react-intl";
-import { TIssue } from "../../api/redmine/types";
+import type { TIssue } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
@@ -13,7 +13,7 @@ export const IssueInfoTooltip = ({ children, ...props }: PropTypes & { children:
   return (
     <Tooltip>
       <TooltipTrigger delay={300} render={children} />
-      <TooltipContent className="flex max-w-[17rem] flex-col items-start gap-y-3 truncate">
+      <TooltipContent className="flex max-w-68 flex-col items-start gap-y-3 truncate">
         <IssueInfoTooltipContent {...props} />
       </TooltipContent>
     </Tooltip>

@@ -2,7 +2,7 @@ import { redmineProjectMembershipsQuery } from "@/api/redmine/queries/projectMem
 import { redmineRolesQuery } from "@/api/redmine/queries/roles";
 import { useQuery } from "@tanstack/react-query";
 import { useRedmineApi } from "../../../provider/RedmineApiProvider";
-import { TMembership, TReference } from "../types";
+import type { TMembership, TReference } from "../types";
 import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 
 type Options = {

@@ -5,6 +5,7 @@
   "singleQuote": false,
   "printWidth": 200,
   "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./src/index.css",
   "tailwindFunctions": ["clsx"],
   "endOfLine": "lf"
 }

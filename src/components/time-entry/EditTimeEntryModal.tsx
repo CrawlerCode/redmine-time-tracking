@@ -1,11 +1,11 @@
 /* eslint-disable react/no-children-prop */
-import { useRedmineIssue } from "@/api/redmine/hooks/useRedmineIssue";
 import { redmineTimeEntriesQueries } from "@/api/redmine/queries/timeEntries";
+import { IssueField } from "@/components/time-entry/form/fields/IssueField";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { parseISO } from "date-fns";
 import { useIntl } from "react-intl";
 import { z } from "zod";
-import { TTimeEntry, TUpdateTimeEntry } from "../../api/redmine/types";
+import type { TTimeEntry, TUpdateTimeEntry } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";
@@ -23,6 +23,7 @@ type PropTypes = {
 
 const editTimeEntryFormSchema = ({ formatMessage }: { formatMessage: ReturnType<typeof useIntl>["formatMessage"] }) =>
   z.object({
+    issue_id: z.int(formatMessage({ id: "time.time-entry.field.issue.validation.required" })).nullable(),
     hours: z
       .number(formatMessage({ id: "time.time-entry.field.hours.validation.required" }))
       .min(0.01, formatMessage({ id: "time.time-entry.field.hours.validation.greater-than-zero" }))
@@ -40,10 +41,6 @@ const EditTimeEntryModal = ({ entry, onClose, onSuccess }: PropTypes) => {
   const redmineApi = useRedmineApi();
   const queryClient = useQueryClient();
 
-  const issueQuery = useRedmineIssue(entry.issue?.id ?? 0, {
-    enabled: !!entry.issue,
-  });
-
   const updateTimeEntryMutation = useMutation({
     mutationFn: (data: TUpdateTimeEntry) => redmineApi.updateTimeEntry(entry.id, data),
     onSuccess: () => {
@@ -56,6 +53,7 @@ const EditTimeEntryModal = ({ entry, onClose, onSuccess }: PropTypes) => {
 
   const form = useAppForm({
     defaultValues: {
+      issue_id: entry.issue?.id ?? null,
       hours: entry.hours,
       spent_on: parseISO(entry.spent_on),
       comments: entry.comments,
@@ -85,17 +83,7 @@ const EditTimeEntryModal = ({ entry, onClose, onSuccess }: PropTypes) => {
               <Input name="project_id" placeholder={formatMessage({ id: "time.time-entry.field.project" })} value={entry.project.name} disabled />
             </Field>
 
-            {issueQuery.data && (
-              <Field>
-                <FieldLabel required>{formatMessage({ id: "time.time-entry.field.issue" })}</FieldLabel>
-                <Input
-                  name="issue_id"
-                  placeholder={formatMessage({ id: "time.time-entry.field.issue" })}
-                  value={`${issueQuery.data.tracker.name} #${issueQuery.data.id}: ${issueQuery.data.subject}`}
-                  disabled
-                />
-              </Field>
-            )}
+            <form.AppField name="issue_id" children={() => <IssueField />} />
 
             <form.AppField
               name="hours"

@@ -2,7 +2,7 @@ import { redmineIssuePrioritiesQuery } from "@/api/redmine/queries/issuePrioriti
 import { useRedmineApi } from "@/provider/RedmineApiProvider";
 import { combineFlatSuspenseQueries } from "@/utils/query";
 import { useQuery, useSuspenseQueries } from "@tanstack/react-query";
-import { TIssue, TIssuePriority } from "../types";
+import type { TIssue, TIssuePriority } from "../types";
 
 type Options = {
   enabled?: boolean;

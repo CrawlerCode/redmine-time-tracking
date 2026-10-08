@@ -1,11 +1,11 @@
 import { setDefaultOptions } from "date-fns";
-import React, { ComponentProps, useEffect, useState } from "react";
+import React, { type ComponentProps, useEffect, useState } from "react";
 import { IntlProvider as ReactIntlProvider } from "react-intl";
 import { z } from "zod";
 import messagesEN from "../lang/en.json";
 import { useSettings } from "./SettingsProvider";
 
-export const LANGUAGES = ["en", "de", "ru", "fr"] as const;
+export const LANGUAGES = ["en", "de", "ru", "fr", "pt"] as const;
 
 type Language = (typeof LANGUAGES)[number];
 

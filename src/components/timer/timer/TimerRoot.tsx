@@ -1,7 +1,7 @@
-import { TIssue } from "@/api/redmine/types";
-import { calculateTimerTotalElapsedTime, Timer } from "@/hooks/useTimers";
+import type { TIssue } from "@/api/redmine/types";
+import { calculateTimerTotalElapsedTime, type Timer } from "@/hooks/useTimers";
 import { useInterval } from "@mantine/hooks";
-import { createContext, PropsWithChildren, use, useEffect, useEffectEvent, useState } from "react";
+import { createContext, type PropsWithChildren, use, useEffect, useEffectEvent, useState } from "react";
 
 type TimerContextType = {
   timer: Timer;
