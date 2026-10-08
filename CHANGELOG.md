@@ -1,3 +1,29 @@
+## [2.1.0-beta.2](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.1.0-beta.1...v2.1.0-beta.2) (2026-10-08)
+
+### 🚀 Features
+
+* **lang:** Add portuguese language support ([#101](https://github.com/CrawlerCode/redmine-time-tracking/issues/101)) ([2ff17f3](https://github.com/CrawlerCode/redmine-time-tracking/commit/2ff17f3444fba00071ff89d8652a33b956eaa51e))
+* **time-entry:** Allow to change issue while editing a time entry ([8ae322a](https://github.com/CrawlerCode/redmine-time-tracking/commit/8ae322a6ec013b31e6a960f760162c0b1f0d9c2f))
+* **timer:** Add fallback issue ([#92](https://github.com/CrawlerCode/redmine-time-tracking/issues/92)) ([68fd6ab](https://github.com/CrawlerCode/redmine-time-tracking/commit/68fd6abe816a0ff52da7dded22b665a0aa41086f))
+* **ui:** Highlight running timers and issues ([0b8c2ea](https://github.com/CrawlerCode/redmine-time-tracking/commit/0b8c2ead9be38d0bccc6efe7f1bbad2b858c48c7))
+
+### 🩹 Fixes
+
+* **ui:** Adjust margin-top for shadow host in content script ([3fc67a7](https://github.com/CrawlerCode/redmine-time-tracking/commit/3fc67a75fd3d061754a60a22bd0b16f5e1e5078c))
+
+### 📖 Documentation
+
+* Update store screenshots ([1f81a14](https://github.com/CrawlerCode/redmine-time-tracking/commit/1f81a14eec7726032fa30dc8f7d1319991b2e6fc))
+
+### 📦 Builds
+
+* **deps:** Update npm dependencies ([1a502a4](https://github.com/CrawlerCode/redmine-time-tracking/commit/1a502a4177f0da87232d730064c808c1a0be342a))
+* **deps:** Upgrade wxt to 0.21 ([c354e7b](https://github.com/CrawlerCode/redmine-time-tracking/commit/c354e7b6c5d4a8bfc121bd9f2f4105be2530ba09))
+
+### ⚡CI
+
+* Move to chrome web store api v2 ([5ebe00b](https://github.com/CrawlerCode/redmine-time-tracking/commit/5ebe00ba23aab7a89877dfe51e51024100f42450))
+
 ## [2.1.0-beta.1](https://github.com/CrawlerCode/redmine-time-tracking/compare/v2.0.3...v2.1.0-beta.1) (2026-09-21)
 
 ### 🚀 Features
