@@ -23,7 +23,13 @@ export const TimerCard = ({ priorityType, className, ...props }: ComponentProps<
   const { timer, issue } = useTimerContext();
 
   return (
-    <ToggleableCard role="listitem" data-type="timer-card" {...props} className={cn("flex flex-col overflow-hidden", className)} onToggle={() => timerApi.toggleTimer(timer)}>
+    <ToggleableCard
+      role="listitem"
+      data-type="timer-card"
+      {...props}
+      className={cn("flex flex-col overflow-hidden", !!timer.activeSession && "border-yellow-500/50", className)}
+      onToggle={() => timerApi.toggleTimer(timer)}
+    >
       <div className="flex flex-col gap-1 p-1">
         {issue ? <IssueTitle issue={issue} priorityType={priorityType} /> : <IssueTitleFallback issueId={timer.issueId} />}
         <TimerWrapper>

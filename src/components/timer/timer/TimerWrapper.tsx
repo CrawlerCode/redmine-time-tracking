@@ -16,5 +16,13 @@ export const TimerWrapperCard = ({ className, ...props }: ComponentProps<typeof 
   const timerApi = useTimerApi();
   const { timer } = useTimerContext();
 
-  return <ToggleableCard as={TimerWrapper} data-type="timer-card" {...props} className={cn("px-2 py-1", className)} onToggle={() => timerApi.toggleTimer(timer)} />;
+  return (
+    <ToggleableCard
+      as={TimerWrapper}
+      data-type="timer-card"
+      {...props}
+      className={cn("px-2 py-1", !!timer.activeSession && "border-yellow-500/50", className)}
+      onToggle={() => timerApi.toggleTimer(timer)}
+    />
+  );
 };

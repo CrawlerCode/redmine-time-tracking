@@ -37,6 +37,7 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers }: PropTy
   const primaryTimer = timers[0]!;
 
   const hasMultipleTimers = timers.length > 1;
+  const isActive = canLogTime && timers.some((timer) => !!timer.activeSession);
 
   return (
     <IssueContextMenu issue={issue} localIssue={localIssue} primaryTimer={primaryTimer} assignedToMe={assignedToMe}>
@@ -45,11 +46,13 @@ const Issue = ({ issue, localIssue, priorityType, assignedToMe, timers }: PropTy
         data-type="issue"
         className={clsx(
           "relative flex flex-col gap-1 p-1",
-          settings.style.showIssuePriority && {
-            "border-priority-lowest-bg ring-1 ring-priority-lowest-bg": priorityType === "lowest",
-            "border-priority-medium-high-bg ring-1 ring-priority-medium-high-bg": priorityType === "medium-high",
-            "border-priority-high-bg ring-1 ring-priority-high-bg": priorityType === "high" || priorityType === "highest",
-          }
+          isActive && "border-yellow-500/50",
+          !isActive &&
+            settings.style.showIssuePriority && {
+              "border-priority-lowest-bg ring-1 ring-priority-lowest-bg": priorityType === "lowest",
+              "border-priority-medium-high-bg ring-1 ring-priority-medium-high-bg": priorityType === "medium-high",
+              "border-priority-high-bg ring-1 ring-priority-high-bg": priorityType === "high" || priorityType === "highest",
+            }
         )}
         {...(canLogTime && { onToggle: () => timerApi.toggleTimer(primaryTimer) })}
       >
