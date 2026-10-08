@@ -1,5 +1,5 @@
-import { TRedmineError } from "@/api/redmine/types";
-import { AxiosError, isAxiosError } from "axios";
+import type { TRedmineError } from "@/api/redmine/types";
+import { type AxiosError, isAxiosError } from "axios";
 
 export const getErrorMessage = (error: unknown): string => {
   if (isAxiosError(error)) {

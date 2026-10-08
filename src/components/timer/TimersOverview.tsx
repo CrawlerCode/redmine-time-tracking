@@ -1,20 +1,20 @@
 import { useRedmineCurrentUser } from "@/api/redmine/hooks/useRedmineCurrentUser";
 import { useRedmineTimeEntries } from "@/api/redmine/hooks/useRedmineTimeEntries";
-import { TIssue } from "@/api/redmine/types";
+import type { TIssue } from "@/api/redmine/types";
 import TimeEntry from "@/components/time-entry/TimeEntry";
 import SubmitTimersModal from "@/components/timer/SubmitTimersModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFormatHours from "@/hooks/useFormatHours";
-import { calculateTimerTotalElapsedTime, Timer } from "@/hooks/useTimers";
+import { calculateTimerTotalElapsedTime, type Timer } from "@/hooks/useTimers";
 import { cn } from "@/lib/utils";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { formatTimer, roundHours } from "@/utils/date";
 import { useInterval } from "@mantine/hooks";
 import { startOfDay } from "date-fns";
 import { BadgeCheckIcon } from "lucide-react";
-import { ReactNode, useEffect, useEffectEvent, useState } from "react";
+import { type ReactNode, useEffect, useEffectEvent, useState } from "react";
 import { useIntl } from "react-intl";
 
 type PropTypes = {

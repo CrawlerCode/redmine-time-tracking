@@ -1,8 +1,8 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { type AxiosInstance } from "axios";
 import { formatISO } from "date-fns";
 import qs from "qs";
 import { MissingRedmineConfigError } from "./MissingRedmineConfigError";
-import {
+import type {
   TCreateIssue,
   TCreateTimeEntry,
   TIssue,

@@ -1,7 +1,7 @@
 import { parseISO } from "date-fns";
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 import { useIntl } from "react-intl";
-import { TIssue } from "../../api/redmine/types";
+import type { TIssue } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 

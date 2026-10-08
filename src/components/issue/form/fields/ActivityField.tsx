@@ -1,6 +1,6 @@
 import { useRedmineProjectTimeEntryActivities } from "@/api/redmine/hooks/useRedmineProjectTimeEntryActivities";
 import { ComboboxField } from "@/components/form/ComboboxField";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { useIntl } from "react-intl";
 
 type Props = {

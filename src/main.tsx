@@ -1,13 +1,13 @@
-import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
+import type { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 import { ErrorComponent } from "@/components/error/ErrorComponent";
 import { Layout } from "@/components/general/Layout";
 import Providers from "@/provider/Providers";
 import { queryClient } from "@/provider/QueryClientProvider";
 import { useRedmineApi } from "@/provider/RedmineApiProvider";
-import { Settings, useSettings } from "@/provider/SettingsProvider";
+import { type Settings, useSettings } from "@/provider/SettingsProvider";
 import { routeTree } from "@/routeTree.gen";
-import { Entrypoint, getEntrypoint } from "@/utils/entrypoint";
-import { QueryClient } from "@tanstack/react-query";
+import { type Entrypoint, getEntrypoint } from "@/utils/entrypoint";
+import type { QueryClient } from "@tanstack/react-query";
 import { createHashHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";

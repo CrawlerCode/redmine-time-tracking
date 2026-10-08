@@ -1,5 +1,5 @@
 import { useRedmineProject } from "@/api/redmine/hooks/useRedmineProject";
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 import { useIntl } from "react-intl";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 

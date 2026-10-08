@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ComponentProps, JSXElementConstructor } from "react";
+import type { ComponentProps, JSXElementConstructor } from "react";
 
 interface PropTypes extends ComponentProps<"div"> {
   as?: "div" | JSXElementConstructor<ComponentProps<"div">>;

@@ -1,7 +1,7 @@
 import { MissingRedmineConfigError } from "@/api/redmine/MissingRedmineConfigError";
 import { getErrorMessage } from "@/utils/error";
 import { useQueryErrorResetBoundary } from "@tanstack/react-query";
-import { ErrorComponentProps } from "@tanstack/react-router";
+import type { ErrorComponentProps } from "@tanstack/react-router";
 import { isAxiosError } from "axios";
 import { AlertCircleIcon } from "lucide-react";
 import { useIntl } from "react-intl";

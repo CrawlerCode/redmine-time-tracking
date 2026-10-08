@@ -1,13 +1,13 @@
 import { redmineTimeEntryActivitiesQuery } from "@/api/redmine/queries/timeEntryActivities";
-import { TTimeEntry } from "@/api/redmine/types";
-import { ChartConfig, ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import type { TTimeEntry } from "@/api/redmine/types";
+import { type ChartConfig, ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { Separator } from "@/components/ui/separator";
 import useFormatHours from "@/hooks/useFormatHours";
 import { useRedmineApi } from "@/provider/RedmineApiProvider";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useIntl } from "react-intl";
-import { DefaultTooltipContentProps, Label, Pie, PieChart, Tooltip } from "recharts";
+import { type DefaultTooltipContentProps, Label, Pie, PieChart, type Tooltip } from "recharts";
 
 const CHART_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 

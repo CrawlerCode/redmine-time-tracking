@@ -4,7 +4,7 @@ import { eachDayOfInterval, format, formatISO, isFuture, isSameWeek, isWeekend, 
 import { ChevronDownIcon, ChevronUpIcon, ClockIcon } from "lucide-react";
 import { useState } from "react";
 import { useIntl } from "react-intl";
-import { TTimeEntry } from "../../api/redmine/types";
+import type { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
 import { roundHours } from "../../utils/date";
 import { Badge } from "../ui/badge";

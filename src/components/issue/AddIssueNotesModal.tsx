@@ -6,7 +6,7 @@ import { markdownToTextile } from "@/utils/markdownToTextile";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useIntl } from "react-intl";
 import { z } from "zod";
-import { TIssue, TUpdateIssue } from "../../api/redmine/types";
+import type { TIssue, TUpdateIssue } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";

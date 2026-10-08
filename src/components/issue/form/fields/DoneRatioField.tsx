@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { useIntl } from "react-intl";
 import { SelectField } from "../../../form/SelectField";
 

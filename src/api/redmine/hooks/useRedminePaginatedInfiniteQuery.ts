@@ -1,16 +1,16 @@
 import {
-  DefaultError,
-  InfiniteData,
+  type DefaultError,
+  type InfiniteData,
   infiniteQueryOptions,
-  QueryKey,
-  UnusedSkipTokenInfiniteOptions,
+  type QueryKey,
+  type UnusedSkipTokenInfiniteOptions,
   useInfiniteQuery,
-  UseInfiniteQueryOptions,
+  type UseInfiniteQueryOptions,
   useSuspenseInfiniteQuery,
-  UseSuspenseInfiniteQueryOptions,
+  type UseSuspenseInfiniteQueryOptions,
 } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { TPaginatedResponse } from "../types";
+import type { TPaginatedResponse } from "../types";
 
 const defaultInitialPageParam = {
   offset: 0,

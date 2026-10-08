@@ -2,7 +2,7 @@ import { TimeByProjectChart, TimeByProjectChartSkeleton } from "@/components/tim
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIntl } from "react-intl";
-import { TTimeEntry } from "../../api/redmine/types";
+import type { TTimeEntry } from "../../api/redmine/types";
 
 type PropTypes = {
   entries: TTimeEntry[];

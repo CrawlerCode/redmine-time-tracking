@@ -1,15 +1,15 @@
 /* eslint-disable react/no-children-prop */
-import useRedmineIssuesSearch from "@/api/redmine/hooks/useRedmineIssuesSearch";
+import type useRedmineIssuesSearch from "@/api/redmine/hooks/useRedmineIssuesSearch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAppForm } from "@/hooks/useAppForm";
 import { useSuspenseStorage } from "@/hooks/useStorage";
 import { cn } from "@/lib/utils";
 import { useDebouncedValue } from "@mantine/hooks";
 import { ChevronRightIcon, CloudIcon, ListTreeIcon, MoreHorizontalIcon, SearchIcon, XIcon } from "lucide-react";
-import { createContext, PropsWithChildren, use, useEffect, useRef, useState } from "react";
+import { createContext, type PropsWithChildren, use, useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { z } from "zod";
-import { TIssue, TReference } from "../../api/redmine/types";
+import type { TIssue, TReference } from "../../api/redmine/types";
 import useHotKey from "../../hooks/useHotkey";
 import { useSettings } from "../../provider/SettingsProvider";
 import { Badge } from "../ui/badge";

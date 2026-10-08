@@ -1,7 +1,7 @@
 import { TimeEntryContextMenu } from "@/components/time-entry/TimeEntryContextMenu";
 import { clsx } from "clsx";
 import { Fragment } from "react";
-import { TTimeEntry } from "../../api/redmine/types";
+import type { TTimeEntry } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import TimeEntryTooltip from "./TimeEntryTooltip";

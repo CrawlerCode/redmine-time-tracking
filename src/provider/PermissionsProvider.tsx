@@ -5,8 +5,8 @@ import { redmineRoleQuery } from "@/api/redmine/queries/roles";
 import { useRedmineApi } from "@/provider/RedmineApiProvider";
 import { combineAggregateQueries } from "@/utils/query";
 import { useQueries } from "@tanstack/react-query";
-import { ReactNode, createContext, use } from "react";
-import { TProject, TRole, TUser } from "../api/redmine/types";
+import { type ReactNode, createContext, use } from "react";
+import type { TProject, TRole, TUser } from "../api/redmine/types";
 
 type PermissionContextType = {
   hasProjectPermission: (projectId: number, permission: TRole["permissions"][number]) => boolean;

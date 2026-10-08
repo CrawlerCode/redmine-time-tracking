@@ -1,4 +1,4 @@
-import { TUploadAttachment } from "@/api/redmine/types";
+import type { TUploadAttachment } from "@/api/redmine/types";
 import { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentMedia, AttachmentTitle } from "@/components/ui/attachment";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { useFieldContext } from "@/hooks/useAppForm";

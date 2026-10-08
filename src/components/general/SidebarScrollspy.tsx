@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ComponentPropsWithRef, ReactNode, useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
+import { type ComponentPropsWithRef, type ReactNode, useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 
 interface ScrollspyGroup {

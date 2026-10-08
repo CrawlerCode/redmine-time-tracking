@@ -22,10 +22,10 @@ import {
   subWeeks,
 } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { useIntl } from "react-intl";
 import z from "zod";
-import { TTimeEntry } from "../../api/redmine/types";
+import type { TTimeEntry } from "../../api/redmine/types";
 
 type ChildrenProps = {
   entries: TTimeEntry[];

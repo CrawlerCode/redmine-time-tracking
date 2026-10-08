@@ -31,14 +31,14 @@ jobs:
 
       - run: pnpm run build:chrome:release
 
-      - run: gh release upload "${RELEASE_TAG}" "$(ls .output/*-chrome.zip)"
+      - run: gh release upload "${RELEASE_TAG}" "$(ls .output/*-chrome-release.zip)"
         env:
           GITHUB_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
 
       - run: |
           pnpm wxt submit \
-            --chrome-zip .output/*-chrome.zip
+            --chrome-zip .output/*-chrome-release.zip
         env:
           CHROME_EXTENSION_ID: ldcanhhkffokndenejhafhlkapflgcjg
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
@@ -67,15 +67,15 @@ jobs:
 
       - run: pnpm run build:firefox:release
 
-      - run: gh release upload "${RELEASE_TAG}" "$(ls .output/*-firefox.zip)"
+      - run: gh release upload "${RELEASE_TAG}" "$(ls .output/*-firefox-release.zip)"
         env:
           GITHUB_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
 
       - run: |
           pnpm wxt submit \
-            --firefox-zip .output/*-firefox.zip \
-            --firefox-sources-zip .output/*-sources.zip
+            --firefox-zip .output/*-firefox-release.zip \
+            --firefox-sources-zip .output/*-sources-release.zip
         env:
           FIREFOX_EXTENSION_ID: 2867093
           FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}

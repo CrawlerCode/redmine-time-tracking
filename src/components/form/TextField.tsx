@@ -1,4 +1,4 @@
-import { ComponentProps, useId } from "react";
+import { type ComponentProps, useId } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";

@@ -1,5 +1,5 @@
 import { useTimerApiActions } from "@/hooks/useTimers";
-import { createContext, PropsWithChildren, use } from "react";
+import { createContext, type PropsWithChildren, use } from "react";
 
 type TimerApi = ReturnType<typeof useTimerApiActions>;
 

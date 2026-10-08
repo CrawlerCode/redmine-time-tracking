@@ -1,7 +1,7 @@
 import { GlobalErrorComponent } from "@/components/error/GlobalErrorComponent";
 import { NotFoundComponent } from "@/components/error/NotFoundComponent";
 import Navbar from "@/components/general/Navbar";
-import { RouteContext } from "@/main";
+import type { RouteContext } from "@/main";
 import { createPopOut } from "@/utils/popout";
 import { createRootRouteWithContext, HeadContent, Outlet } from "@tanstack/react-router";
 import { CalendarDaysIcon, ListChecksIcon, SettingsIcon, SquareArrowOutUpRightIcon, TimerIcon } from "lucide-react";

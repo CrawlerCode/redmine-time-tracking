@@ -1,5 +1,5 @@
-import { TIssue } from "@/api/redmine/types";
-import { TimerSearchContext } from "@/components/timer/TimerSearch";
+import type { TIssue } from "@/api/redmine/types";
+import type { TimerSearchContext } from "@/components/timer/TimerSearch";
 import { useSettings } from "../provider/SettingsProvider";
 import { getStorage, setStorage, useSuspenseStorage } from "./useStorage";
 

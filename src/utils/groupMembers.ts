@@ -1,5 +1,5 @@
-import { TProjectMember } from "../api/redmine/hooks/useRedmineProjectMembers";
-import { TReference } from "../api/redmine/types";
+import type { TProjectMember } from "../api/redmine/hooks/useRedmineProjectMembers";
+import type { TReference } from "../api/redmine/types";
 
 type GroupedMembers = {
   role: TReference;

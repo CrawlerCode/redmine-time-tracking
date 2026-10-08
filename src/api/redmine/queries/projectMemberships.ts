@@ -1,5 +1,5 @@
 import { redminePaginatedInfiniteQueryOptions } from "@/api/redmine/hooks/useRedminePaginatedInfiniteQuery";
-import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
+import type { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
 
 /**
  * Query redmine project memberships

@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { SearchIcon } from "lucide-react";
-import { createContext, PropsWithChildren, use, useEffect, useRef, useState } from "react";
+import { createContext, type PropsWithChildren, use, useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import useHotKey from "../../hooks/useHotkey";
 import { useSettings } from "../../provider/SettingsProvider";

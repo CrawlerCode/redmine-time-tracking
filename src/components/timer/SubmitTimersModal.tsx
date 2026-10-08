@@ -1,7 +1,7 @@
 /* eslint-disable react/no-children-prop */
 import { useRedmineMultipleProjectTimeEntryActivities } from "@/api/redmine/hooks/useRedmineProjectTimeEntryActivities";
 import { redmineTimeEntriesQueries } from "@/api/redmine/queries/timeEntries";
-import { TCreateTimeEntry, TIssue } from "@/api/redmine/types";
+import type { TCreateTimeEntry, TIssue } from "@/api/redmine/types";
 import ActivityField from "@/components/issue/form/fields/ActivityField";
 import { IssueTitle, IssueTitleFallback } from "@/components/issue/IssueTitle";
 import { TimerProject } from "@/components/timer/ProjectTimersGroup";
@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormFieldset, FormGrid } from "@/components/ui/form";
 import { useAppForm } from "@/hooks/useAppForm";
-import { calculateTimerTotalElapsedTime, Timer } from "@/hooks/useTimers";
+import { calculateTimerTotalElapsedTime, type Timer } from "@/hooks/useTimers";
 import { omitUndefinedFilter } from "@/lib/utils";
 import { usePermissions } from "@/provider/PermissionsProvider";
 import { useRedmineApi } from "@/provider/RedmineApiProvider";
@@ -17,7 +17,7 @@ import { useSettings } from "@/provider/SettingsProvider";
 import { useTimerApi } from "@/provider/TimerApiProvider";
 import { roundMillisecondsToInterval } from "@/utils/date";
 import { getErrorMessage } from "@/utils/error";
-import { groupTimers, ProjectTimersGroup } from "@/utils/groupTimers";
+import { groupTimers, type ProjectTimersGroup } from "@/utils/groupTimers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useState } from "react";

@@ -1,7 +1,7 @@
 import { redmineIssuesQuery } from "@/api/redmine/queries/issues";
 import { redmineSearchIssuesQuery } from "@/api/redmine/queries/search";
 import { keepPreviousData } from "@tanstack/react-query";
-import { IssueSearchContext } from "../../../components/issue/IssueSearch";
+import type { IssueSearchContext } from "../../../components/issue/IssueSearch";
 import { useRedmineApi } from "../../../provider/RedmineApiProvider";
 import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQuery";
 

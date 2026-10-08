@@ -10,22 +10,22 @@ import { useRedmineApi } from "@/provider/RedmineApiProvider";
 import { useStore as useFormStore } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { DE, FlagComponent, FR, GB, PT, RU } from "country-flag-icons/react/3x2";
+import { DE, type FlagComponent, FR, GB, PT, RU } from "country-flag-icons/react/3x2";
 import {
-    ArrowDownIcon,
-    ArrowDownUpIcon,
-    ArrowUpIcon,
-    BugIcon,
-    ChevronRightIcon,
-    ExternalLinkIcon,
-    GlobeIcon,
-    Loader2Icon,
-    PaletteIcon,
-    PencilIcon,
-    ServerIcon,
-    SignalIcon,
-    UserIcon,
-    Wand2Icon,
+  ArrowDownIcon,
+  ArrowDownUpIcon,
+  ArrowUpIcon,
+  BugIcon,
+  ChevronRightIcon,
+  ExternalLinkIcon,
+  GlobeIcon,
+  Loader2Icon,
+  PaletteIcon,
+  PencilIcon,
+  ServerIcon,
+  SignalIcon,
+  UserIcon,
+  Wand2Icon,
 } from "lucide-react";
 import { useEffect, useEffectEvent, useState } from "react";
 import { useIntl } from "react-intl";
@@ -34,7 +34,7 @@ import { browser } from "wxt/browser";
 import { Form } from "../components/ui/form";
 import { useAppForm, withForm } from "../hooks/useAppForm";
 import { LANGUAGES } from "../provider/IntlProvider";
-import { Settings, settingsSchema, useSettings } from "../provider/SettingsProvider";
+import { type Settings, settingsSchema, useSettings } from "../provider/SettingsProvider";
 import { formatHoursUsually } from "../utils/date";
 
 export const Route = createFileRoute("/settings")({

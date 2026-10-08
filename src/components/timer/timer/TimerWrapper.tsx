@@ -1,7 +1,7 @@
 import { ToggleableCard } from "@/components/general/ToggleableCard";
 import { cn } from "@/lib/utils";
 import { useTimerApi } from "@/provider/TimerApiProvider";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { useTimerContext } from "./TimerRoot";
 
 export const TimerWrapper = ({ className, children, ...props }: ComponentProps<"div">) => {

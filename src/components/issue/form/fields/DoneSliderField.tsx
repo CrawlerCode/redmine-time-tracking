@@ -1,6 +1,6 @@
 import { Field } from "@/components/ui/field";
 import clsx from "clsx";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { useFieldContext } from "../../../../hooks/useAppForm";
 
 const DoneSliderField = ({ className, ...props }: Omit<ComponentProps<"input">, "type" | "value" | "onChange" | "onBlur" | "min" | "max" | "step">) => {

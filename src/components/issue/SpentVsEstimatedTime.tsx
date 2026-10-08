@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import clsx from "clsx";
-import { TIssue } from "../../api/redmine/types";
+import type { TIssue } from "../../api/redmine/types";
 import useFormatHours from "../../hooks/useFormatHours";
 import { roundHours } from "../../utils/date";
 

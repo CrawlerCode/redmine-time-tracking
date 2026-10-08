@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { parseISO } from "date-fns";
 import { useIntl } from "react-intl";
 import { z } from "zod";
-import { TTimeEntry, TUpdateTimeEntry } from "../../api/redmine/types";
+import type { TTimeEntry, TUpdateTimeEntry } from "../../api/redmine/types";
 import { useAppForm } from "../../hooks/useAppForm";
 import { useRedmineApi } from "../../provider/RedmineApiProvider";
 import { useSettings } from "../../provider/SettingsProvider";

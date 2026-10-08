@@ -3,13 +3,13 @@ import { TimerComponents } from "@/components/timer/timer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useSettings } from "@/provider/SettingsProvider";
-import { ProjectTimersGroup as ProjectTimersGroupType } from "@/utils/groupTimers";
+import type { ProjectTimersGroup as ProjectTimersGroupType } from "@/utils/groupTimers";
 import { randomElement } from "@/utils/random";
 import clsx from "clsx";
 import { SquareChartGanttIcon } from "lucide-react";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { FormattedMessage } from "react-intl";
-import { TReference } from "../../api/redmine/types";
+import type { TReference } from "../../api/redmine/types";
 
 interface ProjectTimersGroupProps extends ComponentProps<"div"> {
   projectGroup: ProjectTimersGroupType;

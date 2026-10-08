@@ -1,5 +1,5 @@
 import { Loader2Icon } from "lucide-react";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { useFormContext } from "../../hooks/useAppForm";
 import { Button } from "../ui/button";
 

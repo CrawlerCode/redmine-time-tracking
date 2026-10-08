@@ -1,4 +1,4 @@
-import { UseQueryResult, UseSuspenseQueryResult } from "@tanstack/react-query";
+import type { UseQueryResult, UseSuspenseQueryResult } from "@tanstack/react-query";
 
 export const combineAggregateQueries = <TData>(queries: UseQueryResult<TData>[]) => ({
   isPending: queries.some((q) => q.isPending),

@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { ComponentProps, useMemo } from "react";
+import { type ComponentProps, useMemo } from "react";
 
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";

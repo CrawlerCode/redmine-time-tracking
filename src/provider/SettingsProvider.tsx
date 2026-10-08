@@ -1,6 +1,6 @@
 import deepmerge from "deepmerge";
-import { ReactNode, createContext, use } from "react";
-import { useIntl } from "react-intl";
+import { type ReactNode, createContext, use } from "react";
+import type { useIntl } from "react-intl";
 import { browser } from "wxt/browser";
 import { z } from "zod";
 import { getStorage, setStorage, useStorage } from "../hooks/useStorage";

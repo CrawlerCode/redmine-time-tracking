@@ -13,7 +13,7 @@ import { useIntl } from "react-intl";
 import { z } from "zod";
 import { useRedmineIssuePriorities } from "../../../api/redmine/hooks/useRedmineIssuePriorities";
 import { useRedmineProjectIssueTrackers } from "../../../api/redmine/hooks/useRedmineProjectIssueTrackers";
-import { TIssue } from "../../../api/redmine/types";
+import type { TIssue } from "../../../api/redmine/types";
 import { useAppForm } from "../../../hooks/useAppForm";
 import DismissibleWarning from "../../general/DismissableWarning";
 import AssigneeField from "./fields/AssigneeField";

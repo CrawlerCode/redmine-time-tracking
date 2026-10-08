@@ -1,4 +1,4 @@
-import { TAttachment, TUploadAttachment } from "@/api/redmine/types";
+import type { TAttachment, TUploadAttachment } from "@/api/redmine/types";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { useFieldContext } from "@/hooks/useAppForm";
@@ -27,7 +27,7 @@ import {
   TypeIcon,
   UnderlineIcon,
 } from "lucide-react";
-import { ComponentProps, useId, useMemo, useState } from "react";
+import { type ComponentProps, useId, useMemo, useState } from "react";
 import { useIntl } from "react-intl";
 import { InPortal, OutPortal, createHtmlPortalNode } from "react-reverse-portal";
 

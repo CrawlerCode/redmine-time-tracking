@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 
 export const TimerButtonWrapper = ({ className, children, ...props }: ComponentProps<"div">) => {
   return (

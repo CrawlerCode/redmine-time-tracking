@@ -1,6 +1,6 @@
 import { useRedmineIssuePriorities } from "@/api/redmine/hooks/useRedmineIssuePriorities";
 import { ComboboxField } from "@/components/form/ComboboxField";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import { useIntl } from "react-intl";
 
 const PriorityField = (props: Omit<ComponentProps<typeof ComboboxField>, "items" | "isLoading">) => {

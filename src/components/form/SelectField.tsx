@@ -1,4 +1,4 @@
-import { ComponentProps, ReactNode, useId } from "react";
+import { type ComponentProps, type ReactNode, useId } from "react";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";

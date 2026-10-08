@@ -1,7 +1,7 @@
 import { redmineProjectQuery } from "@/api/redmine/queries/projects";
 import { redmineTimeEntryActivitiesQuery } from "@/api/redmine/queries/timeEntryActivities";
-import { TProject, TTimeEntryActivity } from "@/api/redmine/types";
-import { useQueries, useQuery, UseQueryResult } from "@tanstack/react-query";
+import type { TProject, TTimeEntryActivity } from "@/api/redmine/types";
+import { useQueries, useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { useRedmineApi } from "../../../provider/RedmineApiProvider";
 
 export const useRedmineProjectTimeEntryActivities = (projectId: number) => {

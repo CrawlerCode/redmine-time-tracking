@@ -96,7 +96,4 @@ export default defineConfig({
     },
   },
   imports: false,
-  webExt: {
-    disabled: true,
-  },
 });

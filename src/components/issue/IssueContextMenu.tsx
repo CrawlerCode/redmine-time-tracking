@@ -14,12 +14,12 @@ import {
   TimerOffIcon,
   TimerResetIcon,
 } from "lucide-react";
-import { ReactElement, useState } from "react";
+import { type ReactElement, useState } from "react";
 import { useIntl } from "react-intl";
 import { toast } from "sonner";
-import { TIssue } from "../../api/redmine/types";
-import { LocalIssue } from "../../hooks/useLocalIssues";
-import { calculateTimerTotalElapsedTime, Timer } from "../../hooks/useTimers";
+import type { TIssue } from "../../api/redmine/types";
+import type { LocalIssue } from "../../hooks/useLocalIssues";
+import { calculateTimerTotalElapsedTime, type Timer } from "../../hooks/useTimers";
 import { useSettings } from "../../provider/SettingsProvider";
 import { useTimerApi } from "../../provider/TimerApiProvider";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "../ui/context-menu";

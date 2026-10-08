@@ -3,9 +3,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { randomElement } from "@/utils/random";
 import clsx from "clsx";
-import { ComponentProps } from "react";
-import { PriorityType } from "../../api/redmine/hooks/useRedmineIssuePriorities";
-import { TIssue } from "../../api/redmine/types";
+import type { ComponentProps } from "react";
+import type { PriorityType } from "../../api/redmine/hooks/useRedmineIssuePriorities";
+import type { TIssue } from "../../api/redmine/types";
 import { useSettings } from "../../provider/SettingsProvider";
 
 type PropTypes = {

@@ -1,6 +1,6 @@
 import { useTimerApi } from "@/provider/TimerApiProvider";
 import { PencilIcon, TimerIcon, TimerOffIcon, TimerResetIcon, TrashIcon } from "lucide-react";
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 import { useIntl } from "react-intl";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "../../ui/context-menu";
 import { useTimerContext } from "./TimerRoot";

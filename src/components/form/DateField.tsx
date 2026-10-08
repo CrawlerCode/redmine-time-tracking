@@ -1,7 +1,7 @@
 import { clsx } from "clsx";
 import { XIcon } from "lucide-react";
-import { ComponentProps, useEffect, useId, useState } from "react";
-import { DateRange } from "react-day-picker";
+import { type ComponentProps, useEffect, useId, useState } from "react";
+import type { DateRange } from "react-day-picker";
 import { useIntl } from "react-intl";
 import { useFieldContext } from "../../hooks/useAppForm";
 import { Button } from "../ui/button";

@@ -1,5 +1,5 @@
-import { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
-import { TVersion } from "@/api/redmine/types";
+import type { RedmineApiClient } from "@/api/redmine/RedmineApiClient";
+import type { TVersion } from "@/api/redmine/types";
 import { queryOptions } from "@tanstack/react-query";
 
 /**

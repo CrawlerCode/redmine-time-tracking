@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useTimerApi } from "@/provider/TimerApiProvider";
 import { formatTimer } from "@/utils/date";
 import clsx from "clsx";
-import { FocusEvent, useState } from "react";
+import { type FocusEvent, useState } from "react";
 import { useIntl } from "react-intl";
 import useHotKey from "../../../hooks/useHotkey";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../../ui/alert-dialog";

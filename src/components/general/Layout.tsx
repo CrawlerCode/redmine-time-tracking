@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import { Entrypoint } from "@/utils/entrypoint";
-import { PropsWithChildren } from "react";
+import type { Entrypoint } from "@/utils/entrypoint";
+import type { PropsWithChildren } from "react";
 
 interface LayoutProps extends PropsWithChildren {
   entrypoint: Entrypoint;
