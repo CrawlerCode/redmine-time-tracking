@@ -124,6 +124,8 @@
   "time.time-entry.context-menu.edit": "Modifier",
   "time.time-entry.field.project": "Projet",
   "time.time-entry.field.issue": "Ticket",
+  "time.time-entry.field.issue.placeholder": "Rechercher... (#123, Sujet, ...)",
+  "time.time-entry.field.issue.validation.required": "Issue is required",
   "time.time-entry.field.spent-on": "Date",
   "time.time-entry.field.spent-on.validation.required": "La date est requise",
   "time.time-entry.field.spent-on.validation.in-future": "Ne peut pas être dans le futur",

@@ -7,7 +7,7 @@ import { useRedminePaginatedInfiniteQuery } from "./useRedminePaginatedInfiniteQ
 
 const STALE_DATA_TIME = 1000 * 60; // 1 minute
 
-const useRedmineIssuesSearch = (search: IssueSearchContext) => {
+const useRedmineIssuesSearch = (search: Omit<IssueSearchContext, "searchInProject">) => {
   const redmineApi = useRedmineApi();
 
   const isSearching = search.isSearching && search.settings.mode === "remote";
@@ -56,7 +56,7 @@ const useRedmineIssuesSearch = (search: IssueSearchContext) => {
       assignedTo: search.settings.remoteSearchOptions.assignedToMe ? "me" : undefined, // search option: assigned to me
       statusId: search.settings.remoteSearchOptions.openIssuesOnly ? "open" : "*", // search option: open issues only
     }),
-    enabled: issueIds.length > 0 && !searchResultQuery.isFetching,
+    enabled: !searchResultQuery.isFetching,
     placeholderData: keepPreviousData,
     staleTime: STALE_DATA_TIME,
     autoFetchPages: 10, // Auto fetch (max 10 pages)

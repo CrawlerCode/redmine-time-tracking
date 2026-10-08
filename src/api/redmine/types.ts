@@ -203,8 +203,9 @@ export type TCreateTimeEntry = {
   comments?: string | null;
 };
 
-export type TUpdateTimeEntry = Partial<TCreateTimeEntry> & {
-  project_id?: number;
+export type TUpdateTimeEntry = Partial<Omit<TCreateTimeEntry, "issue_id">> & {
+  project_id?: number | null;
+  issue_id?: number | null;
 };
 
 // Roles and permissions

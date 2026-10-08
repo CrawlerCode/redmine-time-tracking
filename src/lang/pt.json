@@ -124,6 +124,8 @@
   "time.time-entry.context-menu.edit": "Editar",
   "time.time-entry.field.project": "Projeto",
   "time.time-entry.field.issue": "Tarefa",
+  "time.time-entry.field.issue.placeholder": "Buscar... (#123, Assunto, ...)",
+  "time.time-entry.field.issue.validation.required": "Issue is required",
   "time.time-entry.field.spent-on": "Data",
   "time.time-entry.field.spent-on.validation.required": "A data é obrigatória",
   "time.time-entry.field.spent-on.validation.in-future": "Não pode ser no futuro",

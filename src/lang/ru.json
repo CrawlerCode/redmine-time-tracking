@@ -124,6 +124,8 @@
   "time.time-entry.context-menu.edit": "Edit",
   "time.time-entry.field.project": "Проект",
   "time.time-entry.field.issue": "Задача",
+  "time.time-entry.field.issue.placeholder": "Поиск... (по номеру или теме задачи)",
+  "time.time-entry.field.issue.validation.required": "Issue is required",
   "time.time-entry.field.spent-on": "Дата",
   "time.time-entry.field.spent-on.validation.required": "Date is required",
   "time.time-entry.field.spent-on.validation.in-future": "Не может быть позже текущей даты",
