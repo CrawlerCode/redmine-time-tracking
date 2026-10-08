@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const LANGUAGES = ["en", "de", "fr", "ru"] as const;
+const LANGUAGES = ["en", "de", "fr", "ru", "pt"] as const;
 const COLOR_SCHEMES = ["dark"] as const;
 
 /**

@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import sharp, { type OverlayOptions } from "sharp";
 
-const LANGUAGES = ["en", "de", "fr", "ru"] as const;
+const LANGUAGES = ["en", "de", "fr", "ru", "pt"] as const;
 type Language = (typeof LANGUAGES)[number];
 
 const SCREENSHOT_WIDTH = 1280;
