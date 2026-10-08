@@ -23,6 +23,7 @@ export default defineContentScript({
         shadowHost.id = "redmine-time-tracking-shadow-host";
         shadowHost.style.float = "right";
         shadowHost.style.marginRight = "5px";
+        shadowHost.style.marginTop = "-3px";
 
         const reactRoot = document.createElement("div");
         reactRoot.id = "root";
